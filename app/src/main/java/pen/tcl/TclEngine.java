@@ -2,6 +2,7 @@ package pen.tcl;
 
 import tcl.lang.Interp;
 import tcl.lang.TclException;
+import tcl.lang.TclList;
 import tcl.lang.TclObject;
 
 /**
@@ -55,6 +56,23 @@ public class TclEngine {
         var cmd = new TclEngineCommand(this, 1, proc);
         interp.createCommand(name, cmd);
     }
+
+    //-------------------------------------------------------------------------
+    // Helpers: Argument Processing
+
+    public void checkArgs(ArgQ argq, int argMin, int argMax, String argSig)
+        throws TclException
+    {
+        if (argq.size() < argMin || argq.size() > argMax) {
+            var prefix = TclList.newInstance();
+            for (int i = 0; i < argq.getPrefixTokens(); i++) {
+                TclList.append(interp, prefix, argq.asCommandArray()[i]);
+            }
+            throw error("wrong # args: should be \"" + prefix + " " +
+                argSig + "\"");
+        }
+    }
+
 
     //-------------------------------------------------------------------------
     // Helpers: Exceptions

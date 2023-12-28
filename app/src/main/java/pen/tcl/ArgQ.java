@@ -89,6 +89,10 @@ public class ArgQ {
     //-------------------------------------------------------------------------
     // Array API
 
+    public int getPrefixTokens() {
+        return prefixTokens;
+    }
+
     /**
      * Returns the complete arguments array, including the command prefix
      * tokens.

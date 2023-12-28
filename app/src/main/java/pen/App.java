@@ -22,6 +22,7 @@ public class App {
     // Command definitions
 
     private void cmd_hello(TclEngine engine, ArgQ argq) throws TclException {
+        engine.checkArgs(argq, 0, 1, "?arg?");
         System.out.println(argq);
     }
 

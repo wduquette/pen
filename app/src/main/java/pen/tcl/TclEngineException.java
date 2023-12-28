@@ -31,6 +31,6 @@ public class TclEngineException extends TclException {
     }
 
     public String toString() {
-        return getClass() + " " + getMessage();
+        return getClass().getName() + " " + getMessage();
     }
 }
