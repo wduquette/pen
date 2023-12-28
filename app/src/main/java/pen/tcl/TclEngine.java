@@ -57,6 +57,16 @@ public class TclEngine {
         interp.createCommand(name, cmd);
     }
 
+    /**
+     * Adds an ensemble to the engine given its name.
+     * @param name The name
+     */
+    public TclEnsemble ensemble(String name) {
+        var ensemble = new TclEnsemble(this, 1);
+        interp.createCommand(name, ensemble);
+        return ensemble;
+    }
+
     //-------------------------------------------------------------------------
     // Helpers: Argument Processing
 

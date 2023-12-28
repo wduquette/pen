@@ -16,6 +16,8 @@ public class App {
 
     public App() {
         engine.add("hello", this::cmd_hello);
+        var ensemble = engine.ensemble("do");
+        ensemble.add("howdy", this::cmd_hello);
     }
 
     //------------------------------------------------------------------------
@@ -31,7 +33,7 @@ public class App {
 
     public void run(String[] args) {
         try {
-            engine.eval("hello a b c d");
+            engine.eval("do howdy a b");
         } catch (TclException ex) {
             System.out.println("Caught: " + ex);
         }
