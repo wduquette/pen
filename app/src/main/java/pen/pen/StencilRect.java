@@ -11,8 +11,6 @@ public class StencilRect
     //---------------------------------------------------------------------
     // Instance Variables
 
-    private final Stencil stencil;
-
     private double x;
     private double y;
     private double w;
@@ -21,8 +19,8 @@ public class StencilRect
     //---------------------------------------------------------------------
     // Constructor
 
-    public StencilRect(Stencil stencil) {
-        this.stencil = stencil;
+    public StencilRect() {
+        // Nothing to do
     }
 
     //---------------------------------------------------------------------
@@ -56,9 +54,5 @@ public class StencilRect
             .fillRect(x, y, w, h)
             .strokeRect(x, y, w, h)
             .restore();
-    }
-
-    public void draw() {
-        draw(stencil);
     }
 }

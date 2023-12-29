@@ -10,8 +10,6 @@ public class StencilLabel
     //---------------------------------------------------------------------
     // Instance Variables
 
-    private final Stencil stencil;
-
     private double x;
     private double y;
     private String text = "";
@@ -20,8 +18,8 @@ public class StencilLabel
     //---------------------------------------------------------------------
     // Constructor
 
-    public StencilLabel(Stencil stencil) {
-        this.stencil = stencil;
+    public StencilLabel() {
+        // Nothing to do
     }
 
     //---------------------------------------------------------------------
@@ -55,9 +53,5 @@ public class StencilLabel
             .setTextAlign(Pen.pos2textAlign(pos))
             .fillText(text, x, y)
             .restore();
-    }
-
-    public void draw() {
-        draw(stencil);
     }
 }

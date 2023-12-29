@@ -19,20 +19,21 @@ public class Stencil {
     //-------------------------------------------------------------------------
     // DSL
 
-    public void clear() {
-        pen.clear();
-    }
-
     public Pen pen() {
         return pen;
     }
 
-    public StencilLabel label() {
-        return new StencilLabel(this);
+    public Stencil clear() {
+        pen.clear();
+        return this;
     }
 
-    public StencilRect rect() {
-        return new StencilRect(this);
+    public static StencilLabel label() {
+        return new StencilLabel();
+    }
+
+    public static StencilRect rect() {
+        return new StencilRect();
     }
 
     public Stencil draw(StencilShape shape) {

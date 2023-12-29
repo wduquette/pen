@@ -12,6 +12,9 @@ import pen.pen.Stencil;
 
 import java.util.function.Consumer;
 
+import static pen.pen.Stencil.label;
+import static pen.pen.Stencil.rect;
+
 public class App extends Application {
     //------------------------------------------------------------------------
     // Instance Variables
@@ -48,21 +51,21 @@ public class App extends Application {
     }
 
     private void drawTestDrawing(Stencil sten) {
-        var pen = stencil.pen();
-        sten.clear();
         var w = root.getWidth() - 200;
         var h = root.getHeight() - 200;
         var dim = Pen.getTextSize(Pen.DEFAULT_FONT, "Hello, world!");
-        sten.rect()
-            .at(100,100)
-            .size(w,h)
-            .background(Color.LIGHTYELLOW)
-            .foreground(Color.PURPLE)
-            .lineWidth(2)
-            .draw();
 
-        sten.rect().at(50, 50).size(dim.getWidth(), dim.getHeight()).draw();
-        sten.label().at(50, 50).pos(Pos.TOP_LEFT).text("Hello, world!").draw();
+        sten.clear()
+            .draw(rect().at(100,100).size(w,h)
+                .background(Color.LIGHTYELLOW)
+                .foreground(Color.PURPLE)
+                .lineWidth(2))
+            .draw(rect().at(50, 50)
+                .size(dim.getWidth(), dim.getHeight()))
+            .draw(label().at(50, 50)
+                .pos(Pos.TOP_LEFT)
+                .text("Hello, world!"))
+            ;
     }
 
     //------------------------------------------------------------------------
