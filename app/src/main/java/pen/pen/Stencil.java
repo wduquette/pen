@@ -1,7 +1,6 @@
 package pen.pen;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 public class Stencil {
     //-------------------------------------------------------------------------
@@ -34,7 +33,7 @@ public class Stencil {
     //-------------------------------------------------------------------------
     // Helpers
 
-    public class Rect {
+    public class Rect extends StyleBase<Rect> {
         double x;
         double y;
         double w;
@@ -58,9 +57,9 @@ public class Stencil {
 
         public void draw() {
             pen.save()
-                .setLineWidth(1)
-                .setStroke(Color.BLACK)
-                .setFill(Color.WHITE)
+                .setFill(getBackground())
+                .setStroke(getForeground())
+                .setLineWidth(getLineWidth())
                 .fillRect(x, y, w, h)
                 .strokeRect(x, y, w, h)
                 .restore();

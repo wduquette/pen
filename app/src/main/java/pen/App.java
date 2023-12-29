@@ -5,6 +5,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import pen.pen.Pen;
 import pen.pen.Stencil;
@@ -51,7 +52,13 @@ public class App extends Application {
         sten.clear();
         var w = root.getWidth() - 200;
         var h = root.getHeight() - 200;
-        sten.rect().at(100,100).size(w,h).draw();
+        sten.rect()
+            .at(100,100)
+            .size(w,h)
+            .background(Color.LIGHTYELLOW)
+            .foreground(Color.PURPLE)
+            .lineWidth(2)
+            .draw();
 
         var dim = Pen.getTextSize(Pen.DEFAULT_FONT, "Hello, world!");
         sten.rect().at(50, 50).size(dim.getWidth(), dim.getHeight()).draw();
