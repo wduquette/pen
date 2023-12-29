@@ -1,0 +1,185 @@
+{
+  "main": {
+    "id": "c86ff514a3a8b9b8",
+    "type": "split",
+    "children": [
+      {
+        "id": "4e01eca92fa80b0b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6401b16a2fd8a623",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Home.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "69a844eb6904a7d3",
+    "type": "split",
+    "children": [
+      {
+        "id": "6c2d8314d425a777",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c320d49860d02ac8",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "byModifiedTime"
+              }
+            }
+          },
+          {
+            "id": "28da61b08f75cc1e",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "756b2b55790002fb",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "0d89143de1bd37d9",
+    "type": "split",
+    "children": [
+      {
+        "id": "a686a7ecb5a191cf",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b2836a1d59b12407",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Home.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "81addddcf4c98cfe",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Home.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "0a52ea037b1dca48",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "4ce96bb5138c9c5e",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Home.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "homepage:Open homepage": false,
+      "obsidian-excalidraw-plugin:Create new drawing": false
+    }
+  },
+  "active": "6401b16a2fd8a623",
+  "lastOpenFiles": [
+    "Feser2009.2 Metaphysics.md",
+    "Red Bouncy Ball.md",
+    "Excalidraw/Red Bouncy Ball Potencies.excalidraw.md",
+    "Feser2009.2.8 Being.md",
+    "Excalidraw/Red Bouncy Ball Causes.excalidraw.md",
+    "Excalidraw/Red Bouncy Ball Chains.excalidraw.md",
+    "Excalidraw/Red Bouncy Ball.excalidraw.md",
+    "Excalidraw",
+    "Feser2009 Aquinas.md",
+    "Feser2009.2.7 Efficient Causality.md",
+    "Feser2009.2.6 Final Causality.md",
+    "Feser2009.2.5 The Transcendentals.md",
+    "Feser2009.md",
+    "Home.md",
+    "Feser2009.2.4 Essence and Existence.md",
+    "Feser2009.1 St Thomas.md",
+    "ASG 001 - Feser2009 Intro.md",
+    "Aquinas Study Group.md",
+    "Feser2009.2.3 The Four Causes.md",
+    "Feser2009.2.2 Hylemorphism.md",
+    "Feser2009.2.1 Act and Potency.md",
+    "metaphysics.md",
+    "Why did early modern philosophers discard Scholasticism.md",
+    "Citation Symbols.md",
+    "Interpretation.md",
+    "Faith.md",
+    "ST.md",
+    "soul.monopic",
+    "templates",
+    "~$mpendiumTheologiae.docx",
+    "CompendiumTheologiae.docx",
+    "~$mpendiumTheologiae.html",
+    "CompendiumTheologiae.html",
+    "Thomas Aquinas_ Compendium theologiae_ English.html"
+  ]
+}

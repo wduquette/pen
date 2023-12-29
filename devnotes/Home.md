@@ -1,0 +1,40 @@
+
+Development notes for the Pen application
+
+## To Do:
+
+- [ ] Code to save canvas content to PNG file
+- [ ] Tcl Helpers
+    - [ ] Argument parsers
+    - [ ] Option value parsers
+    - [ ] `setResult` methods
+    - [ ] Error handling methods
+- [ ] Tcl bindings
+    - [ ] `pen` for `Pen` class 
+    - [ ] `stencil` for `Stencil` class
+- [ ] Pen Application
+    - [ ] App with subcommands
+        - [ ] See destiny2 app
+    - [ ] `draw` subcommand
+        - [ ] Executes Tcl scripts, saves PNG files
+    - [ ] `view` subcommand
+        - [ ] Executes Tcl script, shows drawing
+        - [ ] Could support browsing a list of Tcl scripts
+    - [ ] `demo` subcommand
+        - [ ] Pick from drawings done with Java API
+- [ ] `Pen` additions
+    - [ ] Add all `GraphicsContext` methods.
+    - [ ] Line types (dash, dot, solid, at least)
+    - [ ] Add other features as necessary.
+- [ ] `Stencil` additions
+    - [ ] Shapes
+        - [ ] Arrowheads
+        - [ ] Lines
+        - [ ] Polygons
+        - [ ] Rounded rectangles
+    - [ ] Position support for shapes
+
+## Ideas
+
+- [[Pondering]]
+
