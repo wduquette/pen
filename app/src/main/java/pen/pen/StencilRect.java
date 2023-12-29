@@ -4,7 +4,10 @@ import javafx.geometry.Point2D;
 
 import java.awt.geom.Dimension2D;
 
-public class StencilRect extends StyleBase<StencilRect> {
+public class StencilRect
+    extends StyleBase<StencilRect>
+    implements StencilShape
+{
     //---------------------------------------------------------------------
     // Instance Variables
 
@@ -45,7 +48,7 @@ public class StencilRect extends StyleBase<StencilRect> {
         return this;
     }
 
-    public void draw() {
+    public void draw(Stencil stencil) {
         stencil.pen().save()
             .setFill(getBackground())
             .setStroke(getForeground())
@@ -53,5 +56,9 @@ public class StencilRect extends StyleBase<StencilRect> {
             .fillRect(x, y, w, h)
             .strokeRect(x, y, w, h)
             .restore();
+    }
+
+    public void draw() {
+        draw(stencil);
     }
 }

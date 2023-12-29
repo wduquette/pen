@@ -35,6 +35,10 @@ public class Stencil {
         return new StencilRect(this);
     }
 
+    public Stencil draw(StencilShape shape) {
+        shape.draw(this);
+        return this;
+    }
 
     //-------------------------------------------------------------------------
     // Helpers

@@ -52,6 +52,7 @@ public class App extends Application {
         sten.clear();
         var w = root.getWidth() - 200;
         var h = root.getHeight() - 200;
+        var dim = Pen.getTextSize(Pen.DEFAULT_FONT, "Hello, world!");
         sten.rect()
             .at(100,100)
             .size(w,h)
@@ -60,7 +61,6 @@ public class App extends Application {
             .lineWidth(2)
             .draw();
 
-        var dim = Pen.getTextSize(Pen.DEFAULT_FONT, "Hello, world!");
         sten.rect().at(50, 50).size(dim.getWidth(), dim.getHeight()).draw();
         sten.label().at(50, 50).pos(Pos.TOP_LEFT).text("Hello, world!").draw();
     }

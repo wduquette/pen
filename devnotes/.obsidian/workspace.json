@@ -49,7 +49,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Open Shape DSL.md",
+                "file": "Stencil Bounds Aggregation.md",
                 "mode": "source",
                 "source": true
               }
@@ -134,7 +134,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Open Shape DSL.md",
+                "file": "Stencil Bounds Aggregation.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -151,7 +151,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Open Shape DSL.md",
+                "file": "Stencil Bounds Aggregation.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -174,7 +174,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Open Shape DSL.md"
+                "file": "Stencil Bounds Aggregation.md"
               }
             }
           }
@@ -200,10 +200,11 @@
   "active": "08133dfb082e16ef",
   "lastOpenFiles": [
     "Ideas.md",
+    "Stencil Bounds Aggregation.md",
+    "Open Shape DSL.md",
     "To Do List.md",
     "Home.md",
     "Pondering.md",
-    "Open Shape DSL.md",
     "Catalog of Shapes.md",
     "Welcome.md"
   ]

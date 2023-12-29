@@ -3,7 +3,10 @@ package pen.pen;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 
-public class StencilLabel extends StyleBase<StencilLabel> {
+public class StencilLabel
+    extends StyleBase<StencilLabel>
+    implements StencilShape
+{
     //---------------------------------------------------------------------
     // Instance Variables
 
@@ -44,7 +47,7 @@ public class StencilLabel extends StyleBase<StencilLabel> {
         return this;
     }
 
-    public void draw() {
+    public void draw(Stencil stencil) {
         stencil.pen().save()
             .setFill(getTextColor())
             .setFont(getFont())
@@ -52,5 +55,9 @@ public class StencilLabel extends StyleBase<StencilLabel> {
             .setTextAlign(Pen.pos2textAlign(pos))
             .fillText(text, x, y)
             .restore();
+    }
+
+    public void draw() {
+        draw(stencil);
     }
 }
