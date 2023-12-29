@@ -72,6 +72,11 @@ public class StyleBase<Self extends StyleBase<Self>> {
     //-------------------------------------------------------------------------
     // DSL
 
+    public Self style(StyleBase<?> other) {
+        copyStyleFrom(other);
+        return (Self)this;
+    }
+
     public Self background(Paint color) {
         this.background = color;
         return (Self)this;

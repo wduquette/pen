@@ -1,6 +1,8 @@
 package pen.pen;
 
 import javafx.geometry.Dimension2D;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
@@ -157,5 +159,17 @@ public class Pen {
         node.setFont(font);
         var bounds = node.getLayoutBounds();
         return bounds.getHeight();
+    }
+
+    public static TextAlignment pos2textAlign(Pos pos) {
+        return pos2textAlign(pos.getHpos());
+    }
+
+    public static TextAlignment pos2textAlign(HPos hpos) {
+        return switch (hpos) {
+            case CENTER -> TextAlignment.CENTER;
+            case LEFT -> TextAlignment.LEFT;
+            case RIGHT -> TextAlignment.RIGHT;
+        };
     }
 }

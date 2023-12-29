@@ -1,7 +1,7 @@
 package pen;
 
 import javafx.application.Application;
-import javafx.geometry.VPos;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
@@ -62,10 +62,7 @@ public class App extends Application {
 
         var dim = Pen.getTextSize(Pen.DEFAULT_FONT, "Hello, world!");
         sten.rect().at(50, 50).size(dim.getWidth(), dim.getHeight()).draw();
-        pen.save()
-            .setTextBaseline(VPos.TOP)
-            .fillText("Hello, world!", 50, 50)
-            .restore();
+        sten.label().at(50, 50).pos(Pos.TOP_LEFT).text("Hello, world!").draw();
     }
 
     //------------------------------------------------------------------------
