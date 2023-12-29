@@ -23,6 +23,10 @@ public class Stencil {
         pen.clear();
     }
 
+    public Pen pen() {
+        return pen;
+    }
+
     public Rect rect() {
         return new Rect();
     }

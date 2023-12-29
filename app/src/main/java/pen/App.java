@@ -1,11 +1,15 @@
 package pen;
 
 import javafx.application.Application;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import pen.pen.Pen;
 import pen.pen.Stencil;
+
+import java.util.function.Consumer;
 
 public class App extends Application {
     //------------------------------------------------------------------------
@@ -13,7 +17,8 @@ public class App extends Application {
 
     private final StackPane root = new StackPane();
     private final Canvas canvas = new Canvas();
-    private Stencil sten;
+    private Stencil stencil;
+    private final Consumer<Stencil> drawingFunc = this::drawTestDrawing;
 
 
     //------------------------------------------------------------------------
@@ -22,7 +27,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         root.getChildren().add(canvas);
-        sten = new Stencil(canvas.getGraphicsContext2D());
+        stencil = new Stencil(canvas.getGraphicsContext2D());
         canvas.widthProperty().bind(root.widthProperty());
         canvas.heightProperty().bind(root.heightProperty());
 
@@ -38,10 +43,22 @@ public class App extends Application {
     }
 
     private void repaint() {
+        drawingFunc.accept(stencil);
+    }
+
+    private void drawTestDrawing(Stencil sten) {
+        var pen = stencil.pen();
         sten.clear();
         var w = root.getWidth() - 200;
         var h = root.getHeight() - 200;
         sten.rect().at(100,100).size(w,h).draw();
+
+        var dim = Pen.getTextSize(Pen.DEFAULT_FONT, "Hello, world!");
+        sten.rect().at(50, 50).size(dim.getWidth(), dim.getHeight()).draw();
+        pen.save()
+            .setTextBaseline(VPos.TOP)
+            .fillText("Hello, world!", 50, 50)
+            .restore();
     }
 
     //------------------------------------------------------------------------
