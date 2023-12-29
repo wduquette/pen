@@ -43,6 +43,54 @@ public class Stencil {
     //-------------------------------------------------------------------------
     // Helpers
 
+    public class Label extends StyleBase<Label> {
+        //---------------------------------------------------------------------
+        // Instance Variables
+
+        double x;
+        double y;
+        String text = "";
+        Pos pos = Pos.TOP_LEFT;
+
+        //---------------------------------------------------------------------
+        // Constructor
+
+        public Label() {  }
+
+        //---------------------------------------------------------------------
+        // DSL
+
+        public Label text(String text) {
+            this.text = text;
+            return this;
+        }
+
+        public Label at(Point2D point) {
+            return at(point.getX(), point.getY());
+        }
+
+        public Label at(double x, double y) {
+            this.x = x;
+            this.y = y;
+            return this;
+        }
+
+        public Label pos(Pos pos) {
+            this.pos = pos;
+            return this;
+        }
+
+        public void draw() {
+            pen.save()
+                .setFill(getTextColor())
+                .setFont(getFont())
+                .setTextBaseline(pos.getVpos())
+                .setTextAlign(Pen.pos2textAlign(pos))
+                .fillText(text, x, y)
+                .restore();
+        }
+    }
+
     public class Rect extends StyleBase<Rect> {
         //---------------------------------------------------------------------
         // Instance Variables
@@ -93,51 +141,4 @@ public class Stencil {
         }
     }
 
-    public class Label extends StyleBase<Label> {
-        //---------------------------------------------------------------------
-        // Instance Variables
-
-        double x;
-        double y;
-        String text = "";
-        Pos pos;
-
-        //---------------------------------------------------------------------
-        // Constructor
-
-        public Label() {  }
-
-        //---------------------------------------------------------------------
-        // DSL
-
-        public Label text(String text) {
-            this.text = text;
-            return this;
-        }
-
-        public Label at(Point2D point) {
-            return at(point.getX(), point.getY());
-        }
-
-        public Label at(double x, double y) {
-            this.x = x;
-            this.y = y;
-            return this;
-        }
-
-        public Label pos(Pos pos) {
-            this.pos = pos;
-            return this;
-        }
-
-        public void draw() {
-            pen.save()
-                .setFill(getTextColor())
-                .setFont(getFont())
-                .setTextBaseline(pos.getVpos())
-                .setTextAlign(Pen.pos2textAlign(pos))
-                .fillText(text, x, y)
-                .restore();
-        }
-    }
 }
