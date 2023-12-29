@@ -1,5 +1,6 @@
 package pen.pen;
 
+import javafx.application.Application;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 
@@ -29,6 +30,11 @@ public class Pen {
      */
     public GraphicsContext gc() {
         return gc;
+    }
+
+    public Pen clear() {
+        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+        return this;
     }
 
     //-------------------------------------------------------------------------

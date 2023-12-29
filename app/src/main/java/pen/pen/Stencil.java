@@ -19,6 +19,10 @@ public class Stencil {
     //-------------------------------------------------------------------------
     // DSL
 
+    public void clear() {
+        pen.clear();
+    }
+
     public Rect rect() {
         return new Rect();
     }

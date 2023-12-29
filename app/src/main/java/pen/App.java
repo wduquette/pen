@@ -1,49 +1,53 @@
 package pen;
 
-import pen.tcl.ArgQ;
-import pen.tcl.TclEngine;
-import tcl.lang.Interp;
-import tcl.lang.TclException;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import pen.pen.Stencil;
 
-public class App {
+public class App extends Application {
     //------------------------------------------------------------------------
     // Instance Variables
 
-    private final TclEngine engine = new TclEngine();
+    private final StackPane root = new StackPane();
+    private final Canvas canvas = new Canvas();
+    private Stencil sten;
 
-    //------------------------------------------------------------------------
-    // Constructor
-
-    public App() {
-        engine.add("hello", this::cmd_hello);
-        var ensemble = engine.ensemble("do");
-        ensemble.add("howdy", this::cmd_hello);
-    }
-
-    //------------------------------------------------------------------------
-    // Command definitions
-
-    private void cmd_hello(TclEngine engine, ArgQ argq) throws TclException {
-        engine.checkArgs(argq, 0, 1, "?arg?");
-        System.out.println(argq);
-    }
 
     //------------------------------------------------------------------------
     // Main-line code
 
-    public void run(String[] args) {
-        try {
-            engine.eval("do howdy a b");
-        } catch (TclException ex) {
-            System.out.println("Caught: " + ex);
-        }
+    @Override
+    public void start(Stage stage) {
+        root.getChildren().add(canvas);
+        sten = new Stencil(canvas.getGraphicsContext2D());
+        canvas.widthProperty().bind(root.widthProperty());
+        canvas.heightProperty().bind(root.heightProperty());
+
+        Scene scene = new Scene(root, 400, 400);
+
+        stage.setTitle("Pen");
+        stage.setScene(scene);
+        stage.show();
+
+        canvas.widthProperty().addListener((p,o,n) -> repaint());
+        canvas.heightProperty().addListener((p,o,n) -> repaint());
+        repaint();
+    }
+
+    private void repaint() {
+        sten.clear();
+        var w = root.getWidth() - 200;
+        var h = root.getHeight() - 200;
+        sten.rect().at(100,100).size(w,h).draw();
     }
 
     //------------------------------------------------------------------------
     // Main
 
     public static void main(String[] args) {
-        var app = new App();
-        app.run(args);
+        launch(args);
     }
 }
