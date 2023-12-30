@@ -1,22 +1,24 @@
-- [ ] Code to save canvas content to PNG file
-- [ ] Tcl Helpers
+- [x] Code to save canvas content to PNG file
+- [ ] Tcl bindings
+    - [ ] `pen` for `Pen` class 
+    - [ ] `stencil` for `Stencil` class
+- [ ] Tcl Helpers (add as needed by bindings)
     - [ ] Argument parsers
     - [ ] Option value parsers
     - [ ] `setResult` methods
     - [ ] Error handling methods
-- [ ] Tcl bindings
-    - [ ] `pen` for `Pen` class 
-    - [ ] `stencil` for `Stencil` class
 - [ ] Pen Application
-    - [ ] App with subcommands
-        - [ ] See destiny2 app
+    - [x] App with subcommands
+        - See destiny2 app
     - [ ] `draw` subcommand
         - [ ] Executes Tcl scripts, saves PNG files
     - [ ] `view` subcommand
         - [ ] Executes Tcl script, shows drawing
         - [ ] Could support browsing a list of Tcl scripts
     - [ ] `demo` subcommand
+        - [x] Current test app runs as `pen demo`
         - [ ] Pick from drawings done with Java API
+    - [ ] Proper installation
 - [ ] `Pen` additions
     - [ ] Add all `GraphicsContext` methods.
     - [ ] Line types (dash, dot, solid, at least)
