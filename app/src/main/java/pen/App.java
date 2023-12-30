@@ -6,6 +6,8 @@ package pen;
 import pen.tools.demo.DemoTool;
 import pen.tools.view.ViewTool;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.*;
 
 public class App {
@@ -84,9 +86,9 @@ public class App {
     }
 
     //-------------------------------------------------------------------------
-    // Data Functions
+    // Helpers
 
-    void println(String text) {
+    public void println(String text) {
         System.out.println(text);
     }
 
