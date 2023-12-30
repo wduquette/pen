@@ -7,7 +7,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import pen.ToolInfo;
+import pen.tools.ToolInfo;
 import pen.stencil.Pen;
 import pen.stencil.Stencil;
 import pen.stencil.StencilBuffer;
@@ -59,15 +59,6 @@ Java API.
         canvas.widthProperty().addListener((p,o,n) -> repaint());
         canvas.heightProperty().addListener((p,o,n) -> repaint());
         repaint();
-
-        var buff = new StencilBuffer();
-        buff.setMargin(50);
-        buff.draw(this::testDrawing);
-        try {
-            buff.save(new File("test.png"));
-        } catch (IOException ex) {
-            System.out.println("Failed to save image: " + ex);
-        }
     }
 
     private void repaint() {

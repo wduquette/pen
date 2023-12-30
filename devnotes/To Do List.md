@@ -12,9 +12,10 @@
 - [ ] Pen Application
     - [x] App with subcommands
         - See destiny2 app
-    - [ ] Improve app architecture; the current `Tool` architecture isn't great.
+    - [x] Improve app architecture; the current `Tool` architecture isn't great.
     - [ ] `draw` subcommand
-        - [ ] Executes Tcl scripts, saves PNG files
+        - [x] Executes a single script, saves a single PNG file
+        - [ ] Executes multiple Tcl scripts, saves PNG files
     - [ ] `view` subcommand
         - [x] Executes Tcl script, shows drawing
         - [ ] Display read/eval errors in GUI, side by side with image.
@@ -22,6 +23,7 @@
     - [ ] `demo` subcommand
         - [x] Current test app runs as `pen demo`
         - [ ] Pick from drawings done with Java API
+            - [ ] Or, possible, from example scripts.
     - [ ] Proper installation
 - [ ] `Pen` additions
     - [ ] Add all `GraphicsContext` methods.

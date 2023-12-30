@@ -2,7 +2,8 @@ package pen.tools.draw;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import pen.ToolInfo;
+import pen.App;
+import pen.tools.ToolInfo;
 import pen.apis.StencilExtension;
 import pen.stencil.Stencil;
 import pen.stencil.StencilBuffer;
@@ -42,8 +43,7 @@ PNG file.""",
         argq.poll(); // Skip the tool name
 
         if (argq.size() != 1) {
-            // TODO: need a MUCH better usage solution.
-            System.out.println("Usage: pen draw drawing.tcl");
+            App.showUsage(INFO);
             System.exit(1);
         }
 

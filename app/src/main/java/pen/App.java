@@ -3,6 +3,7 @@
  */
 package pen;
 
+import pen.tools.ToolInfo;
 import pen.tools.demo.DemoTool;
 import pen.tools.draw.DrawTool;
 import pen.tools.view.ViewTool;
@@ -59,6 +60,11 @@ public class App {
         println("Run \"pen help\" for a list of subcommands.");
     }
 
+    public static void showUsage(ToolInfo info) {
+        // TODO: Use real executable name.
+        System.out.println("Usage: pen " + info.usage());
+    }
+
     private void showHelp(Deque<String> argq) {
         if (argq.isEmpty()) {
             System.out.println("Pen supports the following tools:\n");
@@ -73,8 +79,7 @@ public class App {
             var tool = TOOLS.get(subcommand);
 
             if (tool != null) {
-                System.out.println("Usage: pen " + tool.name() + " " +
-                    tool.usage());
+                System.out.println("Usage: pen " + tool.usage());
                 System.out.println();
                 System.out.println(tool.help());
             } else {
