@@ -4,6 +4,7 @@
 package pen;
 
 import pen.tools.demo.DemoTool;
+import pen.tools.draw.DrawTool;
 import pen.tools.view.ViewTool;
 
 import java.io.File;
@@ -19,7 +20,7 @@ public class App {
     static {
         TOOLS.putAll(Map.of(
             "demo",   new DemoTool(),
-//        "draw",  new DrawTool(),
+            "draw",  new DrawTool(),
             "view", new ViewTool()
         ));
     }

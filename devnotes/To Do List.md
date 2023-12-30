@@ -12,6 +12,7 @@
 - [ ] Pen Application
     - [x] App with subcommands
         - See destiny2 app
+    - [ ] Improve app architecture; the current `Tool` architecture isn't great.
     - [ ] `draw` subcommand
         - [ ] Executes Tcl scripts, saves PNG files
     - [ ] `view` subcommand
