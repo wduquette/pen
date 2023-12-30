@@ -58,23 +58,45 @@ public class Stencil {
         return this;
     }
 
-    public static StencilLabel label() {
-        return new StencilLabel();
-    }
-
-    public static StencilRect rect() {
-        return new StencilRect();
-    }
-
-    public Stencil draw(StencilShape shape) {
-        var bounds = shape.draw(this);
-
+    public Stencil addBounds(Bounds bounds) {
         if (drawingBounds == null) {
             drawingBounds = bounds;
         } else {
             drawingBounds = Pen.boundsOf(drawingBounds, bounds);
         }
         return this;
+    }
+
+    /**
+     * Draws a shape on the stencil, extending the drawing bounds accordingly.
+     * @param shape The shape
+     * @return The stencil
+     */
+    public Stencil draw(StencilShape shape) {
+        addBounds(shape.draw(this));
+        return this;
+    }
+
+    /**
+     * Draws the drawing on the Stencil.  A drawing is a function that
+     * draws using a stencil.
+     * @param drawing The drawing
+     * @return The stencil
+     */
+    public Stencil draw(StencilDrawing drawing) {
+        drawing.draw(this);
+        return this;
+    }
+
+    //-------------------------------------------------------------------------
+    // Standard Shape Factories
+
+    public static StencilLabel label() {
+        return new StencilLabel();
+    }
+
+    public static StencilRect rect() {
+        return new StencilRect();
     }
 
     //-------------------------------------------------------------------------

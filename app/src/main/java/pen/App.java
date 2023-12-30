@@ -9,8 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import pen.pen.Pen;
 import pen.pen.Stencil;
-
-import java.util.function.Consumer;
+import pen.pen.StencilDrawing;
 
 import static pen.pen.Stencil.label;
 import static pen.pen.Stencil.rect;
@@ -22,7 +21,7 @@ public class App extends Application {
     private final StackPane root = new StackPane();
     private final Canvas canvas = new Canvas();
     private Stencil stencil;
-    private final Consumer<Stencil> drawingFunc = this::drawTestDrawing;
+    private final StencilDrawing currentDrawing = this::drawTestDrawing;
 
 
     //------------------------------------------------------------------------
@@ -47,7 +46,7 @@ public class App extends Application {
     }
 
     private void repaint() {
-        drawingFunc.accept(stencil);
+        stencil.draw(currentDrawing);
     }
 
     private void drawTestDrawing(Stencil sten) {
