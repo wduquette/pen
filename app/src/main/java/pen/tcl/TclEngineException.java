@@ -9,6 +9,8 @@ import tcl.lang.TclException;
 public class TclEngineException extends TclException {
     private final Throwable cause;
     private final String message;
+    private final String errorInfo;
+    private final int errorLine;
 
     public TclEngineException(TclEngine engine, String message) {
         this(engine, message, null);
@@ -16,14 +18,30 @@ public class TclEngineException extends TclException {
 
     public TclEngineException(TclEngine engine, String message, Throwable cause) {
         super(engine.interp(), message);
-        // NOTE: TclException does NOT set the exception's message string, but
-        // rather puts it in the interp's result.
         this.message = message;
         this.cause = cause;
+        this.errorInfo = "n/a";
+        this.errorLine = 1;
+    }
+
+    public TclEngineException(TclEngine engine, TclException cause) {
+        super(engine.interp(), engine.interp().getResult().toString());
+        this.message = engine.interp().getResult().toString();
+        this.cause = cause;
+        this.errorInfo = engine.getErrorInfo();
+        this.errorLine = engine.getErrorLine();
     }
 
     public String getMessage() {
         return message;
+    }
+
+    public String getErrorInfo() {
+        return errorInfo;
+    }
+
+    public int getErrorLine() {
+        return errorLine;
     }
 
     public Throwable getCause() {

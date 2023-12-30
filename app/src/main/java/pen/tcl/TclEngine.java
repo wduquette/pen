@@ -1,11 +1,9 @@
 package pen.tcl;
 
-import tcl.lang.Interp;
-import tcl.lang.TclException;
-import tcl.lang.TclList;
-import tcl.lang.TclObject;
+import tcl.lang.*;
 
 import java.io.File;
+import java.util.function.Function;
 
 /**
  * A wrapper for the JTcl Interp, focusing on the needs of embedding.
@@ -38,20 +36,48 @@ public class TclEngine {
      * Evaluates the script as a Tcl script, returning the result.
      * @param script The script.
      * @return The result
-     * @throws TclException on error.
+     * @throws TclEngineException on error.
      */
-    public TclObject eval(String script) throws TclException {
-        interp.eval(script);
-        return interp.getResult();
+    public TclObject eval(String script) throws TclEngineException {
+        try {
+            interp.eval(script);
+            return interp.getResult();
+        } catch (TclException ex) {
+            throw new TclEngineException(this, ex);
+        }
     }
 
     /**
      * Evaluates the file's content as a Tcl script.
      * @param file The file
-     * @throws TclException on Tcl error
+     * @throws TclEngineException on Tcl error
      */
-    public void evalFile(File file) throws TclException {
-        interp.evalFile(file.toString());
+    public void evalFile(File file) throws TclEngineException {
+        try {
+            interp.evalFile(file.toString());
+        } catch (TclException ex) {
+            throw new TclEngineException(this, ex);
+        }
+    }
+
+    /**
+     * Gets the script line number of the just thrown TclException.
+     * @return the line number
+     */
+    public int getErrorLine() {
+        return interp.getErrorLine();
+    }
+
+    /**
+     * Gets the errorInfo of the just thrown TclException, or "" if none.
+     * @return The errorInfo
+     */
+    public String getErrorInfo() {
+        try {
+            return interp.getVar("errorInfo", TCL.GLOBAL_ONLY).toString();
+        } catch (Exception ex) {
+            return "";
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -94,6 +120,47 @@ public class TclEngine {
         }
     }
 
+    public double toDouble(TclObject arg) throws TclException {
+        return TclDouble.get(interp, arg);
+    }
+
+    public <E extends Enum<E>> E toEnum(Class<E> cls, TclObject arg)
+        throws TclException
+    {
+        try {
+            return Enum.valueOf(cls, arg.toString().toUpperCase());
+        } catch (Exception ex) {
+            throw expected(cls.getSimpleName(), arg);
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    // Helpers: Results
+
+    public void setResult(TclObject newResult) {
+        interp.setResult(newResult);
+    }
+
+    public void setResult(boolean value) {
+        interp.setResult(value);
+    }
+
+    public void setResult(double value) {
+        interp.setResult(value);
+    }
+
+    public void setResult(long value) {
+        interp.setResult(value);
+    }
+
+    public void setResult(String value) {
+        interp.setResult(value);
+    }
+
+    public void setResult(Enum<?> symbol) {
+        interp.setResult(symbol.toString().toLowerCase());
+    }
+
 
     //-------------------------------------------------------------------------
     // Helpers: Exceptions
@@ -106,6 +173,8 @@ public class TclEngine {
         return new TclEngineException(this, message, cause);
     }
 
-
-
+    public TclException expected(String name, Object value) {
+        return new TclEngineException(this,
+            "Expected " + name + ", got \"" + value + "\"");
+    }
 }
