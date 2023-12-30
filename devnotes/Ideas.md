@@ -2,12 +2,12 @@ A collection of things I want to consider
 
 ## New Ideas
 
-- [[Open Shape DSL]]
-- [[Stencil Bounds Aggregation]]
+- [[Fancy Label Shape]]
 
 ## Implemented
 
-- None yet
+- [[Open Shape DSL]]
+- [[Stencil Bounds Aggregation]]
 
 ## Rejected Ideas
 

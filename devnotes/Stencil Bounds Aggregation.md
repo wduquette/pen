@@ -1,4 +1,4 @@
-#idea 
+#idea #implemented 
 
 As we draw on the canvas, keep track of the bounding box of all drawn content.  This would allow us to automatically size PNG files given the content and a margin.
 

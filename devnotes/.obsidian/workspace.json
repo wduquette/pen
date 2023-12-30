@@ -13,13 +13,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Stencil Bounds Aggregation.md",
+                "file": "Ideas.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "afb2ece06f518121",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "To Do List.md",
                 "mode": "source",
                 "source": true
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -85,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Stencil Bounds Aggregation.md",
+                "file": "To Do List.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Stencil Bounds Aggregation.md",
+                "file": "To Do List.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Stencil Bounds Aggregation.md"
+                "file": "To Do List.md"
               }
             }
           }
@@ -148,13 +161,14 @@
       "homepage:Open homepage": false
     }
   },
-  "active": "59fe516bb47453ab",
+  "active": "afb2ece06f518121",
   "lastOpenFiles": [
-    "Home.md",
-    "Ideas.md",
+    "Fancy Label Shape.md",
     "Stencil Bounds Aggregation.md",
     "Open Shape DSL.md",
+    "Ideas.md",
     "To Do List.md",
+    "Home.md",
     "Pondering.md",
     "Catalog of Shapes.md",
     "Welcome.md"

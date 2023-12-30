@@ -9,7 +9,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import pen.pen.Pen;
 import pen.pen.Stencil;
+import pen.pen.StencilBuffer;
 import pen.pen.StencilDrawing;
+
+import java.io.File;
+import java.io.IOException;
 
 import static pen.pen.Stencil.label;
 import static pen.pen.Stencil.rect;
@@ -21,7 +25,7 @@ public class App extends Application {
     private final StackPane root = new StackPane();
     private final Canvas canvas = new Canvas();
     private Stencil stencil;
-    private final StencilDrawing currentDrawing = this::drawTestDrawing;
+    private final StencilDrawing currentDrawing = this::testDrawing;
 
 
     //------------------------------------------------------------------------
@@ -43,13 +47,22 @@ public class App extends Application {
         canvas.widthProperty().addListener((p,o,n) -> repaint());
         canvas.heightProperty().addListener((p,o,n) -> repaint());
         repaint();
+
+        var buff = new StencilBuffer();
+        buff.setMargin(50);
+        buff.draw(this::testDrawing);
+        try {
+            buff.save(new File("test.png"));
+        } catch (IOException ex) {
+            System.out.println("Failed to save image: " + ex);
+        }
     }
 
     private void repaint() {
         stencil.draw(currentDrawing);
     }
 
-    private void drawTestDrawing(Stencil sten) {
+    private void testDrawing(Stencil sten) {
         var w = root.getWidth() - 200;
         var h = root.getHeight() - 200;
         var dim = Pen.getTextSize(Pen.DEFAULT_FONT, "Hello, world!");

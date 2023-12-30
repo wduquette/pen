@@ -1,3 +1,5 @@
+#idea #implemented
+
 At time of writing, I expect `Stencil` to have a DSL method to create each kind of shape.  An obvious alternative would be to have an open API allowing the definition of new kinds of shape, any of which could be used without modifying `Stencil`.
 
 That is, instead of this:
