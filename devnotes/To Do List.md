@@ -5,7 +5,7 @@
         - [ ] Option value parsers
         - [ ] `setResult` methods
         - [ ] Error handling methods
-    - [ ] Fork JTcl and simplify
+    - [ ] Fork JTcl and simplify (it's too darn big!)
 - [ ] Tcl bindings
     - [ ] `pen` for `Pen` class 
     - [ ] `stencil` for `Stencil` class
@@ -15,8 +15,9 @@
     - [ ] `draw` subcommand
         - [ ] Executes Tcl scripts, saves PNG files
     - [ ] `view` subcommand
-        - [ ] Executes Tcl script, shows drawing
-        - [ ] Could support browsing a list of Tcl scripts
+        - [x] Executes Tcl script, shows drawing
+        - [ ] Display read/eval errors in GUI, side by side with image.
+        - [ ] Support browsing a list of Tcl scripts
     - [ ] `demo` subcommand
         - [x] Current test app runs as `pen demo`
         - [ ] Pick from drawings done with Java API
