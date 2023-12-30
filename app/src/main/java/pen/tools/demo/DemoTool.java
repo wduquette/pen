@@ -14,7 +14,7 @@ public class DemoTool implements Tool {
 
     @Override
     public String usage() {
-        return "pen demo";
+        return "demo";
     }
 
     @Override

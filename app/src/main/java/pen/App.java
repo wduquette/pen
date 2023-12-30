@@ -4,21 +4,23 @@
 package pen;
 
 import pen.tools.demo.DemoTool;
+import pen.tools.view.ViewTool;
 
-import java.util.ArrayDeque;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class App {
     //-------------------------------------------------------------------------
     // Instance variables
 
-    public final static Map<String, Tool> TOOLS = Map.of(
-        "demo",   new DemoTool()
+    public final static Map<String, Tool> TOOLS = new TreeMap<>();
+
+    static {
+        TOOLS.putAll(Map.of(
+            "demo",   new DemoTool(),
 //        "draw",  new DrawTool(),
-//        "view", new ViewTool(),
-//        "help",   new HelpTool()
-    );
+            "view", new ViewTool()
+        ));
+    }
 
     //-------------------------------------------------------------------------
     // Launcher App
@@ -31,23 +33,54 @@ public class App {
         var argq = new ArrayDeque<>(List.of(args));
 
         if (argq.isEmpty()) {
-            println("Usage: pen <subcommand> [<arguments...>]");
+            println("Usage: pen <tool> [<arguments...>]");
             println("");
-            println("Run \"pen help\" for a list of subcommands.");
+            println("Run \"pen help\" for a list of tools.");
             System.exit(1);
         }
 
         var subcommand = argq.poll();
+
         var tool = TOOLS.get(subcommand);
 
-        if (tool == null) {
-            println("Error, unrecognized subcommand: \"" + subcommand + "\"");
-            println("");
-            println("Run \"pen help\" for a list of subcommands.");
-            System.exit(1);
+        if (tool != null) {
+            tool.start(args);
+        } else if (subcommand.equals("help")) {
+            showHelp(argq);
+        } else {
+            showFailure(subcommand);
         }
+    }
 
-        tool.start(args);
+    private void showFailure(String subcommand) {
+        println("Error, unrecognized tool: \"" + subcommand + "\"");
+        println("");
+        println("Run \"pen help\" for a list of subcommands.");
+    }
+
+    private void showHelp(Deque<String> argq) {
+        if (argq.isEmpty()) {
+            System.out.println("Pen supports the following tools:\n");
+
+            for (var subcommand : TOOLS.keySet()) {
+                var tool = TOOLS.get(subcommand);
+
+                System.out.printf("%-8s %s\n", subcommand, tool.oneLiner());
+            }
+
+            System.out.println("\nEnter \"pen help <tool>\" for help on a tool.");
+        } else {
+            var subcommand = argq.poll();
+            var tool = TOOLS.get(subcommand);
+
+            if (tool != null) {
+                System.out.println("Usage: pen " + tool.usage());
+                System.out.println();
+                System.out.println(tool.help());
+            } else {
+                showFailure(subcommand);
+            }
+        }
     }
 
     //-------------------------------------------------------------------------
