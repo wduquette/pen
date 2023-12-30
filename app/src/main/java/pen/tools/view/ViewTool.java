@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
 
-public class ViewApp extends Application {
+public class ViewTool extends Application {
     public static final ToolInfo INFO = new ToolInfo(
         "view",
         "drawing.tcl",
@@ -32,7 +32,7 @@ public class ViewApp extends Application {
             Given a Pen drawing script, displays the drawing
             in a window.
             """,
-        ViewApp::main
+        ViewTool::main
     );
 
     //------------------------------------------------------------------------

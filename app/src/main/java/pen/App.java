@@ -3,9 +3,9 @@
  */
 package pen;
 
-import pen.tools.demo.DemoApp;
-import pen.tools.draw.DrawApp;
-import pen.tools.view.ViewApp;
+import pen.tools.demo.DemoTool;
+import pen.tools.draw.DrawTool;
+import pen.tools.view.ViewTool;
 
 import java.util.*;
 
@@ -17,9 +17,9 @@ public class App {
 
     static {
         TOOLS.putAll(Map.of(
-            DemoApp.INFO.name(), DemoApp.INFO,
-            DrawApp.INFO.name(), DrawApp.INFO,
-            ViewApp.INFO.name(), ViewApp.INFO
+            DemoTool.INFO.name(), DemoTool.INFO,
+            DrawTool.INFO.name(), DrawTool.INFO,
+            ViewTool.INFO.name(), ViewTool.INFO
         ));
     }
 

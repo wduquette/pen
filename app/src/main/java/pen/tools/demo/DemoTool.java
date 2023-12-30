@@ -12,7 +12,7 @@ import pen.stencil.Pen;
 import pen.stencil.Stencil;
 import pen.stencil.StencilBuffer;
 import pen.stencil.StencilDrawing;
-import pen.tools.draw.DrawApp;
+import pen.tools.draw.DrawTool;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.io.IOException;
 import static pen.stencil.Stencil.label;
 import static pen.stencil.Stencil.rect;
 
-public class DemoApp extends Application {
+public class DemoTool extends Application {
     public static final ToolInfo INFO = new ToolInfo(
         "demo",
         "",
@@ -29,7 +29,7 @@ public class DemoApp extends Application {
 Displays sample drawings; it's also a demo of Pen's internal
 Java API.
             """,
-        DrawApp::main
+        DrawTool::main
     );
     //------------------------------------------------------------------------
     // Instance Variables
