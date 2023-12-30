@@ -1,4 +1,4 @@
-package pen.pen;
+package pen.stencil;
 
 import java.util.ArrayList;
 import java.util.List;

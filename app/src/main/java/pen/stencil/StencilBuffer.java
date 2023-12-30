@@ -1,7 +1,6 @@
-package pen.pen;
+package pen.stencil;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;

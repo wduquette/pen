@@ -1,4 +1,4 @@
-package pen.pen;
+package pen.stencil;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;

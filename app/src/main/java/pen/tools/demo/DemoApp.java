@@ -7,16 +7,16 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import pen.pen.Pen;
-import pen.pen.Stencil;
-import pen.pen.StencilBuffer;
-import pen.pen.StencilDrawing;
+import pen.stencil.Pen;
+import pen.stencil.Stencil;
+import pen.stencil.StencilBuffer;
+import pen.stencil.StencilDrawing;
 
 import java.io.File;
 import java.io.IOException;
 
-import static pen.pen.Stencil.label;
-import static pen.pen.Stencil.rect;
+import static pen.stencil.Stencil.label;
+import static pen.stencil.Stencil.rect;
 
 public class DemoApp extends Application {
     //------------------------------------------------------------------------

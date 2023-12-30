@@ -1,4 +1,4 @@
-package pen.pen;
+package pen.stencil;
 
 import javafx.geometry.*;
 import javafx.scene.canvas.GraphicsContext;

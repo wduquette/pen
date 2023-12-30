@@ -1,4 +1,4 @@
-package pen.pen;
+package pen.stencil;
 
 /**
  * A concrete Style for use in StyleMaps.

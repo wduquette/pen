@@ -1,4 +1,4 @@
-package pen.pen;
+package pen.stencil;
 
 /**
  * A functional interface for Stencil drawings.  A Stencil drawing is a
