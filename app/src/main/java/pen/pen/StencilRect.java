@@ -1,5 +1,7 @@
 package pen.pen;
 
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 
 import java.awt.geom.Dimension2D;
@@ -46,7 +48,7 @@ public class StencilRect
         return this;
     }
 
-    public void draw(Stencil stencil) {
+    public Bounds draw(Stencil stencil) {
         stencil.pen().save()
             .setFill(getBackground())
             .setStroke(getForeground())
@@ -54,5 +56,6 @@ public class StencilRect
             .fillRect(x, y, w, h)
             .strokeRect(x, y, w, h)
             .restore();
+        return new BoundingBox(x, y, w, h);
     }
 }

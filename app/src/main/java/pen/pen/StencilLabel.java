@@ -1,5 +1,6 @@
 package pen.pen;
 
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 
@@ -45,7 +46,8 @@ public class StencilLabel
         return this;
     }
 
-    public void draw(Stencil stencil) {
+    public Bounds draw(Stencil stencil) {
+        // FIRST, draw the text
         stencil.pen().save()
             .setFill(getTextColor())
             .setFont(getFont())
@@ -53,5 +55,9 @@ public class StencilLabel
             .setTextAlign(Pen.pos2textAlign(pos))
             .fillText(text, x, y)
             .restore();
+
+        // NEXT, compute the bounds.
+        var size = Pen.getTextSize(getFont(), text);
+        return Pen.pos2bounds(pos, x, y, size.getWidth(), size.getHeight());
     }
 }

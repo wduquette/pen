@@ -1,6 +1,9 @@
-#idea
+#idea 
 
 As we draw on the canvas, keep track of the bounding box of all drawn content.  This would allow us to automatically size PNG files given the content and a margin.
+
+**Note:** The `Canvas` already needs to be big enough for the drawing before you save all or part of it as a PNG.  Thus, to use this feature you'd usually need
+to draw the drawing twice: once to get the bounds, and a second time to get a canvas of the desired size.
 
 ## Challenges
 
