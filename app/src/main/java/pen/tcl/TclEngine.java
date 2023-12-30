@@ -5,6 +5,8 @@ import tcl.lang.TclException;
 import tcl.lang.TclList;
 import tcl.lang.TclObject;
 
+import java.io.File;
+
 /**
  * A wrapper for the JTcl Interp, focusing on the needs of embedding.
  */
@@ -41,6 +43,15 @@ public class TclEngine {
     public TclObject eval(String script) throws TclException {
         interp.eval(script);
         return interp.getResult();
+    }
+
+    /**
+     * Evaluates the file's content as a Tcl script.
+     * @param file The file
+     * @throws TclException on Tcl error
+     */
+    public void evalFile(File file) throws TclException {
+        interp.evalFile(file.toString());
     }
 
     //-------------------------------------------------------------------------

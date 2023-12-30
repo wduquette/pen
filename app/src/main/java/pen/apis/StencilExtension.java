@@ -31,7 +31,7 @@ public class StencilExtension {
 
     private void cmd_stencilTest(TclEngine engine, ArgQ argq) {
         stencil.draw(rect().at(10,10).size(100,60));
-        stencil.draw(label().at(55,40).pos(Pos.CENTER).text("Stencil Test"));
+        stencil.draw(label().at(60,40).pos(Pos.CENTER).text("Stencil Test"));
     }
 
 }

@@ -1,12 +1,14 @@
 - [x] Code to save canvas content to PNG file
+- [ ] JTcl Stuff
+    - [ ] Tcl Helpers (add as needed by bindings)
+        - [ ] Argument parsers
+        - [ ] Option value parsers
+        - [ ] `setResult` methods
+        - [ ] Error handling methods
+    - [ ] Fork JTcl and simplify
 - [ ] Tcl bindings
     - [ ] `pen` for `Pen` class 
     - [ ] `stencil` for `Stencil` class
-- [ ] Tcl Helpers (add as needed by bindings)
-    - [ ] Argument parsers
-    - [ ] Option value parsers
-    - [ ] `setResult` methods
-    - [ ] Error handling methods
 - [ ] Pen Application
     - [x] App with subcommands
         - See destiny2 app

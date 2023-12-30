@@ -25,6 +25,11 @@ dependencies {
     // This dependency is used by the application.
     implementation files('../tps/jtcl-2.8.0.jar')
 }
+jar {
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
 
 application {
     // Define the main class for the application.

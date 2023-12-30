@@ -7,10 +7,14 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import pen.App;
+import pen.apis.StencilExtension;
 import pen.stencil.Pen;
 import pen.stencil.Stencil;
 import pen.stencil.StencilBuffer;
 import pen.stencil.StencilDrawing;
+import pen.tcl.TclEngine;
+import tcl.lang.TclException;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +30,7 @@ public class ViewApp extends Application {
     private final StackPane root = new StackPane();
     private final Canvas canvas = new Canvas();
     private Stencil stencil;
+    private File drawingFile;
 
     //------------------------------------------------------------------------
     // Main-line code
@@ -34,39 +39,51 @@ public class ViewApp extends Application {
     public void start(Stage stage) {
         // FIRST, parse the command line arguments.
         var argq = new ArrayDeque<>(getParameters().getRaw());
-        System.out.println("args: " + argq);
-        System.exit(0);
+        argq.poll(); // Skip the tool name
 
-//
-//        // NEXT, set up the GUI
-//        root.getChildren().add(canvas);
-//        stencil = new Stencil(canvas.getGraphicsContext2D());
-//        canvas.widthProperty().bind(root.widthProperty());
-//        canvas.heightProperty().bind(root.heightProperty());
-//
-//        Scene scene = new Scene(root, 400, 400);
-//
-//        stage.setTitle("Pen View");
-//        stage.setScene(scene);
-//        stage.show();
-//
-//        canvas.widthProperty().addListener((p,o,n) -> repaint());
-//        canvas.heightProperty().addListener((p,o,n) -> repaint());
-//        repaint();
-//
-//        var buff = new StencilBuffer();
-//        buff.setMargin(50);
-//        buff.draw(this::testDrawing);
-//        try {
-//            buff.save(new File("test.png"));
-//        } catch (IOException ex) {
-//            System.out.println("Failed to save image: " + ex);
-//        }
+        if (argq.size() != 1) {
+            // TODO: need a MUCH better usage solution.
+            System.out.println("Usage: pen view drawing.tcl");
+            System.exit(1);
+        }
+
+        drawingFile = new File(argq.poll());
+
+        // NEXT, set up the GUI
+        root.getChildren().add(canvas);
+        stencil = new Stencil(canvas.getGraphicsContext2D());
+        canvas.widthProperty().bind(root.widthProperty());
+        canvas.heightProperty().bind(root.heightProperty());
+
+        Scene scene = new Scene(root, 400, 400);
+
+        stage.setTitle("pen view " + drawingFile);
+        stage.setScene(scene);
+        stage.show();
+
+        // NEXT, repaint on window size change, and on user request.
+        canvas.widthProperty().addListener((p,o,n) -> repaint());
+        canvas.heightProperty().addListener((p,o,n) -> repaint());
+        // TODO: Add Shortcut+R listener
+
+        repaint();
     }
 
     private void repaint() {
-//        stencil.draw(currentDrawing);
+        stencil.clear();
+        var engine = new TclEngine();
+        // TODO Need better installation story
+        var stencilExtension = new StencilExtension(engine, stencil);
+
+        try {
+            // TODO: we're going to want save the script text and just evaluate that.
+            engine.evalFile(drawingFile);
+        } catch (TclException ex) {
+            System.out.println("Error in file: " + ex);
+            System.exit(1);
+        }
     }
+
 
     //------------------------------------------------------------------------
     // Main
