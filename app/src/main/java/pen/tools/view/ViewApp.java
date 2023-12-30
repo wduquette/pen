@@ -12,6 +12,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import pen.ToolInfo;
 import pen.apis.StencilExtension;
 import pen.stencil.Stencil;
 import pen.tcl.TclEngine;
@@ -23,6 +24,17 @@ import java.nio.file.Files;
 import java.util.ArrayDeque;
 
 public class ViewApp extends Application {
+    public static final ToolInfo INFO = new ToolInfo(
+        "view",
+        "drawing.tcl",
+        "Displays a pen drawing in a window.",
+        """
+            Given a Pen drawing script, displays the drawing
+            in a window.
+            """,
+        ViewApp::main
+    );
+
     //------------------------------------------------------------------------
     // Instance Variables
 

@@ -2,10 +2,12 @@ package pen.tools.draw;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import pen.ToolInfo;
 import pen.apis.StencilExtension;
 import pen.stencil.Stencil;
 import pen.stencil.StencilBuffer;
 import pen.tcl.TclEngine;
+import pen.tools.view.ViewApp;
 import tcl.lang.TclException;
 
 import java.io.File;
@@ -14,12 +16,22 @@ import java.nio.file.Files;
 import java.util.ArrayDeque;
 
 public class DrawApp extends Application {
+    public static final ToolInfo INFO = new ToolInfo(
+        "draw",
+        "drawing.tcl",
+        "Saves a pen drawing as a PNG file.",
+        """
+Given a Pen drawing script, outputs the drawing as a 
+PNG file.""",
+        DrawApp::main
+    );
+
     //------------------------------------------------------------------------
     // Instance Variables
 
     private File drawingFile;
     private String script;
-    private StencilBuffer buffer = new StencilBuffer();
+    private final StencilBuffer buffer = new StencilBuffer();
 
     //------------------------------------------------------------------------
     // Main-line code

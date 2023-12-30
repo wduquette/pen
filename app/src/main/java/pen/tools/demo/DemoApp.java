@@ -7,10 +7,12 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import pen.ToolInfo;
 import pen.stencil.Pen;
 import pen.stencil.Stencil;
 import pen.stencil.StencilBuffer;
 import pen.stencil.StencilDrawing;
+import pen.tools.draw.DrawApp;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +21,16 @@ import static pen.stencil.Stencil.label;
 import static pen.stencil.Stencil.rect;
 
 public class DemoApp extends Application {
+    public static final ToolInfo INFO = new ToolInfo(
+        "demo",
+        "",
+        "Displays sample Pen drawings.",
+        """
+Displays sample drawings; it's also a demo of Pen's internal
+Java API.
+            """,
+        DrawApp::main
+    );
     //------------------------------------------------------------------------
     // Instance Variables
 

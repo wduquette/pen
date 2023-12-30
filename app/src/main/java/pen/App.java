@@ -3,25 +3,23 @@
  */
 package pen;
 
-import pen.tools.demo.DemoTool;
-import pen.tools.draw.DrawTool;
-import pen.tools.view.ViewTool;
+import pen.tools.demo.DemoApp;
+import pen.tools.draw.DrawApp;
+import pen.tools.view.ViewApp;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.util.*;
 
 public class App {
     //-------------------------------------------------------------------------
     // Instance variables
 
-    public final static Map<String, Tool> TOOLS = new TreeMap<>();
+    public final static Map<String, ToolInfo> TOOLS = new TreeMap<>();
 
     static {
         TOOLS.putAll(Map.of(
-            "demo",   new DemoTool(),
-            "draw",  new DrawTool(),
-            "view", new ViewTool()
+            DemoApp.INFO.name(), DemoApp.INFO,
+            DrawApp.INFO.name(), DrawApp.INFO,
+            ViewApp.INFO.name(), ViewApp.INFO
         ));
     }
 
@@ -47,7 +45,7 @@ public class App {
         var tool = TOOLS.get(subcommand);
 
         if (tool != null) {
-            tool.start(args);
+            tool.start().accept(args);
         } else if (subcommand.equals("help")) {
             showHelp(argq);
         } else {
@@ -65,10 +63,8 @@ public class App {
         if (argq.isEmpty()) {
             System.out.println("Pen supports the following tools:\n");
 
-            for (var subcommand : TOOLS.keySet()) {
-                var tool = TOOLS.get(subcommand);
-
-                System.out.printf("%-8s %s\n", subcommand, tool.oneLiner());
+            for (var tool : TOOLS.values()) {
+                System.out.printf("%-8s %s\n", tool.name(), tool.oneLiner());
             }
 
             System.out.println("\nEnter \"pen help <tool>\" for help on a tool.");
@@ -77,7 +73,8 @@ public class App {
             var tool = TOOLS.get(subcommand);
 
             if (tool != null) {
-                System.out.println("Usage: pen " + tool.usage());
+                System.out.println("Usage: pen " + tool.name() + " " +
+                    tool.usage());
                 System.out.println();
                 System.out.println(tool.help());
             } else {
