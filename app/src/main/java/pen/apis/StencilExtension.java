@@ -2,7 +2,6 @@ package pen.apis;
 
 import javafx.geometry.Pos;
 import pen.stencil.Stencil;
-import pen.stencil.Style;
 import pen.stencil.StyleBase;
 import pen.stencil.StyleMap;
 import pen.tcl.Argq;
@@ -34,6 +33,8 @@ public class StencilExtension {
         var sten = engine.ensemble("stencil");
 
         sten.add("test", this::cmd_stencilTest);
+        sten.add("label", this::cmd_stencilLabel);
+        sten.add("rect", this::cmd_stencilRect);
 
         // stencil style *
         var style = sten.ensemble("style");
@@ -49,6 +50,46 @@ public class StencilExtension {
     private void cmd_stencilTest(TclEngine tcl, Argq argq) {
         stencil.draw(rect().at(10,10).size(100,60));
         stencil.draw(label().at(60,40).pos(Pos.CENTER).text("Stencil Test"));
+    }
+
+    // stencil label text ?option value...?
+    private void cmd_stencilLabel(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkMinArgs(argq, 1, "text ?option value?...");
+        var obj = label();
+        obj.text(argq.next().toString());
+
+        while (argq.hasNext()) {
+            var opt = argq.next().toString();
+
+            switch (opt) {
+                case "-at" -> obj.at(tcl.toPoint(opt, argq));
+                case "-pos" -> obj.pos(tcl.toEnum(Pos.class, opt, argq));
+                default -> parseStyleOption(obj, opt, argq);
+            }
+        }
+
+        stencil.draw(obj);
+    }
+
+    // stencil rect ?option value?...
+    private void cmd_stencilRect(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        var rect = rect();
+
+        while (argq.hasNext()) {
+            var opt = argq.next().toString();
+
+            switch (opt) {
+                case "-at" -> rect.at(tcl.toPoint(opt, argq));
+                case "-size" -> rect.size(tcl.toDim(opt, argq));
+                default -> parseStyleOption(rect, opt, argq);
+            }
+        }
+
+        stencil.draw(rect);
     }
 
     // stencil style create name ?option value...?

@@ -2,9 +2,8 @@ package pen.stencil;
 
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
-
-import java.awt.geom.Dimension2D;
 
 public class StencilRect
     extends StyleBase<StencilRect>

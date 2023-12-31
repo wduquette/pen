@@ -3,6 +3,7 @@ A collection of things I want to consider
 ## New Ideas
 
 - [[Fancy Label Shape]]
+- [[Output Color Names]]
 
 ## Implemented
 

@@ -1,5 +1,7 @@
 package pen.tcl;
 
+import javafx.geometry.Dimension2D;
+import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import tcl.lang.*;
 
@@ -129,8 +131,10 @@ public class TclEngine {
     public TclObject toOptArg(String opt, Argq argq) throws TclException {
         if (argq.hasNext()) {
             return argq.next();
-        } else {
+        } else if (opt.startsWith("-")) {
             throw error("missing value for option " + opt);
+        } else {
+            throw expected("option",  opt);
         }
     }
 
@@ -162,6 +166,82 @@ public class TclEngine {
         } catch (Exception ex) {
             throw expected(cls.getSimpleName(), arg);
         }
+    }
+
+    public <E extends Enum<E>> E toEnum(Class<E> cls, String opt, Argq argq)
+        throws TclException
+    {
+        return toEnum(cls, toOptArg(opt, argq));
+    }
+
+    /**
+     * Converts an argument containing a string "num,num" into a Point2D
+     * @param arg The argument
+     * @return The point
+     * @throws TclException on parse error
+     */
+    public Point2D toPoint(TclObject arg) throws TclException {
+        var tokens = arg.toString().split(",");
+        double x;
+        double y;
+
+        // TODO: Fix up error messages to be more helpful and Tcl-like
+        if (tokens.length == 2) {
+            try {
+                x = Double.parseDouble(tokens[0]);
+            } catch (Exception ex) {
+                throw expected("x,y point", arg);
+            }
+
+            try {
+                y = Double.parseDouble(tokens[1]);
+            } catch (Exception ex) {
+                throw expected("x,y point", arg);
+            }
+
+            return new Point2D(x, y);
+        } else {
+            throw expected("x,y point", arg);
+        }
+    }
+
+    public Point2D toPoint(String opt, Argq argq) throws TclException {
+        return toPoint(toOptArg(opt, argq));
+    }
+
+    /**
+     * Converts an argument containing a string "num,num" into a Dimension2D
+     * @param arg The argument
+     * @return The point
+     * @throws TclException on parse error
+     */
+    public Dimension2D toDim(TclObject arg) throws TclException {
+        var tokens = arg.toString().split(",");
+        double x;
+        double y;
+
+        // TODO: Fix up error messages to be more helpful and Tcl-like
+        if (tokens.length == 2) {
+            try {
+                x = Double.parseDouble(tokens[0]);
+            } catch (Exception ex) {
+                throw expected("width,height", arg);
+            }
+
+            try {
+                y = Double.parseDouble(tokens[1]);
+            } catch (Exception ex) {
+                throw expected("width,height", arg);
+            }
+
+            return new Dimension2D(x, y);
+        } else {
+            throw expected("width,height", arg);
+        }
+    }
+
+    public Dimension2D toDim(String opt, Argq argq) throws TclException {
+        return toDim(toOptArg(opt, argq));
     }
 
     //-------------------------------------------------------------------------

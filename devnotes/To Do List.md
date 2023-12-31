@@ -1,14 +1,17 @@
 - [x] Code to save canvas content to PNG file
 - [ ] JTcl Stuff
-    - [ ] Tcl Helpers (add as needed by bindings)
-        - [ ] Argument parsers
-        - [ ] Option value parsers
-        - [ ] `setResult` methods
-        - [ ] Error handling methods
+    - Tcl Helpers (add as needed by bindings)
+        - Argument parsers
+        - Option value parsers
+        - `setResult` methods
+        - Error handling methods
     - [ ] Fork JTcl and simplify (it's too darn big!)
+        - [ ] Create minimal .jar by hand, to assess actual size
 - [ ] Tcl bindings
     - [ ] `pen` for `Pen` class 
-    - [ ] `stencil` for `Stencil` class
+    - `stencil` for `Stencil` class
+        - As features are added
+        - [x] Minimal binding
 - [ ] Pen Application
     - [x] App with subcommands
         - See destiny2 app
@@ -30,6 +33,9 @@
     - [ ] Line types (dash, dot, solid, at least)
     - [ ] Add other features as necessary.
 - [ ] `Stencil` additions
+    - [ ] Clear canvas to a particular color.
+        - Defaults to transparent
+        - Can be any color
     - [ ] Shapes
         - [ ] Arrowheads
         - [ ] Lines
