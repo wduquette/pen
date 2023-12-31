@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * A JTcl Command argument list, packaged for convenient processing.
  */
-public class ArgQ {
+public class Argq {
     //-------------------------------------------------------------------------
     // Instance Variables
 
@@ -25,7 +25,7 @@ public class ArgQ {
      * @param prefixTokens The number of prefix tokens.
      * @throws IllegalArgumentException if args.length < prefixTokens
      */
-    public ArgQ(TclObject[] args, int prefixTokens) {
+    public Argq(TclObject[] args, int prefixTokens) {
         if (args.length < prefixTokens) {
             throw new IllegalStateException("prefixTokens exceeds the array length");
         }

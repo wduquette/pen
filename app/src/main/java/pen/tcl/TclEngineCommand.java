@@ -43,7 +43,7 @@ public class TclEngineCommand implements Command {
     @Override
     public void cmdProc(Interp interp, TclObject[] args) throws TclException {
         try {
-            proc.run(engine, new ArgQ(args, prefixTokens));
+            proc.run(engine, new Argq(args, prefixTokens));
         } catch (TclException ex) {
             throw ex;
         } catch (Exception ex) {

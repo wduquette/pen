@@ -9,5 +9,5 @@ public interface TclEngineProc {
      * @param argq The argument queue
      * @throws TclException on error
      */
-    void run(TclEngine engine, ArgQ argq) throws TclException;
+    void run(TclEngine engine, Argq argq) throws TclException;
 }

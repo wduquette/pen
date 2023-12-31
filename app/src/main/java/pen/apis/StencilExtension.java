@@ -2,8 +2,10 @@ package pen.apis;
 
 import javafx.geometry.Pos;
 import pen.stencil.Stencil;
+import pen.stencil.Style;
+import pen.stencil.StyleBase;
 import pen.stencil.StyleMap;
-import pen.tcl.ArgQ;
+import pen.tcl.Argq;
 import pen.tcl.TclEngine;
 import tcl.lang.TclException;
 
@@ -36,19 +38,66 @@ public class StencilExtension {
         // stencil style *
         var style = sten.ensemble("style");
         style.add("cget", this::cmd_stencilStyleCget);
+        style.add("configure", this::cmd_stencilStyleConfigure);
+        style.add("create", this::cmd_stencilStyleCreate);
         style.add("names", this::cmd_stencilStyleNames);
-
     }
 
     //-------------------------------------------------------------------------
     // Ensemble: stencil *
 
-    private void cmd_stencilTest(TclEngine tcl, ArgQ argq) {
+    private void cmd_stencilTest(TclEngine tcl, Argq argq) {
         stencil.draw(rect().at(10,10).size(100,60));
         stencil.draw(label().at(60,40).pos(Pos.CENTER).text("Stencil Test"));
     }
 
-    private void cmd_stencilStyleCget(TclEngine tcl, ArgQ argq)
+    // stencil style create name ?option value...?
+    private void cmd_stencilStyleCreate(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkMinArgs(argq, 1, "name ?option value...?");
+        var name = argq.next().toString();
+        var style = styleMap.make(name);
+
+        while (argq.hasNext()) {
+            var opt = argq.next().toString();
+            parseStyleOption(style, opt, argq);
+        }
+    }
+
+    // stencil style configure name ?option value...?
+    private void cmd_stencilStyleConfigure(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkMinArgs(argq, 1, "name ?option value...?");
+        var name = argq.next().toString();
+        if (!styleMap.hasStyle(name)) {
+            throw tcl.expected("style", name);
+        }
+        var style = styleMap.get(name);
+
+        while (argq.hasNext()) {
+            var opt = argq.next().toString();
+            parseStyleOption(style, opt, argq);
+        }
+    }
+
+    private void parseStyleOption(StyleBase<?> style, String opt, Argq argq)
+        throws TclException
+    {
+
+        switch (opt) {
+            case "-background" -> style.background(tcl.toColor(opt, argq));
+            case "-font"       -> throw tcl.error("TODO");
+            case "-foreground" -> style.foreground(tcl.toColor(opt, argq));
+            case "-linewidth"  -> style.lineWidth(tcl.toDouble(opt, argq));
+            case "-textcolor"  -> style.textColor(tcl.toColor(opt, argq));
+            default -> throw tcl.badValue("unknown option", opt);
+        }
+    }
+
+    // stencil style cget name ?option?
+    private void cmd_stencilStyleCget(TclEngine tcl, Argq argq)
         throws TclException
     {
         tcl.checkArgs(argq, 1, 2, "name ?option?");
@@ -63,23 +112,12 @@ public class StencilExtension {
             var opt = argq.next().toString();
 
             switch (opt) {
-                case "-background":
-                    tcl.setResult(style.getBackground().toString());
-                    break;
-                case "-font":
-                    tcl.setResult("TODO");
-                    break;
-                case "-foreground":
-                    tcl.setResult(style.getForeground().toString());
-                    break;
-                case "-linewidth":
-                    tcl.setResult(style.getLineWidth());
-                    break;
-                case "-textcolor":
-                    tcl.setResult(style.getTextColor().toString());
-                    break;
-                default:
-                    throw tcl.expected("style option", opt);
+                case "-background" -> tcl.setResult(style.getBackground().toString());
+                case "-font"       -> tcl.setResult("TODO");
+                case "-foreground" -> tcl.setResult(style.getForeground().toString());
+                case "-linewidth"  -> tcl.setResult(style.getLineWidth());
+                case "-textcolor"  -> tcl.setResult(style.getTextColor().toString());
+                default            -> throw tcl.expected("style option", opt);
             }
         } else {
             tcl.setResult(tcl.list()
@@ -97,7 +135,7 @@ public class StencilExtension {
         }
     }
 
-    private void cmd_stencilStyleNames(TclEngine tcl, ArgQ argq)
+    private void cmd_stencilStyleNames(TclEngine tcl, Argq argq)
         throws TclException
     {
         tcl.checkArgs(argq, 0, 0, "");

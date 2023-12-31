@@ -96,4 +96,9 @@ public class StyleBase<Self extends StyleBase<Self>> {
         this.lineWidth = pixels;
         return (Self)this;
     }
+
+    public Self textColor(Paint color) {
+        this.textColor = color;
+        return (Self)this;
+    }
 }

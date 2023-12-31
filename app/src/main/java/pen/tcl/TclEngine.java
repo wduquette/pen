@@ -1,5 +1,6 @@
 package pen.tcl;
 
+import javafx.scene.paint.Color;
 import tcl.lang.*;
 
 import java.io.File;
@@ -108,21 +109,49 @@ public class TclEngine {
     //-------------------------------------------------------------------------
     // Helpers: Argument Processing
 
-    public void checkArgs(ArgQ argq, int argMin, int argMax, String argSig)
+    public void checkArgs(Argq argq, int argMin, int argMax, String argSig)
         throws TclException
     {
         if (argq.size() < argMin || argq.size() > argMax) {
-            var prefix = TclList.newInstance();
-            for (int i = 0; i < argq.getPrefixTokens(); i++) {
-                TclList.append(interp, prefix, argq.asCommandArray()[i]);
-            }
-            throw error("wrong # args: should be \"" + prefix + " " +
-                argSig + "\"");
+            throw wrongNumArgs(argq, argSig);
         }
+    }
+
+    public void checkMinArgs(Argq argq, int argMin, String argSig)
+        throws TclException
+    {
+        if (argq.size() < argMin) {
+            throw wrongNumArgs(argq, argSig);
+        }
+    }
+
+
+    public TclObject toOptArg(String opt, Argq argq) throws TclException {
+        if (argq.hasNext()) {
+            return argq.next();
+        } else {
+            throw error("missing value for option " + opt);
+        }
+    }
+
+    public Color toColor(TclObject arg) throws TclException {
+        try {
+            return Color.valueOf(arg.toString());
+        } catch (Exception ex) {
+            throw expected("color", arg);
+        }
+    }
+
+    public Color toColor(String opt, Argq argq) throws TclException {
+        return toColor(toOptArg(opt, argq));
     }
 
     public double toDouble(TclObject arg) throws TclException {
         return TclDouble.get(interp, arg);
+    }
+
+    public double toDouble(String opt, Argq argq) throws TclException {
+        return TclDouble.get(interp, toOptArg(opt, argq));
     }
 
     public <E extends Enum<E>> E toEnum(Class<E> cls, TclObject arg)
@@ -245,6 +274,29 @@ public class TclEngine {
     public TclException expected(String name, Object value) {
         return new TclEngineException(this,
             "Expected " + name + ", got \"" + value + "\"");
+    }
+
+    public TclException badValue(String message, Object value) {
+        return new TclEngineException(this,
+            message + ": \"" + value + "\"");
+    }
+
+    public TclException wrongNumArgs(Argq argq, String argSig) {
+        return error("wrong # args: should be \"" +
+            commandPrefix(argq) + " " + argSig + "\"");
+    }
+
+    public String commandPrefix(Argq argq) {
+        var prefix = TclList.newInstance();
+
+        try {
+            for (int i = 0; i < argq.getPrefixTokens(); i++) {
+                TclList.append(interp, prefix, argq.asCommandArray()[i]);
+            }
+            return prefix.toString();
+        } catch (Exception ex) {
+            throw new IllegalStateException("list failure");
+        }
     }
 
     //-------------------------------------------------------------------------
