@@ -1,44 +1,41 @@
-- [x] Code to save canvas content to PNG file
-- [ ] JTcl Stuff
-    - Tcl Helpers (add as needed by bindings)
-        - Argument parsers
-        - Option value parsers
-        - `setResult` methods
-        - Error handling methods
-    - [ ] Fork JTcl and simplify (it's too darn big!)
-        - [ ] Create minimal .jar by hand, to assess actual size
-- [ ] Tcl bindings
-    - [ ] `pen` for `Pen` class 
-    - `stencil` for `Stencil` class
-        - As features are added
-        - [x] Minimal binding
-- [ ] Pen Application
-    - [x] App with subcommands
-        - See destiny2 app
-    - [x] Improve app architecture; the current `Tool` architecture isn't great.
-    - [ ] `draw` subcommand
+- [ ] `pen` Application
+    -  `draw` tool
+        - [x] Code to save canvas content to PNG file
         - [x] Executes a single script, saves a single PNG file
         - [ ] Executes multiple Tcl scripts, saves PNG files
-    - [ ] `view` subcommand
+    - `view` tool
         - [x] Executes Tcl script, shows drawing
         - [ ] Display read/eval errors in GUI, side by side with image.
         - [ ] Support browsing a list of Tcl scripts
-    - [ ] `demo` subcommand
+    - `demo` tool
         - [x] Current test app runs as `pen demo`
         - [ ] Pick from drawings done with Java API
             - [ ] Or, possible, from example scripts.
     - [ ] Proper installation
-- [ ] `Pen` additions
-    - [ ] Add all `GraphicsContext` methods.
+    - [ ] `shell` tool — stretch goal
+        - JTcl shell, for general Stencil scripting.
+        - Might need to define `stencil` objects.
+- `Pen` 
+    - Add remaining `GraphicsContext` methods, as needed.
     - [ ] Line types (dash, dot, solid, at least)
-    - [ ] Add other features as necessary.
-- [ ] `Stencil` additions
+- `Stencil` 
     - [ ] Clear canvas to a particular color.
         - Defaults to transparent
         - Can be any color
+        - Client doesn't need to know canvas size.
+        - Doesn't affect computed bounds.
     - [ ] Shapes
         - [ ] Arrowheads
-        - [ ] Lines
         - [ ] Polygons
         - [ ] Rounded rectangles
-    - [ ] Position support for shapes
+    - [ ] Position support for relevant shapes
+- [ ] Tcl bindings
+    - [ ] `font` for managing fonts
+    - Update `stencil` for `Stencil` class, as features are added.
+        - [ ] Add named font support
+    - [ ] `pen` for `Pen` class 
+    - Enum commands?
+- JTcl
+    - Add helpers as needed by bindings.
+    - [ ] Fork JTcl and simplify (it's too darn big!)
+        - [ ] Create minimal .jar by hand, to assess actual size
