@@ -167,6 +167,71 @@ public class TclEngine {
     }
 
     //-------------------------------------------------------------------------
+    // TclList Builder
+
+    public TclListBuilder list() {
+        return new TclListBuilder();
+    }
+
+    public class TclListBuilder {
+        private final TclObject result = TclList.newInstance();
+
+        public TclObject get() {
+            return result;
+        }
+
+        public TclListBuilder item(TclObject value)
+            throws TclException
+        {
+            TclList.append(interp, result, value);
+            return this;
+        }
+
+        public TclListBuilder item(boolean value)
+            throws TclException
+        {
+            TclList.append(interp, result, TclBoolean.newInstance(value));
+            return this;
+        }
+
+        public TclListBuilder item(double value)
+            throws TclException
+        {
+            TclList.append(interp, result, TclDouble.newInstance(value));
+            return this;
+        }
+
+        public TclListBuilder item(long value)
+            throws TclException
+        {
+            TclList.append(interp, result, TclInteger.newInstance(value));
+            return this;
+        }
+
+        public TclListBuilder item(String value)
+            throws TclException
+        {
+            TclList.append(interp, result, TclString.newInstance(value));
+            return this;
+        }
+
+        public TclListBuilder item(Enum<?> symbol)
+            throws TclException
+        {
+            TclList.append(interp, result,
+                TclString.newInstance(symbol.toString().toLowerCase()));
+            return this;
+        }
+
+        public TclListBuilder item(List<String> list)
+            throws TclException
+        {
+            TclList.append(interp, result, list2tclList(list));
+            return this;
+        }
+    }
+
+    //-------------------------------------------------------------------------
     // Helpers: Exceptions
 
     public TclException error(String message) {
