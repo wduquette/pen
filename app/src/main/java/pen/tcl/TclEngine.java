@@ -3,11 +3,12 @@ package pen.tcl;
 import tcl.lang.*;
 
 import java.io.File;
-import java.util.function.Function;
+import java.util.List;
 
 /**
  * A wrapper for the JTcl Interp, focusing on the needs of embedding.
  */
+@SuppressWarnings("unused")
 public class TclEngine {
     //-------------------------------------------------------------------------
     // Instance Variables
@@ -161,6 +162,9 @@ public class TclEngine {
         interp.setResult(symbol.toString().toLowerCase());
     }
 
+    public void setResult(List<String> list) {
+        interp.setResult(list2tclList(list));
+    }
 
     //-------------------------------------------------------------------------
     // Helpers: Exceptions
@@ -177,4 +181,22 @@ public class TclEngine {
         return new TclEngineException(this,
             "Expected " + name + ", got \"" + value + "\"");
     }
+
+    //-------------------------------------------------------------------------
+    // Helpers: Type Conversions
+
+    public TclObject list2tclList(List<String> list) {
+        var result = TclList.newInstance();
+
+        try {
+            for (var item : list) {
+                TclList.append(interp, result, TclString.newInstance(item));
+            }
+        } catch (TclException ex) {
+            throw new IllegalStateException("Unexpected failure", ex);
+        }
+
+        return result;
+    }
+
 }

@@ -45,6 +45,10 @@ public class StyleMap {
         return style;
     }
 
+    public boolean hasStyle(String name) {
+        return map.containsKey(name);
+    }
+
     /**
      * Gets the style with the given name, creating it if need be.
      * @param name The name
