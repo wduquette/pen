@@ -36,6 +36,19 @@ public class StencilLine
         return to(new Point2D(x,y));
     }
 
+    public StencilLine toX(double x) {
+        return to(new Point2D(x,last().getY()));
+    }
+
+    public StencilLine toY(double y) {
+        return to(new Point2D(last().getX(),y));
+    }
+
+    public StencilLine points(List<Point2D> points) {
+        this.points.addAll(points);
+        return this;
+    }
+
     public Bounds draw(Stencil stencil) {
         stencil.pen().save()
             .setStroke(getForeground())
@@ -44,5 +57,11 @@ public class StencilLine
             .restore();
 
         return Pen.boundsOf(points);
+    }
+
+    private Point2D last() {
+        return points.isEmpty()
+            ? Point2D.ZERO
+            : points.get(points.size() - 1);
     }
 }

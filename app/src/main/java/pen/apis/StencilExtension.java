@@ -8,8 +8,7 @@ import pen.tcl.Argq;
 import pen.tcl.TclEngine;
 import tcl.lang.TclException;
 
-import static pen.stencil.Stencil.label;
-import static pen.stencil.Stencil.rect;
+import static pen.stencil.Stencil.*;
 
 public class StencilExtension {
     public static final String NORMAL = "normal";
@@ -32,9 +31,10 @@ public class StencilExtension {
         // stencil *
         var sten = engine.ensemble("stencil");
 
-        sten.add("test", this::cmd_stencilTest);
+        sten.add("test",  this::cmd_stencilTest);
         sten.add("label", this::cmd_stencilLabel);
-        sten.add("rect", this::cmd_stencilRect);
+        sten.add("line",  this::cmd_stencilLine);
+        sten.add("rect",  this::cmd_stencilRect);
 
         // stencil style *
         var style = sten.ensemble("style");
@@ -71,6 +71,32 @@ public class StencilExtension {
             switch (opt) {
                 case "-at" -> obj.at(tcl.toPoint(opt, argq));
                 case "-pos" -> obj.pos(tcl.toEnum(Pos.class, opt, argq));
+                default -> parseStyleOption(obj, opt, argq);
+            }
+        }
+
+        stencil.draw(obj);
+    }
+
+    // stencil line ?option value?...
+    // stencil line ?optionList?
+    private void cmd_stencilLine(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        var obj = line();
+
+        // If we were provided the options and values as a list, convert it to
+        // an Argq.  Note: we lose the command prefix.
+        argq = argq.argsLeft() != 1 ? argq : tcl.toArgq(argq.next());
+
+        while (argq.hasNext()) {
+            var opt = argq.next().toString();
+
+            switch (opt) {
+                case "-to" -> obj.to(tcl.toPoint(opt, argq));
+                case "-tox" -> obj.toX(tcl.toDouble(opt, argq));
+                case "-toy" -> obj.toY(tcl.toDouble(opt, argq));
+                case "-points" -> obj.points(tcl.toPointList(opt, argq));
                 default -> parseStyleOption(obj, opt, argq);
             }
         }

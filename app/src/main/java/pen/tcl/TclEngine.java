@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import tcl.lang.*;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -216,6 +217,23 @@ public class TclEngine {
 
     public Point2D toPoint(String opt, Argq argq) throws TclException {
         return toPoint(toOptArg(opt, argq));
+    }
+
+    public List<Point2D> toPointList(TclObject arg) throws TclException {
+        var q = toArgq(arg);
+        var list = new ArrayList<Point2D>();
+
+        while (q.hasNext()) {
+            list.add(toPoint(q.next()));
+        }
+
+        return list;
+    }
+
+    public List<Point2D> toPointList(String opt, Argq argq)
+        throws TclException
+    {
+        return toPointList(toOptArg(opt, argq));
     }
 
     /**
