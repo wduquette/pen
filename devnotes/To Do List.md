@@ -1,3 +1,7 @@
+- Next Steps
+    - [ ] `font *` ensemble
+    - [ ] Support `-font` style option
+    - [ ] `stencil clear ?color?` command
 - [ ] `pen` Application
     -  `draw` tool
         - [x] Code to save canvas content to PNG file
