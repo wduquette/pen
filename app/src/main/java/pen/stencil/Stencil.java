@@ -95,6 +95,10 @@ public class Stencil {
         return new StencilLabel();
     }
 
+    public static StencilLine line() {
+        return new StencilLine();
+    }
+
     public static StencilRect rect() {
         return new StencilRect();
     }

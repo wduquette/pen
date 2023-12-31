@@ -7,6 +7,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+import java.util.List;
+
 /**
  * A wrapper for the JavaFX GraphicsContext
  */
@@ -113,6 +115,26 @@ public class Pen {
     }
 
     //
+    // Lines
+    //
+
+    public Pen strokePolyline(double[] xPoints, double[] yPoints, int nPoints) {
+        gc.strokePolyline(xPoints, yPoints, nPoints);
+        return this;
+    }
+
+    public Pen strokePolyline(List<Point2D> points) {
+        double[] xPoints = new double[points.size()];
+        double[] yPoints = new double[points.size()];
+
+        for (int i = 0; i < points.size(); i++) {
+            xPoints[i] = points.get(i).getX();
+            yPoints[i] = points.get(i).getY();
+        }
+        return strokePolyline(xPoints, yPoints, points.size());
+    }
+
+    //
     // Rectangles
     //
 
@@ -212,6 +234,31 @@ public class Pen {
         var x1 = Math.ceil(Math.max(a.getMaxX(), b.getMaxX()));
         var y0 = Math.floor(Math.min(a.getMinY(), b.getMinY()));
         var y1 = Math.ceil(Math.max(a.getMaxY(), b.getMaxY()));
+
+        return new BoundingBox(x0, y0, x1 - x0, y1 - y0);
+    }
+
+    /**
+     * Computes a bounding box just large enough to contain all the points.
+     * @param points The points
+     * @return The bounds, or null if there are no points
+     */
+    public static Bounds boundsOf(List<Point2D> points) {
+        if (points.isEmpty()) {
+            return null;
+        }
+
+        var x0 = points.get(0).getX();
+        var x1 = points.get(0).getX();
+        var y0 = points.get(0).getY();
+        var y1 = points.get(0).getY();
+
+        for (var p : points) {
+            x0 = Math.min(x0, p.getX());
+            x1 = Math.max(x1, p.getX());
+            y0 = Math.min(y0, p.getY());
+            y1 = Math.max(y1, p.getY());
+        }
 
         return new BoundingBox(x0, y0, x1 - x0, y1 - y0);
     }

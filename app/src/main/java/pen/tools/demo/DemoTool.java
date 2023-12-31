@@ -17,8 +17,7 @@ import pen.tools.draw.DrawTool;
 import java.io.File;
 import java.io.IOException;
 
-import static pen.stencil.Stencil.label;
-import static pen.stencil.Stencil.rect;
+import static pen.stencil.Stencil.*;
 
 public class DemoTool extends Application {
     public static final ToolInfo INFO = new ToolInfo(
@@ -75,6 +74,8 @@ Java API.
                 .background(Color.LIGHTYELLOW)
                 .foreground(Color.PURPLE)
                 .lineWidth(2))
+            .draw(line().to(100,100).to(100 + w, 100 + h))
+            .draw(line().to(100,100 + h).to(100 + w, 100))
             .draw(rect().at(50, 50)
                 .size(dim.getWidth(), dim.getHeight()))
             .draw(label().at(50, 50)
