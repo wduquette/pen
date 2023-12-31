@@ -82,18 +82,18 @@ public class StencilExtension {
                     throw tcl.expected("style option", opt);
             }
         } else {
-            // TODO: Need TclListMolder molder
-            tcl.setResult("");
-            tcl.interp().appendElement("-background");
-            tcl.interp().appendElement(style.getBackground().toString());
-            tcl.interp().appendElement("-font");
-            tcl.interp().appendElement("TODO");
-            tcl.interp().appendElement("-foreground");
-            tcl.interp().appendElement(style.getForeground().toString());
-            tcl.interp().appendElement("-linewidth");
-            tcl.interp().appendElement(Double.toString(style.getLineWidth()));
-            tcl.interp().appendElement("-textcolor");
-            tcl.interp().appendElement(style.getTextColor().toString());
+            tcl.setResult(tcl.list()
+                .item("-background")
+                .item(style.getBackground().toString())
+                .item("-font")
+                .item("TODO")
+                .item("-foreground")
+                .item(style.getForeground().toString())
+                .item("-linewidth")
+                .item(Double.toString(style.getLineWidth()))
+                .item("-textcolor")
+                .item(style.getTextColor().toString())
+                .get());
         }
     }
 
