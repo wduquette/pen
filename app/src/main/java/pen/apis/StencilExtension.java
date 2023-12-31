@@ -52,13 +52,18 @@ public class StencilExtension {
         stencil.draw(label().at(60,40).pos(Pos.CENTER).text("Stencil Test"));
     }
 
-    // stencil label text ?option value...?
+    // stencil label text ?option value?...
+    // stencil label text ?optionList?
     private void cmd_stencilLabel(TclEngine tcl, Argq argq)
         throws TclException
     {
         tcl.checkMinArgs(argq, 1, "text ?option value?...");
         var obj = label();
         obj.text(argq.next().toString());
+
+        // If we were provided the options and values as a list, convert it to
+        // an Argq.  Note: we lose the command prefix.
+        argq = argq.argsLeft() != 1 ? argq : tcl.toArgq(argq.next());
 
         while (argq.hasNext()) {
             var opt = argq.next().toString();
@@ -79,6 +84,10 @@ public class StencilExtension {
     {
         var rect = rect();
 
+        // If we were provided the options and values as a list, convert it to
+        // an Argq.  Note: we lose the command prefix.
+        argq = argq.argsLeft() != 1 ? argq : tcl.toArgq(argq.next());
+
         while (argq.hasNext()) {
             var opt = argq.next().toString();
 
@@ -92,7 +101,8 @@ public class StencilExtension {
         stencil.draw(rect);
     }
 
-    // stencil style create name ?option value...?
+    // stencil style create name ?option value?...
+    // stencil style create name ?optionList?
     private void cmd_stencilStyleCreate(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -100,13 +110,18 @@ public class StencilExtension {
         var name = argq.next().toString();
         var style = styleMap.make(name);
 
+        // If we were provided the options and values as a list, convert it to
+        // an Argq.  Note: we lose the command prefix.
+        argq = argq.argsLeft() != 1 ? argq : tcl.toArgq(argq.next());
+
         while (argq.hasNext()) {
             var opt = argq.next().toString();
             parseStyleOption(style, opt, argq);
         }
     }
 
-    // stencil style configure name ?option value...?
+    // stencil style configure name ?option value?...
+    // stencil style configure name ?optionList?
     private void cmd_stencilStyleConfigure(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -116,6 +131,10 @@ public class StencilExtension {
             throw tcl.expected("style", name);
         }
         var style = styleMap.get(name);
+
+        // If we were provided the options and values as a list, convert it to
+        // an Argq.  Note: we lose the command prefix.
+        argq = argq.argsLeft() != 1 ? argq : tcl.toArgq(argq.next());
 
         while (argq.hasNext()) {
             var opt = argq.next().toString();
@@ -183,5 +202,4 @@ public class StencilExtension {
 
         tcl.setResult(styleMap.getNames());
     }
-
 }

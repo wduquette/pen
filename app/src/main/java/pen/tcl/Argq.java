@@ -126,19 +126,20 @@ public class Argq {
     public String toString() {
         var prefix = new ArrayList<String>();
         var tokens = new ArrayList<String>();
+        int tokenCount = 0;
         for (int i = 0; i < args.length; i++) {
             if (i < prefixTokens) {
                 prefix.add(args[i].toString());
             } else {
-                tokens.add(args[i].toString());
+                tokens.add(tokenCount++ + ":[" + args[i].toString() + "]");
             }
         }
 
         var buff = new StringBuilder();
         buff.append(String.join(",", prefix));
         if (!tokens.isEmpty()) {
-            buff.append(":")
-                .append(String.join(",", tokens));
+            buff.append(",");
+            buff.append(String.join(",", tokens));
         }
 
         return buff.toString();

@@ -127,6 +127,15 @@ public class TclEngine {
         }
     }
 
+    /**
+     * Given a Tcl List, returns the list as an Argq with no prefix tokens.
+     * @param arg The Tcl list
+     * @return The Argq
+     * @throws TclException on list error
+     */
+    public Argq toArgq(TclObject arg) throws TclException {
+        return new Argq(TclList.getElements(interp, arg), 0);
+    }
 
     public TclObject toOptArg(String opt, Argq argq) throws TclException {
         if (argq.hasNext()) {
