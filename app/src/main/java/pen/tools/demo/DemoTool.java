@@ -6,17 +6,12 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pen.tools.ToolInfo;
 import pen.stencil.Pen;
 import pen.stencil.Stencil;
-import pen.stencil.StencilBuffer;
 import pen.stencil.StencilDrawing;
 import pen.tools.draw.DrawTool;
-
-import java.io.File;
-import java.io.IOException;
 
 import static pen.stencil.Stencil.*;
 

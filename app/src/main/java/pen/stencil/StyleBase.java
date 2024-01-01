@@ -2,7 +2,6 @@ package pen.stencil;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
 
 /**
  * A collection of style parameters used by Stencil shapes.  It
@@ -20,7 +19,7 @@ public class StyleBase<Self extends StyleBase<Self>> {
     // Instance Variables
 
     private Paint background = Color.TRANSPARENT;
-    private Font font = Pen.DEFAULT_FONT;
+    private StencilFont font = StencilFont.SANS12;
     private Paint foreground = Color.BLACK;
     private double lineWidth = 1;
     private Paint textColor = Color.BLACK;
@@ -53,7 +52,7 @@ public class StyleBase<Self extends StyleBase<Self>> {
         return background;
     }
 
-    public Font getFont() {
+    public StencilFont getFont() {
         return font;
     }
 
@@ -82,7 +81,7 @@ public class StyleBase<Self extends StyleBase<Self>> {
         return (Self)this;
     }
 
-    public Self font(Font font) {
+    public Self font(StencilFont font) {
         this.font = font;
         return (Self)this;
     }

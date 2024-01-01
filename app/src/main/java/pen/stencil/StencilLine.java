@@ -1,8 +1,6 @@
 package pen.stencil;
 
-import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
-import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
