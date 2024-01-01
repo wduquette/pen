@@ -211,7 +211,7 @@ public class StencilExtension {
 
             switch (opt) {
                 case "-background" -> tcl.setResult(style.getBackground().toString());
-                case "-font"       -> tcl.setResult(font2name(style.getFont()));
+                case "-font"       -> tcl.setResult(style.getFont().getName());
                 case "-foreground" -> tcl.setResult(style.getForeground().toString());
                 case "-linewidth"  -> tcl.setResult(style.getLineWidth());
                 case "-textcolor"  -> tcl.setResult(style.getTextColor().toString());
@@ -222,7 +222,7 @@ public class StencilExtension {
                 .item("-background")
                 .item(style.getBackground().toString())
                 .item("-font")
-                .item(font2name(style.getFont()))
+                .item(style.getFont().getName())
                 .item("-foreground")
                 .item(style.getForeground().toString())
                 .item("-linewidth")
@@ -350,10 +350,4 @@ public class StencilExtension {
     public PenFont toFont(String opt, Argq argq) throws TclException {
         return toFont(tcl.toOptArg(opt, argq));
     }
-
-    public String font2name(PenFont font) throws TclException {
-        return fontMap.nameOf(font).orElseThrow(
-            () -> tcl.error("unknown font"));
-    }
-
 }

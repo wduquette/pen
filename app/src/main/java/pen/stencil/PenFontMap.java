@@ -3,18 +3,21 @@ package pen.stencil;
 import java.util.*;
 
 /**
- * A class for accumulating named fonts; for used by Tcl extensions.
+ * A class for accumulating {@link PenFont} instances by assigned name.
  */
 public class PenFontMap {
     //-------------------------------------------------------------------------
     // Instance Variables
 
+    // The fonts by name
     private final Map<String, PenFont> name2font = new TreeMap<>();
-    private final Map<PenFont, String> font2name = new HashMap<>();
 
     //-------------------------------------------------------------------------
     // Constructor
 
+    /**
+     * Creates a new font map containing the three standard fonts.
+     */
     public PenFontMap() {
         putFont(PenFont.SANS12);
         putFont(PenFont.SERIF12);
@@ -24,14 +27,29 @@ public class PenFontMap {
     //-------------------------------------------------------------------------
     // Accessors
 
+    /**
+     * Gets the list of the names of the defined fonts.
+     * @return The list
+     */
     public List<String> getNames() {
         return new ArrayList<>(name2font.keySet());
     }
 
+    /**
+     * Gets whether there is a font with the given client-assigned name.
+     * @param name The name
+     * @return True or false
+     */
     public boolean hasFont(String name) {
         return name2font.containsKey(name);
     }
 
+    /**
+     * Gets the font with the given client-assigned name.
+     * @param name The name
+     * @return The font.
+     * @throws IllegalArgumentException if there is no such font.
+     */
     public PenFont getFont(String name) {
         var font = name2font.get(name);
         if (font == null) {
@@ -41,17 +59,12 @@ public class PenFontMap {
         return font;
     }
 
+    /**
+     * Puts the font into the font map.  The font will replace any existing
+     * font with the same name.
+     * @param font The font
+     */
     public void putFont(PenFont font) {
-        if (hasFont(font.getName())) {
-            throw new IllegalArgumentException(
-                "Font already exists: \"" + font.getName() + "\"");
-        }
-
         name2font.put(font.getName(), font);
-        font2name.put(font, font.getName());
-    }
-
-    public Optional<String> nameOf(PenFont font) {
-        return Optional.ofNullable(font2name.get(font));
     }
 }
