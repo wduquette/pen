@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "To Do List.md",
+                "file": "2024-01-01.md",
                 "mode": "source",
                 "source": true
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "To Do List.md",
+                "file": "2024-01-01.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "To Do List.md",
+                "file": "2024-01-01.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "To Do List.md"
+                "file": "2024-01-01.md"
               }
             }
           }
@@ -150,6 +150,7 @@
   },
   "active": "458cb8c7314a8319",
   "lastOpenFiles": [
+    "To Do List.md",
     "Ideas.md",
     "Stencil Bounds Aggregation.md",
     "Output Color Names.md",
@@ -158,7 +159,6 @@
     "Home.md",
     "2023-12-31.md",
     "2023-12-30.md",
-    "To Do List.md",
     "Fancy Label Shape.md",
     "Pondering.md",
     "Catalog of Shapes.md",
