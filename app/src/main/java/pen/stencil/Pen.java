@@ -17,7 +17,7 @@ public class Pen {
     /**
      * Default font.
      */
-    public static final Font DEFAULT_FONT = Font.font("sans-serif", 12);
+    public static final PenFont DEFAULT_FONT = PenFont.SANS12;
 
     //-------------------------------------------------------------------------
     //  Instance Variables
@@ -29,7 +29,7 @@ public class Pen {
 
     public Pen(GraphicsContext gc) {
         this.gc = gc;
-        gc.setFont(DEFAULT_FONT);
+        gc.setFont(DEFAULT_FONT.getRealFont());
     }
 
     //-------------------------------------------------------------------------
@@ -73,6 +73,11 @@ public class Pen {
 
     public Pen setFont(Font font) {
         gc.setFont(font);
+        return this;
+    }
+
+    public Pen setFont(PenFont font) {
+        gc.setFont(font.getRealFont());
         return this;
     }
 
@@ -156,26 +161,26 @@ public class Pen {
     //-------------------------------------------------------------------------
     // Static Helpers
 
-    public static Dimension2D getTextSize(Font font, String text) {
+    public static Dimension2D getTextSize(PenFont font, String text) {
         var node = new Text();
         node.setText(text);
-        node.setFont(font);
+        node.setFont(font.getRealFont());
         var bounds = node.getLayoutBounds();
         return new Dimension2D(bounds.getWidth(), bounds.getHeight());
     }
 
-    public static double getTextWidth(Font font, String text) {
+    public static double getTextWidth(PenFont font, String text) {
         var node = new Text();
         node.setText(text);
-        node.setFont(font);
+        node.setFont(font.getRealFont());
         var bounds = node.getLayoutBounds();
         return bounds.getWidth();
     }
 
-    public static double getTextHeight(Font font, String text) {
+    public static double getTextHeight(PenFont font, String text) {
         var node = new Text();
         node.setText(text);
-        node.setFont(font);
+        node.setFont(font.getRealFont());
         var bounds = node.getLayoutBounds();
         return bounds.getHeight();
     }

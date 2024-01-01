@@ -50,14 +50,14 @@ public class StencilLabel
         // FIRST, draw the text
         stencil.pen().save()
             .setFill(getTextColor())
-            .setFont(getFont().getRealFont())
+            .setFont(getFont())
             .setTextBaseline(pos.getVpos())
             .setTextAlign(Pen.pos2textAlign(pos))
             .fillText(text, x, y)
             .restore();
 
         // NEXT, compute the bounds.
-        var size = Pen.getTextSize(getFont().getRealFont(), text);
+        var size = Pen.getTextSize(getFont(), text);
         return Pen.pos2bounds(pos, x, y, size.getWidth(), size.getHeight());
     }
 }

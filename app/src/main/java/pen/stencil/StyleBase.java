@@ -19,7 +19,7 @@ public class StyleBase<Self extends StyleBase<Self>> {
     // Instance Variables
 
     private Paint background = Color.TRANSPARENT;
-    private StencilFont font = StencilFont.SANS12;
+    private PenFont font = PenFont.SANS12;
     private Paint foreground = Color.BLACK;
     private double lineWidth = 1;
     private Paint textColor = Color.BLACK;
@@ -52,7 +52,7 @@ public class StyleBase<Self extends StyleBase<Self>> {
         return background;
     }
 
-    public StencilFont getFont() {
+    public PenFont getFont() {
         return font;
     }
 
@@ -81,7 +81,7 @@ public class StyleBase<Self extends StyleBase<Self>> {
         return (Self)this;
     }
 
-    public Self font(StencilFont font) {
+    public Self font(PenFont font) {
         this.font = font;
         return (Self)this;
     }

@@ -8,12 +8,12 @@ import javafx.scene.text.FontWeight;
  * A font, as retrieved by family, weight, posture, and size
  */
 @SuppressWarnings("unused")
-public final class StencilFont {
-    public static final StencilFont SANS12 = new StencilFont.Builder("sans12")
+public final class PenFont {
+    public static final PenFont SANS12 = new PenFont.Builder("sans12")
         .family("sans-serif").size(12).build();
-    public static final StencilFont SERIF12 = new StencilFont.Builder("serif12")
+    public static final PenFont SERIF12 = new PenFont.Builder("serif12")
         .family("serif").size(12).build();
-    public static final StencilFont MONO12 = new StencilFont.Builder("mono12")
+    public static final PenFont MONO12 = new PenFont.Builder("mono12")
         .family("monospace").size(12).build();
 
     public static final String SANS = "sans-serif";
@@ -33,7 +33,7 @@ public final class StencilFont {
     //-------------------------------------------------------------------------
     // Constructor
 
-    private StencilFont(Builder builder) {
+    private PenFont(Builder builder) {
         this.name = builder.name;
         this.family = builder.family;
         this.weight = builder.weight;
@@ -85,7 +85,7 @@ public final class StencilFont {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        StencilFont that = (StencilFont) o;
+        PenFont that = (PenFont) o;
 
         if (Double.compare(that.size, size) != 0) return false;
         if (!name.equals(that.name)) return false;
@@ -123,8 +123,8 @@ public final class StencilFont {
             this.name = name;
         }
 
-        public StencilFont build() {
-            return new StencilFont(this);
+        public PenFont build() {
+            return new PenFont(this);
         }
 
         public Builder family(String family) {

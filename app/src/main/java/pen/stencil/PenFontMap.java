@@ -5,20 +5,20 @@ import java.util.*;
 /**
  * A class for accumulating named fonts; for used by Tcl extensions.
  */
-public class StencilFontMap {
+public class PenFontMap {
     //-------------------------------------------------------------------------
     // Instance Variables
 
-    private final Map<String, StencilFont> name2font = new TreeMap<>();
-    private final Map<StencilFont, String> font2name = new HashMap<>();
+    private final Map<String, PenFont> name2font = new TreeMap<>();
+    private final Map<PenFont, String> font2name = new HashMap<>();
 
     //-------------------------------------------------------------------------
     // Constructor
 
-    public StencilFontMap() {
-        putFont(StencilFont.SANS12);
-        putFont(StencilFont.SERIF12);
-        putFont(StencilFont.MONO12);
+    public PenFontMap() {
+        putFont(PenFont.SANS12);
+        putFont(PenFont.SERIF12);
+        putFont(PenFont.MONO12);
     }
 
     //-------------------------------------------------------------------------
@@ -32,7 +32,7 @@ public class StencilFontMap {
         return name2font.containsKey(name);
     }
 
-    public StencilFont getFont(String name) {
+    public PenFont getFont(String name) {
         var font = name2font.get(name);
         if (font == null) {
             throw new IllegalArgumentException(
@@ -41,7 +41,7 @@ public class StencilFontMap {
         return font;
     }
 
-    public void putFont(StencilFont font) {
+    public void putFont(PenFont font) {
         if (hasFont(font.getName())) {
             throw new IllegalArgumentException(
                 "Font already exists: \"" + font.getName() + "\"");
@@ -51,7 +51,7 @@ public class StencilFontMap {
         font2name.put(font, font.getName());
     }
 
-    public Optional<String> nameOf(StencilFont font) {
+    public Optional<String> nameOf(PenFont font) {
         return Optional.ofNullable(font2name.get(font));
     }
 }

@@ -21,7 +21,7 @@ public class StencilExtension {
     private final TclEngine tcl;
     private final Stencil stencil;
     private final StyleMap styleMap = new StyleMap();
-    private final StencilFontMap fontMap = new StencilFontMap();
+    private final PenFontMap fontMap = new PenFontMap();
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -297,7 +297,7 @@ public class StencilExtension {
             throw tcl.badValue("Invalid font name", name);
         }
 
-        var builder = new StencilFont.Builder(name);
+        var builder = new PenFont.Builder(name);
 
         while (argq.hasNext()) {
             var opt = argq.next().toString();
@@ -339,7 +339,7 @@ public class StencilExtension {
     //-------------------------------------------------------------------------
     // Helpers
 
-    public StencilFont toFont(TclObject arg) throws TclException {
+    public PenFont toFont(TclObject arg) throws TclException {
         var name = arg.toString();
         if (!fontMap.hasFont(name)) {
             throw tcl.expected("font name", name);
@@ -347,11 +347,11 @@ public class StencilExtension {
         return fontMap.getFont(name);
     }
 
-    public StencilFont toFont(String opt, Argq argq) throws TclException {
+    public PenFont toFont(String opt, Argq argq) throws TclException {
         return toFont(tcl.toOptArg(opt, argq));
     }
 
-    public String font2name(StencilFont font) throws TclException {
+    public String font2name(PenFont font) throws TclException {
         return fontMap.nameOf(font).orElseThrow(
             () -> tcl.error("unknown font"));
     }
