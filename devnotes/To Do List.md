@@ -1,6 +1,8 @@
+- Any time
+    - Review Javadoc
 - Next Steps
-    - [ ] `font *` ensemble
-    - [ ] Support `-font` style option
+    - [x] `font *` ensemble
+    - [x] Support `-font` style option
     - [ ] `stencil clear ?color?` command
 - [ ] `pen` Application
     -  `draw` tool
@@ -34,9 +36,9 @@
         - [ ] Rounded rectangles
     - [ ] Position support for relevant shapes
 - [ ] Tcl bindings
-    - [ ] `font` for managing fonts
+    - [x] `font` for managing fonts
     - Update `stencil` for `Stencil` class, as features are added.
-        - [ ] Add named font support
+        - [x] Add named font support
     - [ ] `pen` for `Pen` class 
     - Enum commands?
 - JTcl
