@@ -1,12 +1,17 @@
 package pen.apis;
 
 import javafx.geometry.Pos;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import pen.stencil.FontMap;
 import pen.stencil.Stencil;
 import pen.stencil.StyleBase;
 import pen.stencil.StyleMap;
 import pen.tcl.Argq;
 import pen.tcl.TclEngine;
 import tcl.lang.TclException;
+import tcl.lang.TclObject;
 
 import static pen.stencil.Stencil.*;
 
@@ -19,6 +24,7 @@ public class StencilExtension {
     private final TclEngine tcl;
     private final Stencil stencil;
     private final StyleMap styleMap = new StyleMap();
+    private final FontMap fontMap = new FontMap();
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -42,6 +48,15 @@ public class StencilExtension {
         style.add("configure", this::cmd_stencilStyleConfigure);
         style.add("create", this::cmd_stencilStyleCreate);
         style.add("names", this::cmd_stencilStyleNames);
+
+        // font *
+        var font = engine.ensemble("font");
+
+        font.add("cget", this::cmd_fontCget);
+        font.add("create", this::cmd_fontCreate);
+        font.add("exists", this::cmd_fontExists);
+        font.add("families", this::cmd_fontFamilies);
+        font.add("names",  this::cmd_fontNames);
     }
 
     //-------------------------------------------------------------------------
@@ -174,7 +189,7 @@ public class StencilExtension {
 
         switch (opt) {
             case "-background" -> style.background(tcl.toColor(opt, argq));
-            case "-font"       -> throw tcl.error("TODO");
+            case "-font"       -> style.font(toFont(opt, argq));
             case "-foreground" -> style.foreground(tcl.toColor(opt, argq));
             case "-linewidth"  -> style.lineWidth(tcl.toDouble(opt, argq));
             case "-textcolor"  -> style.textColor(tcl.toColor(opt, argq));
@@ -199,7 +214,7 @@ public class StencilExtension {
 
             switch (opt) {
                 case "-background" -> tcl.setResult(style.getBackground().toString());
-                case "-font"       -> tcl.setResult("TODO");
+                case "-font"       -> tcl.setResult(font2name(style.getFont()));
                 case "-foreground" -> tcl.setResult(style.getForeground().toString());
                 case "-linewidth"  -> tcl.setResult(style.getLineWidth());
                 case "-textcolor"  -> tcl.setResult(style.getTextColor().toString());
@@ -210,7 +225,7 @@ public class StencilExtension {
                 .item("-background")
                 .item(style.getBackground().toString())
                 .item("-font")
-                .item("TODO")
+                .item(font2name(style.getFont()))
                 .item("-foreground")
                 .item(style.getForeground().toString())
                 .item("-linewidth")
@@ -228,4 +243,121 @@ public class StencilExtension {
 
         tcl.setResult(styleMap.getNames());
     }
+
+    //-------------------------------------------------------------------------
+    // API: font *
+
+    // font cget name ?option?
+    private void cmd_fontCget(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkArgs(argq, 1, 2, "name ?-fullname|-family|-size?");
+        var name = argq.next().toString();
+
+        if (!fontMap.hasFont(name)) {
+            throw tcl.expected("font name", name);
+        }
+        var font = fontMap.getFont(name);
+
+        if (argq.hasNext()) {
+            var opt = argq.next().toString();
+
+            switch (opt) {
+                case "-fullname" -> tcl.setResult(font.getName());
+                case "-family"   -> tcl.setResult(font.getFamily());
+                case "-size"     -> tcl.setResult(font.getSize());
+                default          -> throw tcl.expected("font option", opt);
+            }
+        } else {
+            tcl.setResult(tcl.list()
+                .item("-fullname")
+                .item(font.getName())
+                .item("-family")
+                .item(font.getFamily())
+                .item("-size")
+                .item(font.getSize())
+                .get());
+        }
+    }
+    private void cmd_fontCreate(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkMinArgs(argq, 1, "name ?options...?");
+        var name = argq.next().toString();
+
+        // If we were provided the options and values as a list, convert it to
+        // an Argq.  Note: we lose the command prefix.
+        argq = argq.argsLeft() != 1 ? argq : tcl.toArgq(argq.next());
+
+        if (fontMap.hasFont(name)) {
+            throw tcl.badValue("Font already exists", name);
+        }
+
+        if (!name.matches("^[a-zA-Z]\\w*$")) {
+            throw tcl.badValue("Invalid font name", name);
+        }
+
+        var family = "sans-serif";
+        var size = 12.0;
+        var weight = FontWeight.NORMAL;
+        var posture = FontPosture.REGULAR;
+
+        while (argq.hasNext()) {
+            var opt = argq.next().toString();
+
+            switch (opt) {
+                case "-family" -> family = tcl.toString(opt, argq);
+                case "-size" -> size = tcl.toDouble(opt, argq);
+                case "-weight" -> weight = tcl.toEnum(FontWeight.class, opt, argq);
+                case "-posture" -> posture = tcl.toEnum(FontPosture.class, opt, argq);
+                default -> throw tcl.badValue("Unknown option", opt);
+            }
+        }
+
+        var font = Font.font(family, weight, posture, size);
+        fontMap.putFont(name, font);
+        tcl.setResult(name);
+    }
+
+    private void cmd_fontExists(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkArgs(argq, 1, 1, "name");
+        tcl.setResult(fontMap.hasFont(argq.next().toString()));
+    }
+
+    private void cmd_fontFamilies(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkArgs(argq, 0, 0, "");
+        tcl.setResult(Font.getFamilies());
+    }
+
+    private void cmd_fontNames(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkArgs(argq, 0, 0, "");
+        tcl.setResult(fontMap.getNames());
+    }
+
+    //-------------------------------------------------------------------------
+    // Helpers
+
+    public Font toFont(TclObject arg) throws TclException {
+        var name = arg.toString();
+        if (!fontMap.hasFont(name)) {
+            throw tcl.expected("font name", name);
+        }
+        return fontMap.getFont(name);
+    }
+
+    public Font toFont(String opt, Argq argq) throws TclException {
+        return toFont(tcl.toOptArg(opt, argq));
+    }
+
+    public String font2name(Font font) throws TclException {
+        return fontMap.nameOf(font).orElseThrow(
+            () -> tcl.error("unknown font"));
+    }
+
 }

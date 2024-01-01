@@ -148,6 +148,18 @@ public class TclEngine {
         }
     }
 
+    public String toString(String opt, Argq argq) throws TclException {
+        return toOptArg(opt, argq).toString();
+    }
+
+    public boolean toBoolean(TclObject arg) throws TclException {
+        return TclBoolean.get(interp, arg);
+    }
+
+    public boolean toBoolean(String opt, Argq argq) throws TclException {
+        return TclBoolean.get(interp, toOptArg(opt, argq));
+    }
+
     public Color toColor(TclObject arg) throws TclException {
         try {
             return Color.valueOf(arg.toString());
