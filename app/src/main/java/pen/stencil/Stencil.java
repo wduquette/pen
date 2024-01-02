@@ -2,6 +2,7 @@ package pen.stencil;
 
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Paint;
 
 import java.util.Optional;
 
@@ -49,6 +50,12 @@ public class Stencil {
      */
     public Stencil clear() {
         pen.clear();
+        clearDrawingBounds();
+        return this;
+    }
+
+    public Stencil clear(Paint color) {
+        pen.clear(color);
         clearDrawingBounds();
         return this;
     }

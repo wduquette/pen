@@ -50,6 +50,19 @@ public class Pen {
         return this;
     }
 
+    public Pen clear(Paint color) {
+        gc.clearRect(0, 0,
+            gc.getCanvas().getWidth(),
+            gc.getCanvas().getHeight());
+        gc.save();
+        gc.setFill(color);
+        gc.fillRect(0, 0,
+            gc.getCanvas().getWidth(),
+            gc.getCanvas().getHeight());
+        gc.restore();
+        return this;
+    }
+
     //-------------------------------------------------------------------------
     // DSL: save and restore
 

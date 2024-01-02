@@ -35,6 +35,7 @@ public class StencilExtension {
         var sten = engine.ensemble("stencil");
 
         sten.add("test",  this::cmd_stencilTest);
+        sten.add("clear", this::cmd_stencilClear);
         sten.add("label", this::cmd_stencilLabel);
         sten.add("line",  this::cmd_stencilLine);
         sten.add("rect",  this::cmd_stencilRect);
@@ -62,6 +63,19 @@ public class StencilExtension {
     private void cmd_stencilTest(TclEngine tcl, Argq argq) {
         stencil.draw(rect().at(10,10).size(100,60));
         stencil.draw(label().at(60,40).pos(Pos.CENTER).text("Stencil Test"));
+    }
+
+    private void cmd_stencilClear(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkArgs(argq, 0, 1, "?color?");
+
+        if (argq.hasNext()) {
+            var color = tcl.toColor(argq.next());
+            stencil.clear(color);
+        } else {
+            stencil.clear();
+        }
     }
 
     // stencil label text ?option value?...

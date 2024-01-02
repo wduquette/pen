@@ -3,6 +3,7 @@ package pen.tools.draw;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import pen.App;
+import pen.tcl.TclEngineException;
 import pen.tools.ToolInfo;
 import pen.apis.StencilExtension;
 import pen.stencil.Stencil;
@@ -21,7 +22,7 @@ public class DrawTool extends Application {
         "drawing.tcl",
         "Saves a pen drawing as a PNG file.",
         """
-Given a Pen drawing script, outputs the drawing as a 
+Given a Pen drawing script, outputs the drawing as a
 PNG file.""",
         DrawTool::main
     );
@@ -78,10 +79,9 @@ PNG file.""",
 
         try {
             engine.eval(script);
-        } catch (TclException ex) {
-            // TODO: Do better
-            System.out.println("Drawing error: " +
-                engine.interp().getResult().toString());
+        } catch (TclEngineException ex) {
+            System.out.println("Drawing error at line " + ex.getErrorLine() +
+                " of " + drawingFile + ":\n" + ex.getErrorInfo());
             System.exit(1);
         }
     }
