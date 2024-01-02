@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -39,7 +40,7 @@ Java API.
     private final VBox root = new VBox();
     private final SplitPane splitPane = new SplitPane();
     private final ListView<DemoDrawing> listBox = new ListView<>();
-    private final StackPane canvasPane = new StackPane();
+    private final Pane canvasPane = new Pane();
     private final Canvas canvas = new Canvas();
     private Stencil stencil;
     private DemoDrawing currentDrawing;
@@ -58,9 +59,9 @@ Java API.
         // CanvasPane
         SplitPane.setResizableWithParent(canvasPane, true);
         canvasPane.getChildren().add(canvas);
-        stencil = new Stencil(canvas.getGraphicsContext2D());
         canvas.widthProperty().bind(canvasPane.widthProperty());
         canvas.heightProperty().bind(canvasPane.heightProperty());
+        stencil = new Stencil(canvas.getGraphicsContext2D());
 
         // splitPane
         VBox.setVgrow(splitPane, Priority.ALWAYS);
@@ -76,14 +77,15 @@ Java API.
         stage.setScene(scene);
         stage.show();
 
-        canvas.widthProperty().addListener((p,o,n) -> repaint());
-        canvas.heightProperty().addListener((p,o,n) -> repaint());
+        canvasPane.widthProperty().addListener((p,o,n) -> repaint());
+        canvasPane.heightProperty().addListener((p,o,n) -> repaint());
 
         currentDrawing = drawings.get(0);
         repaint();
     }
 
     private void repaint() {
+        stencil.clear();
         stencil.draw(currentDrawing.drawing());
     }
 
