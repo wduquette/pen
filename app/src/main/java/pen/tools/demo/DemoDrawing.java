@@ -12,6 +12,6 @@ public record DemoDrawing(
     StencilDrawing drawing
 ) {
     public String toString() {
-        return "Drawing[" + name + "]";
+        return name;
     }
 }
