@@ -1,14 +1,18 @@
 - Any time
     - Review Javadoc
 - Next Steps
-    - [x] `font *` ensemble
-    - [x] Support `-font` style option
-    - [ ] `stencil clear ?color?` command
+    - [ ] Add GUI to `pen demo` so that I can browse from a list of different test drawings.
+    - [ ] Add `pos` parameter to `Stencil::rect`
+    - [ ] Add `StencilCircle` plus `Pen` infrastructure
+    - [ ] `view` tool displays script error in a useful way.
+    - [ ] Add transforms to `Pen`: translate, rotate, and (possibly) scale
+    - [ ] Add transforms to `Stencil`
+        - [ ] `Stencil::draw()` must transform bounds according to the current transform.
+    - [ ] Add arrowheads.
+        - [ ] Circles can be drawn centered on point or tangent to point.
 - [ ] `pen` Application
     -  `draw` tool
-        - [x] Code to save canvas content to PNG file
-        - [x] Executes a single script, saves a single PNG file
-        - [ ] Executes multiple Tcl scripts, saves PNG files
+        - [ ] Execute multiple Tcl scripts, save PNG files
     - `view` tool
         - [x] Executes Tcl script, shows drawing
         - [ ] Display read/eval errors in GUI, side by side with image.
@@ -25,20 +29,17 @@
     - Add remaining `GraphicsContext` methods, as needed.
     - [ ] Line types (dash, dot, solid, at least)
 - `Stencil` 
-    - [ ] Clear canvas to a particular color.
-        - Defaults to transparent
-        - Can be any color
-        - Client doesn't need to know canvas size.
-        - Doesn't affect computed bounds.
     - [ ] Shapes
         - [ ] Arrowheads
         - [ ] Polygons
         - [ ] Rounded rectangles
     - [ ] Position support for relevant shapes
+- `StencilBuffer`
+        - [ ] Support adding border, margin, to computed bounds.
+            - I.e., do the work so that the drawing doesn't need to worry about the margin at all.
+            - Either add a separate border and margin outside the canvas, or translate the content explicitly.
 - [ ] Tcl bindings
-    - [x] `font` for managing fonts
     - Update `stencil` for `Stencil` class, as features are added.
-        - [x] Add named font support
     - [ ] `pen` for `Pen` class 
     - Enum commands?
 - JTcl
