@@ -1,6 +1,9 @@
 package pen.tools.demo;
 
 import javafx.application.Application;
+import javafx.beans.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -26,14 +29,14 @@ Java API.
             """,
         DrawTool::main
     );
+
     //------------------------------------------------------------------------
     // Instance Variables
 
     private final StackPane root = new StackPane();
     private final Canvas canvas = new Canvas();
     private Stencil stencil;
-    private final StencilDrawing currentDrawing = this::testDrawing;
-
+    private DemoDrawing currentDrawing;
 
     //------------------------------------------------------------------------
     // Main-line code
@@ -53,12 +56,26 @@ Java API.
 
         canvas.widthProperty().addListener((p,o,n) -> repaint());
         canvas.heightProperty().addListener((p,o,n) -> repaint());
+
+        currentDrawing = drawings.get(0);
         repaint();
     }
 
     private void repaint() {
-        stencil.draw(currentDrawing);
+        stencil.draw(currentDrawing.drawing());
     }
+
+    //-------------------------------------------------------------------------
+    // Drawings
+
+    private DemoDrawing drawing(String name, StencilDrawing drawing) {
+        return new DemoDrawing(name, drawing);
+    }
+
+    private final ObservableList<DemoDrawing> drawings =
+        FXCollections.observableArrayList(
+            drawing("Test Drawing", this::testDrawing)
+        );
 
     private void testDrawing(Stencil sten) {
         var w = root.getWidth() - 200;
