@@ -14,6 +14,12 @@ import static pen.stencil.Stencil.*;
 
 /**
  * A TclEngine extension for drawing using a {@link Stencil}.
+ *
+ * <p><b>NOTE:</b> at present there's no way to reset the stencil,
+ * style map, or font map; DrawTool just creates a new TclEngine for
+ * each drawing (which is nice and simple).  But if we use this
+ * extension for doing anything other than single drawings, we're
+ * going to want a "stencil reset" command.</p>
  */
 public class StencilExtension {
     /**
@@ -24,14 +30,26 @@ public class StencilExtension {
     //-------------------------------------------------------------------------
     // Instance Variables
 
+    // The TclEngine in use
     private final TclEngine tcl;
+
+    // The Stencil used to produce drawings.
     private final Stencil stencil;
+
+    // The styleMap
     private final StyleMap styleMap = new StyleMap();
+
+    // The fontMap
     private final PenFontMap fontMap = new PenFontMap();
 
     //-------------------------------------------------------------------------
     // Constructor
 
+    /**
+     * Creates a new TclEngine extension for drawing using the given stencil.
+     * @param engine The engine
+     * @param stencil The stencil
+     */
     public StencilExtension(TclEngine engine, Stencil stencil) {
         this.tcl = engine;
         this.stencil = stencil;
@@ -68,12 +86,15 @@ public class StencilExtension {
     //-------------------------------------------------------------------------
     // Ensemble: stencil *
 
+    // Just a test routine; a convenient place for temporary code.
     private void cmd_stencilTest(TclEngine tcl, Argq argq) {
         stencil.draw(rect().at(10,10).size(100,60));
         stencil.draw(label().at(60,40).pos(Pos.CENTER).text("Stencil Test"));
     }
 
     // stencil cget ?-option?
+    //
+    // Gets global stencil parameters.
     private void cmd_stencilCget(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -85,6 +106,7 @@ public class StencilExtension {
                 case "-margin"    -> tcl.setResult(stencil.getMargin());
                 case "-minheight" -> tcl.setResult(stencil.getMinHeight());
                 case "-minwidth"  -> tcl.setResult(stencil.getMinWidth());
+                // TODO: It would be nice to support "should be one of..."
                 default           -> throw tcl.unknownOption(opt);
             }
         } else {
@@ -102,6 +124,10 @@ public class StencilExtension {
     }
 
     // stencil clear ?color?
+    //
+    // Clears the stencil's canvas to the given color.
+    // TODO Possibly we should remove the optional argument and just
+    // define a Stencil `-background` option.
     private void cmd_stencilClear(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -114,10 +140,18 @@ public class StencilExtension {
             stencil.clear();
         }
     }
+
     // stencil configure ?option value?...
+    // stencil configure optionList
+    //
+    // Configures one or more Stencil options.
     private void cmd_stencilConfigure(TclEngine tcl, Argq argq)
         throws TclException {
-        tcl.checkMinArgs(argq, 2, "?option value?...");
+        tcl.checkMinArgs(argq, 1, "?option value?...");
+
+        // If we were provided the options and values as a list, convert it to
+        // an Argq.  Note: we lose the command prefix.
+        argq = argq.argsLeft() != 1 ? argq : tcl.toArgq(argq.next());
 
         while (argq.hasNext()) {
             var opt = argq.next().toString();
@@ -133,6 +167,9 @@ public class StencilExtension {
 
     // stencil label text ?option value?...
     // stencil label text ?optionList?
+    //
+    // Creates a label with the given text and draws it according to the
+    // other options.
     private void cmd_stencilLabel(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -150,6 +187,7 @@ public class StencilExtension {
             switch (opt) {
                 case "-at" -> obj.at(tcl.toPoint(opt, argq));
                 case "-pos" -> obj.pos(tcl.toEnum(Pos.class, opt, argq));
+                // TODO: Use if (parseStyleOption(...)) style instead.
                 default -> parseStyleOption(obj, opt, argq);
             }
         }
@@ -159,6 +197,8 @@ public class StencilExtension {
 
     // stencil line ?option value?...
     // stencil line ?optionList?
+    //
+    // Creates a line given the options.
     private void cmd_stencilLine(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -184,6 +224,9 @@ public class StencilExtension {
     }
 
     // stencil rect ?option value?...
+    // stencil rect optionList
+    //
+    // Creates a rectangle given the options
     private void cmd_stencilRect(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -208,12 +251,15 @@ public class StencilExtension {
 
     // stencil style create name ?option value?...
     // stencil style create name ?optionList?
+    //
+    // Creates a new style based on the "normal" style, and configures
+    // it.
     private void cmd_stencilStyleCreate(TclEngine tcl, Argq argq)
         throws TclException
     {
         tcl.checkMinArgs(argq, 1, "name ?option value...?");
         var name = argq.next().toString();
-        var style = styleMap.make(name);
+        var style = styleMap.make(name).style(styleMap.get(NORMAL));
 
         // If we were provided the options and values as a list, convert it to
         // an Argq.  Note: we lose the command prefix.
@@ -227,6 +273,8 @@ public class StencilExtension {
 
     // stencil style configure name ?option value?...
     // stencil style configure name ?optionList?
+    //
+    // Configures the named style with new options.
     private void cmd_stencilStyleConfigure(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -247,10 +295,10 @@ public class StencilExtension {
         }
     }
 
+    // TODO: Make this return false rather than flagging an option error.
     private void parseStyleOption(StyleBase<?> style, String opt, Argq argq)
         throws TclException
     {
-
         switch (opt) {
             case "-background" -> style.background(tcl.toColor(opt, argq));
             case "-font"       -> style.font(toFont(opt, argq));
@@ -262,6 +310,9 @@ public class StencilExtension {
     }
 
     // stencil style cget name ?option?
+    //
+    // Gets the value of the given option for the named style, or
+    // a dictionary of all of the option's values.
     private void cmd_stencilStyleCget(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -300,6 +351,9 @@ public class StencilExtension {
         }
     }
 
+    // stencil style names
+    //
+    // Gets the names of the existing styles.
     private void cmd_stencilStyleNames(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -312,6 +366,8 @@ public class StencilExtension {
     // API: font *
 
     // font cget name ?option?
+    //
+    // Gets an option value from the named font.
     private void cmd_fontCget(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -346,6 +402,10 @@ public class StencilExtension {
                 .get());
         }
     }
+
+    // font create name ?option value...?
+    //
+    // Creates a named font given the option values.
     private void cmd_fontCreate(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -382,6 +442,9 @@ public class StencilExtension {
         tcl.setResult(name);
     }
 
+    // font exists name
+    //
+    // Checks whether there is a font with the given name.
     private void cmd_fontExists(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -389,6 +452,10 @@ public class StencilExtension {
         tcl.setResult(fontMap.hasFont(argq.next().toString()));
     }
 
+    // font families
+    //
+    // Gets a list of the font family names recognized by JavaFX
+    // on this host.
     private void cmd_fontFamilies(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -396,6 +463,9 @@ public class StencilExtension {
         tcl.setResult(Font.getFamilies());
     }
 
+    // font names
+    //
+    // Gets a list of the names of the named fonts.
     private void cmd_fontNames(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -406,6 +476,12 @@ public class StencilExtension {
     //-------------------------------------------------------------------------
     // Helpers
 
+    /**
+     * Gets a PenFont by name as the value of a Tcl argument.
+     * @param arg The name
+     * @return The font
+     * @throws TclException if not found
+     */
     public PenFont toFont(TclObject arg) throws TclException {
         var name = arg.toString();
         if (!fontMap.hasFont(name)) {
@@ -414,6 +490,13 @@ public class StencilExtension {
         return fontMap.getFont(name);
     }
 
+    /**
+     * Gets a PenFont by name as the value of a Tcl option.
+     * @param opt The option
+     * @param argq The argument queue
+     * @return The font
+     * @throws TclException if not found
+     */
     public PenFont toFont(String opt, Argq argq) throws TclException {
         return toFont(tcl.toOptArg(opt, argq));
     }
