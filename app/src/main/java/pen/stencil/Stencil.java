@@ -1,6 +1,7 @@
 package pen.stencil;
 
 import javafx.geometry.Bounds;
+import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 
@@ -8,6 +9,10 @@ import java.util.Optional;
 
 @SuppressWarnings("unused")
 public class Stencil {
+    public static final double DEFAULT_MARGIN = 10;
+    public static final double DEFAULT_MIN_WIDTH = 1;
+    public static final double DEFAULT_MIN_HEIGHT = 1;
+
     //-------------------------------------------------------------------------
     // Instance Variables
 
@@ -16,6 +21,14 @@ public class Stencil {
 
     // The coordinate bounds of what we've drawn.
     private Bounds drawingBounds = null;
+
+    // The margin for the right and bottom sides.  (The client is responsible
+    // for leaving room at the top and left).
+    private double margin = DEFAULT_MARGIN;
+
+    // The minimum size for an image produced using this Stencil
+    private double minWidth = DEFAULT_MIN_WIDTH;
+    private double minHeight = DEFAULT_MIN_HEIGHT;
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -27,6 +40,19 @@ public class Stencil {
     //-------------------------------------------------------------------------
     // Getters
 
+
+    public double getMargin() {
+        return margin;
+    }
+
+    public double getMinWidth() {
+        return minWidth;
+    }
+
+    public double getMinHeight() {
+        return minHeight;
+    }
+
     /**
      * Gets the accumulated bounding box of all drawing done so far.  Clients
      * can use this as desired, e.g., to set the size of the canvas before
@@ -35,6 +61,24 @@ public class Stencil {
      */
     public Optional<Bounds> getDrawingBounds() {
         return Optional.ofNullable(drawingBounds);
+    }
+
+    /**
+     * Gets the size of the finished image: from (0,0) to the maximum drawing
+     * bounds, plus the margin on the right and bottom--but no less than the
+     * minimum width and height. This will be the dimensions of the image file
+     * saved by `StencilBuffer`
+     * .
+     * @return The size
+     */
+    public Dimension2D getImageSize() {
+        var xMax = drawingBounds != null ? drawingBounds.getMaxX() : 0;
+        var yMax = drawingBounds != null ? drawingBounds.getMaxY() : 0;
+
+        var w = Math.max(minWidth, xMax + margin);
+        var h = Math.max(minHeight, yMax + margin);
+
+        return new Dimension2D(w, h);
     }
 
     //-------------------------------------------------------------------------
@@ -92,6 +136,21 @@ public class Stencil {
      */
     public Stencil draw(StencilDrawing drawing) {
         drawing.draw(this);
+        return this;
+    }
+
+    public Stencil margin(double value) {
+        this.margin = value;
+        return this;
+    }
+
+    public Stencil minHeight(double value) {
+        this.minHeight = value;
+        return this;
+    }
+
+    public Stencil minWidth(double value) {
+        this.minWidth = value;
         return this;
     }
 

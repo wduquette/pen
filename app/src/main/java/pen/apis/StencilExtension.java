@@ -34,11 +34,13 @@ public class StencilExtension {
         // stencil *
         var sten = engine.ensemble("stencil");
 
-        sten.add("test",  this::cmd_stencilTest);
-        sten.add("clear", this::cmd_stencilClear);
-        sten.add("label", this::cmd_stencilLabel);
-        sten.add("line",  this::cmd_stencilLine);
-        sten.add("rect",  this::cmd_stencilRect);
+        sten.add("test",      this::cmd_stencilTest);
+        sten.add("clear",     this::cmd_stencilClear);
+        sten.add("cget",      this::cmd_stencilCget);
+        sten.add("configure", this::cmd_stencilConfigure);
+        sten.add("label",     this::cmd_stencilLabel);
+        sten.add("line",      this::cmd_stencilLine);
+        sten.add("rect",      this::cmd_stencilRect);
 
         // stencil style *
         var style = sten.ensemble("style");
@@ -65,6 +67,35 @@ public class StencilExtension {
         stencil.draw(label().at(60,40).pos(Pos.CENTER).text("Stencil Test"));
     }
 
+    // stencil cget ?-option?
+    private void cmd_stencilCget(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkArgs(argq, 0, 1, "?option?");
+
+        if (argq.hasNext()) {
+            var opt = argq.next().toString();
+            switch (opt) {
+                case "-margin"    -> tcl.setResult(stencil.getMargin());
+                case "-minheight" -> tcl.setResult(stencil.getMinHeight());
+                case "-minwidth"  -> tcl.setResult(stencil.getMinWidth());
+                default           -> throw tcl.unknownOption(opt);
+            }
+        } else {
+            // Provide list
+            tcl.setResult(tcl.list()
+                .item("-margin")
+                .item(stencil.getMargin())
+                .item("-minheight")
+                .item(stencil.getMinHeight())
+                .item("-minwidth")
+                .item(stencil.getMinWidth())
+                .get()
+            );
+        }
+    }
+
+    // stencil clear ?color?
     private void cmd_stencilClear(TclEngine tcl, Argq argq)
         throws TclException
     {
@@ -75,6 +106,22 @@ public class StencilExtension {
             stencil.clear(color);
         } else {
             stencil.clear();
+        }
+    }
+    // stencil configure ?option value?...
+    private void cmd_stencilConfigure(TclEngine tcl, Argq argq)
+        throws TclException {
+        tcl.checkMinArgs(argq, 2, "?option value?...");
+
+        while (argq.hasNext()) {
+            var opt = argq.next().toString();
+
+            switch (opt) {
+                case "-margin"    -> stencil.margin(tcl.toDouble(opt, argq));
+                case "-minheight" -> stencil.minHeight(tcl.toDouble(opt, argq));
+                case "-minwidth"  -> stencil.minWidth(tcl.toDouble(opt, argq));
+                default           -> throw tcl.unknownOption(opt);
+            }
         }
     }
 

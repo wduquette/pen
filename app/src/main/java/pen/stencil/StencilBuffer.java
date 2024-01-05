@@ -15,18 +15,12 @@ import java.io.IOException;
  */
 @SuppressWarnings("unused")
 public class StencilBuffer {
-    /**
-     * The default margin added on the right and bottom of the canvas.
-     */
-    public static final double DEFAULT_MARGIN = 10;
-
     //-------------------------------------------------------------------------
     // Instance Variables
 
     private final StackPane root = new StackPane();
     private final Canvas canvas = new Canvas();
     private final Stencil stencil;
-    private double margin = DEFAULT_MARGIN;
 
     // This field needs to be preserved so that it isn't garbage collected;
     // the image conversion won't work right without it.
@@ -46,20 +40,6 @@ public class StencilBuffer {
     // Configuration
 
 
-    public double getMargin() {
-        return margin;
-    }
-
-    /**
-     * Sets the margin, in pixels, to be added on the right and bottom sides
-     * of the canvas.  It is the drawing's responsibility to leave any
-     * desired space on the top and left.
-     * @param margin The margin
-     */
-    public void setMargin(double margin) {
-        this.margin = margin;
-    }
-
     public double getWidth() {
         return canvas.getWidth();
     }
@@ -76,15 +56,16 @@ public class StencilBuffer {
      * @param drawing The drawing
      */
     public void draw(StencilDrawing drawing) {
+        // FIRST, draw the image to determine the drawing bounds
         stencil.clear();
         stencil.draw(drawing);
 
-        stencil.getDrawingBounds().ifPresent(box -> {
-            canvas.setWidth(box.getMaxX() + margin);
-            canvas.setHeight(box.getMaxY() + margin);
-            stencil.clear();
-            stencil.draw(drawing);
-        });
+        // NEXT, resize the canvas to fit, draw it again, and save it.
+        var size = stencil.getImageSize();
+        canvas.setWidth(size.getWidth());
+        canvas.setHeight(size.getHeight());
+        stencil.clear();
+        stencil.draw(drawing);
     }
 
     /**
