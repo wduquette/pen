@@ -1,5 +1,6 @@
 {
   "livePreview": false,
   "vimMode": true,
-  "useTab": false
+  "useTab": false,
+  "alwaysUpdateLinks": true
 }

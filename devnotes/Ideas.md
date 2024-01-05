@@ -10,6 +10,7 @@ A collection of things I want to consider
 
 - [[Open Shape DSL]]
 - [[Stencil Bounds Aggregation]]
+- [[Stencil Margin]]
 
 ## Rejected Ideas
 

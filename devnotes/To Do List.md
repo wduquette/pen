@@ -1,6 +1,8 @@
 - Any time
     - Review Javadoc
 - Next Steps
+    - [x] Add `Stencil::getImageSize()` and `Stencil::setMargin`
+        - See [[Stencil Margin]]
     - [ ] Add GUI to `pen demo` so that I can browse from a list of different test drawings.
     - [ ] Add `pos` parameter to `Stencil::rect`
     - [ ] Add `StencilCircle` plus `Pen` infrastructure

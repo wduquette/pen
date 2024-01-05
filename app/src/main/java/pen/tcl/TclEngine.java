@@ -390,6 +390,14 @@ public class TclEngine {
         return new TclEngineException(this, message, cause);
     }
 
+    public TclException unknownOption(String opt) {
+        if (opt.startsWith("-")) {
+            return badValue("unknown option", opt);
+        } else {
+            return expected("option", opt);
+        }
+    }
+
     public TclException expected(String name, Object value) {
         return new TclEngineException(this,
             "Expected " + name + ", got \"" + value + "\"");
