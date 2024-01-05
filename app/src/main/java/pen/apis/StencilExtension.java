@@ -12,7 +12,13 @@ import tcl.lang.TclObject;
 
 import static pen.stencil.Stencil.*;
 
+/**
+ * A TclEngine extension for drawing using a {@link Stencil}.
+ */
 public class StencilExtension {
+    /**
+     * The name of the normal style used with Stencil objects.
+     */
     public static final String NORMAL = "normal";
 
     //-------------------------------------------------------------------------
@@ -131,7 +137,7 @@ public class StencilExtension {
         throws TclException
     {
         tcl.checkMinArgs(argq, 1, "text ?option value?...");
-        var obj = label();
+        var obj = label().style(styleMap.get(NORMAL));
         obj.text(argq.next().toString());
 
         // If we were provided the options and values as a list, convert it to
@@ -156,7 +162,7 @@ public class StencilExtension {
     private void cmd_stencilLine(TclEngine tcl, Argq argq)
         throws TclException
     {
-        var obj = line();
+        var obj = line().style(styleMap.get(NORMAL));
 
         // If we were provided the options and values as a list, convert it to
         // an Argq.  Note: we lose the command prefix.
@@ -181,7 +187,7 @@ public class StencilExtension {
     private void cmd_stencilRect(TclEngine tcl, Argq argq)
         throws TclException
     {
-        var rect = rect();
+        var rect = rect().style(styleMap.get(NORMAL));
 
         // If we were provided the options and values as a list, convert it to
         // an Argq.  Note: we lose the command prefix.
