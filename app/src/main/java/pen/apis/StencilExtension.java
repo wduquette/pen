@@ -183,12 +183,12 @@ public class StencilExtension {
 
         while (argq.hasNext()) {
             var opt = argq.next().toString();
+            if (parseStyleOption(obj, opt, argq)) continue;
 
             switch (opt) {
                 case "-at" -> obj.at(tcl.toPoint(opt, argq));
                 case "-pos" -> obj.pos(tcl.toEnum(Pos.class, opt, argq));
-                // TODO: Use if (parseStyleOption(...)) style instead.
-                default -> parseStyleOption(obj, opt, argq);
+                default -> throw tcl.unknownOption(opt);
             }
         }
 
@@ -210,13 +210,14 @@ public class StencilExtension {
 
         while (argq.hasNext()) {
             var opt = argq.next().toString();
+            if (parseStyleOption(obj, opt, argq)) continue;
 
             switch (opt) {
                 case "-to" -> obj.to(tcl.toPoint(opt, argq));
                 case "-tox" -> obj.toX(tcl.toDouble(opt, argq));
                 case "-toy" -> obj.toY(tcl.toDouble(opt, argq));
                 case "-points" -> obj.points(tcl.toPointList(opt, argq));
-                default -> parseStyleOption(obj, opt, argq);
+                default -> throw tcl.unknownOption(opt);
             }
         }
 
@@ -230,7 +231,7 @@ public class StencilExtension {
     private void cmd_stencilRect(TclEngine tcl, Argq argq)
         throws TclException
     {
-        var rect = rect().style(styleMap.get(NORMAL));
+        var obj = rect().style(styleMap.get(NORMAL));
 
         // If we were provided the options and values as a list, convert it to
         // an Argq.  Note: we lose the command prefix.
@@ -238,15 +239,16 @@ public class StencilExtension {
 
         while (argq.hasNext()) {
             var opt = argq.next().toString();
+            if (parseStyleOption(obj, opt, argq)) continue;
 
             switch (opt) {
-                case "-at" -> rect.at(tcl.toPoint(opt, argq));
-                case "-size" -> rect.size(tcl.toDim(opt, argq));
-                default -> parseStyleOption(rect, opt, argq);
+                case "-at" -> obj.at(tcl.toPoint(opt, argq));
+                case "-size" -> obj.size(tcl.toDim(opt, argq));
+                default -> throw tcl.unknownOption(opt);
             }
         }
 
-        stencil.draw(rect);
+        stencil.draw(obj);
     }
 
     // stencil style create name ?option value?...
@@ -267,7 +269,9 @@ public class StencilExtension {
 
         while (argq.hasNext()) {
             var opt = argq.next().toString();
-            parseStyleOption(style, opt, argq);
+            if (!parseStyleOption(style, opt, argq)) {
+                throw tcl.unknownOption(opt);
+            }
         }
     }
 
@@ -291,12 +295,13 @@ public class StencilExtension {
 
         while (argq.hasNext()) {
             var opt = argq.next().toString();
-            parseStyleOption(style, opt, argq);
+            if (!parseStyleOption(style, opt, argq)) {
+                throw tcl.unknownOption(opt);
+            }
         }
     }
 
-    // TODO: Make this return false rather than flagging an option error.
-    private void parseStyleOption(StyleBase<?> style, String opt, Argq argq)
+    private boolean parseStyleOption(StyleBase<?> style, String opt, Argq argq)
         throws TclException
     {
         switch (opt) {
@@ -305,8 +310,10 @@ public class StencilExtension {
             case "-foreground" -> style.foreground(tcl.toColor(opt, argq));
             case "-linewidth"  -> style.lineWidth(tcl.toDouble(opt, argq));
             case "-textcolor"  -> style.textColor(tcl.toColor(opt, argq));
-            default -> throw tcl.badValue("unknown option", opt);
+            default -> { return false; }
         }
+
+        return true;
     }
 
     // stencil style cget name ?option?
