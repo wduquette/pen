@@ -1,6 +1,5 @@
 package pen.stencil;
 
-import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 
 /**
@@ -32,9 +31,11 @@ public class StencilRect
             .setFill(getBackground())
             .setStroke(getForeground())
             .setLineWidth(getLineWidth())
-            .fillRect(box.getMinX(), box.getMinY(),
+            .fillRect(
+                box.getMinX(),  box.getMinY(),
                 box.getWidth(), box.getHeight())
-            .strokeRect(box.getMinX(), box.getMinY(),
+            .strokeRect(
+                box.getMinX(),  box.getMinY(),
                 box.getWidth(), box.getHeight())
             .restore();
         return box;

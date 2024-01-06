@@ -3,7 +3,7 @@
 - Next Steps
     - [x] Add `Stencil::getImageSize()` and `Stencil::setMargin`
         - See [[Stencil Margin]]
-    - [ ] Add `pos` parameter to `Stencil::rect`
+    - [x] Add `tack` parameter to `Stencil::rect`
     - [ ] Add GUI to `pen demo` so that I can browse from a list of different test drawings.
     - [ ] Add `StencilCircle` plus `Pen` infrastructure
     - [ ] `view` tool displays script error in a useful way.

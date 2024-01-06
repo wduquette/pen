@@ -47,27 +47,83 @@ public abstract class StencilBoundedShape<Self extends StencilBoundedShape<Self>
     }
 
     //---------------------------------------------------------------------
+    // Getters
+
+    /**
+     * Gets the shape's origin point
+     * @return The point
+     */
+    public Point2D getAt() {
+        return new Point2D(x, y);
+    }
+
+    /**
+     * Gets the shape's tack position: the location of the origin relative
+     * to the bounding box.
+     * @return The tack
+     */
+    public Tack getTack() {
+        return tack;
+    }
+
+    /**
+     * Gets the shape's size.
+     * @return The size
+     */
+    public Dimension2D getSize() {
+        return new Dimension2D(w, h);
+    }
+
+    //---------------------------------------------------------------------
     // DSL
 
+    /**
+     * Sets the shape's origin point
+     * @param point The point
+     * @return The shape
+     */
     public Self at(Point2D point) {
         return at(point.getX(), point.getY());
     }
 
+    /**
+     * Sets the shape's origin point
+     * @param x The X coordinate
+     * @param y The Y coordinate
+     * @return The shape
+     */
     public Self at(double x, double y) {
         this.x = x;
         this.y = y;
         return (Self)this;
     }
 
+    /**
+     * Sets the "tack position": the location of the origin point on the
+     * bounding box. Defaults to Tack.NORTHWEST.
+     * @param tack The tack
+     * @return The shape
+     */
     public Self tack(Tack tack) {
         this.tack = tack;
         return (Self)this;
     }
 
+    /**
+     * Sets the size of the shape.
+     * @param size The size
+     * @return The shape
+     */
     public Self size(Dimension2D size) {
         return size(size.getWidth(), size.getHeight());
     }
 
+    /**
+     * Sets the size of the shape
+     * @param w The width
+     * @param h The height
+     * @return The shape
+     */
     public Self size(double w, double h) {
         this.w = w;
         this.h = h;
