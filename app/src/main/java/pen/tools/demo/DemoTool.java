@@ -14,6 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import pen.stencil.Tack;
 import pen.tools.ToolInfo;
 import pen.stencil.Pen;
 import pen.stencil.Stencil;
@@ -106,6 +107,9 @@ Java API.
         stencil.draw(line().to(10,10).to(110,70));
         stencil.draw(line().to(10,70).to(110,10));
         stencil.draw(label().at(60,80).pos(Pos.TOP_CENTER).text("Stencil Test"));
+
+        stencil.draw(rect().at(60,150).size(60,40).tack(Tack.SOUTH));
+        stencil.draw(rect().at(60,150).size(12,8).tack(Tack.SOUTH));
     }
 
     //------------------------------------------------------------------------

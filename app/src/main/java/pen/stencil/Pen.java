@@ -242,6 +242,36 @@ public class Pen {
     }
 
     /**
+     * Given an origin point and tack value for a region of a given size,
+     * return the actual bounding box.  Note:
+     * @param tack  The tack, e.g., NORTHWEST
+     * @param x  The origin point's X coordinate
+     * @param y  The origin point's Y coordinate
+     * @param w  The width of the region
+     * @param h  The height of the region
+     * @return The bounds
+     */
+    public static Bounds tack2bounds(
+        Tack tack,
+        double x, double y,
+        double w, double h
+    ) {
+        var x0 = switch (tack.hpos()) {
+            case LEFT -> x;
+            case CENTER -> x - w/2.0;
+            case RIGHT -> x - w;
+        };
+
+        // Note: tack.vpos() will never actually return BASELINE
+        var y0 = switch (tack.vpos()) {
+            case TOP -> y;
+            case CENTER -> y - h/2.0;
+            case BASELINE, BOTTOM -> y - h;
+        };
+        return new BoundingBox(x0, y0, w, h);
+    }
+
+    /**
      * Computes a bounding box just large enough to contain both boxes.
      * @param a The first box
      * @param b The second box
