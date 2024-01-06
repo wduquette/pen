@@ -23,7 +23,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
 
     // This dependency is used by the application.
-    implementation files('../tps/jtcl-2.8.0.jar')
+    implementation files('../tps/jtcl-2.8.0-small.jar')
 }
 jar {
     from {

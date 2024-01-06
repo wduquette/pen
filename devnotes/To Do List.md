@@ -36,10 +36,6 @@
         - [ ] Polygons
         - [ ] Rounded rectangles
     - [ ] Position support for relevant shapes
-- `StencilBuffer`
-        - [ ] Support adding border, margin, to computed bounds.
-            - I.e., do the work so that the drawing doesn't need to worry about the margin at all.
-            - Either add a separate border and margin outside the canvas, or translate the content explicitly.
 - [ ] Tcl bindings
     - Update `stencil` for `Stencil` class, as features are added.
     - [ ] `pen` for `Pen` class 
@@ -47,4 +43,5 @@
 - JTcl
     - Add helpers as needed by bindings.
     - [ ] Fork JTcl and simplify (it's too darn big!)
-        - [ ] Create minimal .jar by hand, to assess actual size
+        - [x] Create minimal .jar by hand, to assess actual size
+        - [ ] Run with it awhile, make sure it works.
