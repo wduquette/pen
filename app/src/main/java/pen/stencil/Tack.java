@@ -3,6 +3,7 @@ package pen.stencil;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.text.TextAlignment;
 
 /**
  * A shape's Tack determines the location of its origin point relative to the
@@ -10,20 +11,22 @@ import javafx.geometry.VPos;
  * drawing.
  */
 public enum Tack {
-    CENTER(Pos.CENTER),
-    NORTH(Pos.TOP_CENTER),
-    NORTHEAST(Pos.TOP_RIGHT),
-    EAST(Pos.CENTER_RIGHT),
-    SOUTHEAST(Pos.BOTTOM_RIGHT),
-    SOUTH(Pos.BOTTOM_CENTER),
-    SOUTHWEST(Pos.BOTTOM_LEFT),
-    WEST(Pos.CENTER_LEFT),
-    NORTHWEST(Pos.TOP_LEFT);
+    CENTER(Pos.CENTER, TextAlignment.CENTER),
+    NORTH(Pos.TOP_CENTER, TextAlignment.CENTER),
+    NORTHEAST(Pos.TOP_RIGHT, TextAlignment.RIGHT),
+    EAST(Pos.CENTER_RIGHT, TextAlignment.RIGHT),
+    SOUTHEAST(Pos.BOTTOM_RIGHT, TextAlignment.RIGHT),
+    SOUTH(Pos.BOTTOM_CENTER, TextAlignment.CENTER),
+    SOUTHWEST(Pos.BOTTOM_LEFT, TextAlignment.LEFT),
+    WEST(Pos.CENTER_LEFT, TextAlignment.LEFT),
+    NORTHWEST(Pos.TOP_LEFT, TextAlignment.LEFT);
 
     private final Pos pos;
+    private final TextAlignment textAlign;
 
-    Tack(Pos pos) {
+    Tack(Pos pos, TextAlignment textAlign) {
         this.pos = pos;
+        this.textAlign = textAlign;
     }
 
     public Pos pos() {
@@ -36,5 +39,9 @@ public enum Tack {
 
     public VPos vpos() {
         return pos.getVpos();
+    }
+
+    public TextAlignment textAlign() {
+        return textAlign;
     }
 }

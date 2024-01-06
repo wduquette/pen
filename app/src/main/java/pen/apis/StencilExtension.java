@@ -1,6 +1,5 @@
 package pen.apis;
 
-import javafx.geometry.Pos;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -87,9 +86,10 @@ public class StencilExtension {
     // Ensemble: stencil *
 
     // Just a test routine; a convenient place for temporary code.
-    private void cmd_stencilTest(TclEngine tcl, Argq argq) {
-        stencil.draw(rect().at(10,10).size(100,60));
-        stencil.draw(label().at(60,40).pos(Pos.CENTER).text("Stencil Test"));
+    private void cmd_stencilTest(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        throw tcl.error("No test defined");
     }
 
     // stencil cget ?-option?
@@ -187,7 +187,7 @@ public class StencilExtension {
 
             switch (opt) {
                 case "-at" -> obj.at(tcl.toPoint(opt, argq));
-                case "-pos" -> obj.pos(tcl.toEnum(Pos.class, opt, argq));
+                case "-tack" -> obj.tack(tcl.toEnum(Tack.class, opt, argq));
                 default -> throw tcl.unknownOption(opt);
             }
         }
@@ -244,6 +244,7 @@ public class StencilExtension {
             switch (opt) {
                 case "-at" -> obj.at(tcl.toPoint(opt, argq));
                 case "-size" -> obj.size(tcl.toDim(opt, argq));
+                case "-tack" -> obj.tack(tcl.toEnum(Tack.class, opt, argq));
                 default -> throw tcl.unknownOption(opt);
             }
         }
@@ -319,7 +320,7 @@ public class StencilExtension {
     // stencil style cget name ?option?
     //
     // Gets the value of the given option for the named style, or
-    // a dictionary of all of the option's values.
+    // a dictionary of all the option's values.
     private void cmd_stencilStyleCget(TclEngine tcl, Argq argq)
         throws TclException
     {

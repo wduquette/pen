@@ -2,7 +2,6 @@ package pen.stencil;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
 
 public class StencilLabel
     extends StyleBase<StencilLabel>
@@ -14,7 +13,7 @@ public class StencilLabel
     private double x;
     private double y;
     private String text = "";
-    private Pos pos = Pos.TOP_LEFT;
+    private Tack tack = Tack.NORTHWEST;
 
     //---------------------------------------------------------------------
     // Constructor
@@ -41,8 +40,8 @@ public class StencilLabel
         return this;
     }
 
-    public StencilLabel pos(Pos pos) {
-        this.pos = pos;
+    public StencilLabel tack(Tack tack) {
+        this.tack = tack;
         return this;
     }
 
@@ -51,13 +50,13 @@ public class StencilLabel
         stencil.pen().save()
             .setFill(getTextColor())
             .setFont(getFont())
-            .setTextBaseline(pos.getVpos())
-            .setTextAlign(Pen.pos2textAlign(pos))
+            .setTextBaseline(tack.vpos())
+            .setTextAlign(tack.textAlign())
             .fillText(text, x, y)
             .restore();
 
         // NEXT, compute the bounds.
         var size = Pen.getTextSize(getFont(), text);
-        return Pen.pos2bounds(pos, x, y, size.getWidth(), size.getHeight());
+        return Pen.tack2bounds(tack, x, y, size.getWidth(), size.getHeight());
     }
 }
