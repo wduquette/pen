@@ -198,49 +198,6 @@ public class Pen {
         return bounds.getHeight();
     }
 
-    public static TextAlignment pos2textAlign(Pos pos) {
-        return pos2textAlign(pos.getHpos());
-    }
-
-    public static TextAlignment pos2textAlign(HPos hpos) {
-        return switch (hpos) {
-            case CENTER -> TextAlignment.CENTER;
-            case LEFT -> TextAlignment.LEFT;
-            case RIGHT -> TextAlignment.RIGHT;
-        };
-    }
-
-    /**
-     * Given an origin point and Pos value for a region of a given size,
-     * return the actual bounding box.  Note:
-     * @param pos  The position, e.g., TOP_LEFT
-     * @param x  The origin point's X coordinate
-     * @param y  The origin point's Y coordinate
-     * @param w  The width of the region
-     * @param h  The height of the region
-     * @return The bounds
-     */
-    public static Bounds pos2bounds(
-        Pos pos,
-        double x, double y,
-        double w, double h
-    ) {
-        var x0 = switch (pos.getHpos()) {
-            case LEFT -> x;
-            case CENTER -> x - w/2.0;
-            case RIGHT -> x - w;
-        };
-
-        // Note: BASELINE isn't actually a possibility; Pos does not have
-        // a value that maps to it.
-        var y0 = switch (pos.getVpos()) {
-            case TOP -> y;
-            case CENTER -> y - h/2.0;
-            case BASELINE, BOTTOM -> y - h;
-        };
-        return new BoundingBox(x0, y0, w, h);
-    }
-
     /**
      * Given an origin point and tack value for a region of a given size,
      * return the actual bounding box.  Note:
