@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -55,12 +56,14 @@ Java API.
         FX.vbox(root)
             .add(FX.splitPane(splitPane)
                 .vgrow()
-                .add(FX.region(listBox)
+                .add(FX.listView(listBox)
                     .splitResizableWithParent(false)
+                    .setItems(drawings)
                 )
                 .add(FX.pane(canvasPane)
                     .splitResizableWithParent(true)
-                    .addBare(canvas)
+                    .add(FX.node(canvas)
+                        .onMouseMoved(this::showMousePosition))
                 )
                 .setDividerPosition(0, 0.2)
             )
@@ -71,7 +74,6 @@ Java API.
 
         // NEXT, configure ancillary objects
         stencil = new Stencil(canvas.getGraphicsContext2D());
-        listBox.setItems(drawings);
 
         // NEXT, set up the event handling
 
@@ -80,13 +82,8 @@ Java API.
         canvas.heightProperty().bind(canvasPane.heightProperty());
 
         // Repaint if the canvas size changes
-        canvasPane.widthProperty().addListener((p,o,n) -> repaint());
-        canvasPane.heightProperty().addListener((p,o,n) -> repaint());
-
-        // Show the mouse coordinates on the status bar
-        canvas.setOnMouseMoved(evt ->
-            statusLabel.setText(String.format("(x=%4.0f, y=%4.0f)",
-                evt.getX(), evt.getY())));
+        FX.listenTo(canvasPane.widthProperty(), this::repaint);
+        FX.listenTo(canvasPane.heightProperty(), this::repaint);
 
         // NEXT, configure the stage
         Scene scene = new Scene(root, 600, 400);
@@ -101,8 +98,15 @@ Java API.
     }
 
     private void repaint() {
-        stencil.clear();
-        stencil.draw(currentDrawing.drawing());
+        if (currentDrawing != null) {
+            stencil.clear();
+            stencil.draw(currentDrawing.drawing());
+        }
+    }
+
+    private void showMousePosition(MouseEvent evt) {
+        statusLabel.setText(String.format("(x=%4.0f, y=%4.0f)",
+            evt.getX(), evt.getY()));
     }
 
     //-------------------------------------------------------------------------

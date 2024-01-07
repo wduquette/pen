@@ -1,6 +1,8 @@
 package pen.fx;
 
+import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 
 @SuppressWarnings({"unchecked", "unused"})
 public interface NodeMolderBase<N extends Node, Self>
@@ -8,6 +10,11 @@ public interface NodeMolderBase<N extends Node, Self>
 {
     default Self id(String id) {
         object().setId(id);
+        return (Self)this;
+    }
+
+    default Self onMouseMoved(EventHandler<MouseEvent> handler) {
+        object().setOnMouseMoved(handler);
         return (Self)this;
     }
 }
