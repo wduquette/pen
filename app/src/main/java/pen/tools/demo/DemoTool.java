@@ -49,16 +49,17 @@ Java API.
 
     //------------------------------------------------------------------------
     // Main-line code
-
-    // TODO: Geometry management isn't right: canvasPane won't shrink!
-
     @Override
     public void start(Stage stage) {
+        // FIRST, build the GUI
         FX.vbox(root)
             .add(FX.splitPane(splitPane)
                 .vgrow()
-                .addBare(listBox)
+                .add(FX.region(listBox)
+                    .splitResizableWithParent(false)
+                )
                 .add(FX.pane(canvasPane)
+                    .splitResizableWithParent(true)
                     .addBare(canvas)
                 )
                 .setDividerPosition(0, 0.2)
@@ -68,40 +69,33 @@ Java API.
             )
             ;
 
-        // listBox
-        SplitPane.setResizableWithParent(listBox, false);
+        // NEXT, configure ancillary objects
+        stencil = new Stencil(canvas.getGraphicsContext2D());
         listBox.setItems(drawings);
 
-        // CanvasPane
-        SplitPane.setResizableWithParent(canvasPane, true);
-//        canvasPane.getChildren().add(canvas);
+        // NEXT, set up the event handling
+
+        // Make the canvas the same size as its parent.
         canvas.widthProperty().bind(canvasPane.widthProperty());
         canvas.heightProperty().bind(canvasPane.heightProperty());
-        stencil = new Stencil(canvas.getGraphicsContext2D());
+
+        // Repaint if the canvas size changes
+        canvasPane.widthProperty().addListener((p,o,n) -> repaint());
+        canvasPane.heightProperty().addListener((p,o,n) -> repaint());
+
+        // Show the mouse coordinates on the status bar
         canvas.setOnMouseMoved(evt ->
             statusLabel.setText(String.format("(x=%4.0f, y=%4.0f)",
                 evt.getX(), evt.getY())));
 
-        // splitPane
-//        VBox.setVgrow(splitPane, Priority.ALWAYS);
-//        splitPane.getItems().addAll(listBox, canvasPane);
-//        splitPane.setDividerPosition(0, 0.2);
-
-        // statusBar
-//        statusBar.getItems().add(statusLabel);
-
-        // root
-//        root.getChildren().addAll(splitPane, statusBar);
-
+        // NEXT, configure the stage
         Scene scene = new Scene(root, 600, 400);
 
         stage.setTitle("pen demo");
         stage.setScene(scene);
         stage.show();
 
-        canvasPane.widthProperty().addListener((p,o,n) -> repaint());
-        canvasPane.heightProperty().addListener((p,o,n) -> repaint());
-
+        // NEXT, set and draw the default drawing
         currentDrawing = drawings.get(0);
         repaint();
     }
@@ -109,7 +103,6 @@ Java API.
     private void repaint() {
         stencil.clear();
         stencil.draw(currentDrawing.drawing());
-        System.out.println("Size=" + stencil.getImageSize());
     }
 
     //-------------------------------------------------------------------------

@@ -4,6 +4,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 /**
@@ -24,6 +25,10 @@ public class FX {
 
     public static PaneMolder pane(Pane node) {
         return new PaneMolder(node);
+    }
+
+    public static RegionMolder region(Region node) {
+        return new RegionMolder(node);
     }
 
     public static SplitPaneMolder splitPane() {
