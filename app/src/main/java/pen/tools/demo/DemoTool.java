@@ -10,10 +10,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import pen.fx.FX;
 import pen.stencil.Tack;
 import pen.tools.ToolInfo;
 import pen.stencil.Stencil;
@@ -54,13 +54,27 @@ Java API.
 
     @Override
     public void start(Stage stage) {
+        FX.vbox(root)
+            .add(FX.splitPane(splitPane)
+                .vgrow()
+                .addBare(listBox)
+                .add(FX.pane(canvasPane)
+                    .addBare(canvas)
+                )
+                .setDividerPosition(0, 0.2)
+            )
+            .add(FX.toolBar(statusBar)
+                .add(FX.label(statusLabel).text("(x=    , y=    )"))
+            )
+            ;
+
         // listBox
         SplitPane.setResizableWithParent(listBox, false);
         listBox.setItems(drawings);
 
         // CanvasPane
         SplitPane.setResizableWithParent(canvasPane, true);
-        canvasPane.getChildren().add(canvas);
+//        canvasPane.getChildren().add(canvas);
         canvas.widthProperty().bind(canvasPane.widthProperty());
         canvas.heightProperty().bind(canvasPane.heightProperty());
         stencil = new Stencil(canvas.getGraphicsContext2D());
@@ -69,15 +83,15 @@ Java API.
                 evt.getX(), evt.getY())));
 
         // splitPane
-        VBox.setVgrow(splitPane, Priority.ALWAYS);
-        splitPane.getItems().addAll(listBox, canvasPane);
-        splitPane.setDividerPosition(0, 0.2);
+//        VBox.setVgrow(splitPane, Priority.ALWAYS);
+//        splitPane.getItems().addAll(listBox, canvasPane);
+//        splitPane.setDividerPosition(0, 0.2);
 
         // statusBar
-        statusBar.getItems().add(statusLabel);
+//        statusBar.getItems().add(statusLabel);
 
         // root
-        root.getChildren().addAll(splitPane, statusBar);
+//        root.getChildren().addAll(splitPane, statusBar);
 
         Scene scene = new Scene(root, 600, 400);
 
