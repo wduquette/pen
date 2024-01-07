@@ -5,8 +5,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -40,6 +42,8 @@ Java API.
     private final ListView<DemoDrawing> listBox = new ListView<>();
     private final Pane canvasPane = new Pane();
     private final Canvas canvas = new Canvas();
+    private final ToolBar statusBar = new ToolBar();
+    private final Label statusLabel = new Label();
     private Stencil stencil;
     private DemoDrawing currentDrawing;
 
@@ -60,14 +64,20 @@ Java API.
         canvas.widthProperty().bind(canvasPane.widthProperty());
         canvas.heightProperty().bind(canvasPane.heightProperty());
         stencil = new Stencil(canvas.getGraphicsContext2D());
+        canvas.setOnMouseMoved(evt ->
+            statusLabel.setText(String.format("(x=%4.0f, y=%4.0f)",
+                evt.getX(), evt.getY())));
 
         // splitPane
         VBox.setVgrow(splitPane, Priority.ALWAYS);
         splitPane.getItems().addAll(listBox, canvasPane);
         splitPane.setDividerPosition(0, 0.2);
 
+        // statusBar
+        statusBar.getItems().add(statusLabel);
+
         // root
-        root.getChildren().add(splitPane);
+        root.getChildren().addAll(splitPane, statusBar);
 
         Scene scene = new Scene(root, 600, 400);
 
@@ -85,6 +95,7 @@ Java API.
     private void repaint() {
         stencil.clear();
         stencil.draw(currentDrawing.drawing());
+        System.out.println("Size=" + stencil.getImageSize());
     }
 
     //-------------------------------------------------------------------------
@@ -100,6 +111,9 @@ Java API.
         );
 
     private void testDrawing(Stencil sten) {
+//        stencil.pen().translate(100, 0);
+//        stencil.pen().scale(2,2);
+//        stencil.pen().rotate(45.0);
         stencil.draw(rect().at(10,10).size(100,60).lineWidth(2).background(Color.LIGHTYELLOW));
         stencil.draw(line().to(10,10).to(110,70));
         stencil.draw(line().to(10,70).to(110,10));

@@ -6,6 +6,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.transform.Affine;
 
 import java.util.List;
 
@@ -77,7 +78,62 @@ public class Pen {
     }
 
     //-------------------------------------------------------------------------
-    // Public API: Style
+    // DSL: Transforms
+    //
+    // Translations are applied in the order defined, and apply to all future
+    // drawing.  Hence, one usually does this:
+    //
+    // - Save the pen state using pen.save().
+    // - Translates to the desired point of rotation
+    // - Scales by the desired amount in the X and Y directions.
+    // - Rotates by the desired number of degrees
+    // - Does the desired drawing.
+    // - Restores the pen state.
+
+    /**
+     * Rotates future drawing by the given number of degrees,
+     * rotating counter-clockwise.
+     * @param degrees The number of degrees.
+     * @return The pen
+     */
+    public Pen rotate(double degrees) {
+        gc.rotate(degrees);
+        return this;
+    }
+
+    /**
+     * Scales future drawing by the given X and Y factors.
+     * @param xFactor The X scaling
+     * @param yFactor The Y scaling
+     * @return The pen
+     */
+    public Pen scale(double xFactor, double yFactor) {
+        gc.scale(xFactor, yFactor);
+        return this;
+    }
+
+    /**
+     * Translates future drawing by the given X and Y values in pixels
+     * @param x The X delta
+     * @param y The Y delta
+     * @return The pen
+     */
+    public Pen translate(double x, double y) {
+        gc.translate(x, y);
+        return this;
+    }
+
+    /**
+     * Gets the current aggregated transform.
+     * @return The transform
+     */
+    public Affine getTransform() {
+        return gc.getTransform();
+    }
+
+
+    //-------------------------------------------------------------------------
+    // DSL: Style
 
     public Pen setFill(Paint color) {
         gc.setFill(color);

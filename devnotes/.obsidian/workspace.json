@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "374e0f2b5152a616",
+        "id": "fc86761d8f4d58d6",
         "type": "tabs",
         "children": [
           {
-            "id": "a980b035e6b784db",
+            "id": "db434351a1d7204e",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "To Do List.md",
+                "file": "Stencil Bounds Aggregation.md",
                 "mode": "source",
                 "source": true
               }
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "transform",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -65,7 +65,8 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -85,7 +86,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "To Do List.md",
+                "file": "Stencil Bounds Aggregation.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +103,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "To Do List.md",
+                "file": "Stencil Bounds Aggregation.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +126,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "To Do List.md"
+                "file": "Stencil Bounds Aggregation.md"
               }
             }
           }
@@ -148,12 +149,12 @@
       "homepage:Open homepage": false
     }
   },
-  "active": "a980b035e6b784db",
+  "active": "db434351a1d7204e",
   "lastOpenFiles": [
-    "2024-01-06.md",
     "To Do List.md",
-    "Ideas.md",
     "Home.md",
+    "2024-01-06.md",
+    "Ideas.md",
     "2024-01-05.md",
     "Stencil Margin.md",
     "Catalog of Shapes.md",

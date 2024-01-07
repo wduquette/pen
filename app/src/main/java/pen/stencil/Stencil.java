@@ -110,6 +110,9 @@ public class Stencil {
     }
 
     public Stencil addBounds(Bounds bounds) {
+        // FIRST, apply current transformation
+        bounds = pen.getTransform().transform(bounds);
+
         if (drawingBounds == null) {
             drawingBounds = bounds;
         } else {
