@@ -4,12 +4,14 @@
     - [x] Add `Stencil::getImageSize()` and `Stencil::setMargin`
         - See [[Stencil Margin]]
     - [x] Add `tack` parameter to `Stencil::rect`
+    - [x] Add transforms to `Pen`: translate, rotate, and scale
+    - [x] `Stencil::draw()` must transform bounds according to the current transform.
+    - [x] Add `FX`, a fluent molder package
+    - [x] Update to Java 21 via ZuluFX 21.
+    - [ ] Add transforms to `Stencil`
     - [ ] Add GUI to `pen demo` so that I can browse from a list of different test drawings.
     - [ ] Add `StencilCircle` plus `Pen` infrastructure
     - [ ] `view` tool displays script error in a useful way.
-    - [ ] Add transforms to `Pen`: translate, rotate, and (possibly) scale
-    - [ ] Add transforms to `Stencil`
-        - [ ] `Stencil::draw()` must transform bounds according to the current transform.
     - [ ] Add arrowheads.
         - [ ] Circles can be drawn centered on point or tangent to point.
 - [ ] `pen` Application

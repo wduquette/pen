@@ -1,7 +1,5 @@
 package pen.fx;
 
-import javafx.beans.Observable;
-import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -15,6 +13,7 @@ import javafx.scene.layout.VBox;
 /**
  * Static JavaFX helper class.  Provides molder factories and listener help.
  */
+@SuppressWarnings("unused")
 public class FX {
     //-------------------------------------------------------------------------
     // Listener Helpers
