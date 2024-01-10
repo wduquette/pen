@@ -1,9 +1,7 @@
 package pen.fx;
 
 
-import javafx.scene.control.Control;
 import javafx.scene.control.Labeled;
-import javafx.scene.control.Tooltip;
 import javafx.scene.text.Font;
 
 @SuppressWarnings({"unchecked", "unused"})

@@ -89,6 +89,14 @@ Java API.
         FX.listenTo(canvasPane.widthProperty(), this::repaint);
         FX.listenTo(canvasPane.heightProperty(), this::repaint);
 
+        // Draw the selected drawing.
+        listBox.getSelectionModel().selectedIndexProperty().addListener((p,o,n) -> {
+            if (n != null) {
+                currentDrawing = drawings.get(n.intValue());
+                repaint();
+            }
+        });
+
         // NEXT, configure the stage
         Scene scene = new Scene(root, 600, 400);
 
@@ -97,7 +105,7 @@ Java API.
         stage.show();
 
         // NEXT, set and draw the default drawing
-        currentDrawing = drawings.get(0);
+        currentDrawing = drawings.getFirst();
         repaint();
     }
 
@@ -122,18 +130,43 @@ Java API.
 
     private final ObservableList<DemoDrawing> drawings =
         FXCollections.observableArrayList(
-            drawing("Test Drawing", this::testDrawing)
+            drawing("Test Drawing", this::testDrawing),
+            drawing("Shapes", this::testShapes),
+            drawing("Rotation", this::testRotation)
         );
 
     private void testDrawing(Stencil sten) {
-        stencil.clear(Color.WHITE);
-        stencil.draw(rect().at(10,10).size(100,60).background(Color.LIGHTYELLOW));
-        stencil.draw(line().to(10,10).to(110,70));
-        stencil.draw(line().to(10,70).to(110,10));
-        stencil.draw(label().at(60,80).tack(Tack.NORTH).text("Stencil Test"));
+        sten.clear(Color.WHITE);
+        sten.draw(rect().at(10,10).size(100,60).background(Color.LIGHTYELLOW));
+        sten.draw(line().to(10,10).to(110,70));
+        sten.draw(line().to(10,70).to(110,10));
+        sten.draw(label().at(60,80).tack(Tack.NORTH).text("Stencil Test"));
 
-        stencil.draw(rect().at(60,150).size(60,40).tack(Tack.SOUTH));
-        stencil.draw(rect().at(60,150).size(12,8).tack(Tack.SOUTH));
+        sten.draw(rect().at(60,150).size(60,40).tack(Tack.SOUTH));
+        sten.draw(rect().at(60,150).size(12,8).tack(Tack.SOUTH));
+    }
+
+    private void testShapes(Stencil sten) {
+        sten.clear(Color.WHITE);
+        sten.draw(rect().at(10,10).size(100,60).background(Color.LIGHTYELLOW));
+        sten.draw(line().to(10,10).to(110,70));
+        sten.draw(line().to(10,70).to(110,10));
+        sten.draw(label().at(60,80).tack(Tack.NORTH).text("Stencil Test"));
+
+        sten.draw(rect().at(60,150).size(60,40).tack(Tack.SOUTH));
+        sten.draw(rect().at(60,150).size(12,8).tack(Tack.SOUTH));
+    }
+
+    private void testRotation(Stencil sten) {
+        sten.clear(Color.WHITE);
+
+        for (var degrees = 0; degrees < 360; degrees += 30) {
+            sten.pen().save();
+            sten.pen().translate(150,150);
+            sten.pen().rotate(degrees);
+            sten.draw(rect().at(0,0).size(100,20).tack(Tack.CENTER));
+            sten.pen().restore();
+        }
     }
 
     //------------------------------------------------------------------------
