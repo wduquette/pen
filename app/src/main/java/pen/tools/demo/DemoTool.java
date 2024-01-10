@@ -13,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pen.fx.FX;
 import pen.stencil.Tack;
@@ -68,7 +69,10 @@ Java API.
                 .setDividerPosition(0, 0.2)
             )
             .add(FX.toolBar(statusBar)
-                .add(FX.label(statusLabel).text("(x=    , y=    )"))
+                .add(FX.label(statusLabel)
+                    .text("(x=    , y=    )")
+                    .font(Font.font("Menlo", 14))
+                )
             )
             ;
 
@@ -122,10 +126,8 @@ Java API.
         );
 
     private void testDrawing(Stencil sten) {
-//        stencil.pen().translate(100, 0);
-//        stencil.pen().scale(2,2);
-//        stencil.pen().rotate(45.0);
-        stencil.draw(rect().at(10,10).size(100,60).lineWidth(2).background(Color.LIGHTYELLOW));
+        stencil.clear(Color.WHITE);
+        stencil.draw(rect().at(10,10).size(100,60).background(Color.LIGHTYELLOW));
         stencil.draw(line().to(10,10).to(110,70));
         stencil.draw(line().to(10,70).to(110,10));
         stencil.draw(label().at(60,80).tack(Tack.NORTH).text("Stencil Test"));
