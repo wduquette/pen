@@ -2,6 +2,7 @@ A collection of things I want to consider
 
 ## New Ideas
 
+- [[Managing Pen State in Stencil]]
 - [[Fancy Label Shape]]
 - [[Output Color Names]]
 - [[AceFX]]

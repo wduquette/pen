@@ -23,7 +23,11 @@ public class Pen {
     //-------------------------------------------------------------------------
     //  Instance Variables
 
+    // The wrapped GraphicsContext
     private final GraphicsContext gc;
+
+    // Height of the save/restore stack
+    private int stackHeight = 0;
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -67,14 +71,49 @@ public class Pen {
     //-------------------------------------------------------------------------
     // DSL: save and restore
 
+    /**
+     * Saves the drawing state.
+     * @return The pen
+     */
     public Pen save() {
+        stackHeight++;
         gc.save();
         return this;
     }
 
+    /**
+     * Restores the previous drawing state.
+     * @return The pen
+     */
     public Pen restore() {
-        gc.restore();
+        if (stackHeight > 0) {
+            stackHeight--;
+            gc.restore();
+        }
         return this;
+    }
+
+    /**
+     * Resets the drawing state to its condition when the Pen was created.
+     * @return The pen
+     */
+    public Pen reset() {
+        while (stackHeight > 0) {
+            restore();
+        }
+
+        return this;
+    }
+
+    /**
+     * Gets the height of the save/restore stack.  If 0, the state of the Pen
+     * is as it was when the Pen was created.  If greater than 1, then its value
+     * is the number of times {@code save()} has been called without a matching
+     * {@code restore()}.
+     * @return The height.
+     */
+    public int getSaveStackHeight() {
+        return stackHeight;
     }
 
     //-------------------------------------------------------------------------

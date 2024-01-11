@@ -112,6 +112,7 @@ Java API.
     private void repaint() {
         if (currentDrawing != null) {
             stencil.clear();
+            stencil.pen().reset(); // TODO: Use stencil's own method.
             stencil.draw(currentDrawing.drawing());
         }
     }
@@ -161,9 +162,7 @@ Java API.
         sten.clear(Color.WHITE);
 
         for (var degrees = 0; degrees < 360; degrees += 30) {
-            sten.pen().save();
-            sten.pen().translate(150,150);
-            sten.pen().rotate(degrees);
+            sten.pen().save().translate(150,150).rotate(degrees);
             sten.draw(rect().at(0,0).size(100,20).tack(Tack.CENTER));
             sten.pen().restore();
         }
