@@ -348,10 +348,10 @@ public class Pen {
             return null;
         }
 
-        var x0 = points.get(0).getX();
-        var x1 = points.get(0).getX();
-        var y0 = points.get(0).getY();
-        var y1 = points.get(0).getY();
+        var x0 = points.getFirst().getX();
+        var x1 = points.getFirst().getX();
+        var y0 = points.getFirst().getY();
+        var y1 = points.getFirst().getY();
 
         for (var p : points) {
             x0 = Math.min(x0, p.getX());
