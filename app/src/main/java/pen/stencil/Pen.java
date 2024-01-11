@@ -32,6 +32,12 @@ public class Pen {
     //-------------------------------------------------------------------------
     // Constructor
 
+    /**
+     * Creates a new Pen for the given GraphicsContext.  The {@code reset()}
+     * method will reset the GraphicsContext to its state as of the moment of
+     * Pen creation.
+     * @param gc The graphics context.
+     */
     public Pen(GraphicsContext gc) {
         this.gc = gc;
         gc.setFont(DEFAULT_FONT.getRealFont());
