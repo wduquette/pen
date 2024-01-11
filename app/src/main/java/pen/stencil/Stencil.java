@@ -127,8 +127,14 @@ public class Stencil {
      * @return The stencil
      */
     public Stencil draw(StencilShape shape) {
-        addBounds(shape.draw(this));
+        try {
+            pen.save();
+            addBounds(shape.draw(this));
+        } finally {
+            pen.restore();
+        }
         return this;
+
     }
 
     /**
