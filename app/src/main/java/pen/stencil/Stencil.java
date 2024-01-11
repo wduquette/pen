@@ -133,12 +133,18 @@ public class Stencil {
 
     /**
      * Draws the drawing on the Stencil.  A drawing is a function that
-     * draws using a stencil.
+     * draws using a stencil.  The Stencil's pen's drawing parameters are
+     * saved before the drawing is done, and restored afterward.
      * @param drawing The drawing
      * @return The stencil
      */
     public Stencil draw(StencilDrawing drawing) {
-        drawing.draw(this);
+        try {
+            pen.save();
+            drawing.draw(this);
+        } finally {
+            pen.restore();
+        }
         return this;
     }
 
@@ -154,6 +160,51 @@ public class Stencil {
 
     public Stencil minWidth(double value) {
         this.minWidth = value;
+        return this;
+    }
+
+    //-------------------------------------------------------------------------
+    // Transforms and Pen State Management
+
+    /**
+     * Saves the pen's drawing parameter settings onto the pen's stack.
+     * @return The stencil
+     */
+    public Stencil savePen() {
+        pen.save();
+        return this;
+    }
+
+    /**
+     * Restores the pen's saved drawing parameter settings.
+     * @return The stencil
+     */
+    public Stencil restorePen() {
+        pen.restore();
+        return this;
+    }
+
+    /**
+     * Resets the pen's drawing parameter settings to their initial values.
+     * @return The stencil
+     */
+    public Stencil resetPen() {
+        pen.reset();
+        return this;
+    }
+
+    public Stencil translate(double x, double y) {
+        pen.translate(x, y);
+        return this;
+    }
+
+    public Stencil rotate(double degrees) {
+        pen.rotate(degrees);
+        return this;
+    }
+
+    public Stencil scale(double xFactor, double yFactor) {
+        pen.scale(xFactor, yFactor);
         return this;
     }
 
