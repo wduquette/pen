@@ -85,31 +85,28 @@ public class StencilSymbol
             .rotate(rotationDegrees)
             .setFill(getForeground());
 
-        double x0;
+        double offset = switch (hpos) {
+            case HPos.LEFT -> w;
+            case HPos.CENTER -> w/2;
+            case HPos.RIGHT -> 0;
+        };
         double y0 = y - h/2;
-        if (hpos == HPos.LEFT) {
-            x0 = x;
-            sten.pen().fillPolygon(List.of(
-                new Point2D(0, 0),
-                new Point2D(w, -h / 2),
-                new Point2D(w, h / 2)
-            )).restore();
-        } else if (hpos == HPos.CENTER) {
-            x0 = x - w/2;
-            sten.pen().fillPolygon(List.of(
-                new Point2D(-w/2, 0),
-                new Point2D(w/2, -h / 2),
-                new Point2D(w/2, h / 2)
-            )).restore();
-        } else {
-            // HPos.RIGHT
-            x0 = x - w;
-            sten.pen().fillPolygon(List.of(
+        double x0 = x - offset;
+
+//        sten.pen()
+//            .fillPolygon(List.of(
+//                new Point2D(offset - w, 0),
+//                new Point2D(offset, -h / 2),
+//                new Point2D(offset, h / 2)
+//        )).restore();
+
+        sten.pen()
+            .translate(offset, 0)
+            .fillPolygon(List.of(
                 new Point2D(-w, 0),
                 new Point2D(0, -h / 2),
                 new Point2D(0, h / 2)
             )).restore();
-        }
 
         return new BoundingBox(x0, y0, w, h);
     }
