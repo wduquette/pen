@@ -77,18 +77,18 @@ public class StencilSymbol
 
         double offset = switch (hpos) {
             case HPos.LEFT -> w;
-            case HPos.CENTER -> w/2;
+            case HPos.CENTER -> w/2.0;
             case HPos.RIGHT -> 0;
         };
-        double y0 = y - h/2;
+        double y0 = y - h/2.0;
         double x0 = x - offset;
 
         sten.pen()
             .translate(offset, 0)
             .fillPolygon(List.of(
                 new Point2D(-w, 0),
-                new Point2D(0, -h / 2),
-                new Point2D(0, h / 2)
+                new Point2D(0, -h / 2.0),
+                new Point2D(0, h / 2.0)
             )).restore();
 
         return new BoundingBox(x0, y0, w, h);
