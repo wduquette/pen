@@ -141,7 +141,7 @@ Java API.
         sten.clear(Color.WHITE);
 
         var x = 30;
-        var symbol = Symbol.SOLID_ARROW;
+        var symbol = Symbol.ARROW_SOLID;
         sten.draw(line().to(x, 30).to(x, 195).foreground(Color.RED));
         for (int i = 0; i < 12; i++) {
             var y = 30 + i*15;
@@ -155,6 +155,7 @@ Java API.
         }
 
         x = 90;
+        symbol = Symbol.ARROW_OPEN;
         sten.draw(line().to(x,30).to(x, 195).foreground(Color.RED));
         for (int i = 0; i < 12; i++) {
             var y = 30 + i*15;
@@ -162,12 +163,13 @@ Java API.
             sten.savePen()
                 .translate(x, y)
                 .rotate(degrees)
-                .draw(symbol().at(0,0).symbol(symbol).tack(Tack.CENTER))
+                .draw(symbol().at(0,0).symbol(symbol))
                 .restorePen()
             ;
         }
 
         x = 150;
+        symbol = Symbol.DOT_OPEN_OFFSET;
         sten.draw(line().to(x,30).to(x, 195).foreground(Color.RED));
         for (int i = 0; i < 12; i++) {
             var y = 30 + i*15;
@@ -175,7 +177,20 @@ Java API.
             sten.savePen()
                 .translate(x, y)
                 .rotate(degrees)
-                .draw(symbol().at(0,0).symbol(symbol).tack(Tack.EAST))
+                .draw(symbol().at(0,0).symbol(symbol))
+                .restorePen();
+        }
+
+        x = 240;
+        symbol = Symbol.DOT_SOLID;
+        sten.draw(line().to(x,30).to(x, 195).foreground(Color.RED));
+        for (int i = 0; i < 12; i++) {
+            var y = 30 + i*15;
+            var degrees = 30.0*i;
+            sten.savePen()
+                .translate(x, y)
+                .rotate(degrees)
+                .draw(symbol().at(0,0).symbol(symbol))
                 .restorePen();
         }
     }

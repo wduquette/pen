@@ -18,14 +18,11 @@ public class StencilSymbol
     // Instance Variables
 
     // The symbol to draw
-    private Symbol symbol = Symbol.SOLID_ARROW;
+    private Symbol symbol = Symbol.ARROW_SOLID;
 
     // Its origin
     private double x;
     private double y;
-
-    // Its unrotated position relative to its origin
-    private Tack tack = Tack.WEST;
 
     //---------------------------------------------------------------------
     // Constructor
@@ -52,24 +49,21 @@ public class StencilSymbol
         return this;
     }
 
-    public StencilSymbol tack(Tack tack) {
-        this.tack = tack;
-        return this;
-    }
-
     public Bounds draw(Stencil stencil) {
         return switch (symbol) {
-            case SOLID_ARROW -> drawSolidArrow(stencil);
-            case OPEN_ARROW  -> drawOpenArrow(stencil);
-            case SOLID_DOT   -> drawSolidDot(stencil);
-            case OPEN_DOT    -> drawOpenDot(stencil);
+            case ARROW_SOLID -> drawArrowSolid(stencil);
+            case ARROW_OPEN -> drawArrowOpen(stencil);
+            case DOT_SOLID -> drawDotSolid(stencil);
+            case DOT_SOLID_OFFSET -> drawDotSolidOffset(stencil);
+            case DOT_OPEN -> drawDotOpen(stencil);
+            case DOT_OPEN_OFFSET -> drawDotOpenOffset(stencil);
         };
     }
 
-    public Bounds drawSolidArrow(Stencil sten) {
+    public Bounds drawArrowSolid(Stencil sten) {
         var w = 12;
         var h = 8;
-        var box = Pen.tack2bounds(tack, x, y, w, h);
+        var box = Pen.tack2bounds(Tack.WEST, x, y, w, h);
 
         sten.pen()
             .setFill(getForeground())
@@ -81,10 +75,10 @@ public class StencilSymbol
         return box;
     }
 
-    public Bounds drawOpenArrow(Stencil sten) {
+    public Bounds drawArrowOpen(Stencil sten) {
         var w = 12;
         var h = 8;
-        var box = Pen.tack2bounds(tack, x, y, w, h);
+        var box = Pen.tack2bounds(Tack.WEST, x, y, w, h);
 
         sten.pen()
             .setStroke(getForeground())
@@ -96,22 +90,54 @@ public class StencilSymbol
         return box;
     }
 
-    public Bounds drawSolidDot(Stencil sten) {
+    public Bounds drawDotSolid(Stencil sten) {
         var w = 6;
         var h = 6;
-        var box = Pen.tack2bounds(tack, x, y, w, h);
+        var box = Pen.tack2bounds(Tack.CENTER, x, y, w, h);
 
         sten.pen()
             .setFill(getForeground())
-            .fillOval(box);
+            .setStroke(getForeground())
+            .fillOval(box)
+            .strokeOval(box)
+        ;
 
         return box;
     }
 
-    public Bounds drawOpenDot(Stencil sten) {
+    public Bounds drawDotSolidOffset(Stencil sten) {
         var w = 6;
         var h = 6;
-        var box = Pen.tack2bounds(tack, x, y, w, h);
+        var box = Pen.tack2bounds(Tack.WEST, x, y, w, h);
+
+        sten.pen()
+            .setFill(getForeground())
+            .setStroke(getForeground())
+            .fillOval(box)
+            .strokeOval(box)
+        ;
+
+        return box;
+    }
+
+    public Bounds drawDotOpen(Stencil sten) {
+        var w = 6;
+        var h = 6;
+        var box = Pen.tack2bounds(Tack.CENTER, x, y, w, h);
+
+        sten.pen()
+            .setFill(getBackground())
+            .setStroke(getForeground())
+            .fillOval(box)
+            .strokeOval(box);
+
+        return box;
+    }
+
+    public Bounds drawDotOpenOffset(Stencil sten) {
+        var w = 6;
+        var h = 6;
+        var box = Pen.tack2bounds(Tack.WEST, x, y, w, h);
 
         sten.pen()
             .setFill(getBackground())
