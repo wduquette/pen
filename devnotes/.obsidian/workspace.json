@@ -4,22 +4,47 @@
     "type": "split",
     "children": [
       {
-        "id": "7e31de3496cb9b72",
+        "id": "c7bbabbae62c3f85",
         "type": "tabs",
         "children": [
           {
-            "id": "8c0bd158daab8f1c",
+            "id": "904fcf32f302a7e1",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "2024-01-11.md",
+                "file": "To Do List.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "694cfea1a9ff73a1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Ponder Arrowheads.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "bf83e3d47ad1b282",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Ponder Arrowheads.md",
                 "mode": "source",
                 "source": true
               }
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -69,7 +94,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "right": {
     "id": "9ad1db49e5b0cead",
@@ -85,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "2024-01-11.md",
+                "file": "Ponder Arrowheads.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "2024-01-11.md",
+                "file": "Ponder Arrowheads.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "2024-01-11.md"
+                "file": "Ponder Arrowheads.md"
               }
             }
           }
@@ -148,15 +173,18 @@
       "homepage:Open homepage": false
     }
   },
-  "active": "8c0bd158daab8f1c",
+  "active": "bf83e3d47ad1b282",
   "lastOpenFiles": [
-    "Reset Pen State.md",
-    "2024-01-11.md",
+    "Excalidraw/Drawing Arrowhead Position.excalidraw.md",
+    "Ponder Arrowheads.md",
+    "Excalidraw",
+    "To Do List.md",
     "Managing Pen State in Stencil.md",
+    "Reset Pen State.md",
+    "Home.md",
+    "2024-01-11.md",
     "Ideas.md",
     "2024-01-09.md",
-    "Home.md",
-    "To Do List.md",
     "2024-01-07.md",
     "Stencil Bounds Aggregation.md",
     "2024-01-06.md",

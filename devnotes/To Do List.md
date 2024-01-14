@@ -8,12 +8,14 @@
     - [x] `Stencil::draw()` must transform bounds according to the current transform.
     - [x] Add `FX`, a fluent molder package
     - [x] Update to Java 21 via ZuluFX 21.
-    - [ ] Add transforms to `Stencil`
+    - [x] Add transforms to `Stencil`
+        - Including `pen reset` and `stencil resetPen`
+    - [ ] [[Ponder Arrowheads]]
+    - [ ] Add arrowheads.
+        - [ ] Circles can be drawn centered on point or tangent to point.
     - [ ] Add GUI to `pen demo` so that I can browse from a list of different test drawings.
     - [ ] Add `StencilCircle` plus `Pen` infrastructure
     - [ ] `view` tool displays script error in a useful way.
-    - [ ] Add arrowheads.
-        - [ ] Circles can be drawn centered on point or tangent to point.
 - [ ] `pen` Application
     -  `draw` tool
         - [ ] Execute multiple Tcl scripts, save PNG files

@@ -1,4 +1,7 @@
 [[Home]] > [[Ideas]] #idea   See also: [[Managing Pen State in Stencil]]
+#completed 
+
+**Status:** done, using Option C.
 
 `GraphicsContext` provides no easy means of resetting its state to its defaults.  And yet, we'd like to be able to do that.  What are the possibilities?
 

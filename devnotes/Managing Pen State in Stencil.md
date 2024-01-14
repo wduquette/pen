@@ -1,11 +1,13 @@
-[[Home]] > [[Ideas]] #idea 
+[[Home]] > [[Ideas]] #idea #task
+
+**Status**: Done, using options B and D.
 
 ## To Do
 
-- [ ] Make `Stencil::draw(StencilDrawing)` save and restore the pen state.
-- [ ] Add `Pen`'s `save`, `restore`, `translate`, `rotate`, and `scale` API to `Stencil`
+- [x] Make `Stencil::draw(StencilDrawing)` save and restore the pen state.
+- [x] Add `Pen`'s `save`, `restore`, `translate`, `rotate`, and `scale` API to `Stencil`
     - Ponder the names.
-- [ ] Ponder [[Reset Pen State]]
+- [x] Ponder [[Reset Pen State]]
 
 ## The Problem
 
@@ -113,6 +115,8 @@ Cons
 - If you remember to use it.
 - All variables used in the lambda must be effectively final, which becomes a nuisance very quickly.
     - Or you have to break up your drawing into multiple methods.
+
+However, the Tcl API can easily provide this.
 
 ### Option D: Stencil::draw(StencilDrawing)
 
