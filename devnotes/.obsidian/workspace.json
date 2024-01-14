@@ -43,8 +43,7 @@
               }
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -110,7 +109,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Ponder Arrowheads.md",
+                "file": "To Do List.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -127,7 +126,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Ponder Arrowheads.md",
+                "file": "To Do List.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -150,7 +149,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Ponder Arrowheads.md"
+                "file": "To Do List.md"
               }
             }
           }
@@ -173,12 +172,12 @@
       "homepage:Open homepage": false
     }
   },
-  "active": "bf83e3d47ad1b282",
+  "active": "904fcf32f302a7e1",
   "lastOpenFiles": [
-    "Excalidraw/Drawing Arrowhead Position.excalidraw.md",
     "Ponder Arrowheads.md",
-    "Excalidraw",
     "To Do List.md",
+    "Excalidraw/Drawing Arrowhead Position.excalidraw.md",
+    "Excalidraw",
     "Managing Pen State in Stencil.md",
     "Reset Pen State.md",
     "Home.md",

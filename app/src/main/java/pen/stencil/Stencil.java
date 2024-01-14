@@ -228,6 +228,10 @@ public class Stencil {
         return new StencilRect();
     }
 
+    public static StencilSymbol symbol() {
+        return new StencilSymbol();
+    }
+
     //-------------------------------------------------------------------------
     // Helpers
 

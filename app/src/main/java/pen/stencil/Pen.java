@@ -237,6 +237,11 @@ public class Pen {
     // Lines
     //
 
+    public Pen strokeLine(double x1, double y1, double x2, double y2) {
+        gc.strokeLine(x1, y1, x2, y2);
+        return this;
+    }
+
     public Pen strokePolyline(double[] xPoints, double[] yPoints, int nPoints) {
         gc.strokePolyline(xPoints, yPoints, nPoints);
         return this;
@@ -254,6 +259,42 @@ public class Pen {
     }
 
     //
+    // Polygon
+    //
+
+    public Pen fillPolygon(double[] xPoints, double[] yPoints, int nPoints) {
+        gc.fillPolygon(xPoints, yPoints, nPoints);
+        return this;
+    }
+
+    public Pen fillPolygon(List<Point2D> points) {
+        double[] xPoints = new double[points.size()];
+        double[] yPoints = new double[points.size()];
+
+        for (int i = 0; i < points.size(); i++) {
+            xPoints[i] = points.get(i).getX();
+            yPoints[i] = points.get(i).getY();
+        }
+        return fillPolygon(xPoints, yPoints, points.size());
+    }
+
+    public Pen strokePolygon(double[] xPoints, double[] yPoints, int nPoints) {
+        gc.strokePolygon(xPoints, yPoints, nPoints);
+        return this;
+    }
+
+    public Pen strokePolygon(List<Point2D> points) {
+        double[] xPoints = new double[points.size()];
+        double[] yPoints = new double[points.size()];
+
+        for (int i = 0; i < points.size(); i++) {
+            xPoints[i] = points.get(i).getX();
+            yPoints[i] = points.get(i).getY();
+        }
+        return strokePolygon(xPoints, yPoints, points.size());
+    }
+
+    //
     // Rectangles
     //
 
@@ -262,13 +303,46 @@ public class Pen {
         return this;
     }
 
+    public Pen fillRect(Bounds bounds) {
+        gc.fillRect(bounds.getMinX(), bounds.getMinY(),
+            bounds.getWidth(), bounds.getHeight());
+        return this;
+    }
+
     public Pen strokeRect(double x, double y, double w, double h) {
         gc.strokeRect(x, y, w, h);
         return this;
     }
 
-    public Pen strokeLine(double x1, double y1, double x2, double y2) {
-        gc.strokeLine(x1, y1, x2, y2);
+    public Pen strokeRect(Bounds bounds) {
+        gc.strokeRect(bounds.getMinX(), bounds.getMinY(),
+            bounds.getWidth(), bounds.getHeight());
+        return this;
+    }
+
+    //
+    // Ovals
+    //
+
+    public Pen fillOval(double x, double y, double w, double h) {
+        gc.fillOval(x, y, w, h);
+        return this;
+    }
+
+    public Pen fillOval(Bounds bounds) {
+        gc.fillOval(bounds.getMinX(), bounds.getMinY(),
+            bounds.getWidth(), bounds.getHeight());
+        return this;
+    }
+
+    public Pen strokeOval(double x, double y, double w, double h) {
+        gc.strokeOval(x, y, w, h);
+        return this;
+    }
+
+    public Pen strokeOval(Bounds bounds) {
+        gc.strokeOval(bounds.getMinX(), bounds.getMinY(),
+            bounds.getWidth(), bounds.getHeight());
         return this;
     }
 
@@ -327,6 +401,30 @@ public class Pen {
             case BASELINE, BOTTOM -> y - h;
         };
         return new BoundingBox(x0, y0, w, h);
+    }
+
+    /**
+     * Given a tack and the related bounds (as computed by tack2bounds()), get
+     * the tack point.
+     * @param tack The tack
+     * @param bounds The bounds
+     * @return The tack point
+     */
+    public static Point2D tack2point(Tack tack, Bounds bounds) {
+        var x0 = switch (tack.hpos()) {
+            case LEFT -> bounds.getMinX();
+            case CENTER -> bounds.getCenterX();
+            case RIGHT -> bounds.getMaxX();
+        };
+
+        // Note: tack.vpos() will never actually return BASELINE
+        var y0 = switch (tack.vpos()) {
+            case TOP -> bounds.getMinY();
+            case CENTER -> bounds.getCenterY();
+            case BASELINE, BOTTOM -> bounds.getMaxY();
+        };
+
+        return new Point2D(x0, y0);
     }
 
     /**

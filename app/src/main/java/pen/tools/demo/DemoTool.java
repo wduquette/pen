@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pen.fx.FX;
+import pen.stencil.Symbol;
 import pen.stencil.Tack;
 import pen.tools.ToolInfo;
 import pen.stencil.Stencil;
@@ -138,13 +139,60 @@ Java API.
 
     private void testDrawing(Stencil sten) {
         sten.clear(Color.WHITE);
-        sten.draw(rect().at(10,10).size(100,60).background(Color.LIGHTYELLOW));
-        sten.draw(line().to(10,10).to(110,70));
-        sten.draw(line().to(10,70).to(110,10));
-        sten.draw(label().at(60,80).tack(Tack.NORTH).text("Stencil Test"));
 
-        sten.draw(rect().at(60,150).size(60,40).tack(Tack.SOUTH));
-        sten.draw(rect().at(60,150).size(12,8).tack(Tack.SOUTH));
+        var x = 30;
+        var symbol = Symbol.ARROW_SOLID;
+        sten.draw(line().to(x, 30).to(x, 195).foreground(Color.RED));
+        for (int i = 0; i < 12; i++) {
+            var y = 30 + i*15;
+            var degrees = 30.0*i;
+            sten.savePen()
+                .translate(x, y)
+                .rotate(degrees)
+                .draw(symbol().at(0,0).symbol(symbol))
+                .restorePen()
+                ;
+        }
+
+        x = 90;
+        symbol = Symbol.ARROW_OPEN;
+        sten.draw(line().to(x,30).to(x, 195).foreground(Color.RED));
+        for (int i = 0; i < 12; i++) {
+            var y = 30 + i*15;
+            var degrees = 30.0*i;
+            sten.savePen()
+                .translate(x, y)
+                .rotate(degrees)
+                .draw(symbol().at(0,0).symbol(symbol))
+                .restorePen()
+            ;
+        }
+
+        x = 150;
+        symbol = Symbol.DOT_OPEN_OFFSET;
+        sten.draw(line().to(x,30).to(x, 195).foreground(Color.RED));
+        for (int i = 0; i < 12; i++) {
+            var y = 30 + i*15;
+            var degrees = 30.0*i;
+            sten.savePen()
+                .translate(x, y)
+                .rotate(degrees)
+                .draw(symbol().at(0,0).symbol(symbol))
+                .restorePen();
+        }
+
+        x = 240;
+        symbol = Symbol.DOT_SOLID;
+        sten.draw(line().to(x,30).to(x, 195).foreground(Color.RED));
+        for (int i = 0; i < 12; i++) {
+            var y = 30 + i*15;
+            var degrees = 30.0*i;
+            sten.savePen()
+                .translate(x, y)
+                .rotate(degrees)
+                .draw(symbol().at(0,0).symbol(symbol))
+                .restorePen();
+        }
     }
 
     private void testShapes(Stencil sten) {

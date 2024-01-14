@@ -10,11 +10,15 @@
     - [x] Update to Java 21 via ZuluFX 21.
     - [x] Add transforms to `Stencil`
         - Including `pen reset` and `stencil resetPen`
-    - [ ] [[Ponder Arrowheads]]
-    - [ ] Add arrowheads.
-        - [ ] Circles can be drawn centered on point or tangent to point.
-    - [ ] Add GUI to `pen demo` so that I can browse from a list of different test drawings.
+    - [x] Add GUI to `pen demo` so that I can browse from a list of different test drawings.
+    - [x] [[Ponder Arrowheads]]
+    - [x] Add arrowhead symbol drawing
+    - [ ] Revise arrowhead implementation to use distinct symbols instead of `tacks`.
+    - [ ] Add arrowheads to `Stencil::line`
+    - [ ] Add `StencilOval`.
     - [ ] Add `StencilCircle` plus `Pen` infrastructure
+    - [ ] Use `.pen` file type for `Pen` drawing scripts
+    - [ ] Add GUI to `pen view` so I can browse from a list of drawing scripts.
     - [ ] `view` tool displays script error in a useful way.
 - [ ] `pen` Application
     -  `draw` tool
