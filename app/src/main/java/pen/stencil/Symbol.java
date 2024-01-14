@@ -14,5 +14,5 @@ public enum Symbol {
     SOLID_DOT,
 
     /** A small dot filled with the background color. */
-    OPEN_DOT;
+    OPEN_DOT
 }

@@ -60,9 +60,9 @@ public class StencilSymbol
     public Bounds draw(Stencil stencil) {
         return switch (symbol) {
             case SOLID_ARROW -> drawSolidArrow(stencil);
-            case OPEN_ARROW -> drawOpenArrow(stencil);
-            default -> throw new IllegalStateException(
-                "Unexpected symbol: " + symbol);
+            case OPEN_ARROW  -> drawOpenArrow(stencil);
+            case SOLID_DOT   -> drawSolidDot(stencil);
+            case OPEN_DOT    -> drawOpenDot(stencil);
         };
     }
 
@@ -93,6 +93,32 @@ public class StencilSymbol
                 new Point2D(box.getMinX(), box.getCenterY()),
                 new Point2D(box.getMaxX(), box.getMaxY())
             ));
+        return box;
+    }
+
+    public Bounds drawSolidDot(Stencil sten) {
+        var w = 6;
+        var h = 6;
+        var box = Pen.tack2bounds(tack, x, y, w, h);
+
+        sten.pen()
+            .setFill(getForeground())
+            .fillOval(box);
+
+        return box;
+    }
+
+    public Bounds drawOpenDot(Stencil sten) {
+        var w = 6;
+        var h = 6;
+        var box = Pen.tack2bounds(tack, x, y, w, h);
+
+        sten.pen()
+            .setFill(getBackground())
+            .setStroke(getForeground())
+            .fillOval(box)
+            .strokeOval(box);
+
         return box;
     }
 }
