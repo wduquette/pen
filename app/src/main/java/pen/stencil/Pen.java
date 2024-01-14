@@ -237,6 +237,11 @@ public class Pen {
     // Lines
     //
 
+    public Pen strokeLine(double x1, double y1, double x2, double y2) {
+        gc.strokeLine(x1, y1, x2, y2);
+        return this;
+    }
+
     public Pen strokePolyline(double[] xPoints, double[] yPoints, int nPoints) {
         gc.strokePolyline(xPoints, yPoints, nPoints);
         return this;
@@ -298,13 +303,46 @@ public class Pen {
         return this;
     }
 
+    public Pen fillRect(Bounds bounds) {
+        gc.fillRect(bounds.getMinX(), bounds.getMinY(),
+            bounds.getWidth(), bounds.getHeight());
+        return this;
+    }
+
     public Pen strokeRect(double x, double y, double w, double h) {
         gc.strokeRect(x, y, w, h);
         return this;
     }
 
-    public Pen strokeLine(double x1, double y1, double x2, double y2) {
-        gc.strokeLine(x1, y1, x2, y2);
+    public Pen strokeRect(Bounds bounds) {
+        gc.strokeRect(bounds.getMinX(), bounds.getMinY(),
+            bounds.getWidth(), bounds.getHeight());
+        return this;
+    }
+
+    //
+    // Ovals
+    //
+
+    public Pen fillOval(double x, double y, double w, double h) {
+        gc.fillOval(x, y, w, h);
+        return this;
+    }
+
+    public Pen fillOval(Bounds bounds) {
+        gc.fillOval(bounds.getMinX(), bounds.getMinY(),
+            bounds.getWidth(), bounds.getHeight());
+        return this;
+    }
+
+    public Pen strokeOval(double x, double y, double w, double h) {
+        gc.strokeOval(x, y, w, h);
+        return this;
+    }
+
+    public Pen strokeOval(Bounds bounds) {
+        gc.strokeOval(bounds.getMinX(), bounds.getMinY(),
+            bounds.getWidth(), bounds.getHeight());
         return this;
     }
 
