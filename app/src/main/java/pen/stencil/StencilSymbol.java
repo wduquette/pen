@@ -1,8 +1,6 @@
 package pen.stencil;
 
-import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
-import javafx.geometry.HPos;
 import javafx.geometry.Point2D;
 
 import java.util.List;
@@ -11,6 +9,7 @@ import java.util.List;
  * Draws a given symbol. Symbols that imply a direction (i.e., arrowheads)
  * are drawing pointing left.
  */
+@SuppressWarnings("unused")
 public class StencilSymbol
     extends StyleBase<StencilSymbol>
     implements StencilShape
@@ -26,7 +25,6 @@ public class StencilSymbol
     private double y;
 
     // Its unrotated position relative to its origin
-    private HPos hpos = HPos.LEFT;
     private Tack tack = Tack.WEST;
 
     //---------------------------------------------------------------------
@@ -51,11 +49,6 @@ public class StencilSymbol
     public StencilSymbol at(double x, double y) {
         this.x = x;
         this.y = y;
-        return this;
-    }
-
-    public StencilSymbol hpos(HPos hpos) {
-        this.hpos = hpos;
         return this;
     }
 
