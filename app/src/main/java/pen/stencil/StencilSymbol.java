@@ -28,9 +28,6 @@ public class StencilSymbol
     // Its unrotated position relative to its origin
     private HPos hpos = HPos.LEFT;
 
-    // Rotation around the tack point
-    private double rotationDegrees;
-
     //---------------------------------------------------------------------
     // Constructor
 
@@ -61,11 +58,6 @@ public class StencilSymbol
         return this;
     }
 
-    public StencilSymbol rotate(double degrees) {
-        this.rotationDegrees = degrees;
-        return this;
-    }
-
     public Bounds draw(Stencil stencil) {
         return switch (symbol) {
             case SOLID_ARROW -> drawSolidArrow(stencil);
@@ -78,11 +70,9 @@ public class StencilSymbol
         var w = 12;
         var h = 8;
 
-        // This is not right, I think.  Getting confused.
         sten.pen()
             .save()
             .translate(x, y)
-            .rotate(rotationDegrees)
             .setFill(getForeground());
 
         double offset = switch (hpos) {
@@ -92,13 +82,6 @@ public class StencilSymbol
         };
         double y0 = y - h/2;
         double x0 = x - offset;
-
-//        sten.pen()
-//            .fillPolygon(List.of(
-//                new Point2D(offset - w, 0),
-//                new Point2D(offset, -h / 2),
-//                new Point2D(offset, h / 2)
-//        )).restore();
 
         sten.pen()
             .translate(offset, 0)

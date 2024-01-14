@@ -147,7 +147,12 @@ Java API.
         for (int i = 0; i < 12; i++) {
             var y = 30 + i*15;
             var degrees = 30.0*i;
-            sten.draw(symbol().at(x,y).rotate(degrees));
+            sten.savePen()
+                .translate(x, y)
+                .rotate(degrees)
+                .draw(symbol().at(0,0))
+                .restorePen()
+                ;
         }
 
         x = 90;
@@ -155,7 +160,12 @@ Java API.
         for (int i = 0; i < 12; i++) {
             var y = 30 + i*15;
             var degrees = 30.0*i;
-            sten.draw(symbol().at(x,y).rotate(degrees).hpos(HPos.CENTER));
+            sten.savePen()
+                .translate(x, y)
+                .rotate(degrees)
+                .draw(symbol().at(0,0).hpos(HPos.CENTER))
+                .restorePen()
+            ;
         }
 
         x = 150;
@@ -163,7 +173,11 @@ Java API.
         for (int i = 0; i < 12; i++) {
             var y = 30 + i*15;
             var degrees = 30.0*i;
-            sten.draw(symbol().at(x,y).rotate(degrees).hpos(HPos.RIGHT));
+            sten.savePen()
+                .translate(x, y)
+                .rotate(degrees)
+                .draw(symbol().at(0,0).hpos(HPos.RIGHT))
+                .restorePen();
         }
     }
 
