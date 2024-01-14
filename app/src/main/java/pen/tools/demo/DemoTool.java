@@ -163,7 +163,7 @@ Java API.
             sten.savePen()
                 .translate(x, y)
                 .rotate(degrees)
-                .draw(symbol().at(0,0).hpos(HPos.CENTER))
+                .draw(symbol().at(0,0).tack(Tack.CENTER))
                 .restorePen()
             ;
         }
@@ -176,7 +176,7 @@ Java API.
             sten.savePen()
                 .translate(x, y)
                 .rotate(degrees)
-                .draw(symbol().at(0,0).hpos(HPos.RIGHT))
+                .draw(symbol().at(0,0).tack(Tack.EAST))
                 .restorePen();
         }
     }

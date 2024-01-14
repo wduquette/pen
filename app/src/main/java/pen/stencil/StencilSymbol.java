@@ -27,6 +27,7 @@ public class StencilSymbol
 
     // Its unrotated position relative to its origin
     private HPos hpos = HPos.LEFT;
+    private Tack tack = Tack.WEST;
 
     //---------------------------------------------------------------------
     // Constructor
@@ -58,6 +59,11 @@ public class StencilSymbol
         return this;
     }
 
+    public StencilSymbol tack(Tack tack) {
+        this.tack = tack;
+        return this;
+    }
+
     public Bounds draw(Stencil stencil) {
         return switch (symbol) {
             case SOLID_ARROW -> drawSolidArrow(stencil);
@@ -69,28 +75,15 @@ public class StencilSymbol
     public Bounds drawSolidArrow(Stencil sten) {
         var w = 12;
         var h = 8;
+        var box = Pen.tack2bounds(tack, x, y, w, h);
 
         sten.pen()
-            .save()
-            .translate(x, y)
-            .setFill(getForeground());
-
-        double offset = switch (hpos) {
-            case HPos.LEFT -> w;
-            case HPos.CENTER -> w/2.0;
-            case HPos.RIGHT -> 0;
-        };
-        double y0 = y - h/2.0;
-        double x0 = x - offset;
-
-        sten.pen()
-            .translate(offset, 0)
+            .setFill(getForeground())
             .fillPolygon(List.of(
-                new Point2D(-w, 0),
-                new Point2D(0, -h / 2.0),
-                new Point2D(0, h / 2.0)
-            )).restore();
-
-        return new BoundingBox(x0, y0, w, h);
+                new Point2D(box.getMinX(), box.getCenterY()),
+                new Point2D(box.getMaxX(), box.getMinY()),
+                new Point2D(box.getMaxX(), box.getMaxY())
+            ));
+        return box;
     }
 }
