@@ -254,6 +254,42 @@ public class Pen {
     }
 
     //
+    // Polygon
+    //
+
+    public Pen fillPolygon(double[] xPoints, double[] yPoints, int nPoints) {
+        gc.fillPolygon(xPoints, yPoints, nPoints);
+        return this;
+    }
+
+    public Pen fillPolygon(List<Point2D> points) {
+        double[] xPoints = new double[points.size()];
+        double[] yPoints = new double[points.size()];
+
+        for (int i = 0; i < points.size(); i++) {
+            xPoints[i] = points.get(i).getX();
+            yPoints[i] = points.get(i).getY();
+        }
+        return fillPolygon(xPoints, yPoints, points.size());
+    }
+
+    public Pen strokePolygon(double[] xPoints, double[] yPoints, int nPoints) {
+        gc.strokePolygon(xPoints, yPoints, nPoints);
+        return this;
+    }
+
+    public Pen strokePolygon(List<Point2D> points) {
+        double[] xPoints = new double[points.size()];
+        double[] yPoints = new double[points.size()];
+
+        for (int i = 0; i < points.size(); i++) {
+            xPoints[i] = points.get(i).getX();
+            yPoints[i] = points.get(i).getY();
+        }
+        return strokePolygon(xPoints, yPoints, points.size());
+    }
+
+    //
     // Rectangles
     //
 
@@ -327,6 +363,30 @@ public class Pen {
             case BASELINE, BOTTOM -> y - h;
         };
         return new BoundingBox(x0, y0, w, h);
+    }
+
+    /**
+     * Given a tack and the related bounds (as computed by tack2bounds()), get
+     * the tack point.
+     * @param tack The tack
+     * @param bounds The bounds
+     * @return The tack point
+     */
+    public static Point2D tack2point(Tack tack, Bounds bounds) {
+        var x0 = switch (tack.hpos()) {
+            case LEFT -> bounds.getMinX();
+            case CENTER -> bounds.getCenterX();
+            case RIGHT -> bounds.getMaxX();
+        };
+
+        // Note: tack.vpos() will never actually return BASELINE
+        var y0 = switch (tack.vpos()) {
+            case TOP -> bounds.getMinY();
+            case CENTER -> bounds.getCenterY();
+            case BASELINE, BOTTOM -> bounds.getMaxY();
+        };
+
+        return new Point2D(x0, y0);
     }
 
     /**
