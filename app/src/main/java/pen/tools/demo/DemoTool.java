@@ -3,7 +3,6 @@ package pen.tools.demo;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.HPos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
@@ -140,9 +139,9 @@ Java API.
 
     private void testDrawing(Stencil sten) {
         sten.clear(Color.WHITE);
-        sten.draw(symbol().at(10, 10).symbol(Symbol.SOLID_ARROW));
 
         var x = 30;
+        var symbol = Symbol.SOLID_ARROW;
         sten.draw(line().to(x, 30).to(x, 195).foreground(Color.RED));
         for (int i = 0; i < 12; i++) {
             var y = 30 + i*15;
@@ -150,7 +149,7 @@ Java API.
             sten.savePen()
                 .translate(x, y)
                 .rotate(degrees)
-                .draw(symbol().at(0,0))
+                .draw(symbol().at(0,0).symbol(symbol))
                 .restorePen()
                 ;
         }
@@ -163,7 +162,7 @@ Java API.
             sten.savePen()
                 .translate(x, y)
                 .rotate(degrees)
-                .draw(symbol().at(0,0).tack(Tack.CENTER))
+                .draw(symbol().at(0,0).symbol(symbol).tack(Tack.CENTER))
                 .restorePen()
             ;
         }
@@ -176,7 +175,7 @@ Java API.
             sten.savePen()
                 .translate(x, y)
                 .rotate(degrees)
-                .draw(symbol().at(0,0).tack(Tack.EAST))
+                .draw(symbol().at(0,0).symbol(symbol).tack(Tack.EAST))
                 .restorePen();
         }
     }

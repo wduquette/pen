@@ -60,6 +60,7 @@ public class StencilSymbol
     public Bounds draw(Stencil stencil) {
         return switch (symbol) {
             case SOLID_ARROW -> drawSolidArrow(stencil);
+            case OPEN_ARROW -> drawOpenArrow(stencil);
             default -> throw new IllegalStateException(
                 "Unexpected symbol: " + symbol);
         };
@@ -73,8 +74,23 @@ public class StencilSymbol
         sten.pen()
             .setFill(getForeground())
             .fillPolygon(List.of(
-                new Point2D(box.getMinX(), box.getCenterY()),
                 new Point2D(box.getMaxX(), box.getMinY()),
+                new Point2D(box.getMinX(), box.getCenterY()),
+                new Point2D(box.getMaxX(), box.getMaxY())
+            ));
+        return box;
+    }
+
+    public Bounds drawOpenArrow(Stencil sten) {
+        var w = 12;
+        var h = 8;
+        var box = Pen.tack2bounds(tack, x, y, w, h);
+
+        sten.pen()
+            .setStroke(getForeground())
+            .strokePolyline(List.of(
+                new Point2D(box.getMaxX(), box.getMinY()),
+                new Point2D(box.getMinX(), box.getCenterY()),
                 new Point2D(box.getMaxX(), box.getMaxY())
             ));
         return box;
