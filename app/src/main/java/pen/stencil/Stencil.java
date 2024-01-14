@@ -134,7 +134,6 @@ public class Stencil {
             pen.restore();
         }
         return this;
-
     }
 
     /**
