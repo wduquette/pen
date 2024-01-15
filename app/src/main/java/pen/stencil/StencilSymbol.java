@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Draws a given symbol. Symbols that imply a direction (i.e., arrowheads)
- * are drawing pointing left.
+ * are drawn pointing to the right, i.e., at an angle of 0 degrees.
  */
 @SuppressWarnings("unused")
 public class StencilSymbol
@@ -64,14 +64,14 @@ public class StencilSymbol
     public Bounds drawArrowSolid(Stencil sten) {
         var w = 12;
         var h = 8;
-        var box = Pen.tack2bounds(Tack.WEST, x, y, w, h);
+        var box = Pen.tack2bounds(Tack.EAST, x, y, w, h);
 
         sten.pen()
             .setFill(getForeground())
             .fillPolygon(List.of(
-                new Point2D(box.getMaxX(), box.getMinY()),
-                new Point2D(box.getMinX(), box.getCenterY()),
-                new Point2D(box.getMaxX(), box.getMaxY())
+                new Point2D(box.getMinX(), box.getMinY()),
+                new Point2D(box.getMaxX(), box.getCenterY()),
+                new Point2D(box.getMinX(), box.getMaxY())
             ));
         return box;
     }
@@ -79,14 +79,14 @@ public class StencilSymbol
     public Bounds drawArrowOpen(Stencil sten) {
         var w = 12;
         var h = 8;
-        var box = Pen.tack2bounds(Tack.WEST, x, y, w, h);
+        var box = Pen.tack2bounds(Tack.EAST, x, y, w, h);
 
         sten.pen()
             .setStroke(getForeground())
             .strokePolyline(List.of(
-                new Point2D(box.getMaxX(), box.getMinY()),
-                new Point2D(box.getMinX(), box.getCenterY()),
-                new Point2D(box.getMaxX(), box.getMaxY())
+                new Point2D(box.getMinX(), box.getMinY()),
+                new Point2D(box.getMaxX(), box.getCenterY()),
+                new Point2D(box.getMinX(), box.getMaxY())
             ));
         return box;
     }
@@ -109,7 +109,7 @@ public class StencilSymbol
     public Bounds drawDotSolidOffset(Stencil sten) {
         var w = 6;
         var h = 6;
-        var box = Pen.tack2bounds(Tack.WEST, x, y, w, h);
+        var box = Pen.tack2bounds(Tack.EAST, x, y, w, h);
 
         sten.pen()
             .setFill(getForeground())
@@ -138,7 +138,7 @@ public class StencilSymbol
     public Bounds drawDotOpenOffset(Stencil sten) {
         var w = 6;
         var h = 6;
-        var box = Pen.tack2bounds(Tack.WEST, x, y, w, h);
+        var box = Pen.tack2bounds(Tack.EAST, x, y, w, h);
 
         sten.pen()
             .setFill(getBackground())

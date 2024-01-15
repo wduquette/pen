@@ -379,12 +379,12 @@ public class Pen {
      * @param start The starting point
      * @return The angle in degrees
      */
-    public static double angleOf(Point2D end, Point2D start) {
+    public static double angleOf(Point2D start, Point2D end) {
         var axis = new Point2D(1, 0);
-        var vector = start.subtract(end);
+        var vector = end.subtract(start);
         var angle = vector.angle(axis);
 
-        return (start.getY() >= end.getY()) ? angle : -angle;
+        return (start.getY() < end.getY()) ? angle : -angle;
     }
 
     /**

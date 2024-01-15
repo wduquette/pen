@@ -15,6 +15,8 @@
     - [x] Add arrowhead symbol drawing
     - [x] Revise arrowhead implementation to use distinct symbols instead of `tacks`.
     - [x] Add arrowheads to `Stencil::line`
+    - [ ] Add `stencil symbol *`
+    - [ ] Add `-start` and `-end` options to `stencil line` 
     - [ ] Add `StencilOval`.
     - [ ] Add `StencilCircle` plus `Pen` infrastructure
     - [ ] Use `.pen` file type for `Pen` drawing scripts

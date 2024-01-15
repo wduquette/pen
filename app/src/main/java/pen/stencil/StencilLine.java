@@ -88,7 +88,7 @@ public class StencilLine
         Point2D from,
         Point2D to
     ) {
-        var angle = Pen.angleOf(to, from);
+        var angle = Pen.angleOf(from, to);
         sten.savePen()
             .translate(to.getX(), to.getY())
             .rotate(angle)

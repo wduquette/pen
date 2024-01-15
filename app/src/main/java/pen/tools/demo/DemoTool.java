@@ -3,6 +3,7 @@ package pen.tools.demo;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
@@ -16,11 +17,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pen.fx.FX;
-import pen.stencil.Symbol;
-import pen.stencil.Tack;
+import pen.stencil.*;
 import pen.tools.ToolInfo;
-import pen.stencil.Stencil;
-import pen.stencil.StencilDrawing;
 import pen.tools.draw.DrawTool;
 
 import static pen.stencil.Stencil.*;
@@ -135,24 +133,12 @@ Java API.
             drawing("Test Drawing", this::testDrawing),
             drawing("Shapes",       this::testShapes),
             drawing("Rotation",     this::testRotation),
-            drawing("Symbols",      this::testSymbols)
+            drawing("Symbols",      this::testSymbols),
+            drawing("Line Symbols", this::testLineSymbols)
         );
 
     private void testDrawing(Stencil sten) {
-        sten.clear(Color.WHITE);
-
-        sten.savePen();
-        sten.draw(line().to(20,20).toX(100).start(Symbol.ARROW_OPEN));
-        sten.translate(100,100);
-        sten.draw(line().to( 15,  0).to( 50,   0).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
-        sten.draw(line().to( 15,-15).to( 50, -50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
-        sten.draw(line().to(  0,-15).to(  0, -50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
-        sten.draw(line().to(-15,-15).to(-50, -50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
-        sten.draw(line().to(-15,  0).to(-50,   0).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
-        sten.draw(line().to(-15, 15).to(-50,  50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
-        sten.draw(line().to(  0, 15).to(  0,  50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
-        sten.draw(line().to( 15, 15).to( 50,  50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
-        sten.restorePen();
+        sten.clear(Color.PINK);
     }
 
     private void testShapes(Stencil sten) {
@@ -171,7 +157,8 @@ Java API.
 
         for (var degrees = 0; degrees < 360; degrees += 30) {
             sten.pen().save().translate(150,150).rotate(degrees);
-            sten.draw(rect().at(0,0).size(100,20).tack(Tack.CENTER));
+            sten.draw(line().to(0,0).to(100,0));
+            sten.draw(label().at(110, 0).tack(Tack.WEST).text(Double.toString(degrees)));
             sten.pen().restore();
         }
     }
@@ -196,6 +183,22 @@ Java API.
                 .draw(symbol().at(0,0).symbol(symbol))
                 .restorePen();
         }
+    }
+
+    private void testLineSymbols(Stencil sten) {
+        sten.clear(Color.WHITE);
+
+        sten.savePen();
+        sten.translate(100,100);
+        sten.draw(line().to( 15,  0).to( 50,   0).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.draw(line().to( 15,-15).to( 50, -50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.draw(line().to(  0,-15).to(  0, -50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.draw(line().to(-15,-15).to(-50, -50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.draw(line().to(-15,  0).to(-50,   0).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.draw(line().to(-15, 15).to(-50,  50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.draw(line().to(  0, 15).to(  0,  50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.draw(line().to( 15, 15).to( 50,  50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.restorePen();
     }
 
     //------------------------------------------------------------------------
