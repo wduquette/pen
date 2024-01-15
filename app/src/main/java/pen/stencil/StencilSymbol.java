@@ -18,7 +18,7 @@ public class StencilSymbol
     // Instance Variables
 
     // The symbol to draw
-    private Symbol symbol = Symbol.ARROW_SOLID;
+    private Symbol symbol = Symbol.NONE;
 
     // Its origin
     private double x;
@@ -51,6 +51,7 @@ public class StencilSymbol
 
     public Bounds draw(Stencil stencil) {
         return switch (symbol) {
+            case NONE -> null;
             case ARROW_SOLID -> drawArrowSolid(stencil);
             case ARROW_OPEN -> drawArrowOpen(stencil);
             case DOT_SOLID -> drawDotSolid(stencil);

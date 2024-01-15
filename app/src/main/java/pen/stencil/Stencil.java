@@ -113,6 +113,7 @@ public class Stencil {
         // FIRST, apply current transformation
         bounds = pen.getTransform().transform(bounds);
 
+        // NEXT, combine with the drawing bounds
         if (drawingBounds == null) {
             drawingBounds = bounds;
         } else {
@@ -129,7 +130,11 @@ public class Stencil {
     public Stencil draw(StencilShape shape) {
         try {
             pen.save();
-            addBounds(shape.draw(this));
+            var bounds = shape.draw(this);
+
+            if (bounds !=  null) {
+                addBounds(bounds);
+            }
         } finally {
             pen.restore();
         }

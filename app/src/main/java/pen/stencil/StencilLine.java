@@ -13,7 +13,10 @@ public class StencilLine
     //---------------------------------------------------------------------
     // Instance Variables
 
+    // The points on the line
     private final List<Point2D> points = new ArrayList<>();
+
+    // The symbols and the start and end of the line.
 
     //---------------------------------------------------------------------
     // Constructor

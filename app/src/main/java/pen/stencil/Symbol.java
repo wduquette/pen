@@ -6,6 +6,11 @@ package pen.stencil;
  */
 public enum Symbol {
     /**
+     * No symbol at all.
+     */
+    NONE,
+
+    /**
      * A solid triangular arrowhead filled with the foreground color. The
      * arrowhead points to the left, with its origin at its tip.
      */

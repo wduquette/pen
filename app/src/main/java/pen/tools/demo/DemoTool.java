@@ -133,67 +133,15 @@ Java API.
     private final ObservableList<DemoDrawing> drawings =
         FXCollections.observableArrayList(
             drawing("Test Drawing", this::testDrawing),
-            drawing("Shapes", this::testShapes),
-            drawing("Rotation", this::testRotation)
+            drawing("Shapes",       this::testShapes),
+            drawing("Rotation",     this::testRotation),
+            drawing("Symbols",      this::testSymbols)
         );
 
     private void testDrawing(Stencil sten) {
-        sten.clear(Color.WHITE);
-
-        var x = 30;
-        var symbol = Symbol.ARROW_SOLID;
-        sten.draw(line().to(x, 30).to(x, 195).foreground(Color.RED));
-        for (int i = 0; i < 12; i++) {
-            var y = 30 + i*15;
-            var degrees = 30.0*i;
-            sten.savePen()
-                .translate(x, y)
-                .rotate(degrees)
-                .draw(symbol().at(0,0).symbol(symbol))
-                .restorePen()
-                ;
-        }
-
-        x = 90;
-        symbol = Symbol.ARROW_OPEN;
-        sten.draw(line().to(x,30).to(x, 195).foreground(Color.RED));
-        for (int i = 0; i < 12; i++) {
-            var y = 30 + i*15;
-            var degrees = 30.0*i;
-            sten.savePen()
-                .translate(x, y)
-                .rotate(degrees)
-                .draw(symbol().at(0,0).symbol(symbol))
-                .restorePen()
-            ;
-        }
-
-        x = 150;
-        symbol = Symbol.DOT_OPEN_OFFSET;
-        sten.draw(line().to(x,30).to(x, 195).foreground(Color.RED));
-        for (int i = 0; i < 12; i++) {
-            var y = 30 + i*15;
-            var degrees = 30.0*i;
-            sten.savePen()
-                .translate(x, y)
-                .rotate(degrees)
-                .draw(symbol().at(0,0).symbol(symbol))
-                .restorePen();
-        }
-
-        x = 240;
-        symbol = Symbol.DOT_SOLID;
-        sten.draw(line().to(x,30).to(x, 195).foreground(Color.RED));
-        for (int i = 0; i < 12; i++) {
-            var y = 30 + i*15;
-            var degrees = 30.0*i;
-            sten.savePen()
-                .translate(x, y)
-                .rotate(degrees)
-                .draw(symbol().at(0,0).symbol(symbol))
-                .restorePen();
-        }
+        sten.clear(Color.PINK);
     }
+
 
     private void testShapes(Stencil sten) {
         sten.clear(Color.WHITE);
@@ -213,6 +161,28 @@ Java API.
             sten.pen().save().translate(150,150).rotate(degrees);
             sten.draw(rect().at(0,0).size(100,20).tack(Tack.CENTER));
             sten.pen().restore();
+        }
+    }
+
+    private void testSymbols(Stencil sten) {
+        sten.clear(Color.WHITE);
+
+        drawSymbols(sten,  30, Symbol.ARROW_SOLID);
+        drawSymbols(sten,  90, Symbol.ARROW_OPEN);
+        drawSymbols(sten, 150, Symbol.DOT_OPEN_OFFSET);
+        drawSymbols(sten, 240, Symbol.DOT_SOLID);
+    }
+
+    private void drawSymbols(Stencil sten, double x, Symbol symbol) {
+        sten.draw(line().to(x,30).to(x, 195).foreground(Color.RED));
+        for (int i = 0; i < 12; i++) {
+            var y = 30 + i*15;
+            var degrees = 30.0*i;
+            sten.savePen()
+                .translate(x, y)
+                .rotate(degrees)
+                .draw(symbol().at(0,0).symbol(symbol))
+                .restorePen();
         }
     }
 
