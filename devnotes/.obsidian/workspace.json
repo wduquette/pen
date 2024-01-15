@@ -4,40 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "c7bbabbae62c3f85",
+        "id": "cb1ba6e490f05daa",
         "type": "tabs",
         "children": [
           {
-            "id": "904fcf32f302a7e1",
+            "id": "0ad9886d84a9bf03",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "To Do List.md",
-                "mode": "source",
-                "source": true
-              }
-            }
-          },
-          {
-            "id": "694cfea1a9ff73a1",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Ponder Arrowheads.md",
-                "mode": "source",
-                "source": true
-              }
-            }
-          },
-          {
-            "id": "bf83e3d47ad1b282",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Ponder Arrowheads.md",
                 "mode": "source",
                 "source": true
               }
@@ -172,15 +148,15 @@
       "homepage:Open homepage": false
     }
   },
-  "active": "904fcf32f302a7e1",
+  "active": "0ad9886d84a9bf03",
   "lastOpenFiles": [
+    "Home.md",
     "Ponder Arrowheads.md",
     "To Do List.md",
     "Excalidraw/Drawing Arrowhead Position.excalidraw.md",
     "Excalidraw",
     "Managing Pen State in Stencil.md",
     "Reset Pen State.md",
-    "Home.md",
     "2024-01-11.md",
     "Ideas.md",
     "2024-01-09.md",

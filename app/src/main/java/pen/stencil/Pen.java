@@ -374,6 +374,20 @@ public class Pen {
     }
 
     /**
+     * Computes the angle in degrees of the line from start to end with the X axis
+     * @param end The ending point
+     * @param start The starting point
+     * @return The angle in degrees
+     */
+    public static double angleOf(Point2D end, Point2D start) {
+        var axis = new Point2D(1, 0);
+        var vector = start.subtract(end);
+        var angle = vector.angle(axis);
+
+        return (start.getY() >= end.getY()) ? angle : -angle;
+    }
+
+    /**
      * Given an origin point and tack value for a region of a given size,
      * return the actual bounding box.  Note:
      * @param tack  The tack, e.g., NORTHWEST

@@ -139,7 +139,17 @@ Java API.
         );
 
     private void testDrawing(Stencil sten) {
-        sten.clear(Color.PINK);
+        sten.clear(Color.WHITE);
+
+        sten.translate(70,70);
+        sten.draw(sten.line().to( 15,  0).to( 50,   0).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.draw(sten.line().to( 15,-15).to( 50, -50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.draw(sten.line().to(  0,-15).to(  0, -50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.draw(sten.line().to(-15,-15).to(-50, -50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.draw(sten.line().to(-15,  0).to(-50,   0).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.draw(sten.line().to(-15, 15).to(-50,  50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.draw(sten.line().to(  0, 15).to(  0,  50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
+        sten.draw(sten.line().to( 15, 15).to( 50,  50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
     }
 
 
