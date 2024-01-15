@@ -214,9 +214,12 @@ public class StencilExtension {
             if (parseStyleOption(obj, opt, argq)) continue;
 
             switch (opt) {
-                case "-to" -> obj.to(tcl.toPoint(opt, argq));
-                case "-tox" -> obj.toX(tcl.toDouble(opt, argq));
-                case "-toy" -> obj.toY(tcl.toDouble(opt, argq));
+                case "-from", "-to"
+                               -> obj.to(tcl.toPoint(opt, argq));
+                case "-tox"    -> obj.toX(tcl.toDouble(opt, argq));
+                case "-toy"    -> obj.toY(tcl.toDouble(opt, argq));
+                case "-start"  -> obj.start(tcl.toEnum(Symbol.class, opt, argq));
+                case "-end"    -> obj.end(tcl.toEnum(Symbol.class, opt, argq));
                 case "-points" -> obj.points(tcl.toPointList(opt, argq));
                 default -> throw tcl.unknownOption(opt);
             }

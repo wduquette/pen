@@ -93,6 +93,7 @@ public class StencilLine
             .translate(to.getX(), to.getY())
             .rotate(angle)
             .draw(Stencil.symbol()
+                .style(this)
                 .symbol(symbol)
                 .at(0, 0))
             .restorePen();

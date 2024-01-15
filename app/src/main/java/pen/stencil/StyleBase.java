@@ -18,7 +18,7 @@ public class StyleBase<Self extends StyleBase<Self>> {
     //-------------------------------------------------------------------------
     // Instance Variables
 
-    private Paint background = Color.TRANSPARENT;
+    private Paint background = Color.WHITE;
     private PenFont font = PenFont.SANS12;
     private Paint foreground = Color.BLACK;
     private double lineWidth = 1;

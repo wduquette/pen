@@ -1,8 +1,10 @@
 # Simple test file
-stencil line -to 40,20 -toy 120 -foreground red
-stencil symbol arrow_solid      -at 40,20
-stencil symbol arrow_open       -at 40,40
-stencil symbol dot_solid        -at 40,60
-stencil symbol dot_solid_offset -at 40,80
-stencil symbol dot_open         -at 40,100
-stencil symbol dot_open_offset  -at 40,120
+stencil clear white
+
+set y 20
+foreach sym {
+    none arrow_solid arrow_open dot_solid dot_solid_offset dot_open dot_open_offset
+} {
+    stencil line -from 20,$y -tox 100 -start $sym -end $sym
+    incr y 20
+}
