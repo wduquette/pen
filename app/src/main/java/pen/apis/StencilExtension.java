@@ -64,6 +64,7 @@ public class StencilExtension {
         sten.add("label",     this::cmd_stencilLabel);
         sten.add("line",      this::cmd_stencilLine);
         sten.add("rect",      this::cmd_stencilRect);
+        sten.add("symbol",    this::cmd_stencilSymbol);
 
         // stencil style *
         var style = sten.ensemble("style");
@@ -245,6 +246,34 @@ public class StencilExtension {
                 case "-at" -> obj.at(tcl.toPoint(opt, argq));
                 case "-size" -> obj.size(tcl.toDim(opt, argq));
                 case "-tack" -> obj.tack(tcl.toEnum(Tack.class, opt, argq));
+                default -> throw tcl.unknownOption(opt);
+            }
+        }
+
+        stencil.draw(obj);
+    }
+
+    // stencil symbol name ?option value?...
+    // stencil symbol name ?optionList?
+    //
+    // Draws the named symbol according to the other options.
+    private void cmd_stencilSymbol(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkMinArgs(argq, 1, "name ?option value?...");
+        var obj = symbol().style(styleMap.get(NORMAL));
+        obj.symbol(tcl.toEnum(Symbol.class, argq.next()));
+
+        // If we were provided the options and values as a list, convert it to
+        // an Argq.  Note: we lose the command prefix.
+        argq = argq.argsLeft() != 1 ? argq : tcl.toArgq(argq.next());
+
+        while (argq.hasNext()) {
+            var opt = argq.next().toString();
+            if (parseStyleOption(obj, opt, argq)) continue;
+
+            switch (opt) {
+                case "-at" -> obj.at(tcl.toPoint(opt, argq));
                 default -> throw tcl.unknownOption(opt);
             }
         }
