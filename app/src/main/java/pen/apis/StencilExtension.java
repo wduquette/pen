@@ -272,9 +272,10 @@ public class StencilExtension {
             var opt = argq.next().toString();
             if (parseStyleOption(obj, opt, argq)) continue;
 
-            switch (opt) {
-                case "-at" -> obj.at(tcl.toPoint(opt, argq));
-                default -> throw tcl.unknownOption(opt);
+            if (opt.equals("-at")) {
+                obj.at(tcl.toPoint(opt, argq));
+            } else {
+                throw tcl.unknownOption(opt);
             }
         }
 
