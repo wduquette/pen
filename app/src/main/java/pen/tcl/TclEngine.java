@@ -7,6 +7,7 @@ import tcl.lang.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -308,6 +309,18 @@ public class TclEngine {
 
     public void setResult(Enum<?> symbol) {
         interp.setResult(symbol.toString().toLowerCase());
+    }
+
+    /**
+     * Sets the result, converting a list of Enum symbols into a list of
+     * lowercase strings.  Use this to return
+     * {@code Enum&lt;?&gt&gt;::values}.
+     * @param symbols The symbols
+     */
+    public void setResult(Enum<?>[] symbols) {
+        setResult(Arrays.stream(symbols)
+            .map(sym -> sym.toString().toLowerCase())
+            .toList());
     }
 
     public void setResult(List<String> list) {

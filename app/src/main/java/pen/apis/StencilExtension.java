@@ -81,6 +81,10 @@ public class StencilExtension {
         font.add("exists", this::cmd_fontExists);
         font.add("families", this::cmd_fontFamilies);
         font.add("names",  this::cmd_fontNames);
+
+        // symbol *
+        var symbol = engine.ensemble("symbol");
+        symbol.add("names", this::cmd_symbolNames);
     }
 
     //-------------------------------------------------------------------------
@@ -104,15 +108,18 @@ public class StencilExtension {
         if (argq.hasNext()) {
             var opt = argq.next().toString();
             switch (opt) {
-                case "-margin"    -> tcl.setResult(stencil.getMargin());
-                case "-minheight" -> tcl.setResult(stencil.getMinHeight());
-                case "-minwidth"  -> tcl.setResult(stencil.getMinWidth());
+                case "-background" -> tcl.setResult(stencil.getBackground().toString());
+                case "-margin"     -> tcl.setResult(stencil.getMargin());
+                case "-minheight"  -> tcl.setResult(stencil.getMinHeight());
+                case "-minwidth"   -> tcl.setResult(stencil.getMinWidth());
                 // TODO: It would be nice to support "should be one of..."
-                default           -> throw tcl.unknownOption(opt);
+                default            -> throw tcl.unknownOption(opt);
             }
         } else {
             // Provide list
             tcl.setResult(tcl.list()
+                .item("-background")
+                .item(stencil.getBackground().toString())
                 .item("-margin")
                 .item(stencil.getMargin())
                 .item("-minheight")
@@ -124,22 +131,14 @@ public class StencilExtension {
         }
     }
 
-    // stencil clear ?color?
+    // stencil clear
     //
-    // Clears the stencil's canvas to the given color.
-    // TODO Possibly we should remove the optional argument and just
-    // define a Stencil `-background` option.
+    // Clears the stencil's canvas to its default background.
     private void cmd_stencilClear(TclEngine tcl, Argq argq)
         throws TclException
     {
-        tcl.checkArgs(argq, 0, 1, "?color?");
-
-        if (argq.hasNext()) {
-            var color = tcl.toColor(argq.next());
-            stencil.clear(color);
-        } else {
-            stencil.clear();
-        }
+        tcl.checkArgs(argq, 0, 0, "");
+        stencil.clear();
     }
 
     // stencil configure ?option value?...
@@ -158,10 +157,11 @@ public class StencilExtension {
             var opt = argq.next().toString();
 
             switch (opt) {
-                case "-margin"    -> stencil.margin(tcl.toDouble(opt, argq));
-                case "-minheight" -> stencil.minHeight(tcl.toDouble(opt, argq));
-                case "-minwidth"  -> stencil.minWidth(tcl.toDouble(opt, argq));
-                default           -> throw tcl.unknownOption(opt);
+                case "-background" -> stencil.background(tcl.toColor(opt,argq));
+                case "-margin"     -> stencil.margin(tcl.toDouble(opt, argq));
+                case "-minheight"  -> stencil.minHeight(tcl.toDouble(opt, argq));
+                case "-minwidth"   -> stencil.minWidth(tcl.toDouble(opt, argq));
+                default            -> throw tcl.unknownOption(opt);
             }
         }
     }
@@ -512,6 +512,19 @@ public class StencilExtension {
     {
         tcl.checkArgs(argq, 0, 0, "");
         tcl.setResult(fontMap.getNames());
+    }
+
+    //-------------------------------------------------------------------------
+    // Enums
+
+    // symbol names
+    //
+    // Gets the names of the symbols
+    private void cmd_symbolNames(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkArgs(argq, 0, 0, "");
+        tcl.setResult(Symbol.values());
     }
 
     //-------------------------------------------------------------------------
