@@ -16,7 +16,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
 
+/**
+ * Application class for the "pen draw" tool.
+ */
 public class DrawTool extends Application {
+    /**
+     * Tool information for this tool, for use by the launcher.
+     */
     public static final ToolInfo INFO = new ToolInfo(
         "draw",
         "drawing.tcl",
@@ -36,6 +42,13 @@ PNG file.""",
 
     //------------------------------------------------------------------------
     // Main-line code
+
+    /**
+     * Creates the tool's application object.
+     */
+    public DrawTool() {
+        super();
+    }
 
     @Override
     public void start(Stage stage) {
@@ -86,6 +99,11 @@ PNG file.""",
         }
     }
 
+    /**
+     * Given a file name, removes the file type and replaces it with ".png"
+     * @param file The input file name
+     * @return The PNG file name
+     */
     private File asPNGFile(File file) {
         var text = file.toString();
         var ndx = text.lastIndexOf('.');
@@ -98,6 +116,10 @@ PNG file.""",
     //------------------------------------------------------------------------
     // Main
 
+    /**
+     * The tool's JavaFX Application main() method.  Launches the application.
+     * @param args The command-line arguments.
+     */
     public static void main(String[] args) {
         launch(args);
     }

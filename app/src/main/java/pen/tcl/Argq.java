@@ -23,7 +23,7 @@ public class Argq {
      * of prefix tokens to skip.
      * @param args The complete set of arguments.
      * @param prefixTokens The number of prefix tokens.
-     * @throws IllegalArgumentException if args.length < prefixTokens
+     * @throws IllegalArgumentException if args.length &lt; prefixTokens
      */
     public Argq(TclObject[] args, int prefixTokens) {
         if (args.length < prefixTokens) {
@@ -89,6 +89,10 @@ public class Argq {
     //-------------------------------------------------------------------------
     // Array API
 
+    /**
+     * Gets the number of prefix tokens for this command.
+     * @return The number
+     */
     public int getPrefixTokens() {
         return prefixTokens;
     }

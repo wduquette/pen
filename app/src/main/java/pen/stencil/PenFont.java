@@ -9,7 +9,7 @@ import javafx.scene.text.FontWeight;
  * use with {@link Pen} and {@link Stencil}, and wraps instances of the
  * JavaFX {@code Font} class.
  *
- * <h3>Rationale</h3>
+ * <h2>Rationale</h2>
  *
  * <p>JavaFX lets you request a JavaFX {@code Font} by family, weight, posture,
  * and size.  The created font knows its size, but it does not know its weight
@@ -22,7 +22,7 @@ import javafx.scene.text.FontWeight;
  * the details of the "real" font (certainly) but we also want to remember
  * why the user asked for.</p>
  *
- * <h3>Warning</h3>
+ * <h2>Warning</h2>
  *
  * <p>The user is free to request any combination of font family, weight,
  * and posture.  However, there are issues.</p>

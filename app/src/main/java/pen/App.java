@@ -10,11 +10,16 @@ import pen.tools.view.ViewTool;
 
 import java.util.*;
 
+/**
+ * The Pen application launcher.  Launches various tool applications, provides
+ * help, etc.
+ */
 public class App {
     //-------------------------------------------------------------------------
     // Instance variables
 
-    public final static Map<String, ToolInfo> TOOLS = new TreeMap<>();
+    // Array of tool applications that can be launched.
+    private final static Map<String, ToolInfo> TOOLS = new TreeMap<>();
 
     static {
         TOOLS.putAll(Map.of(
@@ -26,6 +31,13 @@ public class App {
 
     //-------------------------------------------------------------------------
     // Launcher App
+
+    /**
+     * Initializes the application object.
+     */
+    public App() {
+        super();
+    }
 
     /**
      * Gets the desired tool and executes it
@@ -60,6 +72,10 @@ public class App {
         println("Run \"pen help\" for a list of subcommands.");
     }
 
+    /**
+     * Print the usage for the given tool.
+     * @param info A tool's info object
+     */
     public static void showUsage(ToolInfo info) {
         // TODO: Use real executable name.
         System.out.println("Usage: pen " + info.usage());
@@ -91,12 +107,22 @@ public class App {
     //-------------------------------------------------------------------------
     // Helpers
 
+    /**
+     * Print to System.out.
+     * @param text Text to print.
+     */
     public void println(String text) {
         System.out.println(text);
     }
 
     //-------------------------------------------------------------------------
     // Main
+
+    /**
+     * App's main routine.  Creates a new application object and passes it the
+     * arguments; handles errors thrown by the application.
+     * @param args The command line arguments.
+     */
     public static void main(String[] args) {
         try {
             new App().app(args);

@@ -15,9 +15,17 @@ import javafx.scene.layout.VBox;
  */
 @SuppressWarnings("unused")
 public class FX {
+    private FX() {} // not instantiable
+
     //-------------------------------------------------------------------------
     // Listener Helpers
 
+    /**
+     * Binds the runnable to the property; it will be called when the property
+     * value changes.
+     * @param property The property
+     * @param runnable The runnable
+     */
     public static void listenTo(ReadOnlyProperty<?> property, Runnable runnable) {
         property.addListener((p,o,n) -> runnable.run());
     }
@@ -25,55 +33,118 @@ public class FX {
     //-------------------------------------------------------------------------
     // Molder Factories
 
+    /**
+     * Creates a LabelMolder containing a new Label.
+     * @return The molder
+     */
     public static LabelMolder label() {
         return new LabelMolder(new Label());
     }
 
-    public static LabelMolder label(Label node) {
-        return new LabelMolder(node);
+    /**
+     * Creates a LabelMolder containing the given Label.
+     * @param object The object to mold
+     * @return The molder
+     */
+    public static LabelMolder label(Label object) {
+        return new LabelMolder(object);
     }
 
-    public static <T> ListViewMolder<T> listView(ListView<T> node) {
-        return new ListViewMolder<>(node);
+    /**
+     * Creates a ListViewMolder containing the given ListView
+     * @param object The object to mold
+     * @param <T> The widget's item type
+     * @return The molder
+     */
+    public static <T> ListViewMolder<T> listView(ListView<T> object) {
+        return new ListViewMolder<>(object);
     }
 
-    public static NodeMolder node(Node node) {
-        return new NodeMolder(node);
+    /**
+     * Creates a NodeMolder containing the given Node
+     * @param object The object to mold
+     * @return The molder
+     */
+    public static NodeMolder node(Node object) {
+        return new NodeMolder(object);
     }
 
+    /**
+     * Creates a PaneMolder containing a new Pane.
+     * @return The molder
+     */
     public static PaneMolder pane() {
         return new PaneMolder(new Pane());
     }
 
-    public static PaneMolder pane(Pane node) {
-        return new PaneMolder(node);
+    /**
+     * Creates a PaneMolder containing the given Pane
+     * @param object The object to mold
+     * @return The molder
+     */
+    public static PaneMolder pane(Pane object) {
+        return new PaneMolder(object);
     }
 
-    public static RegionMolder region(Region node) {
-        return new RegionMolder(node);
+    /**
+     * Creates a RegionMolder containing the given widget.  This is general
+     * used to set basic properties for widgets for which no molder has
+     * been defined.
+     * @param object The object to mold
+     * @return The molder
+     */
+    public static RegionMolder region(Region object) {
+        return new RegionMolder(object);
     }
 
+    /**
+     * Creates a SplitPaneMolder containing a new SplitPane.
+     * @return The molder
+     */
     public static SplitPaneMolder splitPane() {
         return new SplitPaneMolder(new SplitPane());
     }
 
-    public static SplitPaneMolder splitPane(SplitPane node) {
-        return new SplitPaneMolder(node);
+    /**
+     * Creates a SplitPaneMolder containing the given SplitPane
+     * @param object The object to mold
+     * @return The molder
+     */
+    public static SplitPaneMolder splitPane(SplitPane object) {
+        return new SplitPaneMolder(object);
     }
 
+    /**
+     * Creates a ToolBarMolder containing a new ToolBar.
+     * @return The molder
+     */
     public static ToolBarMolder toolBar() {
         return new ToolBarMolder(new ToolBar());
     }
 
-    public static ToolBarMolder toolBar(ToolBar node) {
-        return new ToolBarMolder(node);
+    /**
+     * Creates a ToolBarMolder containing the given ToolBar
+     * @param object The object to mold
+     * @return The molder
+     */
+    public static ToolBarMolder toolBar(ToolBar object) {
+        return new ToolBarMolder(object);
     }
 
+    /**
+     * Creates a VBoxMolder containing a new VBox.
+     * @return The molder
+     */
     public static VBoxMolder vbox() {
         return new VBoxMolder(new VBox());
     }
 
-    public static VBoxMolder vbox(VBox node) {
-        return new VBoxMolder(node);
+    /**
+     * Creates a VBoxMolder containing the given VBox
+     * @param object The object to mold
+     * @return The molder
+     */
+    public static VBoxMolder vbox(VBox object) {
+        return new VBoxMolder(object);
     }
 }

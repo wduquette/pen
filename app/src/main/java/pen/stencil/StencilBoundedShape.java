@@ -7,6 +7,7 @@ import javafx.geometry.Point2D;
 /**
  * A StencilBoundedShape is a shape that draws itself to fit a specified
  * bounding box (x, y, width, height), as adjusted by a {@link Tack} value.
+ * @param <Self> the concrete shape class
  */
 @SuppressWarnings("unchecked")
 public abstract class StencilBoundedShape<Self extends StencilBoundedShape<Self>>

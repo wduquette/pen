@@ -22,7 +22,13 @@ import pen.tools.draw.DrawTool;
 
 import static pen.stencil.Stencil.*;
 
+/**
+ * The application class for the "pen demo" tool.
+ */
 public class DemoTool extends Application {
+    /**
+     * Tool information for this tool, for use by the launcher.
+     */
     public static final ToolInfo INFO = new ToolInfo(
         "demo",
         "",
@@ -49,6 +55,14 @@ Java API.
 
     //------------------------------------------------------------------------
     // Main-line code
+
+    /**
+     * Creates the application object.
+     */
+    public DemoTool() {
+        super();
+    }
+
     @Override
     public void start(Stage stage) {
         // FIRST, build the GUI
@@ -203,6 +217,11 @@ Java API.
     //------------------------------------------------------------------------
     // Main
 
+    /**
+     * The tool's main method.  Launches the Java Application with the
+     * command-line arguments.
+     * @param args The command-line arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }

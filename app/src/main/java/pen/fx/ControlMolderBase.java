@@ -7,17 +7,32 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+/**
+ * Base interface for Control molder methods.
+ * @param <C> The specific Control class
+ * @param <Self> The concrete molder
+ */
 @SuppressWarnings({"unchecked", "unused"})
 public interface ControlMolderBase<C extends Control, Self>
     extends RegionMolderBase<C, Self>
 {
-    default Self tooltip(Tooltip tooltip) {
-        object().setTooltip(tooltip);
+    /**
+     * Sets the object's tooltip.
+     * @param value The tooltip
+     * @return The molder
+     */
+    default Self tooltip(Tooltip value) {
+        object().setTooltip(value);
         return (Self)this;
     }
 
-    default Self tooltipText(String text) {
-        object().setTooltip(new Tooltip(text));
+    /**
+     * Sets the object's tooltip to a new Tooltip with the given text.
+     * @param value The text
+     * @return The molder
+     */
+    default Self tooltipText(String value) {
+        object().setTooltip(new Tooltip(value));
         return (Self)this;
     }
 }
