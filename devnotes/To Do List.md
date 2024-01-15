@@ -15,8 +15,9 @@
     - [x] Add arrowhead symbol drawing
     - [x] Revise arrowhead implementation to use distinct symbols instead of `tacks`.
     - [x] Add arrowheads to `Stencil::line`
-    - [ ] Add `stencil symbol *`
-    - [ ] Add `-start` and `-end` options to `stencil line` 
+    - [x] Add `stencil symbol *`
+    - [x] Add `-start` and `-end` options to `stencil line` 
+    - [ ] Give stencil an explicit background, used when clearing.  Defaults to white.
     - [ ] Add `StencilOval`.
     - [ ] Add `StencilCircle` plus `Pen` infrastructure
     - [ ] Use `.pen` file type for `Pen` drawing scripts
@@ -41,8 +42,9 @@
     - Add remaining `GraphicsContext` methods, as needed.
     - [ ] Line types (dash, dot, solid, at least)
 - `Stencil` 
+    - [ ] Explicit background, used when clearing.  Defaults to white.
     - [ ] Shapes
-        - [ ] Arrowheads
+        - [x] Arrowheads
         - [ ] Polygons
         - [ ] Rounded rectangles
     - [ ] Position support for relevant shapes
