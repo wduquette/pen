@@ -3,6 +3,7 @@ package pen.stencil;
 import javafx.geometry.Bounds;
 import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 import java.util.Optional;
@@ -19,16 +20,19 @@ public class Stencil {
     // The pen we do the drawing with
     private final Pen pen;
 
-    // The coordinate bounds of what we've drawn.
-    private Bounds drawingBounds = null;
-
     // The margin for the right and bottom sides.  (The client is responsible
     // for leaving room at the top and left).
     private double margin = DEFAULT_MARGIN;
 
+    // The background color.
+    private Paint background = Color.WHITE;
+
     // The minimum size for an image produced using this Stencil
     private double minWidth = DEFAULT_MIN_WIDTH;
     private double minHeight = DEFAULT_MIN_HEIGHT;
+
+    // The coordinate bounds of what we've drawn.
+    private Bounds drawingBounds = null;
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -43,6 +47,10 @@ public class Stencil {
 
     public double getMargin() {
         return margin;
+    }
+
+    public Paint getBackground() {
+        return background;
     }
 
     public double getMinWidth() {
@@ -89,17 +97,37 @@ public class Stencil {
     }
 
     /**
-     * Clears the drawing, and all computed bounds.
+     * Sets the background color.
+     * @param color The color
+     * @return The stencil
+     */
+    public Stencil background(Paint color) {
+        this.background = color;
+        return this;
+    }
+
+    /**
+     * Clears the drawing using the current background color, along with all
+     * computed bounds.
      * @return The stencil
      */
     public Stencil clear() {
         pen.clear();
+        pen.clear(background);
         clearDrawingBounds();
         return this;
     }
 
-    public Stencil clear(Paint color) {
-        pen.clear(color);
+    /**
+     * Sets the background color and clears the drawing, along with all
+     * computed bounds.
+     * @param background The new background color
+     * @return The stencil
+     */
+    public Stencil clear(Paint background) {
+        background(background);
+        pen.clear();
+        pen.clear(background);
         clearDrawingBounds();
         return this;
     }

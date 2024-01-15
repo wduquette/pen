@@ -1,5 +1,4 @@
 # Simple test file
-stencil clear white
 
 set y 20
 foreach sym {
