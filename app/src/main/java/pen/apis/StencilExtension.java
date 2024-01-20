@@ -175,7 +175,7 @@ public class StencilExtension {
         throws TclException
     {
         tcl.checkMinArgs(argq, 1, "text ?option value?...");
-        var obj = label().style(styleMap.get(NORMAL));
+        var obj = text().style(styleMap.get(NORMAL));
         obj.text(argq.next().toString());
 
         // If we were provided the options and values as a list, convert it to
@@ -235,7 +235,7 @@ public class StencilExtension {
     private void cmd_stencilRect(TclEngine tcl, Argq argq)
         throws TclException
     {
-        var obj = rect().style(styleMap.get(NORMAL));
+        var obj = rectangle().style(styleMap.get(NORMAL));
 
         // If we were provided the options and values as a list, convert it to
         // an Argq.  Note: we lose the command prefix.

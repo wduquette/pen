@@ -155,7 +155,7 @@ public class Stencil {
      * @param shape The shape
      * @return The stencil
      */
-    public Stencil draw(StencilShape shape) {
+    public Stencil draw(Drawable shape) {
         try {
             pen.save();
             var bounds = shape.draw(this);
@@ -176,7 +176,7 @@ public class Stencil {
      * @param drawing The drawing
      * @return The stencil
      */
-    public Stencil draw(StencilDrawing drawing) {
+    public Stencil draw(Drawing drawing) {
         try {
             pen.save();
             drawing.draw(this);
@@ -249,20 +249,20 @@ public class Stencil {
     //-------------------------------------------------------------------------
     // Standard Shape Factories
 
-    public static StencilLabel label() {
-        return new StencilLabel();
+    public static TextShape text() {
+        return new TextShape();
     }
 
-    public static StencilLine line() {
-        return new StencilLine();
+    public static LineShape line() {
+        return new LineShape();
     }
 
-    public static StencilRect rect() {
-        return new StencilRect();
+    public static RectangleShape rectangle() {
+        return new RectangleShape();
     }
 
-    public static StencilSymbol symbol() {
-        return new StencilSymbol();
+    public static SymbolShape symbol() {
+        return new SymbolShape();
     }
 
     //-------------------------------------------------------------------------

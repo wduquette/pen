@@ -10,9 +10,9 @@ import javafx.geometry.Point2D;
  * @param <Self> the concrete shape class
  */
 @SuppressWarnings("unchecked")
-public abstract class StencilBoundedShape<Self extends StencilBoundedShape<Self>>
+public abstract class BoundedShape<Self extends BoundedShape<Self>>
     extends StyleBase<Self>
-    implements StencilShape
+    implements Drawable
 {
     //---------------------------------------------------------------------
     // Instance Variables
@@ -32,7 +32,7 @@ public abstract class StencilBoundedShape<Self extends StencilBoundedShape<Self>
     //---------------------------------------------------------------------
     // Constructor
 
-    public StencilBoundedShape() {
+    public BoundedShape() {
         // Nothing to do
     }
 

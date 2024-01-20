@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class StencilLine
-    extends StyleBase<StencilLine>
-    implements StencilShape
+public class LineShape
+    extends SimpleShape<LineShape>
+    implements Drawable
 {
     //---------------------------------------------------------------------
     // Instance Variables
@@ -24,41 +24,41 @@ public class StencilLine
     //---------------------------------------------------------------------
     // Constructor
 
-    public StencilLine() {
+    public LineShape() {
         // Nothing to do
     }
 
     //---------------------------------------------------------------------
     // DSL
 
-    public StencilLine to(Point2D point) {
+    public LineShape to(Point2D point) {
         points.add(point);
         return this;
     }
 
-    public StencilLine to(double x, double y) {
+    public LineShape to(double x, double y) {
         return to(new Point2D(x,y));
     }
 
-    public StencilLine toX(double x) {
+    public LineShape toX(double x) {
         return to(new Point2D(x,last().getY()));
     }
 
-    public StencilLine toY(double y) {
+    public LineShape toY(double y) {
         return to(new Point2D(last().getX(),y));
     }
 
-    public StencilLine points(List<Point2D> points) {
+    public LineShape points(List<Point2D> points) {
         this.points.addAll(points);
         return this;
     }
 
-    public StencilLine start(Symbol symbol) {
+    public LineShape start(Symbol symbol) {
         this.startSymbol = Objects.requireNonNull(symbol);
         return this;
     }
 
-    public StencilLine end(Symbol symbol) {
+    public LineShape end(Symbol symbol) {
         this.endSymbol = Objects.requireNonNull(symbol);
         return this;
     }

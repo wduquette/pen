@@ -1,4 +1,4 @@
-[[Home]] > [[Ideas]] #idea #task
+[[Home]] > [[Ideas]] #idea #task #completed
 
 **Status**: Done, using options B and D.
 

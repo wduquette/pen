@@ -3,9 +3,9 @@ package pen.stencil;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 
-public class StencilLabel
-    extends StyleBase<StencilLabel>
-    implements StencilShape
+public class TextShape
+    extends SimpleShape<TextShape>
+    implements Drawable
 {
     //---------------------------------------------------------------------
     // Instance Variables
@@ -18,29 +18,29 @@ public class StencilLabel
     //---------------------------------------------------------------------
     // Constructor
 
-    public StencilLabel() {
+    public TextShape() {
         // Nothing to do
     }
 
     //---------------------------------------------------------------------
     // DSL
 
-    public StencilLabel text(String text) {
+    public TextShape text(String text) {
         this.text = text;
         return this;
     }
 
-    public StencilLabel at(Point2D point) {
+    public TextShape at(Point2D point) {
         return at(point.getX(), point.getY());
     }
 
-    public StencilLabel at(double x, double y) {
+    public TextShape at(double x, double y) {
         this.x = x;
         this.y = y;
         return this;
     }
 
-    public StencilLabel tack(Tack tack) {
+    public TextShape tack(Tack tack) {
         this.tack = tack;
         return this;
     }

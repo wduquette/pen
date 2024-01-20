@@ -137,7 +137,7 @@ Java API.
     //-------------------------------------------------------------------------
     // Drawings
 
-    private DemoDrawing drawing(String name, StencilDrawing drawing) {
+    private DemoDrawing drawing(String name, Drawing drawing) {
         return new DemoDrawing(name, drawing);
     }
 
@@ -156,13 +156,13 @@ Java API.
 
     private void testShapes(Stencil sten) {
         sten.clear(Color.WHITE);
-        sten.draw(rect().at(10,10).size(100,60).background(Color.LIGHTYELLOW));
+        sten.draw(rectangle().at(10,10).size(100,60).background(Color.LIGHTYELLOW));
         sten.draw(line().to(10,10).to(110,70));
         sten.draw(line().to(10,70).to(110,10));
-        sten.draw(label().at(60,80).tack(Tack.NORTH).text("Stencil Test"));
+        sten.draw(text().at(60,80).tack(Tack.NORTH).text("Stencil Test"));
 
-        sten.draw(rect().at(60,150).size(60,40).tack(Tack.SOUTH));
-        sten.draw(rect().at(60,150).size(12,8).tack(Tack.SOUTH));
+        sten.draw(rectangle().at(60,150).size(60,40).tack(Tack.SOUTH));
+        sten.draw(rectangle().at(60,150).size(12,8).tack(Tack.SOUTH));
     }
 
     private void testRotation(Stencil sten) {
@@ -171,7 +171,7 @@ Java API.
         for (var degrees = 0; degrees < 360; degrees += 30) {
             sten.pen().save().translate(150,150).rotate(degrees);
             sten.draw(line().to(0,0).to(100,0));
-            sten.draw(label().at(110, 0).tack(Tack.WEST).text(Double.toString(degrees)));
+            sten.draw(text().at(110, 0).tack(Tack.WEST).text(Double.toString(degrees)));
             sten.pen().restore();
         }
     }

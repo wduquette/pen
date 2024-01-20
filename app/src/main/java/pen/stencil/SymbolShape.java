@@ -10,9 +10,9 @@ import java.util.List;
  * are drawn pointing to the right, i.e., at an angle of 0 degrees.
  */
 @SuppressWarnings("unused")
-public class StencilSymbol
-    extends StyleBase<StencilSymbol>
-    implements StencilShape
+public class SymbolShape
+    extends SimpleShape<SymbolShape>
+    implements Drawable
 {
     //---------------------------------------------------------------------
     // Instance Variables
@@ -27,23 +27,23 @@ public class StencilSymbol
     //---------------------------------------------------------------------
     // Constructor
 
-    public StencilSymbol() {
+    public SymbolShape() {
         // Nothing to do
     }
 
     //---------------------------------------------------------------------
     // DSL
 
-    public StencilSymbol symbol(Symbol symbol) {
+    public SymbolShape symbol(Symbol symbol) {
         this.symbol = symbol;
         return this;
     }
 
-    public StencilSymbol at(Point2D point) {
+    public SymbolShape at(Point2D point) {
         return at(point.getX(), point.getY());
     }
 
-    public StencilSymbol at(double x, double y) {
+    public SymbolShape at(double x, double y) {
         this.x = x;
         this.y = y;
         return this;

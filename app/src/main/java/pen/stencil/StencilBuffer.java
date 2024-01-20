@@ -55,7 +55,7 @@ public class StencilBuffer {
      * Draws the drawing, setting the canvas size accordingly
      * @param drawing The drawing
      */
-    public void draw(StencilDrawing drawing) {
+    public void draw(Drawing drawing) {
         // FIRST, draw the image to determine the drawing bounds
         stencil.clear();
         stencil.draw(drawing);

@@ -1,6 +1,6 @@
 package pen.tools.demo;
 
-import pen.stencil.StencilDrawing;
+import pen.stencil.Drawing;
 
 /**
  * A named StencilDrawing
@@ -9,7 +9,7 @@ import pen.stencil.StencilDrawing;
  */
 public record DemoDrawing(
     String name,
-    StencilDrawing drawing
+    Drawing drawing
 ) {
     public String toString() {
         return name;

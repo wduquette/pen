@@ -2,6 +2,7 @@
     - Review Javadoc
 - Next Steps
     - [x] Give stencil an explicit background, used when clearing.  Defaults to white.
+    - [ ] Continue to ponder [[Fancy Boxed Label Shape]].
     - [ ] Add `StencilOval`.
     - [ ] Add `StencilCircle` plus `Pen` infrastructure
     - [ ] Use `.pen` file type for `Pen` drawing scripts
@@ -16,8 +17,7 @@
         - [ ] Support browsing a list of Tcl scripts
     - `demo` tool
         - [x] Current test app runs as `pen demo`
-        - [ ] Pick from drawings done with Java API
-            - [ ] Or, possible, from example scripts.
+        - [x] Pick from drawings done with Java API
     - [ ] Proper installation
     - [ ] `shell` tool — stretch goal
         - JTcl shell, for general Stencil scripting.
