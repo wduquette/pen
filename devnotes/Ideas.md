@@ -2,8 +2,8 @@ A collection of things I want to consider
 
 ## New Ideas
 
-- [[Managing Pen State in Stencil]]
-- [[Fancy Label Shape]]
+- [[Stencil Class Hierarchy]]
+- [[Fancy Boxed Label Shape]]
 - [[Output Color Names]]
 - [[AceFX]]
 
@@ -12,8 +12,11 @@ A collection of things I want to consider
 - [[Open Shape DSL]]
 - [[Stencil Bounds Aggregation]]
 - [[Stencil Margin]]
+- [[Managing Pen State in Stencil]]
 
 ## Rejected Ideas
 
 - [[Catalog of Shapes]]
+- [[Creating Custom Shapes in Tcl]]
+    - Interesting ideas here, though.
 

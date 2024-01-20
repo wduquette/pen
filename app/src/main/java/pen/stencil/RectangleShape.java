@@ -5,14 +5,14 @@ import javafx.geometry.Bounds;
 /**
  * A simple rectangle.
  */
-public class StencilRect
-    extends StencilBoundedShape<StencilRect>
-    implements StencilShape
+public class RectangleShape
+    extends BoundedShape<RectangleShape>
+    implements Drawable
 {
     //-------------------------------------------------------------------------
     // Constructor
 
-    public StencilRect() {
+    public RectangleShape() {
         // Nothing to do
     }
 

@@ -4,40 +4,47 @@
     "type": "split",
     "children": [
       {
-        "id": "33796dab26c0f633",
+        "id": "9a80408ccfb51b8f",
         "type": "tabs",
         "children": [
           {
-            "id": "e13594a6030ebd9f",
+            "id": "a94be7d3c15b3f48",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "2024-01-15.md",
+                "file": "Home.md",
                 "mode": "source",
-                "source": true
+                "source": false
               }
             }
-          }
-        ]
-      },
-      {
-        "id": "04455d115349f064",
-        "type": "tabs",
-        "children": [
+          },
           {
-            "id": "c8b6e1396ca8a954",
+            "id": "5a995c53f7b9755b",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "To Do List.md",
+                "file": "Design Notes.md",
                 "mode": "source",
-                "source": true
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "d980259c26097363",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Stencil Class Hierarchy.md",
+                "mode": "source",
+                "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -103,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "2024-01-15.md",
+                "file": "Stencil Class Hierarchy.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -120,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "2024-01-15.md",
+                "file": "Stencil Class Hierarchy.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -143,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "2024-01-15.md"
+                "file": "Stencil Class Hierarchy.md"
               }
             }
           }
@@ -166,19 +173,24 @@
       "homepage:Open homepage": false
     }
   },
-  "active": "e13594a6030ebd9f",
+  "active": "d980259c26097363",
   "lastOpenFiles": [
+    "Stencil Design.md",
+    "Design Notes.md",
+    "Home.md",
+    "Ideas.md",
+    "Creating Custom Shapes in Tcl.md",
+    "Stencil Class Hierarchy.md",
+    "Fancy Boxed Label Shape.md",
     "To Do List.md",
+    "Managing Pen State in Stencil.md",
     "2024-01-15.md",
     "2024-01-11.md",
-    "Home.md",
     "Testing Canvas.canvas",
     "Ponder Arrowheads.md",
     "Excalidraw/Drawing Arrowhead Position.excalidraw.md",
     "Excalidraw",
-    "Managing Pen State in Stencil.md",
     "Reset Pen State.md",
-    "Ideas.md",
     "2024-01-09.md",
     "2024-01-07.md",
     "Stencil Bounds Aggregation.md",
@@ -186,14 +198,10 @@
     "2024-01-05.md",
     "Stencil Margin.md",
     "Catalog of Shapes.md",
-    "Fancy Label Shape.md",
     "AceFX.md",
     "2024-01-01.md",
     "Output Color Names.md",
     "Open Shape DSL.md",
-    "2023-12-31.md",
-    "2023-12-30.md",
-    "Pondering.md",
-    "Welcome.md"
+    "2023-12-31.md"
   ]
 }

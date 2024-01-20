@@ -61,10 +61,10 @@ public class StencilExtension {
         sten.add("clear",     this::cmd_stencilClear);
         sten.add("cget",      this::cmd_stencilCget);
         sten.add("configure", this::cmd_stencilConfigure);
-        sten.add("label",     this::cmd_stencilLabel);
         sten.add("line",      this::cmd_stencilLine);
-        sten.add("rect",      this::cmd_stencilRect);
+        sten.add("rectangle", this::cmd_stencilRectangle);
         sten.add("symbol",    this::cmd_stencilSymbol);
+        sten.add("text",      this::cmd_stencilText);
 
         // stencil style *
         var style = sten.ensemble("style");
@@ -171,11 +171,11 @@ public class StencilExtension {
     //
     // Creates a label with the given text and draws it according to the
     // other options.
-    private void cmd_stencilLabel(TclEngine tcl, Argq argq)
+    private void cmd_stencilText(TclEngine tcl, Argq argq)
         throws TclException
     {
         tcl.checkMinArgs(argq, 1, "text ?option value?...");
-        var obj = label().style(styleMap.get(NORMAL));
+        var obj = text().style(styleMap.get(NORMAL));
         obj.text(argq.next().toString());
 
         // If we were provided the options and values as a list, convert it to
@@ -232,10 +232,10 @@ public class StencilExtension {
     // stencil rect optionList
     //
     // Creates a rectangle given the options
-    private void cmd_stencilRect(TclEngine tcl, Argq argq)
+    private void cmd_stencilRectangle(TclEngine tcl, Argq argq)
         throws TclException
     {
-        var obj = rect().style(styleMap.get(NORMAL));
+        var obj = rectangle().style(styleMap.get(NORMAL));
 
         // If we were provided the options and values as a list, convert it to
         // an Argq.  Note: we lose the command prefix.
