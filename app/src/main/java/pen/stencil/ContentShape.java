@@ -5,12 +5,11 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 
 /**
- * A BoundedShape is a shape that draws itself to fit a specified
- * bounding box (x, y, width, height), as adjusted by a {@link Tack} value.
+ * A ContentShape is a shape that sizes itself to fit its content.
  * @param <Self> the concrete shape class
  */
 @SuppressWarnings("unchecked")
-public abstract class BoundedShape<Self extends BoundedShape<Self>>
+public abstract class ContentShape<Self extends ContentShape<Self>>
     extends StyleBase<Self>
     implements Drawable
 {
@@ -25,26 +24,33 @@ public abstract class BoundedShape<Self extends BoundedShape<Self>>
     // box, i.e, where the tack is.
     protected Tack tack = Tack.NORTHWEST;
 
-    // The size of the shape
-    protected double w = 1.0;
-    protected double h = 1.0;
+    // The minimum size of the shape
+    protected double minWidth = 1.0;
+    protected double minHeight = 1.0;
 
     //---------------------------------------------------------------------
     // Constructor
 
-    public BoundedShape() {
+    public ContentShape() {
         // Nothing to do
     }
 
     //---------------------------------------------------------------------
-    // Protected API
+    // ContentShape API
+
+    /**
+     * Gets the actual size of the shape given its minimum size and content.
+     * @return the size
+     */
+    public abstract Dimension2D getSize();
 
     /**
      * Gets the bounds of the shape given its origin, tack, and size.
      * @return The bounds
      */
     protected Bounds getBounds() {
-        return Pen.tack2bounds(tack, x, y, w, h);
+        var size = getSize();
+        return Pen.tack2bounds(tack, x, y, size.getWidth(), size.getHeight());
     }
 
     //---------------------------------------------------------------------
@@ -58,6 +64,10 @@ public abstract class BoundedShape<Self extends BoundedShape<Self>>
         return new Point2D(x, y);
     }
 
+    public Dimension2D getMinSize() {
+        return new Dimension2D(minWidth, minHeight);
+    }
+
     /**
      * Gets the shape's tack position: the location of the origin relative
      * to the bounding box.
@@ -65,14 +75,6 @@ public abstract class BoundedShape<Self extends BoundedShape<Self>>
      */
     public Tack getTack() {
         return tack;
-    }
-
-    /**
-     * Gets the shape's size.
-     * @return The size
-     */
-    public Dimension2D getSize() {
-        return new Dimension2D(w, h);
     }
 
     //---------------------------------------------------------------------
@@ -100,6 +102,27 @@ public abstract class BoundedShape<Self extends BoundedShape<Self>>
     }
 
     /**
+     * Sets the minimum size of the shape.
+     * @param size The size
+     * @return The shape
+     */
+    public Self minSize(Dimension2D size) {
+        return minSize(size.getWidth(), size.getHeight());
+    }
+
+    /**
+     * Sets the minimum size of the shape
+     * @param minWidth The minimum width
+     * @param minHeight The minimum height
+     * @return The shape
+     */
+    public Self minSize(double minWidth, double minHeight) {
+        this.minWidth = minWidth;
+        this.minHeight = minHeight;
+        return (Self)this;
+    }
+
+    /**
      * Sets the "tack position": the location of the origin point on the
      * bounding box. Defaults to Tack.NORTHWEST.
      * @param tack The tack
@@ -107,27 +130,6 @@ public abstract class BoundedShape<Self extends BoundedShape<Self>>
      */
     public Self tack(Tack tack) {
         this.tack = tack;
-        return (Self)this;
-    }
-
-    /**
-     * Sets the size of the shape.
-     * @param size The size
-     * @return The shape
-     */
-    public Self size(Dimension2D size) {
-        return size(size.getWidth(), size.getHeight());
-    }
-
-    /**
-     * Sets the size of the shape
-     * @param w The width
-     * @param h The height
-     * @return The shape
-     */
-    public Self size(double w, double h) {
-        this.w = w;
-        this.h = h;
         return (Self)this;
     }
 }

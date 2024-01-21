@@ -2,7 +2,9 @@
     - Review Javadoc
 - Next Steps
     - [x] Give stencil an explicit background, used when clearing.  Defaults to white.
-    - [ ] Continue to ponder [[Fancy Boxed Label Shape]].
+    - [x] Revise shape class hierarchy
+    - [x] Add `ContentShape`.
+    - [x] Add `BoxedTextShape`
     - [ ] Add `StencilOval`.
     - [ ] Add `StencilCircle` plus `Pen` infrastructure
     - [ ] Use `.pen` file type for `Pen` drawing scripts

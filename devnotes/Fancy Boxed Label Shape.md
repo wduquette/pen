@@ -1,22 +1,6 @@
-#idea #pondering
+#idea #done
 
-## To Do?
-
-- [ ] Rename `StencilLabel` to `StencilText`, and maybe give it some aids for doing multiline text.
-    - `StencilText` better reflects its low-level nature.
-- [ ] Define `StencilContentShape` as a base class for shapes that size themselves to fit their content.
-    - `minWidth`, `minHeight`
-    - `pad`
-    - Better name, if possible
-- [ ] Define `StencilBox` as a `StencilContentShape` that displays text in a rectangular box. 
-    - `text`
-- Ponder:
-    - Support multiple shapes in one element via a shape parameter?
-    - Support multiple content types?
-        - Text
-        - Image
-        - Drawing (?)
-    - If I do this right, these could be used in a row/column grid diagram as-is. 
+Status: added as `BoxedTextShape`.
 
 ## Overview
 

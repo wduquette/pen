@@ -249,8 +249,8 @@ public class Stencil {
     //-------------------------------------------------------------------------
     // Standard Shape Factories
 
-    public static TextShape text() {
-        return new TextShape();
+    public static BoxedTextShape boxedText() {
+        return new BoxedTextShape();
     }
 
     public static LineShape line() {
@@ -264,6 +264,11 @@ public class Stencil {
     public static SymbolShape symbol() {
         return new SymbolShape();
     }
+
+    public static TextShape text() {
+        return new TextShape();
+    }
+
 
     //-------------------------------------------------------------------------
     // Helpers

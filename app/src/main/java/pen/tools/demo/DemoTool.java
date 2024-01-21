@@ -123,6 +123,7 @@ Java API.
 
     private void repaint() {
         if (currentDrawing != null) {
+            stencil.background(Color.WHITE);
             stencil.clear();
             stencil.pen().reset(); // TODO: Use stencil's own method.
             stencil.draw(currentDrawing.drawing());
@@ -147,7 +148,8 @@ Java API.
             drawing("Shapes",       this::testShapes),
             drawing("Rotation",     this::testRotation),
             drawing("Symbols",      this::testSymbols),
-            drawing("Line Symbols", this::testLineSymbols)
+            drawing("Line Symbols", this::testLineSymbols),
+            drawing("Boxed Label",  this::testBoxedLabels)
         );
 
     private void testDrawing(Stencil sten) {
@@ -212,6 +214,19 @@ Java API.
         sten.draw(line().to(  0, 15).to(  0,  50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
         sten.draw(line().to( 15, 15).to( 50,  50).start(Symbol.ARROW_SOLID).end(Symbol.ARROW_OPEN));
         sten.restorePen();
+    }
+
+    private void testBoxedLabels(Stencil sten) {
+        sten.clear();
+        sten.draw(symbol().at(100,100).symbol(Symbol.ARROW_SOLID));
+        sten.draw(boxedText()
+            .at(100,100)
+            .tack(Tack.WEST)
+            .text("Hello, World!")
+            .pad(20)
+            .background(Color.LIGHTYELLOW)
+            .textColor(Color.BLUE)
+        );
     }
 
     //------------------------------------------------------------------------
