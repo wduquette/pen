@@ -8,7 +8,7 @@ import javafx.geometry.Point2D;
  * A ContentShape is a shape that sizes itself to fit its content.
  * @param <Self> the concrete shape class
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "unused"})
 public abstract class ContentShape<Self extends ContentShape<Self>>
     extends StyleBase<Self>
     implements Drawable

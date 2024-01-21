@@ -6,6 +6,7 @@ import javafx.geometry.Dimension2D;
 /**
  * A simple rectangle containing a text string.
  */
+@SuppressWarnings("unused")
 public class BoxedTextShape
     extends ContentShape<BoxedTextShape>
     implements Drawable

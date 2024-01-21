@@ -9,7 +9,7 @@ import javafx.geometry.Point2D;
  * bounding box (x, y, width, height), as adjusted by a {@link Tack} value.
  * @param <Self> the concrete shape class
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "unused"})
 public abstract class BoundedShape<Self extends BoundedShape<Self>>
     extends StyleBase<Self>
     implements Drawable
