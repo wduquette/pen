@@ -7,7 +7,7 @@ public record ToolInfo(
     String argsig,
     String oneLiner,
     String help,
-    Consumer<String[]> start
+    Consumer<String[]> launcher
 ) {
     public String usage() {
         return name + " " + argsig;

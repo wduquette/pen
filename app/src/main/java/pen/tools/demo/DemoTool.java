@@ -1,6 +1,5 @@
 package pen.tools.demo;
 
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -17,15 +16,18 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pen.fx.FX;
 import pen.stencil.*;
+import pen.tools.FXTool;
 import pen.tools.ToolInfo;
 import pen.tools.draw.DrawTool;
+
+import java.util.Deque;
 
 import static pen.stencil.Stencil.*;
 
 /**
  * The application class for the "pen demo" tool.
  */
-public class DemoTool extends Application {
+public class DemoTool extends FXTool {
     /**
      * Tool information for this tool, for use by the launcher.
      */
@@ -60,11 +62,11 @@ Java API.
      * Creates the application object.
      */
     public DemoTool() {
-        super();
+        super(INFO);
     }
 
     @Override
-    public void start(Stage stage) {
+    public void run(Stage stage, Deque<String> argq) {
         // FIRST, build the GUI
         FX.vbox(root)
             .add(FX.splitPane(splitPane)

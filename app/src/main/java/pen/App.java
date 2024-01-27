@@ -3,6 +3,7 @@
  */
 package pen;
 
+import pen.tools.ToolException;
 import pen.tools.ToolInfo;
 import pen.tools.demo.DemoTool;
 import pen.tools.draw.DrawTool;
@@ -58,7 +59,7 @@ public class App {
         var tool = TOOLS.get(subcommand);
 
         if (tool != null) {
-            tool.start().accept(args);
+            tool.launcher().accept(args);
         } else if (subcommand.equals("help")) {
             showHelp(argq);
         } else {
@@ -126,7 +127,7 @@ public class App {
     public static void main(String[] args) {
         try {
             new App().app(args);
-        } catch (AppError ex) {
+        } catch (ToolException ex) {
             System.out.println("Error: " + ex.getMessage());
 //            ex.printStackTrace(System.out);
         } catch (Exception ex) {
