@@ -1,6 +1,5 @@
 package pen.tools.view;
 
-import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
@@ -13,6 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pen.App;
+import pen.tools.FXTool;
 import pen.tools.ToolInfo;
 import pen.apis.StencilExtension;
 import pen.stencil.Stencil;
@@ -22,9 +22,9 @@ import tcl.lang.TclException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayDeque;
+import java.util.Deque;
 
-public class ViewTool extends Application {
+public class ViewTool extends FXTool {
     public static final ToolInfo INFO = new ToolInfo(
         "view",
         "drawing.tcl",
@@ -47,12 +47,18 @@ public class ViewTool extends Application {
     private String script;
 
     //------------------------------------------------------------------------
+    // Constructor
+
+    public ViewTool() {
+        super(INFO);
+    }
+
+    //------------------------------------------------------------------------
     // Main-line code
 
     @Override
-    public void start(Stage stage) {
+    public void run(Stage stage, Deque<String> argq) {
         // FIRST, parse the command line arguments.
-        var argq = new ArrayDeque<>(getParameters().getRaw());
         argq.poll(); // Skip the tool name
 
         if (argq.size() != 1) {
