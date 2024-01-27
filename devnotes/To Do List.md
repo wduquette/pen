@@ -42,4 +42,4 @@
     - Add helpers as needed by bindings.
     - [ ] Fork JTcl and simplify (it's too darn big!)
         - [x] Create minimal .jar by hand, to assess actual size
-        - [ ] Run with it awhile, make sure it works.
+        - [x] Run with it awhile, make sure it works.

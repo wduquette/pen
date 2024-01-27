@@ -2,8 +2,7 @@ A collection of things I want to consider
 
 ## New Ideas
 
-- [[Stencil Class Hierarchy]]
-- [[Fancy Boxed Label Shape]]
+- [[Tree Diagrams]]
 - [[Output Color Names]]
 - [[AceFX]]
 
@@ -13,6 +12,8 @@ A collection of things I want to consider
 - [[Stencil Bounds Aggregation]]
 - [[Stencil Margin]]
 - [[Managing Pen State in Stencil]]
+- [[Stencil Class Hierarchy]]
+- [[Fancy Boxed Label Shape]]
 
 ## Rejected Ideas
 
