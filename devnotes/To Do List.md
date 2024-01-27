@@ -11,6 +11,9 @@
     - [ ] Add GUI to `pen view` so I can browse from a list of drawing scripts.
     - [ ] `pen view` tool displays script error in a useful way.
 - [ ] `pen` Application
+    - Refined tool architecture
+        - Tool interface and base classes
+        - Handling of all uncaught exceptions
     -  `draw` tool
         - [ ] Execute multiple Tcl scripts, save PNG files
     - `view` tool
