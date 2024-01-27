@@ -1,25 +1,24 @@
 package pen.tools.draw;
 
-import javafx.application.Application;
 import javafx.stage.Stage;
 import pen.App;
 import pen.tcl.TclEngineException;
+import pen.tools.FXTool;
 import pen.tools.ToolInfo;
 import pen.apis.StencilExtension;
 import pen.stencil.Stencil;
 import pen.stencil.StencilBuffer;
 import pen.tcl.TclEngine;
-import tcl.lang.TclException;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * Application class for the "pen draw" tool.
  */
-public class DrawTool extends Application {
+public class DrawTool extends FXTool {
     /**
      * Tool information for this tool, for use by the launcher.
      */
@@ -47,13 +46,12 @@ PNG file.""",
      * Creates the tool's application object.
      */
     public DrawTool() {
-        super();
+        super(INFO);
     }
 
     @Override
-    public void start(Stage stage) {
+    public void run(Stage stage, Deque<String> argq) {
         // FIRST, parse the command line arguments.
-        var argq = new ArrayDeque<>(getParameters().getRaw());
         argq.poll(); // Skip the tool name
 
         if (argq.size() != 1) {

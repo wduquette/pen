@@ -20,9 +20,12 @@ public interface Tool {
      * <li>Either way, the tool terminates.</li>
      * </ul>
      *
+     * <p>Subclasses may override this to provide any desired behavior.</p>
+     *
      * @param onRun Whether this occurred in the run method or later
      * @param ex The exception
      */
+    @SuppressWarnings("unused")
     default void handleUncaughtException(boolean onRun, Throwable ex) {
         if (ex instanceof ToolException tex) {
             System.err.println(toolInfo().name() + ": " + ex.getMessage());

@@ -53,7 +53,7 @@ public abstract class FXTool extends Application implements Tool {
     @Override
     public void start(Stage stage) {
         // FIRST, create the argument queue.
-        var argq = new ArrayDeque<String>(getParameters().getRaw());
+        var argq = new ArrayDeque<>(getParameters().getRaw());
 
         // NEXT, prepare to handle uncaught exceptions in the background.
         Thread.currentThread().setUncaughtExceptionHandler(
