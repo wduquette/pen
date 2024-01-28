@@ -52,11 +52,9 @@ PNG file.""",
     @Override
     public void run(Stage stage, Deque<String> argq) {
         // FIRST, parse the command line arguments.
-        argq.poll(); // Skip the tool name
-
         if (argq.size() != 1) {
-            App.showUsage(INFO);
-            System.exit(1);
+            printUsage(App.NAME);
+            exit(1);
         }
 
         drawingFile = new File(argq.poll());
@@ -65,21 +63,20 @@ PNG file.""",
             script = Files.readString(drawingFile.toPath());
         } catch (IOException ex) {
             script = null;
-            System.out.println("Could not read file: " + drawingFile);
-            System.exit(1);
+            throw error("Could not read file: " + drawingFile, ex);
         }
 
         buffer.draw(this::drawDrawing);
 
         try {
             var outFile = asPNGFile(drawingFile);
-            System.out.println("Writing: " + outFile);
+            println("Writing: " + outFile);
             buffer.save(asPNGFile(drawingFile));
         } catch (IOException ex) {
-            System.out.println("*** Failed to write file: " + ex.getMessage());
+            throw error("Failed to write file: " + ex.getMessage(), ex);
         }
 
-        System.exit(0); // Because JavaFX.
+        exit(); // Because JavaFX.
     }
 
     private void drawDrawing(Stencil stencil) {
@@ -91,9 +88,8 @@ PNG file.""",
         try {
             engine.eval(script);
         } catch (TclEngineException ex) {
-            System.out.println("Drawing error at line " + ex.getErrorLine() +
+            throw error("Drawing error at line " + ex.getErrorLine() +
                 " of " + drawingFile + ":\n" + ex.getErrorInfo());
-            System.exit(1);
         }
     }
 

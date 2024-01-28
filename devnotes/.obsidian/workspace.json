@@ -4,11 +4,23 @@
     "type": "split",
     "children": [
       {
-        "id": "0cd81038945c9f6e",
+        "id": "9698c49e803f3596",
         "type": "tabs",
         "children": [
           {
-            "id": "ff78a24269042c6f",
+            "id": "842e3dd5a81faa2c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "2024-01-27.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "80a10c8a73d7d8b3",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -19,7 +31,8 @@
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -148,14 +161,16 @@
       "homepage:Open homepage": false
     }
   },
-  "active": "ff78a24269042c6f",
+  "active": "80a10c8a73d7d8b3",
   "lastOpenFiles": [
+    "2024-01-28.md",
+    "Home.md",
+    "2024-01-27.md",
+    "To Do List.md",
     "Stencil Design.md",
     "Ideas.md",
     "2024-01-15.md",
     "2024-01-21.md",
-    "To Do List.md",
-    "Home.md",
     "Excalidraw/Tree Diagrams 2024-01-21 10.58.53.excalidraw.md",
     "Excalidraw/Tree Diagrams 2024-01-21 10.54.56.excalidraw.md",
     "Tree Diagrams.md",
@@ -175,8 +190,6 @@
     "Reset Pen State.md",
     "2024-01-09.md",
     "2024-01-07.md",
-    "Stencil Bounds Aggregation.md",
-    "2024-01-06.md",
-    "2024-01-05.md"
+    "Stencil Bounds Aggregation.md"
   ]
 }

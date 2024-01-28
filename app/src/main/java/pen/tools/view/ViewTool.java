@@ -59,19 +59,17 @@ public class ViewTool extends FXTool {
     @Override
     public void run(Stage stage, Deque<String> argq) {
         // FIRST, parse the command line arguments.
-        argq.poll(); // Skip the tool name
-
         if (argq.size() != 1) {
-            App.showUsage(INFO);
-            System.exit(1);
+            printUsage(App.NAME);
+            exit(1);
         }
 
+        assert !argq.isEmpty();
         drawingFile = new File(argq.poll());
         script = readFile(drawingFile);
 
         if (script == null) {
-            System.out.println("Could not read file: " + drawingFile);
-            System.exit(1);
+            throw error("Could not read file: " + drawingFile);
         }
 
         // NEXT, set up the GUI

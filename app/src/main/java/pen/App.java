@@ -16,6 +16,9 @@ import java.util.*;
  * help, etc.
  */
 public class App {
+    /** The application name used in console output. */
+    public static final String NAME = "pen";
+
     //-------------------------------------------------------------------------
     // Instance variables
 
@@ -59,12 +62,22 @@ public class App {
         var tool = TOOLS.get(subcommand);
 
         if (tool != null) {
-            tool.launcher().accept(args);
+            tool.launcher().accept(rest(args));
         } else if (subcommand.equals("help")) {
             showHelp(argq);
         } else {
             showFailure(subcommand);
         }
+    }
+
+    private String[] rest(String[] args) {
+        var rest = new String[args.length - 1];
+
+        for (int i = 1; i < args.length; i++) {
+            rest[i-1] = args[i];
+        }
+
+        return rest;
     }
 
     private void showFailure(String subcommand) {
@@ -73,17 +86,9 @@ public class App {
         println("Run \"pen help\" for a list of subcommands.");
     }
 
-    /**
-     * Print the usage for the given tool.
-     * @param info A tool's info object
-     */
-    public static void showUsage(ToolInfo info) {
-        // TODO: Use real executable name.
-        System.out.println("Usage: pen " + info.usage());
-    }
-
     private void showHelp(Deque<String> argq) {
         if (argq.isEmpty()) {
+            System.out.println();
             System.out.println("Pen supports the following tools:\n");
 
             for (var tool : TOOLS.values()) {
@@ -91,14 +96,13 @@ public class App {
             }
 
             System.out.println("\nEnter \"pen help <tool>\" for help on a tool.");
+            System.out.println();
         } else {
             var subcommand = argq.poll();
             var tool = TOOLS.get(subcommand);
 
             if (tool != null) {
-                System.out.println("Usage: pen " + tool.usage());
-                System.out.println();
-                System.out.println(tool.help());
+                tool.printHelp(NAME);
             } else {
                 showFailure(subcommand);
             }

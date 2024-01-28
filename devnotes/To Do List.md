@@ -5,6 +5,14 @@
     - [x] Revise shape class hierarchy
     - [x] Add `ContentShape`.
     - [x] Add `BoxedTextShape`
+    - [x] Add better tool framework
+        - [x] Define `Tool`/`FXTool`, with error handling
+        - [x] Convert existing tools to be `FXTools`
+        - [x] `App` doesn't remove the tool name from the command line given to the tool.  It should
+        - [x] Scrub the existing tools and add relevant helpers to `Tool`.
+    - [ ] Fix `StencilException` installation.
+        - It's clunky at present; see `ViewTool` and `DrawTool`.
+        - `TclEngine` should remember the extensions and if needed unload them.
     - [ ] Add `StencilOval`.
     - [ ] Add `StencilCircle` plus `Pen` infrastructure
     - [ ] Use `.pen` file type for `Pen` drawing scripts

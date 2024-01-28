@@ -10,6 +10,41 @@ public interface Tool {
      */
     ToolInfo toolInfo();
 
+    //-------------------------------------------------------------------------
+    // Defaulted Tool API
+
+    default void println() {
+        System.out.println();
+    }
+
+    default void println(Object object) {
+        System.out.println(object.toString());
+    }
+
+    /**
+     * Prints the tool's usage string to standard output.
+     * @param appName The application name
+     */
+    default void printUsage(String appName) {
+        toolInfo().printUsage(appName);
+    }
+
+    default ToolException error(String message) {
+        return new ToolException(message);
+    }
+
+    default ToolException error(String message, Throwable cause) {
+        return new ToolException(message, cause);
+    }
+
+    default void exit() {
+        exit(0);
+    }
+
+    default void exit(int code) {
+        System.exit(code);
+    }
+
     /**
      * Handles uncaught exceptions for the tool.  By default:
      *
