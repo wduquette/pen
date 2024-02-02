@@ -19,6 +19,7 @@ public class TclEngine {
     // Instance Variables
 
     private final Interp interp = new Interp();
+    private final List<TclExtension> extensions = new ArrayList<>();
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -108,6 +109,15 @@ public class TclEngine {
         var ensemble = new TclEnsemble(this, 1);
         interp.createCommand(name, ensemble);
         return ensemble;
+    }
+
+    /**
+     * Installs the TclExtension, making its commands available.
+     * @param extension The extension
+     */
+    public void install(TclExtension extension) {
+        extension.initialize(this);
+        extensions.add(extension);
     }
 
     //-------------------------------------------------------------------------

@@ -82,8 +82,7 @@ PNG file.""",
     private void drawDrawing(Stencil stencil) {
         stencil.clear();
         var engine = new TclEngine();
-        // TODO Need better installation story
-        var stencilExtension = new StencilExtension(engine, stencil);
+        engine.install(new StencilExtension(stencil));
 
         try {
             engine.eval(script);

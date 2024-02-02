@@ -6,6 +6,7 @@ import javafx.scene.text.FontWeight;
 import pen.stencil.*;
 import pen.tcl.Argq;
 import pen.tcl.TclEngine;
+import pen.tcl.TclExtension;
 import tcl.lang.TclException;
 import tcl.lang.TclObject;
 
@@ -20,7 +21,7 @@ import static pen.stencil.Stencil.*;
  * extension for doing anything other than single drawings, we're
  * going to want a "stencil reset" command.</p>
  */
-public class StencilExtension {
+public class StencilExtension implements TclExtension {
     /**
      * The name of the normal style used with Stencil objects.
      */
@@ -29,8 +30,8 @@ public class StencilExtension {
     //-------------------------------------------------------------------------
     // Instance Variables
 
-    // The TclEngine in use
-    private final TclEngine tcl;
+    // The TclEngine in use.  Set by initialize().
+    private TclEngine tcl;
 
     // The Stencil used to produce drawings.
     private final Stencil stencil;
@@ -46,16 +47,18 @@ public class StencilExtension {
 
     /**
      * Creates a new TclEngine extension for drawing using the given stencil.
-     * @param engine The engine
      * @param stencil The stencil
      */
-    public StencilExtension(TclEngine engine, Stencil stencil) {
-        this.tcl = engine;
+    public StencilExtension(Stencil stencil) {
         this.stencil = stencil;
         styleMap.make(NORMAL);
+    }
+
+    public void initialize(TclEngine tcl) {
+        this.tcl = tcl;
 
         // stencil *
-        var sten = engine.ensemble("stencil");
+        var sten = tcl.ensemble("stencil");
 
         sten.add("test",      this::cmd_stencilTest);
         sten.add("clear",     this::cmd_stencilClear);
@@ -74,7 +77,7 @@ public class StencilExtension {
         style.add("names", this::cmd_stencilStyleNames);
 
         // font *
-        var font = engine.ensemble("font");
+        var font = tcl.ensemble("font");
 
         font.add("cget", this::cmd_fontCget);
         font.add("create", this::cmd_fontCreate);
@@ -83,8 +86,13 @@ public class StencilExtension {
         font.add("names",  this::cmd_fontNames);
 
         // symbol *
-        var symbol = engine.ensemble("symbol");
+        var symbol = tcl.ensemble("symbol");
         symbol.add("names", this::cmd_symbolNames);
+    }
+
+    @SuppressWarnings("unused")
+    public void reset() {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     //-------------------------------------------------------------------------

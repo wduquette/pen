@@ -128,8 +128,7 @@ public class ViewTool extends FXTool {
     private void repaint() {
         stencil.clear();
         var engine = new TclEngine();
-        // TODO Need better installation story
-        var stencilExtension = new StencilExtension(engine, stencil);
+        engine.install(new StencilExtension(stencil));
 
         try {
             if (script != null) {

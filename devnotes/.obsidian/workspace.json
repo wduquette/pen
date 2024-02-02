@@ -4,23 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "9698c49e803f3596",
+        "id": "9182202447bc71ac",
         "type": "tabs",
         "children": [
           {
-            "id": "842e3dd5a81faa2c",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "2024-01-27.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "80a10c8a73d7d8b3",
+            "id": "ecbafcf59dcd3a98",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -31,8 +19,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -161,10 +148,10 @@
       "homepage:Open homepage": false
     }
   },
-  "active": "80a10c8a73d7d8b3",
+  "active": "ecbafcf59dcd3a98",
   "lastOpenFiles": [
-    "2024-01-28.md",
     "Home.md",
+    "2024-01-28.md",
     "2024-01-27.md",
     "To Do List.md",
     "Stencil Design.md",
