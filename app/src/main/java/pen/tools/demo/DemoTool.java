@@ -155,10 +155,6 @@ Java API.
         );
 
     private void testDrawing(Stencil sten) {
-        sten.clear(Color.PINK);
-    }
-
-    private void testShapes(Stencil sten) {
         sten.clear(Color.WHITE);
         sten.draw(rectangle().at(10,10).size(100,60).background(Color.LIGHTYELLOW));
         sten.draw(line().to(10,10).to(110,70));
@@ -167,6 +163,42 @@ Java API.
 
         sten.draw(rectangle().at(60,150).size(60,40).tack(Tack.SOUTH));
         sten.draw(rectangle().at(60,150).size(12,8).tack(Tack.SOUTH));
+    }
+
+    private void testShapes(Stencil sten) {
+        sten.clear(Color.WHITE);
+
+        var w = 80;
+        var h = 60;
+        var pad = 10;
+        var x0 = 10 + w/2;
+
+        var x = x0;
+        var y = 10 + h/2;
+        sten.draw(rectangle().at(x,y).size(w,h).tack(Tack.CENTER)
+            .background(Color.LIGHTYELLOW)
+        );
+        sten.draw(text().at(x,y).text("rectangle").tack(Tack.CENTER));
+
+        x += w + pad;
+        sten.draw(oval().at(x,y).size(w,h).tack(Tack.CENTER)
+            .background(Color.LIGHTYELLOW)
+        );
+        sten.draw(text().at(x,y).text("oval").tack(Tack.CENTER));
+
+        x = x0;
+        y += h + pad;
+        sten.draw(boxedText().at(x,y).text("boxedText")
+            .pad(10)
+            .tack(Tack.CENTER)
+            .background(Color.LIGHTYELLOW)
+        );
+
+        x += w + pad;
+        sten.draw(oval().at(x,y).diameter(h).tack(Tack.CENTER)
+            .background(Color.LIGHTYELLOW)
+        );
+        sten.draw(text().at(x,y).text("oval").tack(Tack.CENTER));
     }
 
     private void testRotation(Stencil sten) {

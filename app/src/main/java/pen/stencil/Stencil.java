@@ -257,6 +257,10 @@ public class Stencil {
         return new LineShape();
     }
 
+    public static OvalShape oval() {
+        return new OvalShape();
+    }
+
     public static RectangleShape rectangle() {
         return new RectangleShape();
     }
