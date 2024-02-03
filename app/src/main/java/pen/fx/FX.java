@@ -2,10 +2,7 @@ package pen.fx;
 
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -58,6 +55,30 @@ public class FX {
      */
     public static <T> ListViewMolder<T> listView(ListView<T> object) {
         return new ListViewMolder<>(object);
+    }
+
+    public static MenuBarMolder menuBar() {
+        return new MenuBarMolder(new MenuBar());
+    }
+
+    public static MenuBarMolder menuBar(MenuBar object) {
+        return new MenuBarMolder(object);
+    }
+
+    public static MenuMolder menu() {
+        return new MenuMolder(new Menu());
+    }
+
+    public static MenuMolder menu(Menu object) {
+        return new MenuMolder(object);
+    }
+
+    public static MenuItemMolder menuItem() {
+        return new MenuItemMolder(new MenuItem());
+    }
+
+    public static MenuItemMolder menuItem(MenuItem object) {
+        return new MenuItemMolder(object);
     }
 
     /**
