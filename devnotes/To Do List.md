@@ -1,34 +1,20 @@
 - Any time
     - Review Javadoc
 - Next Steps
-    - [x] Give stencil an explicit background, used when clearing.  Defaults to white.
-    - [x] Revise shape class hierarchy
-    - [x] Add `ContentShape`.
-    - [x] Add `BoxedTextShape`
-    - [x] Add better tool framework
-        - [x] Define `Tool`/`FXTool`, with error handling
-        - [x] Convert existing tools to be `FXTools`
-        - [x] `App` doesn't remove the tool name from the command line given to the tool.  It should
-        - [x] Scrub the existing tools and add relevant helpers to `Tool`.
-    - [x] Fix `StencilExtension` installation.
-        - It's clunky at present; see `ViewTool` and `DrawTool`.
-        - `TclEngine` should remember the extensions and if needed unload them.
-        - Provide load/unload/reset methods.
+    - [x] Support browsing a list of Tcl scripts, with recursion
     - [ ] Add `StencilOval`.
     - [ ] Add `StencilCircle` plus `Pen` infrastructure
     - [ ] Use `.pen` file type for `Pen` drawing scripts
     - [ ] Add GUI to `pen view` so I can browse from a list of drawing scripts.
     - [ ] `pen view` tool displays script error in a useful way.
+- Diagrams
+    - [ ] Tree Diagram
 - [ ] `pen` Application
-    - Refined tool architecture
-        - Tool interface and base classes
-        - Handling of all uncaught exceptions
     -  `draw` tool
         - [ ] Execute multiple Tcl scripts, save PNG files
     - `view` tool
         - [x] Executes Tcl script, shows drawing
         - [ ] Display read/eval errors in GUI, side by side with image.
-        - [ ] Support browsing a list of Tcl scripts
     - `demo` tool
         - [x] Current test app runs as `pen demo`
         - [x] Pick from drawings done with Java API

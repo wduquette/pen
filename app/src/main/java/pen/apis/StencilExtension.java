@@ -37,10 +37,10 @@ public class StencilExtension implements TclExtension {
     private final Stencil stencil;
 
     // The styleMap
-    private final StyleMap styleMap = new StyleMap();
+    private StyleMap styleMap;
 
     // The fontMap
-    private final PenFontMap fontMap = new PenFontMap();
+    private PenFontMap fontMap;
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -51,7 +51,7 @@ public class StencilExtension implements TclExtension {
      */
     public StencilExtension(Stencil stencil) {
         this.stencil = stencil;
-        styleMap.make(NORMAL);
+        reset();
     }
 
     public void initialize(TclEngine tcl) {
@@ -92,7 +92,9 @@ public class StencilExtension implements TclExtension {
 
     @SuppressWarnings("unused")
     public void reset() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        styleMap = new StyleMap();
+        styleMap.make(NORMAL);
+        fontMap = new PenFontMap();
     }
 
     //-------------------------------------------------------------------------

@@ -120,6 +120,10 @@ public class TclEngine {
         extensions.add(extension);
     }
 
+    public void resetExtensions() {
+        extensions.forEach(TclExtension::reset);
+    }
+
     //-------------------------------------------------------------------------
     // Helpers: Argument Processing
 

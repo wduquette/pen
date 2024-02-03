@@ -4,13 +4,12 @@ package pen.fx;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.VBox;
 
 @SuppressWarnings({"unchecked", "unused"})
 public interface SplitPaneMolderBase<SP extends SplitPane, Self>
     extends RegionMolderBase<SP, Self>
 {
-    default Self add(Molder<? extends Node> molder) {
+    default Self item(Molder<? extends Node> molder) {
         object().getItems().add(molder.object());
         return (Self)this;
     }
