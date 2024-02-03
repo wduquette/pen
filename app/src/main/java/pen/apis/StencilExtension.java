@@ -65,6 +65,7 @@ public class StencilExtension implements TclExtension {
         sten.add("cget",      this::cmd_stencilCget);
         sten.add("configure", this::cmd_stencilConfigure);
         sten.add("line",      this::cmd_stencilLine);
+        sten.add("oval",      this::cmd_stencilOval);
         sten.add("rectangle", this::cmd_stencilRectangle);
         sten.add("symbol",    this::cmd_stencilSymbol);
         sten.add("text",      this::cmd_stencilText);
@@ -231,6 +232,36 @@ public class StencilExtension implements TclExtension {
                 case "-start"  -> obj.start(tcl.toEnum(Symbol.class, opt, argq));
                 case "-end"    -> obj.end(tcl.toEnum(Symbol.class, opt, argq));
                 case "-points" -> obj.points(tcl.toPointList(opt, argq));
+                default -> throw tcl.unknownOption(opt);
+            }
+        }
+
+        stencil.draw(obj);
+    }
+
+    // stencil oval ?option value?...
+    // stencil oval optionList
+    //
+    // Creates an oval given the options
+    private void cmd_stencilOval(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        var obj = oval().style(styleMap.get(NORMAL));
+
+        // If we were provided the options and values as a list, convert it to
+        // an Argq.  Note: we lose the command prefix.
+        argq = argq.argsLeft() != 1 ? argq : tcl.toArgq(argq.next());
+
+        while (argq.hasNext()) {
+            var opt = argq.next().toString();
+            if (parseStyleOption(obj, opt, argq)) continue;
+
+            switch (opt) {
+                case "-at" -> obj.at(tcl.toPoint(opt, argq));
+                case "-size" -> obj.size(tcl.toDim(opt, argq));
+                case "-tack" -> obj.tack(tcl.toEnum(Tack.class, opt, argq));
+                case "-diameter" -> obj.diameter(tcl.toDouble(opt, argq));
+                case "-radius" -> obj.radius(tcl.toDouble(opt, argq));
                 default -> throw tcl.unknownOption(opt);
             }
         }

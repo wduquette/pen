@@ -1,0 +1,4 @@
+stencil style configure normal -background lightyellow
+stencil rectangle -at 50,40  -tack center -size 80,40
+stencil oval      -at 140,40 -tack center -size 80,40
+stencil oval      -at 140,90 -tack center -diameter 40
