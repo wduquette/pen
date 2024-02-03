@@ -2,11 +2,11 @@
     - Review Javadoc
 - Next Steps
     - [x] Support browsing a list of Tcl scripts, with recursion
-    - [ ] Add `StencilOval`.
-    - [ ] Add `StencilCircle` plus `Pen` infrastructure
-    - [ ] Use `.pen` file type for `Pen` drawing scripts
-    - [ ] Add GUI to `pen view` so I can browse from a list of drawing scripts.
+    - [x] Add `StencilOval`.
+    - [x] Use `.pen` file type for `Pen` drawing scripts
+    - [x] Add GUI to `pen view` so I can browse from a list of drawing scripts.
     - [ ] `pen view` tool displays script error in a useful way.
+    - [ ] Add `stencil boxedtext` command.
 - Diagrams
     - [ ] Tree Diagram
 - [ ] `pen` Application
