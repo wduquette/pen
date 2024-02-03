@@ -1,10 +1,7 @@
 package pen.fx;
 
-import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.input.MouseEvent;
 
 @SuppressWarnings({"unchecked", "unused"})
 public interface MenuBarMolderBase<MB extends MenuBar, Self>
