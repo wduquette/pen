@@ -254,12 +254,11 @@ public class StencilExtension implements TclExtension {
 
         while (argq.hasNext()) {
             var opt = argq.next().toString();
+
             if (parseStyleOption(obj, opt, argq)) continue;
+            if (parseBoundedShapeOption(obj, opt, argq)) continue;
 
             switch (opt) {
-                case "-at" -> obj.at(tcl.toPoint(opt, argq));
-                case "-size" -> obj.size(tcl.toDim(opt, argq));
-                case "-tack" -> obj.tack(tcl.toEnum(Tack.class, opt, argq));
                 case "-diameter" -> obj.diameter(tcl.toDouble(opt, argq));
                 case "-radius" -> obj.radius(tcl.toDouble(opt, argq));
                 default -> throw tcl.unknownOption(opt);
@@ -269,8 +268,8 @@ public class StencilExtension implements TclExtension {
         stencil.draw(obj);
     }
 
-    // stencil rect ?option value?...
-    // stencil rect optionList
+    // stencil rectangle ?option value?...
+    // stencil rectangle optionList
     //
     // Creates a rectangle given the options
     private void cmd_stencilRectangle(TclEngine tcl, Argq argq)
@@ -284,14 +283,11 @@ public class StencilExtension implements TclExtension {
 
         while (argq.hasNext()) {
             var opt = argq.next().toString();
-            if (parseStyleOption(obj, opt, argq)) continue;
 
-            switch (opt) {
-                case "-at" -> obj.at(tcl.toPoint(opt, argq));
-                case "-size" -> obj.size(tcl.toDim(opt, argq));
-                case "-tack" -> obj.tack(tcl.toEnum(Tack.class, opt, argq));
-                default -> throw tcl.unknownOption(opt);
-            }
+            if (parseStyleOption(obj, opt, argq)) continue;
+            if (parseBoundedShapeOption(obj, opt, argq)) continue;
+
+            throw tcl.unknownOption(opt);
         }
 
         stencil.draw(obj);
@@ -442,6 +438,19 @@ public class StencilExtension implements TclExtension {
         tcl.checkArgs(argq, 0, 0, "");
 
         tcl.setResult(styleMap.getNames());
+    }
+
+    private boolean parseBoundedShapeOption(BoundedShape<?> shape, String opt, Argq argq)
+        throws TclException
+    {
+        switch (opt) {
+            case "-at"   -> shape.at(tcl.toPoint(opt, argq));
+            case "-size" -> shape.size(tcl.toDim(opt, argq));
+            case "-tack" -> shape.tack(tcl.toEnum(Tack.class, opt, argq));
+            default -> { return false; }
+        }
+
+        return true;
     }
 
     //-------------------------------------------------------------------------
