@@ -8,13 +8,17 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pen.App;
+import pen.apis.StencilExtension;
 import pen.fx.FX;
+import pen.tcl.TclEngine;
 import pen.tools.FXTool;
 import pen.tools.ToolInfo;
 import pen.stencil.Stencil;
+import tcl.lang.TclException;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +34,7 @@ public class ViewTool extends FXTool {
         "Displays pen drawings in a window.",
         """
             Given one or more ".pen" files on the command line, this tool
-            displays a list of the files and draws the selected file in 
+            displays a list of the files and draws the selected file in
             the window.
             
             OPTIONS
@@ -52,10 +56,11 @@ public class ViewTool extends FXTool {
     private final ToolBar statusBar = new ToolBar();
     private final Label statusLabel = new Label();
 
-    private ObservableList<Path> drawings = FXCollections.observableArrayList();
+    private final ObservableList<Path> drawings =
+        FXCollections.observableArrayList();
 
+    private TclEngine tcl = new TclEngine();
     private Stencil stencil;
-    private Path currentFile;
     private String script;
 
     //------------------------------------------------------------------------
@@ -102,11 +107,11 @@ public class ViewTool extends FXTool {
             )
             .child(FX.splitPane(splitPane)
                 .vgrow()
-                .add(FX.listView(listBox)
+                .item(FX.listView(listBox)
                     .splitResizableWithParent(false)
                     .setItems(drawings)
                 )
-                .add(FX.pane(canvasPane)
+                .item(FX.pane(canvasPane)
                     .splitResizableWithParent(true)
                     .child(FX.node(canvas)
                         .onMouseMoved(this::showMousePosition))
@@ -121,59 +126,75 @@ public class ViewTool extends FXTool {
             )
         ;
 
-//        assert !argq.isEmpty();
-//        drawingFile = new File(argq.poll());
-//        script = readFile(drawingFile);
-//
-//        if (script == null) {
-//            throw error("Could not read file: " + drawingFile);
-//        }
-//
-//        // NEXT, set up the GUI
-//        canvas.widthProperty().bind(root.widthProperty());
-//        canvas.heightProperty().bind(root.heightProperty());
-//
-//        var menuBar = new MenuBar();
-//
-//        var fileMenu = new Menu("File");
-//
-//        var reloadItem = new MenuItem("Reload Script");
-//        reloadItem.setAccelerator(KeyCombination.valueOf("Shortcut+R"));
-//        reloadItem.setOnAction(dummy -> reloadAndRepaint());
-//
-//        var exitItem = new MenuItem("Exit");
-//        exitItem.setAccelerator(KeyCombination.valueOf("Shortcut+Q"));
-//        exitItem.setOnAction(dummy -> System.exit(0));
-//
-//        fileMenu.getItems().addAll(reloadItem, exitItem);
-//
-//        menuBar.getMenus().add(fileMenu);
-//
-//        VBox.setVgrow(hull, Priority.ALWAYS);
-//        hull.getChildren().add(canvas);
-//
-//        root.getChildren().addAll(menuBar, hull);
-//
-//        stencil = new Stencil(canvas.getGraphicsContext2D());
-//
+        // NEXT, create the stencil and initialize the TclEngine
+        stencil = new Stencil(canvas.getGraphicsContext2D());
+        tcl = new TclEngine();
+        tcl.install(new StencilExtension(stencil));
+
+
+        // NEXT, pop up the window
         Scene scene = new Scene(root, 800, 600);
 
         stage.setTitle("pen view");
         stage.setScene(scene);
         stage.show();
-//
-//        // NEXT, repaint on window size change, and on user request.
-//        canvas.widthProperty().addListener((p,o,n) -> repaint());
-//        canvas.heightProperty().addListener((p,o,n) -> repaint());
-//
-//        repaint();
+
+        // NEXT, listen for events
+
+        // Select the drawing on selection change
+        listBox.getSelectionModel().select(0);
+        FX.listenTo(listBox.getSelectionModel().selectedItemProperty(),
+            this::onReloadCurrentDrawing);
+
+        // Make the canvas the same size as its parent.
+        canvas.widthProperty().bind(canvasPane.widthProperty());
+        canvas.heightProperty().bind(canvasPane.heightProperty());
+
+        // NEXT, repaint on window size change.
+        canvas.widthProperty().addListener((p,o,n) -> repaint());
+        canvas.heightProperty().addListener((p,o,n) -> repaint());
+
+        onReloadCurrentDrawing();
     }
 
     //-------------------------------------------------------------------------
     // Logic
 
     private void onReloadCurrentDrawing() {
-        println("TODO: onReloadCurrentDrawing()");
+        var drawing = listBox.getSelectionModel().getSelectedItem();
+        if (drawing != null) {
+            script = readFile(drawing);
+
+            if (script == null) {
+                var alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Could not read script");
+                alert.setContentText(tcl.interp().getResult().toString());
+                alert.showAndWait();
+                drawings.remove(drawing);
+            }
+        }
+        repaint();
+    }
+
+    private void repaint() {
+        stencil.background(Color.WHITE);
+        stencil.clear();
+        tcl.resetExtensions();
+
+        try {
+            if (script != null) {
+                tcl.eval(script);
+            }
+        } catch (TclException ex) {
+            // TODO: need better way to show errors alongside partial results.
+            var alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error in script");
+            alert.setContentText(tcl.interp().getResult().toString());
+            alert.showAndWait();
+            script = null;
+        }
     }
 
     // Shows the mouse position in the status label.
@@ -205,8 +226,8 @@ public class ViewTool extends FXTool {
             if (Files.isRegularFile(path) && path.toString().endsWith(".pen")) {
                 pathSet.add(path);
             } else if (recurse && Files.isDirectory(path)) {
-                try {
-                    Files.find(path, 10, this::isPenFile).forEach(pathSet::add);
+                try (var stream = Files.find(path, 10, this::isPenFile)) {
+                    stream.forEach(pathSet::add);
                 } catch (IOException ex) {
                     throw error("Error finding .pen files", ex);
                 }
@@ -223,41 +244,14 @@ public class ViewTool extends FXTool {
         return path.toString().endsWith(".pen") && attrs.isRegularFile();
     }
 
-    private String readFile(File file) {
+    private String readFile(Path file) {
         try {
-            return Files.readString(file.toPath());
+            return Files.readString(file);
         } catch (IOException ex) {
             return null;
         }
     }
 
-//    private void reloadAndRepaint() {
-//        script = readFile(drawingFile);
-//        repaint();
-//    }
-//
-//    private void repaint() {
-//        stencil.clear();
-//        var engine = new TclEngine();
-//        engine.install(new StencilExtension(stencil));
-//
-//        try {
-//            if (script != null) {
-//                engine.eval(script);
-//            } else {
-//                // TODO: Do better
-//                System.out.println("No script loaded.");
-//            }
-//        } catch (TclException ex) {
-//            // TODO: need better way to show errors alongside partial results.
-//            var alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Error");
-//            alert.setHeaderText("Error in script");
-//            alert.setContentText(engine.interp().getResult().toString());
-//            alert.showAndWait();
-//            script = null;
-//        }
-//    }
 
 
     //------------------------------------------------------------------------
