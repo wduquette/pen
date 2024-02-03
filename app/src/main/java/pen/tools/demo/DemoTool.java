@@ -69,7 +69,7 @@ Java API.
     public void run(Stage stage, Deque<String> argq) {
         // FIRST, build the GUI
         FX.vbox(root)
-            .add(FX.splitPane(splitPane)
+            .child(FX.splitPane(splitPane)
                 .vgrow()
                 .add(FX.listView(listBox)
                     .splitResizableWithParent(false)
@@ -77,12 +77,12 @@ Java API.
                 )
                 .add(FX.pane(canvasPane)
                     .splitResizableWithParent(true)
-                    .add(FX.node(canvas)
+                    .child(FX.node(canvas)
                         .onMouseMoved(this::showMousePosition))
                 )
                 .setDividerPosition(0, 0.2)
             )
-            .add(FX.toolBar(statusBar)
+            .child(FX.toolBar(statusBar)
                 .add(FX.label(statusLabel)
                     .text("(x=    , y=    )")
                     .font(Font.font("Menlo", 14))
