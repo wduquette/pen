@@ -7,7 +7,7 @@ package pen.calendars;
  * is followed by year 1 and preceded by year -1.  The days of the year are
  * numbered 1 to {@code yearLength}.
  * @param symbol The epoch symbol for non-negative years
- * @param symbol The epoch symbol for negative years
+ * @param beforeSymbol The epoch symbol for negative years
  * @param yearLength Function to compute the length of a year in days.
  * @param dayOfYearDigits Number of for dayOfYear in formatted dates
  */
