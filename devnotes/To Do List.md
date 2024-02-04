@@ -5,9 +5,16 @@
     - [x] Add `StencilOval`.
     - [x] Use `.pen` file type for `Pen` drawing scripts
     - [x] Add GUI to `pen view` so I can browse from a list of drawing scripts.
-    - [ ] `pen view` tool displays script error in a useful way.
+    - [ ] `pen view` tool displays the script text
+    - [ ] `pen view` tool displays script error alongside the script text.
     - [ ] Add `stencil boxedtext` command.
+    - [ ] Add `FundamentalCalendar::parseDate`
 - Diagrams
+    - [[Time Line Diagrams]]
+        - [x] Flesh out `FundamentalCalendar`
+        - [ ] Add `EraCalendar`
+        - [ ] Prototype a simple Time Line Diagram using Stencil
+            - Add capabilities to Stencil as needed.
     - [ ] Tree Diagram
 - [ ] `pen` Application
     -  `draw` tool

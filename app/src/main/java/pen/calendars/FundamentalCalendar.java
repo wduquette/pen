@@ -6,16 +6,23 @@ package pen.calendars;
  * length of a year in days given the year number.  The epoch is year 0; it
  * is followed by year 1 and preceded by year -1.  The days of the year are
  * numbered 1 to {@code yearLength}.
- * @param name The calendar's symbol
+ * @param symbol The epoch symbol for non-negative years
+ * @param symbol The epoch symbol for negative years
  * @param yearLength Function to compute the length of a year in days.
+ * @param dayOfYearDigits Number of for dayOfYear in formatted dates
  */
-public record FundamentalCalendar(String name, YearLength yearLength) {
+public record FundamentalCalendar(
+    String symbol,
+    String beforeSymbol,
+    YearLength yearLength,
+    int dayOfYearDigits
+) {
     /**
      * Converts an arbitrary day since the epoch to a date.
      * @param day The day
      * @return The date
      */
-    FundamentalDate day2date(int day) {
+    public FundamentalDate day2date(int day) {
         if (day >= 0) {
             int year = 0;
             var daysInYear = yearLength.apply(year);
@@ -49,15 +56,11 @@ public record FundamentalCalendar(String name, YearLength yearLength) {
      * @return The day
      * @throws CalendarException if the date is invalid.
      */
-    int date2day(FundamentalDate date) {
+    public int date2day(FundamentalDate date) {
         // FIRST, validate the dayOfYear.
-        if (date.dayOfYear() < 1 ||
-            date.dayOfYear() > yearLength.apply(date.year()))
-        {
-            throw new CalendarException("dayOfYear out of range for year " +
-                date.year() + ": " + date.dayOfYear());
-        }
+        validate(date);
 
+        // NEXT, non-negative years, then negative years
         if (date.year() >= 0) {
             var year = date.year() - 1;
             var day = date.dayOfYear() - 1;
@@ -81,15 +84,53 @@ public record FundamentalCalendar(String name, YearLength yearLength) {
         }
     }
 
-//    String formatDate(int day) {
-//
-//    }
-//
-//    String formatDate(FundamentalDate date) {
-//
-//    }
+    /**
+     * Returns the string "{name}{year}/{dayOfYear} for positive years and
+     * "B{name}{-year}/{dayOfYear}" for negative years.
+     * @param day The day
+     * @return The formatted string
+     */
+    public String formatDate(int day) {
+        return formatDate(day2date(day));
+    }
+
+    /**
+     * Returns the string "{symbol}{year}/{dayOfYear}" for positive years and
+     * "{beforeSymbol}{-year}/{dayOfYear}" for negative years.
+     * @param date The date
+     * @return The formatted string
+     */
+    public String formatDate(FundamentalDate date) {
+        validate(date);
+
+        var sym = (date.year() >= 0) ? symbol : beforeSymbol;
+        var year = Math.abs(date.year());
+        var dayOfYear = String.format("%0" + dayOfYearDigits + "d",
+            date.dayOfYear());
+
+        return sym + year + "/" + dayOfYear;
+    }
+
+    /**
+     * Validates that the date is a valid date.
+     * @param date The date
+     * @throws CalendarException if the date is invalid.
+     */
+    public void validate(FundamentalDate date) {
+        if (date.dayOfYear() < 1 ||
+            date.dayOfYear() > yearLength.apply(date.year()))
+        {
+            throw new CalendarException("dayOfYear out of range for year " +
+                date.year() + ": " + date.dayOfYear());
+        }
+    }
+
 //
 //    int parseDate(String dateString) {
 //
 //    }
+
+    public String toString() {
+        return "FundamentalCalendar[" + symbol + "," + beforeSymbol + "]";
+    }
 }

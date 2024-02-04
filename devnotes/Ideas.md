@@ -3,6 +3,8 @@ A collection of things I want to consider
 ## New Ideas
 
 - [[Tree Diagrams]]
+- [[Time Line Diagrams]]
+    - [[Calendars]]
 - [[Output Color Names]]
 - [[AceFX]]
 
