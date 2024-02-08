@@ -1,18 +1,37 @@
 package pen.calendars;
 
-public record Week<E extends Enum<E>>(E[] weekDays, int offset) {
-    public E day2weekDay(int day) {
-        int ndx = (day + offset) % weekDays.length;
-        return weekDays[ndx];
+/**
+ * Defines a week given some number of weekday objects.  The objects
+ * must all be of the same type.  In Java code, W might be an Enum type;
+ * for a Week created by a script they might be something else.
+ * @param weekdays The weekday objects
+ * @param offset The offset for day 0 on the FundamentalCalendar.
+ * @param <W> The weekday type
+ */
+public record Week<W>(W[] weekdays, int offset) {
+    /**
+     * Converts a fundamental calendar day into the matching weekday.
+     * @param day The day
+     * @return The weekday object
+     */
+    public W day2weekday(int day) {
+        int ndx = (day + offset) % weekdays.length;
+        return weekdays[ndx];
     }
 
-    public int weekDay2day(E weekDay) {
-        for (int i = 0; i < weekDays.length; i++) {
-            if (weekDays[i] == weekDay) {
-                return i + offset;
+    /**
+     * Gets the index of the weekday.
+     * @param weekday The weekday
+     * @return The index
+     * @throws CalendarException if the weekday is unknown.
+     */
+    public int indexOf(W weekday) {
+        for (int i = 0; i < weekdays.length; i++) {
+            if (weekdays[i] == weekday) {
+                return i;
             }
         }
         throw new CalendarException(
-            "Invalid weekday value: \"" + weekDay + "\"");
+            "Invalid weekday value: \"" + weekday + "\"");
     }
 }
