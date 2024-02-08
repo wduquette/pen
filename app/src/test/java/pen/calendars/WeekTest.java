@@ -6,7 +6,7 @@ import static pen.checker.Checker.check;
 import static pen.checker.Checker.checkThrows;
 
 public class WeekTest {
-    private static final Week WEEK = new Week(Weekdays.values(), 2);
+    private static final Week<Weekdays> WEEK = new Week<>(Weekdays.values(), 2);
 
     @Test
     public void testDayToWeekday() {
