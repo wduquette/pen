@@ -14,7 +14,7 @@ package pen.calendars;
 public record FundamentalCalendar(
     String symbol,
     String beforeSymbol,
-    YearLength yearLength,
+    YearDelta yearLength,
     int dayOfYearDigits
 ) implements Calendar {
     //-------------------------------------------------------------------------
@@ -44,6 +44,15 @@ public record FundamentalCalendar(
 
     //-------------------------------------------------------------------------
     // FundamentalCalendar conversions
+
+    /**
+     * Returns the number of days in the given year.
+     * @param year The year
+     * @return The number of days
+     */
+    public int daysInYear(int year) {
+        return yearLength.apply(year);
+    }
 
     /**
      * Converts an arbitrary day since the epoch to a date.
