@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A SimpleCalendar is a calendar with some number of months, tied to a
+ * A SimpleCalendar is a calendar with some number of months, tied to
  * an epoch day on a Fundamental Calendar.  New Year's Day is the first
  * day of the first month.  A SimpleCalendar can be modified by a
  * RegnalCalendar.
@@ -22,7 +22,7 @@ public class SimpleCalendar<T> implements Calendar {
     //-------------------------------------------------------------------------
     // Constructor
 
-    private SimpleCalendar(Builder builder) {
+    private SimpleCalendar(Builder<T> builder) {
         this.epochDay = builder.epochDay;
         this.era = builder.era;
         this.priorEra = builder.priorEra;
@@ -47,18 +47,14 @@ public class SimpleCalendar<T> implements Calendar {
 
     /**
      * Gets the number of days in the given calendar year.
-     * @param year
+     * @param year The year, according to this calendar
      * @return The number of days in that year.
      */
     public int daysInYear(int year) {
         return months.stream()
-            .mapToInt(m -> daysInYear(year))
+            .mapToInt(m -> m.daysInMonth().apply(year))
             .sum();
     }
-
-    // NOTE: Might want a fundamental calendar with months.
-    // The rest is simply year reckoning based on a fundamental day and
-    // new year's date.
 
     /**
      * Converts an arbitrary day since the fundamental epoch to a date.
@@ -67,8 +63,8 @@ public class SimpleCalendar<T> implements Calendar {
      */
     public SimpleDate day2date(int fundamentalDay) {
         var day = fundamentalDay - epochDay;
-        int year = 0;
-        int dayOfYear = 0;
+        int year;
+        int dayOfYear;
 
         if (day >= 0) {
             // FIRST, get the year and day of year
@@ -171,7 +167,6 @@ public class SimpleCalendar<T> implements Calendar {
         //---------------------------------------------------------------------
         // Instance Data
 
-        private FundamentalCalendar foundation;
         private int epochDay = 0;
         private String era = "CE";
         private String priorEra = null;
@@ -185,40 +180,35 @@ public class SimpleCalendar<T> implements Calendar {
         //---------------------------------------------------------------------
         // Methods
 
-        public SimpleCalendar build() {
-            return new SimpleCalendar(this);
+        public SimpleCalendar<T> build() {
+            return new SimpleCalendar<>(this);
         }
 
-        public Builder foundation(FundamentalCalendar foundation) {
-            this.foundation = Objects.requireNonNull(foundation);
-            return this;
-        }
-
-        public Builder epochDay(int day) {
+        public Builder<T> epochDay(int day) {
             this.epochDay = day;
             return this;
         }
 
-        public Builder era(String era) {
+        public Builder<T> era(String era) {
             this.era = Objects.requireNonNull(era);
             return this;
         }
 
-        public Builder priorEra(String priorEra) {
+        public Builder<T> priorEra(String priorEra) {
             this.priorEra = Objects.requireNonNull(priorEra);
             return this;
         }
 
-        public Builder month(T month, int length) {
+        public Builder<T> month(T month, int length) {
             Objects.requireNonNull(month, "month is  null!");
-            months.add(new Month(month, y -> length));
+            months.add(new Month<>(month, y -> length));
             return this;
         }
 
-        public Builder month(T month, YearDelta length) {
+        public Builder<T> month(T month, YearDelta length) {
             Objects.requireNonNull(month, "month is  null!");
             Objects.requireNonNull(length, "month length function is  null!");
-            months.add(new Month(month, length));
+            months.add(new Month<>(month, length));
             return this;
         }
     }
