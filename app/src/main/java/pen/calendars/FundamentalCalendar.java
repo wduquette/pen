@@ -108,7 +108,7 @@ public record FundamentalCalendar(
         var dayOfYear = String.format("%0" + dayOfYearDigits + "d",
             date.dayOfYear());
 
-        return sym + year + "/" + dayOfYear;
+        return sym + year + "-" + dayOfYear;
     }
 
     /**
@@ -125,10 +125,55 @@ public record FundamentalCalendar(
         }
     }
 
-//
-//    int parseDate(String dateString) {
-//
-//    }
+    /**
+     * Parses a date string into a fundamental day.
+     * @param dateString the date string
+     * @return The day
+     */
+    public int parseDate(String dateString) {
+        dateString = dateString.trim().toUpperCase();
+
+        // FIRST, get the symbol
+        String sym;
+        boolean isBefore = false;
+
+        if (dateString.startsWith(symbol.toUpperCase())) {
+            sym = symbol;
+        } else if (dateString.startsWith(beforeSymbol.toUpperCase())) {
+            sym = beforeSymbol;
+            isBefore = true;
+        } else {
+            throw badFormat(dateString);
+        }
+
+        // NEXT, split on "-"
+        var tokens = dateString.substring(sym.length()).split("-");
+
+        if (tokens.length != 2) {
+            throw badFormat(dateString);
+        }
+
+        try {
+            var year = Integer.parseInt(tokens[0]);
+            var dayOfYear = Integer.parseInt(tokens[1]);
+
+            var date = new FundamentalDate(
+                isBefore ? -year : year,
+                dayOfYear);
+
+            validate(date);
+            return date2day(date);
+        } catch (IllegalArgumentException ex) {
+            throw badFormat(dateString);
+        }
+    }
+
+    private CalendarException badFormat(String dateString) {
+        throw new CalendarException(
+            "Invalid format, expected \"" +
+            symbol + "|" + beforeSymbol + "<year>-<dayOfYear>\": \"" +
+            dateString + "\".");
+    }
 
     public String toString() {
         return "FundamentalCalendar[" + symbol + "," + beforeSymbol + "]";
