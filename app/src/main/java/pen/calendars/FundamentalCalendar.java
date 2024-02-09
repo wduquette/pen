@@ -16,7 +16,35 @@ public record FundamentalCalendar(
     String beforeSymbol,
     YearLength yearLength,
     int dayOfYearDigits
-) {
+) implements Calendar {
+    //-------------------------------------------------------------------------
+    // Calendar API
+
+    /**
+     * Returns the string "{symbol}{year}-{dayOfYear} for positive years and
+     * "{beforeSymbol}{-year}/{dayOfYear}" for negative years.
+     * @param day The fundamental day
+     * @return The formatted string
+     */
+    @Override
+    public String formatDate(int day) {
+        return date2string(day2date(day));
+    }
+
+    /**
+     * Parses a date string into a fundamental day.
+     * @param dateString the date string
+     * @return The day
+     * @throws CalendarException on parse error
+     */
+    @Override
+    public int parseDate(String dateString) {
+        return date2day(string2date(dateString));
+    }
+
+    //-------------------------------------------------------------------------
+    // FundamentalCalendar conversions
+
     /**
      * Converts an arbitrary day since the epoch to a date.
      * @param day The day
@@ -85,22 +113,12 @@ public record FundamentalCalendar(
     }
 
     /**
-     * Returns the string "{name}{year}/{dayOfYear} for positive years and
-     * "B{name}{-year}/{dayOfYear}" for negative years.
-     * @param day The day
-     * @return The formatted string
-     */
-    public String formatDate(int day) {
-        return formatDate(day2date(day));
-    }
-
-    /**
      * Returns the string "{symbol}{year}/{dayOfYear}" for positive years and
      * "{beforeSymbol}{-year}/{dayOfYear}" for negative years.
      * @param date The date
      * @return The formatted string
      */
-    public String formatDate(FundamentalDate date) {
+    public String date2string(FundamentalDate date) {
         validate(date);
 
         var sym = (date.year() >= 0) ? symbol : beforeSymbol;
@@ -112,25 +130,12 @@ public record FundamentalCalendar(
     }
 
     /**
-     * Validates that the date is a valid date.
-     * @param date The date
-     * @throws CalendarException if the date is invalid.
-     */
-    public void validate(FundamentalDate date) {
-        if (date.dayOfYear() < 1 ||
-            date.dayOfYear() > yearLength.apply(date.year()))
-        {
-            throw new CalendarException("dayOfYear out of range for year " +
-                date.year() + ": " + date.dayOfYear());
-        }
-    }
-
-    /**
-     * Parses a date string into a fundamental day.
+     * Parses a date string into a date
      * @param dateString the date string
-     * @return The day
+     * @return The date
+     * @throws CalendarException on parse error
      */
-    public int parseDate(String dateString) {
+    public FundamentalDate string2date(String dateString) {
         dateString = dateString.trim().toUpperCase();
 
         // FIRST, get the symbol
@@ -162,11 +167,28 @@ public record FundamentalCalendar(
                 dayOfYear);
 
             validate(date);
-            return date2day(date);
+            return date;
         } catch (IllegalArgumentException ex) {
             throw badFormat(dateString);
         }
     }
+
+    /**
+     * Validates that the date is a valid date.
+     * @param date The date
+     * @throws CalendarException if the date is invalid.
+     */
+    public void validate(FundamentalDate date) {
+        if (date.dayOfYear() < 1 ||
+            date.dayOfYear() > yearLength.apply(date.year()))
+        {
+            throw new CalendarException("dayOfYear out of range for year " +
+                date.year() + ": " + date.dayOfYear());
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    // Helpers
 
     private CalendarException badFormat(String dateString) {
         throw new CalendarException(

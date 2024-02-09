@@ -65,28 +65,28 @@ public class FundamentalCalendarTest {
     @Test
     public void testFormatDate() {
         // Positive dates
-        check(CAL.formatDate(date(0,1))).eq("AE0-001");
-        check(CAL.formatDate(date(0,2))).eq("AE0-002");
-        check(CAL.formatDate(date(0,100))).eq("AE0-100");
-        check(CAL.formatDate(date(1,1))).eq("AE1-001");
-        check(CAL.formatDate(date(1,2))).eq("AE1-002");
+        check(CAL.date2string(date(0,1))).eq("AE0-001");
+        check(CAL.date2string(date(0,2))).eq("AE0-002");
+        check(CAL.date2string(date(0,100))).eq("AE0-100");
+        check(CAL.date2string(date(1,1))).eq("AE1-001");
+        check(CAL.date2string(date(1,2))).eq("AE1-002");
 
         // Negative dates
-        check(CAL.formatDate(date(-1,100))).eq("BE1-100");
-        check(CAL.formatDate(date(-1,99))).eq("BE1-099");
-        check(CAL.formatDate(date(-1,1))).eq("BE1-001");
-        check(CAL.formatDate(date(-2,100))).eq("BE2-100");
+        check(CAL.date2string(date(-1,100))).eq("BE1-100");
+        check(CAL.date2string(date(-1,99))).eq("BE1-099");
+        check(CAL.date2string(date(-1,1))).eq("BE1-001");
+        check(CAL.date2string(date(-2,100))).eq("BE2-100");
 
         // From day
         for (int day = -101; day <= 101; day++) {
             var date = CAL.day2date(day);
-            check(CAL.formatDate(day)).eq(CAL.formatDate(date));
+            check(CAL.formatDate(day)).eq(CAL.date2string(date));
         }
 
         // Exception
-        checkThrows(() -> CAL.formatDate(date(0, -1)))
+        checkThrows(() -> CAL.date2string(date(0, -1)))
             .containsString("dayOfYear out of range for year 0: -1");
-        checkThrows(() -> CAL.formatDate(date(0, 101)))
+        checkThrows(() -> CAL.date2string(date(0, 101)))
             .containsString("dayOfYear out of range for year 0: 101");
     }
 
