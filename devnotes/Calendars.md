@@ -26,3 +26,20 @@ Here's what I think I need:
     - The era may define
         - A cycle of months of various lengths
         - Era symbol, e.g., AD, BC
+
+## Fundamental Calendars vs. Eras
+
+What kinds of variation do I want to see in setting?
+
+- Typically I want a range of "eras" all rooted in the same basic calendar
+    - Same cycle of week days (day names can vary)
+    - Same months and month lengths (month names can vary)
+    - Different new year's day and reckoning of years, e.g., coronation of King So-and-So.
+    - Here I'm translating the years only, based on the date.
+- Sometimes I want want two distinct calendars—different month lengths, etc.
+
+So what I need is this:
+
+- A fundamental calendar, for translating between calendars.
+- A well-behaved monthly calendar tied to the fundamental calendar
+- Era calendars modifying the well-behaved monthly calendar.

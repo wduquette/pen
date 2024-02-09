@@ -62,11 +62,12 @@ public record FundamentalCalendar(
     public FundamentalDate day2date(int day) {
         if (day >= 0) {
             int year = 0;
-            var daysInYear = yearLength.apply(year);
+            var daysInYear = daysInYear(year);
 
             while (day >= daysInYear) {
-                year++;
                 day -= daysInYear;
+                year++;
+                daysInYear = daysInYear(year);
             }
 
             return new FundamentalDate(year, day + 1);
@@ -74,15 +75,15 @@ public record FundamentalCalendar(
             int year = -1;
             day = -day;
 
-            var daysInYear = yearLength.apply(year);
+            var daysInYear = daysInYear(year);
 
             while (day > daysInYear) {
-                year--;
                 day -= daysInYear;
+                year--;
+                daysInYear = daysInYear(year);
             }
 
-            var daysInEarliestYear = yearLength.apply(year - 1);
-            var dayOfYear = daysInEarliestYear - day + 1;
+            var dayOfYear = daysInYear - day + 1;
             return new FundamentalDate(year, dayOfYear);
         }
     }
@@ -189,7 +190,7 @@ public record FundamentalCalendar(
      */
     public void validate(FundamentalDate date) {
         if (date.dayOfYear() < 1 ||
-            date.dayOfYear() > yearLength.apply(date.year()))
+            date.dayOfYear() > daysInYear(date.year()))
         {
             throw new CalendarException("dayOfYear out of range for year " +
                 date.year() + ": " + date.dayOfYear());
