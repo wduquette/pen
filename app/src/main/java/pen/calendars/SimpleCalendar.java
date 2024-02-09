@@ -6,24 +6,23 @@ import java.util.Objects;
 
 /**
  * A SimpleCalendar is a calendar with some number of months, tied to a
- * an epoch day on a Fundamental Calendar.
+ * an epoch day on a Fundamental Calendar.  New Year's Day is the first
+ * day of the first month.  A SimpleCalendar can be modified by a
+ * RegnalCalendar.
  */
 public class SimpleCalendar<T> implements Calendar {
     //-------------------------------------------------------------------------
     // Instance variables
 
-    private final FundamentalCalendar foundation;
     private final int epochDay;
     private final String era;
     private final String priorEra;
     private final List<Month<T>> months;
-    // TODO: newYearsDay
 
     //-------------------------------------------------------------------------
     // Constructor
 
     private SimpleCalendar(Builder builder) {
-        this.foundation = builder.foundation;
         this.epochDay = builder.epochDay;
         this.era = builder.era;
         this.priorEra = builder.priorEra;
@@ -47,13 +46,13 @@ public class SimpleCalendar<T> implements Calendar {
     // SimpleCalendar Methods
 
     /**
-     * Gets the number of days in the given year.
-     * @param fundamentalYear The year
+     * Gets the number of days in the given calendar year.
+     * @param year
      * @return The number of days in that year.
      */
-    public int daysInYear(int fundamentalYear) {
+    public int daysInYear(int year) {
         return months.stream()
-            .mapToInt(m -> daysInYear(fundamentalYear))
+            .mapToInt(m -> daysInYear(year))
             .sum();
     }
 
@@ -67,55 +66,86 @@ public class SimpleCalendar<T> implements Calendar {
      * @return The date
      */
     public SimpleDate day2date(int fundamentalDay) {
-        var fundamentalDate = foundation.day2date(fundamentalDay);
-        var fundamentalYear = fundamentalDate.year();
-        var daysInYear = foundation.daysInYear(fundamentalYear);
-
         var day = fundamentalDay - epochDay;
+        int year = 0;
+        int dayOfYear = 0;
 
         if (day >= 0) {
-            // FIRST, get the year
-            int year = 0;
+            // FIRST, get the year and day of year
+            year = 0;
 
+            var daysInYear = daysInYear(year);
             while (day >= daysInYear) {
-                year++;
                 day -= daysInYear;
+                year++;
+                daysInYear = daysInYear(year);
             }
 
             // NEXT, get the month and day of month
-            var monthOfYear = 0;
-            var dayOfMonth = 0;
+            return yearDay2date(year, day);
+        } else {
+            // FIRST, get the year and day of year
+            year = -1;
+            day = -day;
 
-            for (int i = 0; i < months.size(); i++) {
-                var month = months.get(i);
-                var daysInMonth = month.daysInMonth().apply(fundamentalYear);
-
-                if (day <= daysInMonth) {
-                    dayOfMonth = day + 1;
-                    monthOfYear = i + 1;
-                    break;
-                }
-
-                day -= daysInMonth;
+            var daysInYear = daysInYear(year);
+            while (day > daysInYear) {
+                day -= daysInYear;
+                year--;
+                daysInYear = daysInYear(year);
             }
 
-            return new SimpleDate(year, monthOfYear, dayOfMonth);
-        } else {
-//            int year = -1;
-//            day = -day;
-//
-//            while (day > daysInYear) {
-//                year--;
-//                day -= daysInYear;
-//            }
-//
-//            var daysInEarliestYear = yearLength.apply(year - 1);
-//            var dayOfYear = daysInEarliestYear - day + 1;
-//            return new FundamentalDate(year, dayOfYear);
-            throw new UnsupportedOperationException("TODO");
+            dayOfYear = daysInYear - day + 1;
+
+            // NEXT, get the month and day of month
+            return yearDay2date(year, dayOfYear);
         }
     }
 
+    private SimpleDate yearDay2date(int year, int dayOfYear) {
+        var monthOfYear = 0;
+        var dayOfMonth = 0;
+
+        for (int i = 0; i < months.size(); i++) {
+            var month = months.get(i);
+            var daysInMonth = month.daysInMonth().apply(year);
+
+            if (dayOfYear <= daysInMonth) {
+                dayOfMonth = dayOfYear + 1;
+                monthOfYear = i + 1;
+                break;
+            }
+
+            dayOfYear -= daysInMonth;
+        }
+
+        return new SimpleDate(year, monthOfYear, dayOfMonth);
+    }
+
+    public int date2day(SimpleDate date) {
+        var year = date.year();
+
+        // FIRST, days in this month
+        var day = date.dayOfMonth() - 1;
+
+        // NEXT, days in earlier months
+        for (int m = 0; m < date.monthOfYear() - 1; m++) {
+            day += months.get(m).daysInMonth().apply(year);
+        }
+
+        // NEXT, days in years since era start.
+        if (year > 0) {
+            for (int i = 1; i < year; i++) {
+                day += daysInYear(year);
+            }
+        } else {
+            for (int i = -1; i > year; i--) {
+                day += daysInYear(year - 1);
+            }
+        }
+
+        return day + epochDay;
+    }
 
     //-------------------------------------------------------------------------
     // Helper Classes
@@ -127,7 +157,7 @@ public class SimpleCalendar<T> implements Calendar {
      * @param daysInMonth The month length function
      * @param <T> The month type
      */
-    public static record Month<T>(
+    public record Month<T>(
         T month,
         YearDelta daysInMonth
     ) {
@@ -145,7 +175,7 @@ public class SimpleCalendar<T> implements Calendar {
         private int epochDay = 0;
         private String era = "CE";
         private String priorEra = null;
-        private List<Month<T>> months = new ArrayList<>();
+        private final List<Month<T>> months = new ArrayList<>();
 
         //---------------------------------------------------------------------
         // Constructor
