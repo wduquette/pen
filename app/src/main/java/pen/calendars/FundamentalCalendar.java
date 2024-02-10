@@ -65,7 +65,7 @@ public record FundamentalCalendar(
      * @param day The day
      * @return The date
      */
-    public FundamentalDate day2date(int day) {
+    public YearDayOfYear day2date(int day) {
         if (day >= 0) {
             int year = 1;
             var daysInYear = daysInYear(year);
@@ -76,7 +76,7 @@ public record FundamentalCalendar(
                 daysInYear = daysInYear(year);
             }
 
-            return new FundamentalDate(year, day + 1);
+            return new YearDayOfYear(year, day + 1);
         } else {
             int year = -1;
             day = -day;
@@ -90,7 +90,7 @@ public record FundamentalCalendar(
             }
 
             var dayOfYear = daysInYear - day + 1;
-            return new FundamentalDate(year, dayOfYear);
+            return new YearDayOfYear(year, dayOfYear);
         }
     }
 
@@ -100,7 +100,7 @@ public record FundamentalCalendar(
      * @return The day
      * @throws CalendarException if the date is invalid.
      */
-    public int date2day(FundamentalDate date) {
+    public int date2day(YearDayOfYear date) {
         // FIRST, validate the dayOfYear.
         validate(date);
 
@@ -134,7 +134,7 @@ public record FundamentalCalendar(
      * @param date The date
      * @return The formatted string
      */
-    public String date2string(FundamentalDate date) {
+    public String date2string(YearDayOfYear date) {
         validate(date);
 
         var sym = (date.year() >= 0) ? era : priorEra;
@@ -151,7 +151,7 @@ public record FundamentalCalendar(
      * @return The date
      * @throws CalendarException on parse error
      */
-    public FundamentalDate string2date(String dateString) {
+    public YearDayOfYear string2date(String dateString) {
         dateString = dateString.trim().toUpperCase();
 
         // FIRST, get the symbol
@@ -178,7 +178,7 @@ public record FundamentalCalendar(
             var year = Integer.parseInt(tokens[0]);
             var dayOfYear = Integer.parseInt(tokens[1]);
 
-            var date = new FundamentalDate(
+            var date = new YearDayOfYear(
                 isBefore ? -year : year,
                 dayOfYear);
 
@@ -194,7 +194,7 @@ public record FundamentalCalendar(
      * @param date The date
      * @throws CalendarException if the date is invalid.
      */
-    public void validate(FundamentalDate date) {
+    public void validate(YearDayOfYear date) {
         if (date.year() == 0) {
             throw new CalendarException("year is 0 in date: \"" + date + "\".");
         }

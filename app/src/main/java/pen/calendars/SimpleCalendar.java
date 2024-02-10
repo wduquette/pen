@@ -61,7 +61,7 @@ public class SimpleCalendar<T> implements Calendar {
      * @param fundamentalDay The fundamental day
      * @return The date
      */
-    public SimpleDate day2date(int fundamentalDay) {
+    public YearMonthDay day2date(int fundamentalDay) {
         var day = fundamentalDay - epochDay;
         int year;
         int dayOfYear;
@@ -98,7 +98,7 @@ public class SimpleCalendar<T> implements Calendar {
         }
     }
 
-    private SimpleDate yearDay2date(int year, int dayOfYear) {
+    private YearMonthDay yearDay2date(int year, int dayOfYear) {
         var monthOfYear = 0;
         var dayOfMonth = 0;
 
@@ -115,10 +115,10 @@ public class SimpleCalendar<T> implements Calendar {
             dayOfYear -= daysInMonth;
         }
 
-        return new SimpleDate(year, monthOfYear, dayOfMonth);
+        return new YearMonthDay(year, monthOfYear, dayOfMonth);
     }
 
-    public int date2day(SimpleDate date) {
+    public int date2day(YearMonthDay date) {
         var year = date.year();
 
         // FIRST, days in this month

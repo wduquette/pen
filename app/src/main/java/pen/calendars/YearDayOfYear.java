@@ -1,11 +1,11 @@
 package pen.calendars;
 
 /**
- * A date relative to a specific fundamental calendar.
- * @param year The year number
+ * A date relative to a specific calendar.
+ * @param year The year number, omitting 0.
  * @param dayOfYear The day of year, counting from 1.
  */
-public record FundamentalDate(
+public record YearDayOfYear(
     int year,
     int dayOfYear
 ) {

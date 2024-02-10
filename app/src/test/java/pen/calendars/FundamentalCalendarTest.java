@@ -169,7 +169,7 @@ public class FundamentalCalendarTest {
         checkThrows(() -> LEAP.date2day(date(0, 0)));
     }
 
-    private FundamentalDate date(int year, int day) {
-        return new FundamentalDate(year, day);
+    private YearDayOfYear date(int year, int day) {
+        return new YearDayOfYear(year, day);
     }
 }
