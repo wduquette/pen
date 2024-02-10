@@ -12,29 +12,29 @@ public class FundamentalCalendarTest {
 
     // A calendar with 10 day "years" plus a leap year every fourth year
     private static final FundamentalCalendar LEAP =
-        new FundamentalCalendar("AT", "BT", y -> y % 4 == 0 ? 11 : 10, 2);
+        new FundamentalCalendar("AL", "BL", y -> y % 4 == 0 ? 11 : 10, 2);
 
     @Test
     public void testDay2date_TEN() {
         // Positive days
-        check(TEN.day2date(0)).eq(date(1,1));
-        check(TEN.day2date(1)).eq(date(1,2));
-        check(TEN.day2date(9)).eq(date(1,10));
-        check(TEN.day2date(10)).eq(date(2,1));
-        check(TEN.day2date(11)).eq(date(2,2));
+        check(TEN.day2date(0)).eq(ten(1,1));
+        check(TEN.day2date(1)).eq(ten(1,2));
+        check(TEN.day2date(9)).eq(ten(1,10));
+        check(TEN.day2date(10)).eq(ten(2,1));
+        check(TEN.day2date(11)).eq(ten(2,2));
 
         // Negative days
-        check(TEN.day2date(-1)).eq(date(-1,10));
-        check(TEN.day2date(-2)).eq(date(-1,9));
-        check(TEN.day2date(-3)).eq(date(-1,8));
-        check(TEN.day2date(-4)).eq(date(-1,7));
-        check(TEN.day2date(-5)).eq(date(-1,6));
-        check(TEN.day2date(-6)).eq(date(-1,5));
-        check(TEN.day2date(-7)).eq(date(-1,4));
-        check(TEN.day2date(-8)).eq(date(-1,3));
-        check(TEN.day2date(-9)).eq(date(-1,2));
-        check(TEN.day2date(-10)).eq(date(-1,1));
-        check(TEN.day2date(-11)).eq(date(-2,10));
+        check(TEN.day2date(-1)).eq(ten(-1,10));
+        check(TEN.day2date(-2)).eq(ten(-1,9));
+        check(TEN.day2date(-3)).eq(ten(-1,8));
+        check(TEN.day2date(-4)).eq(ten(-1,7));
+        check(TEN.day2date(-5)).eq(ten(-1,6));
+        check(TEN.day2date(-6)).eq(ten(-1,5));
+        check(TEN.day2date(-7)).eq(ten(-1,4));
+        check(TEN.day2date(-8)).eq(ten(-1,3));
+        check(TEN.day2date(-9)).eq(ten(-1,2));
+        check(TEN.day2date(-10)).eq(ten(-1,1));
+        check(TEN.day2date(-11)).eq(ten(-2,10));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class FundamentalCalendarTest {
         }
 
         // Exception
-        checkThrows(() -> TEN.date2day(date(0, 0)));
+        checkThrows(() -> TEN.date2day(ten(0, 0)));
     }
 
     @Test
@@ -57,30 +57,32 @@ public class FundamentalCalendarTest {
         }
 
         // Exception
-        checkThrows(() -> TEN.date2day(date(0, 0)))
+        checkThrows(() -> TEN.validate(leap(1,1)))
+            .containsString("expected \"FundamentalCalendar[AT,BT]\", got \"FundamentalCalendar[AL,BL]");
+        checkThrows(() -> TEN.validate(ten(0, 0)))
             .containsString("year is 0 in date");
-        checkThrows(() -> TEN.validate(date(1, 0)))
+        checkThrows(() -> TEN.validate(ten(1, 0)))
             .containsString("dayOfYear out of range for year 1 in date:");
-        checkThrows(() -> TEN.validate(date(1, -1)))
+        checkThrows(() -> TEN.validate(ten(1, -1)))
             .containsString("dayOfYear out of range for year 1 in date:");
-        checkThrows(() -> TEN.validate(date(1, 11)))
+        checkThrows(() -> TEN.validate(ten(1, 11)))
             .containsString("dayOfYear out of range for year 1 in date:");
     }
 
     @Test
     public void testDate2stringTEN() {
         // Positive dates
-        check(TEN.date2string(date(1,1))).eq("AT1-01");
-        check(TEN.date2string(date(1,2))).eq("AT1-02");
-        check(TEN.date2string(date(1,10))).eq("AT1-10");
-        check(TEN.date2string(date(2,1))).eq("AT2-01");
-        check(TEN.date2string(date(2,2))).eq("AT2-02");
+        check(TEN.date2string(ten(1,1))).eq("AT1-01");
+        check(TEN.date2string(ten(1,2))).eq("AT1-02");
+        check(TEN.date2string(ten(1,10))).eq("AT1-10");
+        check(TEN.date2string(ten(2,1))).eq("AT2-01");
+        check(TEN.date2string(ten(2,2))).eq("AT2-02");
 
         // Negative dates
-        check(TEN.date2string(date(-1,10))).eq("BT1-10");
-        check(TEN.date2string(date(-1,9))).eq("BT1-09");
-        check(TEN.date2string(date(-1,1))).eq("BT1-01");
-        check(TEN.date2string(date(-2,10))).eq("BT2-10");
+        check(TEN.date2string(ten(-1,10))).eq("BT1-10");
+        check(TEN.date2string(ten(-1,9))).eq("BT1-09");
+        check(TEN.date2string(ten(-1,1))).eq("BT1-01");
+        check(TEN.date2string(ten(-2,10))).eq("BT2-10");
 
         // From day
         for (int day = -101; day <= 101; day++) {
@@ -89,7 +91,7 @@ public class FundamentalCalendarTest {
         }
 
         // Exception
-        checkThrows(() -> TEN.date2string(date(1, 0)));
+        checkThrows(() -> TEN.date2string(ten(1, 0)));
     }
 
     @Test
@@ -135,27 +137,27 @@ public class FundamentalCalendarTest {
     @Test
     public void testDay2date_LEAP() {
         // Positive days
-        check(LEAP.day2date(0)).eq(date(1,1));
-        check(LEAP.day2date(1)).eq(date(1,2));
-        check(LEAP.day2date(9)).eq(date(1,10));
-        check(LEAP.day2date(10)).eq(date(2,1));
-        check(LEAP.day2date(11)).eq(date(2,2));
-        check(LEAP.day2date(20)).eq(date(3,1));
-        check(LEAP.day2date(21)).eq(date(3,2));
+        check(LEAP.day2date(0)).eq(leap(1,1));
+        check(LEAP.day2date(1)).eq(leap(1,2));
+        check(LEAP.day2date(9)).eq(leap(1,10));
+        check(LEAP.day2date(10)).eq(leap(2,1));
+        check(LEAP.day2date(11)).eq(leap(2,2));
+        check(LEAP.day2date(20)).eq(leap(3,1));
+        check(LEAP.day2date(21)).eq(leap(3,2));
 
         // Negative days
-        check(LEAP.day2date(-1)).eq(date(-1,11));
-        check(LEAP.day2date(-2)).eq(date(-1,10));
-        check(LEAP.day2date(-3)).eq(date(-1,9));
-        check(LEAP.day2date(-4)).eq(date(-1,8));
-        check(LEAP.day2date(-5)).eq(date(-1,7));
-        check(LEAP.day2date(-6)).eq(date(-1,6));
-        check(LEAP.day2date(-7)).eq(date(-1,5));
-        check(LEAP.day2date(-8)).eq(date(-1,4));
-        check(LEAP.day2date(-9)).eq(date(-1,3));
-        check(LEAP.day2date(-10)).eq(date(-1,2));
-        check(LEAP.day2date(-11)).eq(date(-1,1));
-        check(LEAP.day2date(-12)).eq(date(-2,10));
+        check(LEAP.day2date(-1)).eq(leap(-1,11));
+        check(LEAP.day2date(-2)).eq(leap(-1,10));
+        check(LEAP.day2date(-3)).eq(leap(-1,9));
+        check(LEAP.day2date(-4)).eq(leap(-1,8));
+        check(LEAP.day2date(-5)).eq(leap(-1,7));
+        check(LEAP.day2date(-6)).eq(leap(-1,6));
+        check(LEAP.day2date(-7)).eq(leap(-1,5));
+        check(LEAP.day2date(-8)).eq(leap(-1,4));
+        check(LEAP.day2date(-9)).eq(leap(-1,3));
+        check(LEAP.day2date(-10)).eq(leap(-1,2));
+        check(LEAP.day2date(-11)).eq(leap(-1,1));
+        check(LEAP.day2date(-12)).eq(leap(-2,10));
     }
 
     @Test
@@ -166,10 +168,14 @@ public class FundamentalCalendarTest {
         }
 
         // Exception
-        checkThrows(() -> LEAP.date2day(date(0, 0)));
+        checkThrows(() -> LEAP.date2day(leap(0, 0)));
     }
 
-    private YearDayOfYear date(int year, int day) {
-        return new YearDayOfYear(year, day);
+    private YearDayOfYear ten(int year, int day) {
+        return new YearDayOfYear(TEN, year, day);
+    }
+
+    private YearDayOfYear leap(int year, int day) {
+        return new YearDayOfYear(LEAP, year, day);
     }
 }

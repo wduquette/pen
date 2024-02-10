@@ -76,7 +76,7 @@ public record FundamentalCalendar(
                 daysInYear = daysInYear(year);
             }
 
-            return new YearDayOfYear(year, day + 1);
+            return new YearDayOfYear(this, year, day + 1);
         } else {
             int year = -1;
             day = -day;
@@ -90,7 +90,7 @@ public record FundamentalCalendar(
             }
 
             var dayOfYear = daysInYear - day + 1;
-            return new YearDayOfYear(year, dayOfYear);
+            return new YearDayOfYear(this, year, dayOfYear);
         }
     }
 
@@ -179,6 +179,7 @@ public record FundamentalCalendar(
             var dayOfYear = Integer.parseInt(tokens[1]);
 
             var date = new YearDayOfYear(
+                this,
                 isBefore ? -year : year,
                 dayOfYear);
 
@@ -195,6 +196,11 @@ public record FundamentalCalendar(
      * @throws CalendarException if the date is invalid.
      */
     public void validate(YearDayOfYear date) {
+        if (!date.calendar().equals(this)) {
+            throw new CalendarException(
+                "Calendar mismatch, expected \"" + this + "\", got \"" +
+                date.calendar() + "\"");
+        }
         if (date.year() == 0) {
             throw new CalendarException("year is 0 in date: \"" + date + "\".");
         }
