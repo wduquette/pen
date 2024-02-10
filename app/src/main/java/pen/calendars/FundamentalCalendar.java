@@ -3,17 +3,17 @@ package pen.calendars;
 /**
  * Defines a fundamental calendar.  The name is typically a short symbol,
  * e.g., "FC".  The {@code yearLength} is a function that determines the
- * length of a year in days given the year number.  The epoch is year 0; it
- * is followed by year 1 and preceded by year -1.  The days of the year are
+ * length of a year in days given the year number.  The epoch is year 1; it
+ * is preceded by year -1.  The days of the year are
  * numbered 1 to {@code yearLength}.
- * @param symbol The epoch symbol for non-negative years
- * @param beforeSymbol The epoch symbol for negative years
+ * @param era The era symbol for non-negative years
+ * @param priorEra The era symbol for negative years
  * @param yearLength Function to compute the length of a year in days.
  * @param dayOfYearDigits Number of for dayOfYear in formatted dates
  */
 public record FundamentalCalendar(
-    String symbol,
-    String beforeSymbol,
+    String era,
+    String priorEra,
     YearDelta yearLength,
     int dayOfYearDigits
 ) implements Calendar {
@@ -21,8 +21,8 @@ public record FundamentalCalendar(
     // Calendar API
 
     /**
-     * Returns the string "{symbol}{year}-{dayOfYear} for positive years and
-     * "{beforeSymbol}{-year}/{dayOfYear}" for negative years.
+     * Returns the string "{era}{year}-{dayOfYear} for positive years and
+     * "{priorEra}{-year}/{dayOfYear}" for negative years.
      * @param day The fundamental day
      * @return The formatted string
      */
@@ -51,7 +51,13 @@ public record FundamentalCalendar(
      * @return The number of days
      */
     public int daysInYear(int year) {
-        return yearLength.apply(year);
+        if (year > 0) {
+            return yearLength.apply(year);
+        } else if (year < 0) {
+            return yearLength.apply(year + 1);
+        } else {
+             throw new IllegalArgumentException("year is 0");
+        }
     }
 
     /**
@@ -61,7 +67,7 @@ public record FundamentalCalendar(
      */
     public FundamentalDate day2date(int day) {
         if (day >= 0) {
-            int year = 0;
+            int year = 1;
             var daysInYear = daysInYear(year);
 
             while (day >= daysInYear) {
@@ -98,23 +104,23 @@ public record FundamentalCalendar(
         // FIRST, validate the dayOfYear.
         validate(date);
 
-        // NEXT, non-negative years, then negative years
-        if (date.year() >= 0) {
-            var year = date.year() - 1;
+        // NEXT, positive years, then negative years
+        if (date.year() > 0) {
             var day = date.dayOfYear() - 1;
+            var year = date.year() - 1;
 
-            while (year >= 0) {
-                day += yearLength.apply(year);
+            while (year >= 1) {
+                day += daysInYear(year);
                 year--;
             }
 
             return day;
         } else {
-            var day = yearLength.apply(date.year()) - date.dayOfYear() + 1;
+            var day = daysInYear(date.year()) - date.dayOfYear() + 1;
             var year = date.year() + 1;
 
             while (year < 0) {
-                day += yearLength.apply(year);
+                day += daysInYear(year);
                 year++;
             }
 
@@ -123,15 +129,15 @@ public record FundamentalCalendar(
     }
 
     /**
-     * Returns the string "{symbol}{year}/{dayOfYear}" for positive years and
-     * "{beforeSymbol}{-year}/{dayOfYear}" for negative years.
+     * Returns the string "{era}{year}/{dayOfYear}" for positive years and
+     * "{priorEra}{-year}/{dayOfYear}" for negative years.
      * @param date The date
      * @return The formatted string
      */
     public String date2string(FundamentalDate date) {
         validate(date);
 
-        var sym = (date.year() >= 0) ? symbol : beforeSymbol;
+        var sym = (date.year() >= 0) ? era : priorEra;
         var year = Math.abs(date.year());
         var dayOfYear = String.format("%0" + dayOfYearDigits + "d",
             date.dayOfYear());
@@ -152,10 +158,10 @@ public record FundamentalCalendar(
         String sym;
         boolean isBefore = false;
 
-        if (dateString.startsWith(symbol.toUpperCase())) {
-            sym = symbol;
-        } else if (dateString.startsWith(beforeSymbol.toUpperCase())) {
-            sym = beforeSymbol;
+        if (dateString.startsWith(era.toUpperCase())) {
+            sym = era;
+        } else if (dateString.startsWith(priorEra.toUpperCase())) {
+            sym = priorEra;
             isBefore = true;
         } else {
             throw badFormat(dateString);
@@ -189,11 +195,15 @@ public record FundamentalCalendar(
      * @throws CalendarException if the date is invalid.
      */
     public void validate(FundamentalDate date) {
+        if (date.year() == 0) {
+            throw new CalendarException("year is 0 in date: \"" + date + "\".");
+        }
+
         if (date.dayOfYear() < 1 ||
             date.dayOfYear() > daysInYear(date.year()))
         {
             throw new CalendarException("dayOfYear out of range for year " +
-                date.year() + ": " + date.dayOfYear());
+                date.year() + " in date: \"" + date + "\"");
         }
     }
 
@@ -203,11 +213,11 @@ public record FundamentalCalendar(
     private CalendarException badFormat(String dateString) {
         throw new CalendarException(
             "Invalid format, expected \"" +
-            symbol + "|" + beforeSymbol + "<year>-<dayOfYear>\": \"" +
+                era + "|" + priorEra + "<year>-<dayOfYear>\": \"" +
             dateString + "\".");
     }
 
     public String toString() {
-        return "FundamentalCalendar[" + symbol + "," + beforeSymbol + "]";
+        return "FundamentalCalendar[" + era + "," + priorEra + "]";
     }
 }
