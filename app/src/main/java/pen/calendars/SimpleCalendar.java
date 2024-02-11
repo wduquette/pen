@@ -41,7 +41,7 @@ public class SimpleCalendar implements Calendar {
 
     @Override
     public String formatDate(int day) {
-        return null;
+        return date2string(day2date(day));
     }
 
     @Override
@@ -190,6 +190,24 @@ public class SimpleCalendar implements Calendar {
 
         return day + epochDay;
     }
+
+    /**
+     * Returns the string "{year}-{monthOfYear}-{dayOfMonth} {era}" for
+     * positive years and "{-year}-{monthOfYear}-{dayOfMonty} {priorEra}"
+     * for negative years.
+     * @param date The date
+     * @return The formatted string
+     */
+    public String date2string(YearMonthDay date) {
+        validate(date);
+
+        var sym = (date.year() >= 0) ? era : priorEra;
+        var year = Math.abs(date.year());
+
+        return year + "-" + date.monthOfYear() + "-" + date.dayOfMonth()
+            + "-" + sym;
+    }
+
 
     public String toString() {
         return "SimpleCalendar[" + era + "," + priorEra + "," + months.size()

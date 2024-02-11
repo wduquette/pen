@@ -129,8 +129,8 @@ public record FundamentalCalendar(
     }
 
     /**
-     * Returns the string "{era}{year}/{dayOfYear}" for positive years and
-     * "{priorEra}{-year}/{dayOfYear}" for negative years.
+     * Returns the string "{era}{year}-{dayOfYear}" for positive years and
+     * "{priorEra}{-year}-{dayOfYear}" for negative years.
      * @param date The date
      * @return The formatted string
      */
