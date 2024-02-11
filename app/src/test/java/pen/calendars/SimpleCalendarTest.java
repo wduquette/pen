@@ -166,7 +166,7 @@ public class SimpleCalendarTest {
     @Test
     public void testFormatDate() {
         // Spot check; formatDate just composes day2date and date2string.
-        var day = AE.date2day(AE.date(2024,02,29));
+        var day = AE.date2day(AE.date(2024,2,29));
         check(AE.formatDate(day)).eq("2024-2-29-AE");
     }
 }
