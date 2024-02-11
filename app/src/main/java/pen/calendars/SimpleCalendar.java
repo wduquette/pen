@@ -1,6 +1,7 @@
 package pen.calendars;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,32 +11,12 @@ import java.util.Objects;
  * day of the first month.  A SimpleCalendar can be modified by a
  * RegnalCalendar.
  */
-public class SimpleCalendar implements Calendar {
-    //-------------------------------------------------------------------------
-    // Instance variables
-
-    // The fundamental day corresponding with year 1, month 1, day 1
-    private final int epochDay;
-
-    // The era string for years >= 1
-    private final String era;
-
-    // The era string for years <= -1
-    private final String priorEra;
-
-    // The month definitions
-    private final List<MonthRecord> months;
-
-    //-------------------------------------------------------------------------
-    // Constructor
-
-    private SimpleCalendar(Builder builder) {
-        this.epochDay = builder.epochDay;
-        this.era = builder.era;
-        this.priorEra = builder.priorEra;
-        this.months = builder.months;
-    }
-
+public record SimpleCalendar(
+    int epochDay,
+    String era,
+    String priorEra,
+    List<MonthRecord> months
+) implements Calendar {
     //-------------------------------------------------------------------------
     // Calendar API
 
@@ -46,7 +27,7 @@ public class SimpleCalendar implements Calendar {
 
     @Override
     public int parseDate(String dateString) {
-        return 0;
+        return date2day(string2date(dateString));
     }
 
     //-------------------------------------------------------------------------
@@ -208,6 +189,43 @@ public class SimpleCalendar implements Calendar {
             + "-" + sym;
     }
 
+    YearMonthDay string2date(String dateString) {
+        var tokens = dateString.trim().split("-");
+
+        if (tokens.length != 4) {
+            throw badFormat(dateString);
+        }
+
+        var sym = tokens[3].toUpperCase();
+
+        if (!sym.equals(era) && !sym.equals(priorEra)) {
+            throw badFormat(dateString);
+        }
+
+        try {
+            var year = Integer.parseInt(tokens[0]);
+
+            var date = new YearMonthDay(
+                this,
+                sym.equals(era) ? year : -year,
+                Integer.parseInt(tokens[1]),
+                Integer.parseInt(tokens[2]));
+            validate(date);
+            return date;
+        } catch (IllegalArgumentException ex) {
+            throw badFormat(dateString);
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    // Helpers
+
+    private CalendarException badFormat(String dateString) {
+        throw new CalendarException(
+            "Invalid format, expected \"" +
+                "<year>-<monthOfYear>-<dayOfMonth>-" + era + "|" + priorEra +
+                "\", got \"" + dateString + "\".");
+    }
 
     public String toString() {
         return "SimpleCalendar[" + era + "," + priorEra + "," + months.size()
@@ -255,7 +273,8 @@ public class SimpleCalendar implements Calendar {
          * @return The calendar
          */
         public SimpleCalendar build() {
-            return new SimpleCalendar(this);
+            return new SimpleCalendar(epochDay, era, priorEra,
+                Collections.unmodifiableList(months));
         }
 
         /**
@@ -275,7 +294,7 @@ public class SimpleCalendar implements Calendar {
          * @return the builder
          */
         public Builder era(String era) {
-            this.era = Objects.requireNonNull(era);
+            this.era = Objects.requireNonNull(era).toUpperCase();
             return this;
         }
 
@@ -286,7 +305,7 @@ public class SimpleCalendar implements Calendar {
          * @return the builder
          */
         public Builder priorEra(String priorEra) {
-            this.priorEra = Objects.requireNonNull(priorEra);
+            this.priorEra = Objects.requireNonNull(priorEra).toUpperCase();
             return this;
         }
 

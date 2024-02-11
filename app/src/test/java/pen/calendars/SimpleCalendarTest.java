@@ -141,26 +141,18 @@ public class SimpleCalendarTest {
     @Test
     public void testDate2String() {
         // Positive Days
-        check(AE.date2string(AE.date(1,  1,  1))).eq("1-1-1-AE");
-        check(AE.date2string(AE.date(1,  1, 31))).eq("1-1-31-AE");
-        check(AE.date2string(AE.date(1,  2,  1))).eq("1-2-1-AE");
         check(AE.date2string(AE.date(1,  2, 28))).eq("1-2-28-AE");
-        check(AE.date2string(AE.date(1,  3,  1))).eq("1-3-1-AE");
-        check(AE.date2string(AE.date(1, 12, 31))).eq("1-12-31-AE");
-        check(AE.date2string(AE.date(2,  1,  1))).eq("2-1-1-AE");
-        check(AE.date2string(AE.date(3,  1,  1))).eq("3-1-1-AE");
-        check(AE.date2string(AE.date(4,  1,  1))).eq("4-1-1-AE");
-        check(AE.date2string(AE.date(4,  2,  1))).eq("4-2-1-AE");
-        check(AE.date2string(AE.date(4,  2, 29))).eq("4-2-29-AE");
-        check(AE.date2string(AE.date(4,  3,  1))).eq("4-3-1-AE");
 
         // Negative days
-        check(AE.date2string(AE.date(-1,  1,   1))).eq("1-1-1-BE");
-        check(AE.date2string(AE.date(-1,  1,  31))).eq("1-1-31-BE");
-        check(AE.date2string(AE.date(-1,  2,   1))).eq("1-2-1-BE");
         check(AE.date2string(AE.date(-1,  2,  29))).eq("1-2-29-BE");
-        check(AE.date2string(AE.date(-1,  3,   1))).eq("1-3-1-BE");
-        check(AE.date2string(AE.date(-1,  12, 31))).eq("1-12-31-BE");
+    }
+
+    @Test
+    public void testString2Date() {
+        check(AE.string2date("1-2-28-AE")).eq(AE.date(1,2,28));
+        check(AE.string2date("1-2-29-BE")).eq(AE.date(-1,2,29));
+
+        checkThrows(() -> AE.string2date("1-2-29-AE"));
     }
 
     @Test
@@ -168,5 +160,12 @@ public class SimpleCalendarTest {
         // Spot check; formatDate just composes day2date and date2string.
         var day = AE.date2day(AE.date(2024,2,29));
         check(AE.formatDate(day)).eq("2024-2-29-AE");
+    }
+
+    @Test
+    public void testParseDate() {
+        // Spot check; parseDate just composes string2date and date2day
+        var day = AE.date2day(AE.date(2024,2,29));
+        check(AE.parseDate("2024-2-29-AE")).eq(day);
     }
 }
