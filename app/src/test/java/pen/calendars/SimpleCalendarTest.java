@@ -110,4 +110,31 @@ public class SimpleCalendarTest {
         check(AE.day2date(  -1)).eq(AE.date(-1,  12, 31));
     }
 
+    @Test
+    public void testDate2Day() {
+        check(AE.date2day(AE.date(-1,  1,  31))).eq(-336);
+
+        // Positive Days
+        check(AE.date2day(AE.date(1,  1,  1))).eq(0);
+        check(AE.date2day(AE.date(1,  1, 31))).eq(30);
+        check(AE.date2day(AE.date(1,  2,  1))).eq(31);
+        check(AE.date2day(AE.date(1,  2, 28))).eq(58);
+        check(AE.date2day(AE.date(1,  3,  1))).eq(59);
+        check(AE.date2day(AE.date(1, 12, 31))).eq(364);
+        check(AE.date2day(AE.date(2,  1,  1))).eq(365);
+        check(AE.date2day(AE.date(3,  1,  1))).eq(730);
+        check(AE.date2day(AE.date(4,  1,  1))).eq(1095);
+        check(AE.date2day(AE.date(4,  2,  1))).eq(1126);
+        check(AE.date2day(AE.date(4,  2, 29))).eq(1154);
+        check(AE.date2day(AE.date(4,  3,  1))).eq(1155);
+
+        // Negative days
+        check(AE.date2day(AE.date(-1,  1,   1))).eq(-366);
+        check(AE.date2day(AE.date(-1,  1,  31))).eq(-336);
+        check(AE.date2day(AE.date(-1,  2,   1))).eq(-335);
+        check(AE.date2day(AE.date(-1,  2,  29))).eq(-307);
+        check(AE.date2day(AE.date(-1,  3,   1))).eq(-306);
+        check(AE.date2day(AE.date(-1,  12, 31))).eq(-1);
+    }
+
 }

@@ -166,18 +166,18 @@ public class SimpleCalendar<T> implements Calendar {
         var day = date.dayOfMonth() - 1;
 
         // NEXT, days in earlier months
-        for (int m = 0; m < date.monthOfYear() - 1; m++) {
-            day += months.get(m).daysInMonth().apply(year);
+        for (int m = 1; m <= date.monthOfYear() - 1; m++) {
+            day += daysInMonth(year, m);
         }
 
         // NEXT, days in years since era start.
         if (year > 0) {
-            for (int i = 1; i < year; i++) {
-                day += daysInYear(year);
+            for (int y = 1; y < year; y++) {
+                day += daysInYear(y);
             }
         } else {
-            for (int i = -1; i > year; i--) {
-                day += daysInYear(year - 1);
+            for (int y = -1; y >= year; y--) {
+                day -= daysInYear(y);
             }
         }
 
