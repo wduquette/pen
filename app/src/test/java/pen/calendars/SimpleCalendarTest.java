@@ -7,22 +7,22 @@ import static pen.checker.Checker.checkThrows;
 
 public class SimpleCalendarTest {
     // A calendar with 10 day "years"
-    private static final SimpleCalendar<String> AE = new SimpleCalendar.Builder<String>()
+    private static final SimpleCalendar AE = new SimpleCalendar.Builder()
         .era("AE")
         .priorEra("BE")
         .epochDay(0)
-        .month("January", 31)
-        .month("February", y -> isLeapYear(y) ? 29 : 28)
-        .month("March", 31)
-        .month("April", 30)
-        .month("May", 31)
-        .month("June", 30)
-        .month("July", 31)
-        .month("August", 31)
-        .month("September", 30)
-        .month("October", 31)
-        .month("November", 30)
-        .month("December", 31)
+        .month(StandardMonths.JANUARY, 31)
+        .month(StandardMonths.FEBRUARY, y -> isLeapYear(y) ? 29 : 28)
+        .month(StandardMonths.MARCH, 31)
+        .month(StandardMonths.APRIL, 30)
+        .month(StandardMonths.MAY, 31)
+        .month(StandardMonths.JUNE, 30)
+        .month(StandardMonths.JULY, 31)
+        .month(StandardMonths.AUGUST, 31)
+        .month(StandardMonths.SEPTEMBER, 30)
+        .month(StandardMonths.OCTOBER, 31)
+        .month(StandardMonths.NOVEMBER, 30)
+        .month(StandardMonths.DECEMBER, 31)
         .build();
 
     private static boolean isLeapYear(int year) {

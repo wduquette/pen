@@ -10,7 +10,7 @@ import java.util.Objects;
  * day of the first month.  A SimpleCalendar can be modified by a
  * RegnalCalendar.
  */
-public class SimpleCalendar<T> implements Calendar {
+public class SimpleCalendar implements Calendar {
     //-------------------------------------------------------------------------
     // Instance variables
 
@@ -24,12 +24,12 @@ public class SimpleCalendar<T> implements Calendar {
     private final String priorEra;
 
     // The month definitions
-    private final List<Month<T>> months;
+    private final List<MonthRecord> months;
 
     //-------------------------------------------------------------------------
     // Constructor
 
-    private SimpleCalendar(Builder<T> builder) {
+    private SimpleCalendar(Builder builder) {
         this.epochDay = builder.epochDay;
         this.era = builder.era;
         this.priorEra = builder.priorEra;
@@ -204,10 +204,9 @@ public class SimpleCalendar<T> implements Calendar {
      * and the length of the month given the fundamental year.
      * @param month The month
      * @param daysInMonth The month length function
-     * @param <T> The month type
      */
-    public record Month<T>(
-        T month,
+    public record MonthRecord(
+        Month month,
         YearDelta daysInMonth
     ) {
         // Nothing to do yet
@@ -216,14 +215,14 @@ public class SimpleCalendar<T> implements Calendar {
     //-------------------------------------------------------------------------
     // Builder
 
-    public static class Builder<T> {
+    public static class Builder {
         //---------------------------------------------------------------------
         // Instance Data
 
         private int epochDay = 0;
         private String era = "AE";
         private String priorEra = "BE";
-        private final List<Month<T>> months = new ArrayList<>();
+        private final List<MonthRecord> months = new ArrayList<>();
 
         //---------------------------------------------------------------------
         // Constructor
@@ -237,8 +236,8 @@ public class SimpleCalendar<T> implements Calendar {
          * Builds the calendar given the inputs.
          * @return The calendar
          */
-        public SimpleCalendar<T> build() {
-            return new SimpleCalendar<>(this);
+        public SimpleCalendar build() {
+            return new SimpleCalendar(this);
         }
 
         /**
@@ -246,7 +245,7 @@ public class SimpleCalendar<T> implements Calendar {
          * @param day The epoch day
          * @return The builder
          */
-        public Builder<T> epochDay(int day) {
+        public Builder epochDay(int day) {
             this.epochDay = day;
             return this;
         }
@@ -257,7 +256,7 @@ public class SimpleCalendar<T> implements Calendar {
          * @param era The era string.
          * @return the builder
          */
-        public Builder<T> era(String era) {
+        public Builder era(String era) {
             this.era = Objects.requireNonNull(era);
             return this;
         }
@@ -268,7 +267,7 @@ public class SimpleCalendar<T> implements Calendar {
          * @param priorEra The era string.
          * @return the builder
          */
-        public Builder<T> priorEra(String priorEra) {
+        public Builder priorEra(String priorEra) {
             this.priorEra = Objects.requireNonNull(priorEra);
             return this;
         }
@@ -279,9 +278,9 @@ public class SimpleCalendar<T> implements Calendar {
          * @param length The length
          * @return The builder
          */
-        public Builder<T> month(T month, int length) {
+        public Builder month(Month month, int length) {
             Objects.requireNonNull(month, "month is  null!");
-            months.add(new Month<>(month, y -> length));
+            months.add(new MonthRecord(month, y -> length));
             return this;
         }
 
@@ -291,10 +290,10 @@ public class SimpleCalendar<T> implements Calendar {
          * @param length The length function
          * @return The builder
          */
-        public Builder<T> month(T month, YearDelta length) {
+        public Builder month(Month month, YearDelta length) {
             Objects.requireNonNull(month, "month is  null!");
             Objects.requireNonNull(length, "month length function is  null!");
-            months.add(new Month<>(month, length));
+            months.add(new MonthRecord(month, length));
             return this;
         }
     }
