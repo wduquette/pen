@@ -1,0 +1,113 @@
+package pen.calendars;
+
+import org.junit.Test;
+
+import static pen.checker.Checker.check;
+import static pen.checker.Checker.checkThrows;
+
+public class SimpleCalendarTest {
+    // A calendar with 10 day "years"
+    private static final SimpleCalendar<String> AE = new SimpleCalendar.Builder<String>()
+        .era("AE")
+        .priorEra("BE")
+        .epochDay(0)
+        .month("January", 31)
+        .month("February", y -> isLeapYear(y) ? 29 : 28)
+        .month("March", 31)
+        .month("April", 30)
+        .month("May", 31)
+        .month("June", 30)
+        .month("July", 31)
+        .month("August", 31)
+        .month("September", 30)
+        .month("October", 31)
+        .month("November", 30)
+        .month("December", 31)
+        .build();
+
+    private static boolean isLeapYear(int year) {
+        if (year % 400 == 0) {
+            return true;
+        } else if (year % 100 == 0) {
+            return false;
+        } else {
+            return year % 4 == 0;
+        }
+    }
+
+    @Test
+    public void testDaysInYear() {
+        // Year 0 would be a leap year if we had a year 0; but year -1 is the
+        // equivalent year.
+        check(AE.daysInYear(-5)).eq(366);
+        check(AE.daysInYear(-4)).eq(365);
+        check(AE.daysInYear(-3)).eq(365);
+        check(AE.daysInYear(-2)).eq(365);
+        check(AE.daysInYear(-1)).eq(366);
+
+        check(AE.daysInYear(1)).eq(365);
+        check(AE.daysInYear(2)).eq(365);
+        check(AE.daysInYear(3)).eq(365);
+        check(AE.daysInYear(4)).eq(366);
+        check(AE.daysInYear(100)).eq(365);  // 100 year rule
+        check(AE.daysInYear(400)).eq(366);  // 400 year rule
+    }
+
+    @Test
+    public void testDaysInMonth() {
+        check(AE.daysInMonth(  1, 1)).eq(31);
+
+        check(AE.daysInMonth(  1, 2)).eq(28);
+        check(AE.daysInMonth(  4, 2)).eq(29);
+        check(AE.daysInMonth(100, 2)).eq(28);
+        check(AE.daysInMonth(400, 2)).eq(29);
+    }
+
+    @Test
+    public void testValidate() {
+        // FIRST, check assignment.
+        check(AE.date(1, 2, 3).year()).eq(1);
+        check(AE.date(1, 2, 3).monthOfYear()).eq(2);
+        check(AE.date(1, 2, 3).dayOfMonth()).eq(3);
+
+        // NEXT, the following dates should be valid.
+        AE.date(-1,2,29);
+        AE.date(4,2,29);
+        AE.date(400,2,29);
+
+        // NEXT, the following dates should be invalid.
+        // TODO: Check error message
+        checkThrows(() -> AE.date(0,1,1));
+        checkThrows(() -> AE.date(1,0,1));
+        checkThrows(() -> AE.date(1,1,0));
+        checkThrows(() -> AE.date(1,13,1));
+        checkThrows(() -> AE.date(1,2,29));
+        checkThrows(() -> AE.date(100,2,29));
+    }
+
+    @Test
+    public void testDay2Date() {
+        // Positive Days
+        check(AE.day2date(   0)).eq(AE.date(1,  1,  1));
+        check(AE.day2date(  30)).eq(AE.date(1,  1, 31));
+        check(AE.day2date(  31)).eq(AE.date(1,  2,  1));
+        check(AE.day2date(  58)).eq(AE.date(1,  2, 28));
+        check(AE.day2date(  59)).eq(AE.date(1,  3,  1));
+        check(AE.day2date( 364)).eq(AE.date(1, 12, 31));
+        check(AE.day2date( 365)).eq(AE.date(2,  1,  1));
+        check(AE.day2date( 730)).eq(AE.date(3,  1,  1));
+        check(AE.day2date(1095)).eq(AE.date(4,  1,  1));
+        check(AE.day2date(1126)).eq(AE.date(4,  2,  1));
+        check(AE.day2date(1154)).eq(AE.date(4,  2, 29));
+        check(AE.day2date(1155)).eq(AE.date(4,  3,  1));
+
+        // Negative days
+        check(AE.day2date(-366)).eq(AE.date(-1,  1,   1));
+        check(AE.day2date(-336)).eq(AE.date(-1,  1,  31));
+        check(AE.day2date(-335)).eq(AE.date(-1,  2,   1));
+        check(AE.day2date(-307)).eq(AE.date(-1,  2,  29));
+        check(AE.day2date(-306)).eq(AE.date(-1,  3,   1));
+        check(AE.day2date(  -1)).eq(AE.date(-1,  12, 31));
+    }
+
+}

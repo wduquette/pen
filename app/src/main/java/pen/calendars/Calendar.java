@@ -5,6 +5,13 @@ package pen.calendars;
  */
 public interface Calendar {
     /**
+     * The number of days in the given year, per the calendar
+     * @param year The year
+     * @return The number of days
+     */
+    int daysInYear(int year);
+
+    /**
      * Formats the fundamental day as a date string for the given calendar.
      * @param day The fundamental day
      * @return The string

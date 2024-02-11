@@ -51,9 +51,50 @@ public class SimpleCalendar<T> implements Calendar {
      * @return The number of days in that year.
      */
     public int daysInYear(int year) {
-        return months.stream()
-            .mapToInt(m -> m.daysInMonth().apply(year))
-            .sum();
+        if (year > 0) {
+            return months.stream()
+                .mapToInt(m -> m.daysInMonth().apply(year))
+                .sum();
+        } else if (year < 0) {
+            return months.stream()
+                .mapToInt(m -> m.daysInMonth().apply(year + 1))
+                .sum();
+        } else {
+            throw new CalendarException("Year cannot be 0.");
+        }
+    }
+
+    public int daysInMonth(int year, int monthOfYear) {
+        if (year > 0) {
+            return months.get(monthOfYear - 1).daysInMonth().apply(year);
+        } else if (year < 0) {
+            return months.get(monthOfYear - 1).daysInMonth().apply(year + 1);
+        } else {
+            throw new CalendarException("Year cannot be 0.");
+        }
+    }
+
+    public YearMonthDay date(int year, int month, int day) {
+        var date = new YearMonthDay(this, year, month, day);
+        validate(date);
+        return date;
+    }
+
+    public void validate(YearMonthDay date) {
+        if (date.year() == 0) {
+            throw new CalendarException("Year is 0!");
+        }
+
+        if (date.monthOfYear() < 1 || date.monthOfYear() > months.size()) {
+            throw new CalendarException(
+                "Month is out of range (1,...," + months.size() + ")");
+        }
+
+        var daysInMonth = daysInMonth(date.year(), date.monthOfYear());
+        if (date.dayOfMonth() < 1 || date.dayOfMonth() > daysInMonth) {
+            throw new CalendarException(
+                "Day is out of range (1,...," + daysInMonth + ")");
+        }
     }
 
     /**
@@ -68,7 +109,7 @@ public class SimpleCalendar<T> implements Calendar {
 
         if (day >= 0) {
             // FIRST, get the year and day of year
-            year = 0;
+            year = 1;
 
             var daysInYear = daysInYear(year);
             while (day >= daysInYear) {
@@ -78,7 +119,7 @@ public class SimpleCalendar<T> implements Calendar {
             }
 
             // NEXT, get the month and day of month
-            return yearDay2date(year, day);
+            return yearDay2date(year, day + 1);
         } else {
             // FIRST, get the year and day of year
             year = -1;
@@ -98,24 +139,24 @@ public class SimpleCalendar<T> implements Calendar {
         }
     }
 
+    // Given a year and a dayOfYear 1 to N, get the date
     private YearMonthDay yearDay2date(int year, int dayOfYear) {
         var monthOfYear = 0;
         var dayOfMonth = 0;
 
-        for (int i = 0; i < months.size(); i++) {
-            var month = months.get(i);
-            var daysInMonth = month.daysInMonth().apply(year);
+        for (int i = 1; i <= months.size(); i++) {
+            var daysInMonth = daysInMonth(year, i);
 
             if (dayOfYear <= daysInMonth) {
-                dayOfMonth = dayOfYear + 1;
-                monthOfYear = i + 1;
+                dayOfMonth = dayOfYear;
+                monthOfYear = i;
                 break;
             }
 
             dayOfYear -= daysInMonth;
         }
 
-        return new YearMonthDay(year, monthOfYear, dayOfMonth);
+        return new YearMonthDay(this, year, monthOfYear, dayOfMonth);
     }
 
     public int date2day(YearMonthDay date) {
@@ -141,6 +182,11 @@ public class SimpleCalendar<T> implements Calendar {
         }
 
         return day + epochDay;
+    }
+
+    public String toString() {
+        return "SimpleCalendar[" + era + "," + priorEra + "," + months.size()
+            + "]";
     }
 
     //-------------------------------------------------------------------------

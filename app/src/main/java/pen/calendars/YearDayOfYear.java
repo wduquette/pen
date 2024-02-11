@@ -2,6 +2,7 @@ package pen.calendars;
 
 /**
  * A date relative to a specific calendar.
+ * @param calendar The calendar in question
  * @param year The year number, omitting 0.
  * @param dayOfYear The day of year, counting from 1.
  */
@@ -12,6 +13,6 @@ public record YearDayOfYear(
 ) {
     @Override
     public String toString() {
-        return "FD" + year + "/" + dayOfYear;
+        return calendar + ":" + year + "/" + dayOfYear;
     }
 }
