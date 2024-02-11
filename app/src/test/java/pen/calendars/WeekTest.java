@@ -2,11 +2,14 @@ package pen.calendars;
 
 import org.junit.Test;
 
+import java.util.List;
+
 import static pen.checker.Checker.check;
 import static pen.checker.Checker.checkThrows;
 
 public class WeekTest {
-    private static final Week WEEK = new Week(StandardWeekDays.values(), 2);
+    private static final Week WEEK =
+        new Week(List.of(StandardWeekDays.values()), 2);
 
     @Test
     public void testDayToWeekday() {
@@ -24,8 +27,8 @@ public class WeekTest {
 
     @Test
     public void testIndexOf() {
-        for (int i = 0; i < WEEK.weekdays().length; i++) {
-            var weekday = WEEK.weekdays()[i];
+        for (int i = 0; i < WEEK.weekdays().size(); i++) {
+            var weekday = WEEK.weekdays().get(i);
             check(WEEK.indexOf(weekday)).eq(i);
         }
 
