@@ -6,15 +6,14 @@ package pen.calendars;
  * for a Week created by a script they might be something else.
  * @param weekdays The weekday objects
  * @param offset The offset for day 0 on the FundamentalCalendar.
- * @param <W> The weekday type
  */
-public record Week<W>(W[] weekdays, int offset) {
+public record Week(Weekday[] weekdays, int offset) {
     /**
      * Converts a fundamental calendar day into the matching weekday.
      * @param day The day
      * @return The weekday object
      */
-    public W day2weekday(int day) {
+    public Weekday day2weekday(int day) {
         int ndx = (day + offset) % weekdays.length;
         return weekdays[ndx];
     }
@@ -25,7 +24,7 @@ public record Week<W>(W[] weekdays, int offset) {
      * @return The index
      * @throws CalendarException if the weekday is unknown.
      */
-    public int indexOf(W weekday) {
+    public int indexOf(Weekday weekday) {
         for (int i = 0; i < weekdays.length; i++) {
             if (weekdays[i] == weekday) {
                 return i;

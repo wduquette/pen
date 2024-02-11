@@ -3,7 +3,7 @@ package pen.calendars;
 /**
  * The days of a normal week.
  */
-public enum Weekdays {
+public enum StandardWeekDays implements Weekday {
     SUNDAY,
     MONDAY,
     TUESDAY,
