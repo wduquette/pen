@@ -12,7 +12,10 @@
 - Diagrams
     - [[Time Line Diagrams]]
         - [x] Flesh out `FundamentalCalendar`
-        - [ ] Add `EraCalendar`
+        - [x] Add `SimpleCalendar`
+        - [ ] Add calendar definition and conversion Tcl extension
+        - [ ] Add tool to define and output month and year calendars
+        - [ ] Add `RegnalCalendar`
         - [ ] Prototype a simple Time Line Diagram using Stencil
             - Add capabilities to Stencil as needed.
     - [ ] Tree Diagram
