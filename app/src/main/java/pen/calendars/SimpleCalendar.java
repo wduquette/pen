@@ -14,9 +14,16 @@ public class SimpleCalendar<T> implements Calendar {
     //-------------------------------------------------------------------------
     // Instance variables
 
+    // The fundamental day corresponding with year 1, month 1, day 1
     private final int epochDay;
+
+    // The era string for years >= 1
     private final String era;
+
+    // The era string for years <= -1
     private final String priorEra;
+
+    // The month definitions
     private final List<Month<T>> months;
 
     //-------------------------------------------------------------------------
@@ -214,8 +221,8 @@ public class SimpleCalendar<T> implements Calendar {
         // Instance Data
 
         private int epochDay = 0;
-        private String era = "CE";
-        private String priorEra = null;
+        private String era = "AE";
+        private String priorEra = "BE";
         private final List<Month<T>> months = new ArrayList<>();
 
         //---------------------------------------------------------------------
@@ -226,31 +233,64 @@ public class SimpleCalendar<T> implements Calendar {
         //---------------------------------------------------------------------
         // Methods
 
+        /**
+         * Builds the calendar given the inputs.
+         * @return The calendar
+         */
         public SimpleCalendar<T> build() {
             return new SimpleCalendar<>(this);
         }
 
+        /**
+         * Sets the fundamental day corresponding to year 1, month 1, day 1.
+         * @param day The epoch day
+         * @return The builder
+         */
         public Builder<T> epochDay(int day) {
             this.epochDay = day;
             return this;
         }
 
+        /**
+         * Sets the era string for this calendar.  Defaults to "AE",
+         * "After Epoch".
+         * @param era The era string.
+         * @return the builder
+         */
         public Builder<T> era(String era) {
             this.era = Objects.requireNonNull(era);
             return this;
         }
 
+        /**
+         * Sets the prior era string for this calendar.  Defaults to "BE",
+         * "Before Epoch".
+         * @param priorEra The era string.
+         * @return the builder
+         */
         public Builder<T> priorEra(String priorEra) {
             this.priorEra = Objects.requireNonNull(priorEra);
             return this;
         }
 
+        /**
+         * Adds a month of the given length to the calendar
+         * @param month The month
+         * @param length The length
+         * @return The builder
+         */
         public Builder<T> month(T month, int length) {
             Objects.requireNonNull(month, "month is  null!");
             months.add(new Month<>(month, y -> length));
             return this;
         }
 
+        /**
+         * Adds a month with the given length function to the calendar
+         * @param month The month
+         * @param length The length function
+         * @return The builder
+         */
         public Builder<T> month(T month, YearDelta length) {
             Objects.requireNonNull(month, "month is  null!");
             Objects.requireNonNull(length, "month length function is  null!");
@@ -258,5 +298,4 @@ public class SimpleCalendar<T> implements Calendar {
             return this;
         }
     }
-
 }
