@@ -1,22 +1,48 @@
 package pen.calendars;
 
+import java.util.List;
+import java.util.Objects;
+
 /**
  * Defines a fundamental calendar.  The name is typically a short symbol,
  * e.g., "FC".  The {@code yearLength} is a function that determines the
  * length of a year in days given the year number.  The epoch is year 1; it
  * is preceded by year -1.  The days of the year are
- * numbered 1 to {@code yearLength}.
- * @param era The era symbol for non-negative years
- * @param priorEra The era symbol for negative years
- * @param yearLength Function to compute the length of a year in days.
- * @param dayOfYearDigits Number of for dayOfYear in formatted dates
  */
-public record FundamentalCalendar(
-    String era,
-    String priorEra,
-    YearDelta yearLength,
-    int dayOfYearDigits
-) implements Calendar {
+public class FundamentalCalendar implements Calendar {
+    //-------------------------------------------------------------------------
+    // Instance Variables
+
+    // The era symbol for positive years
+    private final String era;
+
+    // The era symbol for negative years
+    private final String priorEra;
+
+    // A function for computing the length of the year in days given the
+    // year number
+    private final YearDelta yearLength;
+
+    // The number of digits for years, when formatting.
+    // TODO Remove when DateFormatter is available.
+    private final int dayOfYearDigits;
+
+    // The weekly cycle; possibly null
+    private final Week week;
+
+    //-------------------------------------------------------------------------
+    // Constructor
+
+    // Creates the calendar given the builder parameters.
+    private FundamentalCalendar(Builder builder) {
+        this.era             = Objects.requireNonNull(builder.era);
+        this.priorEra        = Objects.requireNonNull(builder.priorEra);
+        this.yearLength      = Objects.requireNonNull(builder.yearLength);
+
+        this.dayOfYearDigits = builder.dayOfYearDigits;
+        this.week            = builder.week;
+    }
+
     //-------------------------------------------------------------------------
     // Calendar API
 
@@ -40,6 +66,26 @@ public record FundamentalCalendar(
     @Override
     public int parseDate(String dateString) {
         return date2day(string2date(dateString));
+    }
+
+    @Override
+    public boolean hasWeeks() {
+        return week != null;
+    }
+
+    @Override
+    public Weekday day2weekday(int day) {
+        if (week != null) {
+            return week.day2weekday(day);
+        } else {
+            throw new UnsupportedOperationException(
+                "Calendar lacks a weekly cycle.");
+        }
+    }
+
+    @Override
+    public Week week() {
+        return week;
     }
 
     //-------------------------------------------------------------------------
@@ -210,6 +256,139 @@ public record FundamentalCalendar(
         {
             throw new CalendarException("dayOfYear out of range for year " +
                 date.year() + " in date: \"" + date + "\"");
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    // Object API
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FundamentalCalendar that = (FundamentalCalendar) o;
+
+        if (!era.equals(that.era)) return false;
+        if (!priorEra.equals(that.priorEra)) return false;
+        if (!yearLength.equals(that.yearLength)) return false;
+        return Objects.equals(week, that.week);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = era.hashCode();
+        result = 31 * result + priorEra.hashCode();
+        result = 31 * result + yearLength.hashCode();
+        result = 31 * result + (week != null ? week.hashCode() : 0);
+        return result;
+    }
+
+
+    //-------------------------------------------------------------------------
+    // Builder
+
+    public static class Builder {
+        //---------------------------------------------------------------------
+        // Instance Data
+
+        private String era = "AE";
+        private String priorEra = "BE";
+        private YearDelta yearLength = (y -> 365);
+        private int dayOfYearDigits = 1;
+        private Week week = null;
+
+        //---------------------------------------------------------------------
+        // Constructor
+
+        public Builder() {} // nothing to do
+
+        //---------------------------------------------------------------------
+        // Methods
+
+        /**
+         * Builds the calendar given the inputs.
+         * @return The calendar
+         */
+        public FundamentalCalendar build() {
+            return new FundamentalCalendar(this);
+        }
+
+        /**
+         * Sets the era string for this calendar.  Defaults to "FE",
+         * "Fundamental Epoch".
+         * @param era The era string.
+         * @return the builder
+         */
+        public FundamentalCalendar.Builder era(String era) {
+            this.era = Objects.requireNonNull(era).toUpperCase();
+            return this;
+        }
+
+        /**
+         * Sets the prior era string for this calendar.  Defaults to "BFE",
+         * "Before Fundamental Epoch".
+         * @param priorEra The era string.
+         * @return the builder
+         */
+        public FundamentalCalendar.Builder priorEra(String priorEra) {
+            this.priorEra = Objects.requireNonNull(priorEra).toUpperCase();
+            return this;
+        }
+
+        /**
+         * Sets the year length to the given function.
+         * @param function The function
+         * @return The builder
+         */
+        public FundamentalCalendar.Builder yearLength(YearDelta function) {
+            this.yearLength = function;
+            return this;
+        }
+
+        /**
+         * Sets the year length to a fixed quantity
+         * @param length The length
+         * @return The builder
+         */
+        public FundamentalCalendar.Builder yearLength(int length) {
+            this.yearLength = (dummy -> length);
+            return this;
+        }
+
+        /**
+         * Sets the number of digits when formatting the day of the year
+         * @param digits The number
+         * @return The builder
+         */
+        public FundamentalCalendar.Builder dayOfYearDigits(int digits) {
+            this.dayOfYearDigits = digits;
+            return this;
+        }
+
+        /**
+         * Sets the weekly cycle.
+         * @param week The cycle
+         * @return The builder
+         */
+        public FundamentalCalendar.Builder week(Week week) {
+            this.week = week;
+            return this;
+        }
+
+        /**
+         * Sets the weekly cycle given a list of weekdays and an offset from
+         * day 0.
+         * @param weekdays the weekdays
+         * @param offset The offset
+         * @return The builder
+         */
+        public FundamentalCalendar.Builder week(
+            List<Weekday> weekdays,
+            int offset
+        ) {
+            this.week = new Week(weekdays, offset);
+            return this;
         }
     }
 

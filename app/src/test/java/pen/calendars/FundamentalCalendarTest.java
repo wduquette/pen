@@ -8,11 +8,23 @@ import static pen.checker.Checker.checkThrows;
 public class FundamentalCalendarTest {
     // A calendar with 10 day "years"
     private static final FundamentalCalendar TEN =
-        new FundamentalCalendar("AT", "BT", y -> 10, 2);
+        new FundamentalCalendar.Builder()
+            .era("AT")
+            .priorEra("BT")
+            .yearLength(10)
+            .dayOfYearDigits(2)
+//            .week()
+            .build();
 
     // A calendar with 10 day "years" plus a leap year every fourth year
     private static final FundamentalCalendar LEAP =
-        new FundamentalCalendar("AL", "BL", y -> y % 4 == 0 ? 11 : 10, 2);
+        new FundamentalCalendar.Builder()
+            .era("AL")
+            .priorEra("BL")
+            .yearLength(y -> (y % 4) == 0 ? 11 : 10)
+            .dayOfYearDigits(2)
+//            .week()
+            .build();
 
     @Test
     public void testDay2date_TEN() {

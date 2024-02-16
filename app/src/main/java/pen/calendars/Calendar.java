@@ -25,4 +25,32 @@ public interface Calendar {
      * @throws CalendarException on parse error
      */
     int parseDate(String dateString);
+
+    /**
+     * Gets the calendar's weekly cycle, if it has one.
+     * @return The Week, or null.
+     */
+    default Week week() {
+        return null;
+    }
+
+    /**
+     * Gets whether the calendar has a weekly cycle or not.
+     * @return true or false
+     */
+    default boolean hasWeeks() {
+        return false;
+    }
+
+    /**
+     * Produces the weekday for the given fundamental day.
+     * @param day The day
+     * @return The weekday
+     * @throws UnsupportedOperationException if this calendar lacks a
+     * weekly cycle.
+     */
+    default Weekday day2weekday(int day) {
+        throw new UnsupportedOperationException(
+            "Calendar lacks a weekly cycle.");
+    }
 }
