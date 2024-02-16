@@ -18,6 +18,7 @@
         - [ ] Implement [[Regnal Calendars]]
         - [ ] Prototype a simple Time Line Diagram using Stencil
             - Add capabilities to Stencil as needed.
+        - [ ] Define a `TimeLineDiagram` class
     - [ ] Tree Diagram
 - [ ] `pen` Application
     -  `draw` tool
