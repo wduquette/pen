@@ -44,6 +44,21 @@ public class FundamentalCalendar implements Calendar {
     }
 
     //-------------------------------------------------------------------------
+    // FundamentalCalendar Getters (other than Calendar API getters)
+
+    public String era() {
+        return era;
+    }
+
+    public String priorEra() {
+        return priorEra;
+    }
+
+    public YearDelta yearLength() {
+        return yearLength;
+    }
+
+    //-------------------------------------------------------------------------
     // Calendar API
 
     /**
@@ -387,8 +402,7 @@ public class FundamentalCalendar implements Calendar {
             List<Weekday> weekdays,
             int offset
         ) {
-            this.week = new Week(weekdays, offset);
-            return this;
+            return week(new Week(weekdays, offset));
         }
     }
 

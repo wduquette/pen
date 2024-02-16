@@ -6,14 +6,18 @@ import static pen.checker.Checker.check;
 import static pen.checker.Checker.checkThrows;
 
 public class FundamentalCalendarTest {
+    private static final YearDelta TEN_DAYS = dummy -> 10;
+    private static final YearDelta LEAP_DAYS = y -> (y % 4) == 0 ? 11 : 10;
+    private static final Week WEEK = new Week(StandardWeekDays.weekdays(), 0);
+
     // A calendar with 10 day "years"
     private static final FundamentalCalendar TEN =
         new FundamentalCalendar.Builder()
             .era("AT")
             .priorEra("BT")
-            .yearLength(10)
+            .yearLength(TEN_DAYS)
             .dayOfYearDigits(2)
-//            .week()
+            .week(WEEK)
             .build();
 
     // A calendar with 10 day "years" plus a leap year every fourth year
@@ -21,10 +25,31 @@ public class FundamentalCalendarTest {
         new FundamentalCalendar.Builder()
             .era("AL")
             .priorEra("BL")
-            .yearLength(y -> (y % 4) == 0 ? 11 : 10)
+            .yearLength(LEAP_DAYS)
             .dayOfYearDigits(2)
-//            .week()
+            .week(WEEK)
             .build();
+
+    @Test
+    public void testBasics() {
+        check(TEN.era()).eq("AT");
+        check(TEN.priorEra()).eq("BT");
+        check(TEN.yearLength()).eq(TEN_DAYS);
+        check(TEN.week()).eq(WEEK);
+
+        check(LEAP.era()).eq("AL");
+        check(LEAP.priorEra()).eq("BL");
+        check(LEAP.yearLength()).eq(LEAP_DAYS);
+        check(LEAP.week()).eq(WEEK);
+
+        // It's a pass-through; just spot check.
+        check(TEN.week()).ne(null);
+        check(TEN.hasWeeks()).eq(true);
+
+        check(TEN.day2weekday(0)).eq(StandardWeekDays.SUNDAY);
+        check(TEN.day2weekday(1)).eq(StandardWeekDays.MONDAY);
+        check(TEN.day2weekday(7)).eq(StandardWeekDays.SUNDAY);
+    }
 
     @Test
     public void testDay2date_TEN() {
