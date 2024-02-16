@@ -4,9 +4,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static pen.checker.Checker.check;
-import static pen.checker.Checker.checkThrows;
-
 /**
  * This is not actually a test, but just a simple way to do some experimenting.
  */
