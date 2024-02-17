@@ -142,6 +142,14 @@ public final class PenFont {
         return font;
     }
 
+    /**
+     * Gets the height of the font in pixels, for geometry computations.
+     * @return The height
+     */
+    public double getHeight() {
+        return Pen.getTextHeight(this, "ABC");
+    }
+
     @Override
     public String toString() {
         return "StencilFont[" + family + "," + weight + "," + posture + "," +

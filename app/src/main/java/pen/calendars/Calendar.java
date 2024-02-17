@@ -6,7 +6,6 @@ package pen.calendars;
 public interface Calendar {
     String era();
     String priorEra();
-    Month month(int monthOfYear);
 
     /**
      * The number of days in the given year, per the calendar
@@ -30,12 +29,28 @@ public interface Calendar {
      */
     int parseDate(String dateString);
 
-    /**
-     * Gets the calendar's weekly cycle, if it has one.
-     * @return The Week, or null.
-     */
-    default Week week() {
-        return null;
+    default boolean hasMonths() {
+        return false;
+    }
+
+    default YearMonthDay date(int year, int monthOfYear, int dayOfMonth) {
+        throw noMonthlyCycle();
+    }
+
+    default Month month(int monthOfYear) {
+        throw noMonthlyCycle();
+    }
+
+    default int daysInMonth(int year, int monthOfYear) {
+        throw noMonthlyCycle();
+    }
+
+    default int date2day(YearMonthDay date) {
+        throw noMonthlyCycle();
+    }
+
+    default YearMonthDay day2date(int day) {
+        throw noMonthlyCycle();
     }
 
     /**
@@ -47,18 +62,26 @@ public interface Calendar {
     }
 
     /**
+     * Gets the calendar's weekly cycle, if it has one.
+     * @return The Week, or null.
+     */
+    default Week week() {
+        return null;
+    }
+
+
+    /**
      * Produces the weekday for the given fundamental day.
      * @param day The day
      * @return The weekday
-     * @throws UnsupportedOperationException if this calendar lacks a
+     * @throws CalendarException if this calendar lacks a
      * weekly cycle.
      */
     default Weekday day2weekday(int day) {
         if (hasWeeks()) {
             return week().day2weekday(day);
         } else {
-            throw new UnsupportedOperationException(
-                "Calendar lacks a weekly cycle.");
+            throw noWeeklyCycle();
         }
     }
 
@@ -66,31 +89,35 @@ public interface Calendar {
      * Produces the day-of-week (1 through daysInWeek) for the given day
      * @param day The day
      * @return The day-of-week
-     * @throws UnsupportedOperationException if this calendar lacks a
-     * weekly cycle.
+     * @throws CalendarException if this calendar lacks a weekly cycle.
      */
     default int day2dayOfWeek(int day) {
         if (hasWeeks()) {
             var weekday = week().day2weekday(day);
             return week().indexOf(weekday) + 1;
         } else {
-            throw new UnsupportedOperationException(
-                "Calendar lacks a weekly cycle.");
+            throw noWeeklyCycle();
         }
     }
 
     /**
      * Gets the number of days in a week.
      * @return The number
-     * @throws UnsupportedOperationException if this calendar lacks a
-     * weekly cycle.
+     * @throws CalendarException if this calendar lacks a weekly cycle.
      */
     default int daysInWeek() {
         if (hasWeeks()) {
             return week().weekdays().size();
         } else {
-            throw new UnsupportedOperationException(
-                "Calendar lacks a weekly cycle.");
+            throw noWeeklyCycle();
         }
+    }
+
+    static CalendarException noWeeklyCycle() {
+        return new CalendarException("Calendar lacks a weekly cycle.");
+    }
+
+    static CalendarException noMonthlyCycle() {
+        return new CalendarException("Calendar lacks a monthly cycle.");
     }
 }

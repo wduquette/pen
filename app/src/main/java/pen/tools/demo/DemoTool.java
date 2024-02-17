@@ -19,6 +19,7 @@ import pen.calendars.SimpleCalendar;
 import pen.calendars.StandardMonths;
 import pen.calendars.StandardWeekDays;
 import pen.calendars.Week;
+import pen.diagram.calendar.MonthSpread;
 import pen.fx.FX;
 import pen.stencil.*;
 import pen.tools.FXTool;
@@ -153,6 +154,7 @@ Java API.
     private final ObservableList<DemoDrawing> drawings =
         FXCollections.observableArrayList(
             drawing("Test Drawing", this::testDrawing),
+            drawing("Month Spread", this::testMonthSpread),
             drawing("Shapes",       this::testShapes),
             drawing("Rotation",     this::testRotation),
             drawing("Symbols",      this::testSymbols),
@@ -230,7 +232,7 @@ Java API.
         stencil.savePen()
             .translate(10 + dateWidth, 10 + titleHeight + titlePad + dateHeight + pad);
         for (int w = 0; w < numWeeks; w++) {
-            var y = w*(dateHeight + pad);
+            var y = w*(dayHeight + pad);
             for (int i = 0; i < daysInWeek; i++) {
                 var x = i*(dateWidth + pad);
 
@@ -246,6 +248,37 @@ Java API.
                 );
             }
         }
+    }
+
+    private void testMonthSpread(Stencil sten) {
+        sten.clear(Color.WHITE);
+        var week = new Week(List.of(StandardWeekDays.values()), 1);
+        var cal = new SimpleCalendar.Builder()
+            .era("ME")
+            .priorEra("BME")
+            .epochDay(-978 * 366)
+            .month(StandardMonths.JANUARY, 31)
+            .month(StandardMonths.FEBRUARY, 28)
+            .month(StandardMonths.MARCH, 31)
+            .month(StandardMonths.APRIL, 30)
+            .month(StandardMonths.MAY, 31)
+            .month(StandardMonths.JUNE, 30)
+            .month(StandardMonths.JULY, 31)
+            .month(StandardMonths.AUGUST, 31)
+            .month(StandardMonths.SEPTEMBER, 30)
+            .month(StandardMonths.OCTOBER, 31)
+            .month(StandardMonths.NOVEMBER, 31)
+            .month(StandardMonths.DECEMBER, 31)
+            .week(week)
+            .build();
+        var spread = new MonthSpread()
+            .at(40, 10)
+            .calendar(cal)
+            .title(cal.month(1).fullForm())
+            .year(1011)
+            .monthOfYear(1)
+            ;
+        sten.draw(spread);
     }
 
     private void testShapes(Stencil sten) {

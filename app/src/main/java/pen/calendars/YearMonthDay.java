@@ -25,4 +25,17 @@ public record YearMonthDay(
     public Month month() {
         return calendar.month(monthOfYear);
     }
+
+    public int daysInMonth() {
+        return calendar.daysInMonth(year, monthOfYear);
+    }
+
+    public Weekday weekday() {
+        return calendar().day2weekday(calendar.date2day(this));
+    }
+
+    public int dayOfWeek() {
+        return calendar().day2dayOfWeek(calendar.date2day(this));
+    }
+
 }

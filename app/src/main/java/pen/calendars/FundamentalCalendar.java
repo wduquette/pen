@@ -74,7 +74,7 @@ public class FundamentalCalendar implements Calendar {
      */
     @Override
     public String formatDate(int day) {
-        return date2string(day2date(day));
+        return yearDayOfYear2string(day2yearDayOfYear(day));
     }
 
     /**
@@ -85,7 +85,7 @@ public class FundamentalCalendar implements Calendar {
      */
     @Override
     public int parseDate(String dateString) {
-        return date2day(string2date(dateString));
+        return yearDayOfYear2day(string2yearDayOfYear(dateString));
     }
 
     @Override
@@ -131,7 +131,7 @@ public class FundamentalCalendar implements Calendar {
      * @param day The day
      * @return The date
      */
-    public YearDayOfYear day2date(int day) {
+    public YearDayOfYear day2yearDayOfYear(int day) {
         if (day >= 0) {
             int year = 1;
             var daysInYear = daysInYear(year);
@@ -166,7 +166,7 @@ public class FundamentalCalendar implements Calendar {
      * @return The day
      * @throws CalendarException if the date is invalid.
      */
-    public int date2day(YearDayOfYear date) {
+    public int yearDayOfYear2day(YearDayOfYear date) {
         // FIRST, validate the dayOfYear.
         validate(date);
 
@@ -200,7 +200,7 @@ public class FundamentalCalendar implements Calendar {
      * @param date The date
      * @return The formatted string
      */
-    public String date2string(YearDayOfYear date) {
+    public String yearDayOfYear2string(YearDayOfYear date) {
         validate(date);
 
         var sym = (date.year() >= 0) ? era : priorEra;
@@ -217,7 +217,7 @@ public class FundamentalCalendar implements Calendar {
      * @return The date
      * @throws CalendarException on parse error
      */
-    public YearDayOfYear string2date(String dateString) {
+    public YearDayOfYear string2yearDayOfYear(String dateString) {
         dateString = dateString.trim().toUpperCase();
 
         // FIRST, get the symbol
