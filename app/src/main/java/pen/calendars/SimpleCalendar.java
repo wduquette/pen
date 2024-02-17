@@ -11,12 +11,58 @@ import java.util.Objects;
  * day of the first month.  A SimpleCalendar can be modified by a
  * RegnalCalendar.
  */
-public record SimpleCalendar(
-    int epochDay,
-    String era,
-    String priorEra,
-    List<MonthRecord> months
-) implements Calendar {
+public class SimpleCalendar implements Calendar {
+    //-------------------------------------------------------------------------
+    // Instance Variables
+
+    // The fundamental calendar day corresponding to 1/1/1 in this
+    // calendar.
+    private final int epochDay;
+
+
+    // The era symbol for positive years.
+    private final String era;
+
+    // The era symbol for negative years
+    private final String priorEra;
+
+    // The month definitions
+    private final List<MonthRecord> months;
+
+    // The weekly cycle; possibly null
+    private final Week week;
+
+    //-------------------------------------------------------------------------
+    // Constructor
+
+    // Creates the calendar given the builder parameters.
+    private SimpleCalendar(Builder builder) {
+        this.epochDay  = builder.epochDay;
+        this.era       = Objects.requireNonNull(builder.era);
+        this.priorEra  = Objects.requireNonNull(builder.priorEra);
+        this.months    = Collections.unmodifiableList(builder.months);
+        this.week      = builder.week;
+    }
+
+    //-------------------------------------------------------------------------
+    // SimpleCalendar Getters (other than Calendar API getters)
+
+    public int epochDay() {
+        return epochDay;
+    }
+
+    public String era() {
+        return era;
+    }
+
+    public String priorEra() {
+        return priorEra;
+    }
+
+    public List<Month> months() {
+        return months.stream().map(MonthRecord::month).toList();
+    }
+
     //-------------------------------------------------------------------------
     // Calendar API
 
@@ -28,6 +74,26 @@ public record SimpleCalendar(
     @Override
     public int parseDate(String dateString) {
         return date2day(string2date(dateString));
+    }
+
+    @Override
+    public boolean hasWeeks() {
+        return week != null;
+    }
+
+    @Override
+    public Weekday day2weekday(int day) {
+        if (week != null) {
+            return week.day2weekday(day);
+        } else {
+            throw new UnsupportedOperationException(
+                "Calendar lacks a weekly cycle.");
+        }
+    }
+
+    @Override
+    public Week week() {
+        return week;
     }
 
     //-------------------------------------------------------------------------
@@ -218,6 +284,34 @@ public record SimpleCalendar(
     }
 
     //-------------------------------------------------------------------------
+    // Object API
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SimpleCalendar that = (SimpleCalendar) o;
+
+        if (epochDay != that.epochDay) return false;
+        if (!era.equals(that.era)) return false;
+        if (!priorEra.equals(that.priorEra)) return false;
+        if (!months.equals(that.months)) return false;
+        return Objects.equals(week, that.week);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = epochDay;
+        result = 31 * result + era.hashCode();
+        result = 31 * result + priorEra.hashCode();
+        result = 31 * result + months.hashCode();
+        result = 31 * result + (week != null ? week.hashCode() : 0);
+        return result;
+    }
+
+
+    //-------------------------------------------------------------------------
     // Helpers
 
     private CalendarException badFormat(String dateString) {
@@ -259,6 +353,7 @@ public record SimpleCalendar(
         private String era = "AE";
         private String priorEra = "BE";
         private final List<MonthRecord> months = new ArrayList<>();
+        private Week week = null;
 
         //---------------------------------------------------------------------
         // Constructor
@@ -273,8 +368,7 @@ public record SimpleCalendar(
          * @return The calendar
          */
         public SimpleCalendar build() {
-            return new SimpleCalendar(epochDay, era, priorEra,
-                Collections.unmodifiableList(months));
+            return new SimpleCalendar(this);
         }
 
         /**
@@ -332,6 +426,30 @@ public record SimpleCalendar(
             Objects.requireNonNull(length, "month length function is  null!");
             months.add(new MonthRecord(month, length));
             return this;
+        }
+
+        /**
+         * Sets the weekly cycle.
+         * @param week The cycle
+         * @return The builder
+         */
+        public Builder week(Week week) {
+            this.week = week;
+            return this;
+        }
+
+        /**
+         * Sets the weekly cycle given a list of weekdays and an offset from
+         * day 0.
+         * @param weekdays the weekdays
+         * @param offset The offset
+         * @return The builder
+         */
+        public Builder week(
+            List<Weekday> weekdays,
+            int offset
+        ) {
+            return week(new Week(weekdays, offset));
         }
     }
 }
