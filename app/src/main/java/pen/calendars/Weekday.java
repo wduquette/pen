@@ -9,12 +9,12 @@ public interface Weekday extends DateText {
 
     @Override
     default String narrowForm() {
-        return name().substring(0,1);
+        return fullForm().substring(0,1);
     }
 
     @Override
     default String shortForm() {
-        return name().substring(0,3);
+        return fullForm().substring(0,3);
     }
 
     @Override
