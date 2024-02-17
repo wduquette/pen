@@ -61,6 +61,11 @@ public class FundamentalCalendar implements Calendar {
     //-------------------------------------------------------------------------
     // Calendar API
 
+    public Month month(int monthOfYear) {
+        throw new UnsupportedOperationException(
+            "Calendar lacks a monthly cycle.");
+    }
+
     /**
      * Returns the string "{era}{year}-{dayOfYear} for positive years and
      * "{priorEra}{-year}/{dayOfYear}" for negative years.

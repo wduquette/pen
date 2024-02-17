@@ -17,4 +17,12 @@ public record YearMonthDay(
     public String toString() {
         return calendar + ":" + year + "-" + monthOfYear + "-" + dayOfMonth;
     }
+
+    public String era() {
+        return (year > 0) ? calendar.era() : calendar.priorEra();
+    }
+
+    public Month month() {
+        return calendar.month(monthOfYear);
+    }
 }

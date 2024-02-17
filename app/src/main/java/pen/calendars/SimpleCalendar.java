@@ -99,6 +99,10 @@ public class SimpleCalendar implements Calendar {
     //-------------------------------------------------------------------------
     // SimpleCalendar Methods
 
+    public Month month(int monthOfYear) {
+        return months.get(monthOfYear - 1).month;
+    }
+
     /**
      * Gets the number of days in the given calendar year.
      * @param year The year, according to this calendar

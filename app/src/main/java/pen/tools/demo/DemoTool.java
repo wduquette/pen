@@ -13,7 +13,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import pen.calendars.SimpleCalendar;
+import pen.calendars.StandardMonths;
+import pen.calendars.StandardWeekDays;
+import pen.calendars.Week;
 import pen.fx.FX;
 import pen.stencil.*;
 import pen.tools.FXTool;
@@ -21,6 +26,7 @@ import pen.tools.ToolInfo;
 import pen.tools.draw.DrawTool;
 
 import java.util.Deque;
+import java.util.List;
 
 import static pen.stencil.Stencil.*;
 
@@ -156,13 +162,90 @@ Java API.
 
     private void testDrawing(Stencil sten) {
         sten.clear(Color.WHITE);
-        sten.draw(rectangle().at(10,10).size(100,60).background(Color.LIGHTYELLOW));
-        sten.draw(line().to(10,10).to(110,70));
-        sten.draw(line().to(10,70).to(110,10));
-        sten.draw(text().at(60,80).tack(Tack.NORTH).text("Stencil Test"));
+        var week = new Week(List.of(StandardWeekDays.values()), 1);
+        var cal = new SimpleCalendar.Builder()
+            .era("ME")
+            .priorEra("BME")
+            .epochDay(-978*366)
+            .month(StandardMonths.JANUARY, 31)
+            .month(StandardMonths.FEBRUARY, 28)
+            .month(StandardMonths.MARCH, 31)
+            .month(StandardMonths.APRIL, 30)
+            .month(StandardMonths.MAY, 31)
+            .month(StandardMonths.JUNE, 30)
+            .month(StandardMonths.JULY, 31)
+            .month(StandardMonths.AUGUST, 31)
+            .month(StandardMonths.SEPTEMBER, 30)
+            .month(StandardMonths.OCTOBER, 31)
+            .month(StandardMonths.NOVEMBER, 31)
+            .month(StandardMonths.DECEMBER, 31)
+            .week(week)
+            .build();
+        var date = cal.date(1011, 1, 1);
+        var funDay = cal.date2day(cal.date(1011, 1, 1));
+        var daysInMonth = cal.daysInMonth(1011, 1);
+        var daysInWeek = cal.daysInWeek();
+        var titleFont = new PenFont.Builder("title")
+            .family("sans-serif").weight(FontWeight.BOLD).size(14).build();
+        var dayFont = new PenFont.Builder("day")
+            .family("sans-serif").weight(FontWeight.BOLD).size(12).build();
+        var dateFont = PenFont.SANS12;
+        // TODO: PenFont::fontHeight
+        var titleHeight = Pen.getTextHeight(titleFont, "ABC");
+        var dayHeight = Pen.getTextHeight(dayFont, "ABC");
+        var dateHeight = Pen.getTextHeight(dateFont, "ABC");
+        var titlePad = 10;
+        var pad = 5;
 
-        sten.draw(rectangle().at(60,150).size(60,40).tack(Tack.SOUTH));
-        sten.draw(rectangle().at(60,150).size(12,8).tack(Tack.SOUTH));
+        var title = date.month().fullForm();
+
+        // NEXT, compute the width of a month.
+        var dateWidth = Pen.getTextWidth(dateFont, "99");
+        var monthWidth = dateWidth + (daysInWeek - 1)*(dateWidth + pad);
+
+        // NEXT, draw the title
+        stencil.savePen().translate(10 + monthWidth/2.0, 10);
+        stencil.draw(text().at(0, 0).text(title).font(titleFont).tack(Tack.NORTH));
+        stencil.restorePen();
+
+        // NEXT, draw the day abbreviations
+        stencil.savePen().translate(10 + dateWidth, 10 + titleHeight + titlePad);
+        for (var i = 0; i < 7; i++) {
+            var x = i*(dateWidth + pad);
+            stencil.draw(text()
+                .at(x, 0)
+                .text(cal.week().weekdays().get(i).narrowForm())
+                .tack(Tack.NORTHEAST)
+                .font(dayFont)
+            );
+        }
+        stencil.restorePen();
+
+        // NEXT, get the start day
+        var startDayOfWeek = cal.day2dayOfWeek(funDay);
+        int startDate = 1 - (startDayOfWeek - 1);
+
+        var numWeeks = 1 + (daysInMonth/daysInWeek);
+
+        stencil.savePen()
+            .translate(10 + dateWidth, 10 + titleHeight + titlePad + dateHeight + pad);
+        for (int w = 0; w < numWeeks; w++) {
+            var y = w*(dateHeight + pad);
+            for (int i = 0; i < daysInWeek; i++) {
+                var x = i*(dateWidth + pad);
+
+                var dayOfMonth = startDate + w*daysInWeek + i;
+                if (dayOfMonth < 1 || dayOfMonth > daysInMonth) {
+                    continue;
+                }
+                stencil.draw(text()
+                    .at(x, y)
+                    .text(Integer.toString(dayOfMonth))
+                    .tack(Tack.NORTHEAST)
+                    .font(dateFont)
+                );
+            }
+        }
     }
 
     private void testShapes(Stencil sten) {
