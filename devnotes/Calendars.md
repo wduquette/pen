@@ -4,7 +4,7 @@ Goal: a way to represent fantasy calendars in Java code, providing easy conversi
 
 ## Next Steps
 
-- [ ] Ponder how to associate weeks with calendars.
+- [x] Ponder how to associate weeks with calendars.
 - [ ] Ponder the date formatting/parsing API
 - [ ] Ponder the Tcl API for defining and managing calendars
 

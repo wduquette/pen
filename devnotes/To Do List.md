@@ -1,14 +1,13 @@
 - Any time
     - Review Javadoc
 - Next Steps
-    - [x] Support browsing a list of Tcl scripts, with recursion
-    - [x] Add `StencilOval`.
-    - [x] Use `.pen` file type for `Pen` drawing scripts
-    - [x] Add GUI to `pen view` so I can browse from a list of drawing scripts.
-    - [ ] `pen view` tool displays the script text
-    - [ ] `pen view` tool displays script error alongside the script text.
-    - [ ] Add `stencil boxedtext` command.
-    - [ ] Add `FundamentalCalendar::parseDate`
+    - [x] Revise `SimpleCalendar` to include a week as `FundamentalCalendar` does.
+    - [ ] Add `hasPriorEra()` to `Calendar`, etc.
+        - Prep for `EraCalendar`
+    - [ ] Provide a `FundamentalCalendar` tied to the modern calendar leap year and week.
+    - [ ] Provide a `SimpleCalendar` tied to the modern "AD/BC" calendar.
+    - [ ] Add a demo for drawing a monthly calendar using Stencil.
+    - [ ] Add the DateFormatter
 - Diagrams
     - [[Time Line Diagrams]]
         - [x] Flesh out `FundamentalCalendar`
@@ -25,6 +24,7 @@
         - [ ] Execute multiple Tcl scripts, save PNG files
     - `view` tool
         - [x] Executes Tcl script, shows drawing
+        - [ ] `pen view` tool displays the script text
         - [ ] Display read/eval errors in GUI, side by side with image.
     - `demo` tool
         - [x] Current test app runs as `pen demo`
@@ -45,6 +45,7 @@
     - [ ] Position support for relevant shapes
 - [ ] Tcl bindings
     - Update `stencil` for `Stencil` class, as features are added.
+        - [ ] Add `stencil boxedtext` command.
     - [ ] `pen` for `Pen` class 
     - Enum commands?
 - JTcl
