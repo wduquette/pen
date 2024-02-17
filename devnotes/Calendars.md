@@ -52,7 +52,7 @@ Goal: a way to represent fantasy calendars in Java code, providing easy conversi
         - [ ] Be based on an underlying simple calendar.
         - [ ] Convert between fundamental days and calendar dates
         - [ ] Support an arbitrary new year's day
-- [ ] High-quality pattern-based date formatting and parsing
+- [ ] High-quality pattern-based [[Date Formatting]] and parsing
     - Purpose
         - For use in drawing timelines, calendars, etc.
     - Ideally, the patterns should be identical to those used by Java's `DateTimeFormatter`.
