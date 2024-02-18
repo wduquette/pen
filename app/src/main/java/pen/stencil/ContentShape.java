@@ -5,7 +5,24 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 
 /**
- * A ContentShape is a shape that sizes itself to fit its content.
+ * A ContentShape is a shape that sizes itself to fit its content.  Each
+ * shape must define {@code getRealSize()} which computes its size without
+ * taking the {@code minSize} property into account.  Then,
+ *
+ * <ul>
+ * <li>{@code getSize()} computes its full size: the real size as modified by
+ *     its {@code minSize}.</li>
+ * <li>{@code getRealBounds()} computes its bounds on the canvas given its
+ *     {@code at}, {@code tack}, and real size.</li>
+ * <li>{@code getBounds()} computes its bounds on the canvas given its
+ *     {@code at}, {@code tack}, and full size.</li>
+ * </ul>
+ *
+ * <p>
+ * The shape may chose to expand to fill its full bounds, or it may choose to
+ * fill its real bounds, in which case it will be positioned within the full
+ * bounds according to its {@code tack}.
+ * </p>
  * @param <Self> the concrete shape class
  */
 @SuppressWarnings({"unchecked", "unused"})
@@ -55,7 +72,7 @@ public abstract class ContentShape<Self extends ContentShape<Self>>
 
     /**
      * Gets the full size of the shape, given the minSize property.
-     * @return
+     * @return the size
      */
     public final Dimension2D getSize() {
         var real = getRealSize();
