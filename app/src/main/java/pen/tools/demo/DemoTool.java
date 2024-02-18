@@ -15,10 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import pen.calendars.SimpleCalendar;
-import pen.calendars.StandardMonths;
-import pen.calendars.StandardWeekDays;
-import pen.calendars.Week;
+import pen.calendars.*;
 import pen.diagram.calendar.MonthSpread;
 import pen.diagram.calendar.YearSpread;
 import pen.fx.FX;
@@ -177,29 +174,10 @@ Java API.
 
     private void testMonthSpreadStencil(Stencil sten) {
         sten.clear(Color.WHITE);
-        var week = new Week(List.of(StandardWeekDays.values()), 1);
-        var cal = new SimpleCalendar.Builder()
-            .era("ME")
-            .priorEra("BME")
-            .epochDay(-978*366)
-            .month(StandardMonths.JANUARY, 31)
-            .month(StandardMonths.FEBRUARY, 28)
-            .month(StandardMonths.MARCH, 31)
-            .month(StandardMonths.APRIL, 30)
-            .month(StandardMonths.MAY, 31)
-            .month(StandardMonths.JUNE, 30)
-            .month(StandardMonths.JULY, 31)
-            .month(StandardMonths.AUGUST, 31)
-            .month(StandardMonths.SEPTEMBER, 30)
-            .month(StandardMonths.OCTOBER, 31)
-            .month(StandardMonths.NOVEMBER, 31)
-            .month(StandardMonths.DECEMBER, 31)
-            .week(week)
-            .build();
-        var date = cal.date(1011, 1, 1);
-        var funDay = cal.date2day(cal.date(1011, 1, 1));
-        var daysInMonth = cal.daysInMonth(1011, 1);
-        var daysInWeek = cal.daysInWeek();
+        var date = ME.date(1011, 1, 1);
+        var funDay = ME.date2day(ME.date(1011, 1, 1));
+        var daysInMonth = ME.daysInMonth(1011, 1);
+        var daysInWeek = ME.daysInWeek();
         var titleFont = new PenFont.Builder("title")
             .family("sans-serif").weight(FontWeight.BOLD).size(14).build();
         var dayFont = new PenFont.Builder("day")
@@ -228,7 +206,7 @@ Java API.
             var x = i*(dateWidth + pad);
             stencil.draw(text()
                 .at(x, 0)
-                .text(cal.week().weekdays().get(i).narrowForm())
+                .text(ME.week().weekdays().get(i).narrowForm())
                 .tack(Tack.NORTHEAST)
                 .font(dayFont)
             );
@@ -236,7 +214,7 @@ Java API.
         stencil.restorePen();
 
         // NEXT, get the start day
-        var startDayOfWeek = cal.day2dayOfWeek(funDay);
+        var startDayOfWeek = ME.day2dayOfWeek(funDay);
         int startDate = 1 - (startDayOfWeek - 1);
 
         var numWeeks = 1 + (daysInMonth/daysInWeek);
@@ -264,31 +242,12 @@ Java API.
 
     private void testMonthSpread(Stencil sten) {
         sten.clear(Color.WHITE);
-        var week = new Week(List.of(StandardWeekDays.values()), 1);
-        var cal = new SimpleCalendar.Builder()
-            .era("ME")
-            .priorEra("BME")
-            .epochDay(-978 * 366)
-            .month(StandardMonths.JANUARY, 31)
-            .month(StandardMonths.FEBRUARY, 28)
-            .month(StandardMonths.MARCH, 31)
-            .month(StandardMonths.APRIL, 30)
-            .month(StandardMonths.MAY, 31)
-            .month(StandardMonths.JUNE, 30)
-            .month(StandardMonths.JULY, 31)
-            .month(StandardMonths.AUGUST, 31)
-            .month(StandardMonths.SEPTEMBER, 30)
-            .month(StandardMonths.OCTOBER, 31)
-            .month(StandardMonths.NOVEMBER, 31)
-            .month(StandardMonths.DECEMBER, 31)
-            .week(week)
-            .build();
         var spread = new MonthSpread()
             .at(40, 10)
-            .calendar(cal)
-            .title(cal.month(1).fullForm())
+            .calendar(ME)
+            .title(ME.month(6).fullForm())
             .year(1011)
-            .monthOfYear(1)
+            .monthOfYear(6)
             ;
         sten.draw(spread);
     }
@@ -296,29 +255,10 @@ Java API.
 
     private void testYearSpread(Stencil sten) {
         sten.clear(Color.WHITE);
-        var week = new Week(List.of(StandardWeekDays.values()), 1);
-        var cal = new SimpleCalendar.Builder()
-            .era("ME")
-            .priorEra("BME")
-            .epochDay(-978 * 366)
-            .month(StandardMonths.JANUARY, 31)
-            .month(StandardMonths.FEBRUARY, 28)
-            .month(StandardMonths.MARCH, 31)
-            .month(StandardMonths.APRIL, 30)
-            .month(StandardMonths.MAY, 31)
-            .month(StandardMonths.JUNE, 30)
-            .month(StandardMonths.JULY, 31)
-            .month(StandardMonths.AUGUST, 31)
-            .month(StandardMonths.SEPTEMBER, 30)
-            .month(StandardMonths.OCTOBER, 31)
-            .month(StandardMonths.NOVEMBER, 31)
-            .month(StandardMonths.DECEMBER, 31)
-            .week(week)
-            .build();
         var spread = new YearSpread()
             .at(10, 10)
-            .calendar(cal)
-            .title("1011 " + cal.era())
+            .calendar(ME)
+            .title("1011 " + ME.era())
             .year(1011)
             ;
         sten.draw(spread);
@@ -421,6 +361,28 @@ Java API.
             .textColor(Color.BLUE)
         );
     }
+
+    //------------------------------------------------------------------------
+    // Calendar values
+    private static final Week ME_WEEK = new Week(List.of(StandardWeekDays.values()), 1);
+    private static final SimpleCalendar ME = new SimpleCalendar.Builder()
+        .era("ME")
+        .priorEra("BME")
+        .epochDay(-978 * 366)
+        .month(StandardMonths.JANUARY, 31)
+        .month(StandardMonths.FEBRUARY, 28)
+        .month(StandardMonths.MARCH, 31)
+        .month(StandardMonths.APRIL, 30)
+        .month(StandardMonths.MAY, 31)
+        .month(StandardMonths.JUNE, 30)
+        .month(StandardMonths.JULY, 31)
+        .month(StandardMonths.AUGUST, 31)
+        .month(StandardMonths.SEPTEMBER, 30)
+        .month(StandardMonths.OCTOBER, 31)
+        .month(StandardMonths.NOVEMBER, 31)
+        .month(StandardMonths.DECEMBER, 31)
+        .week(ME_WEEK)
+        .build();
 
     //------------------------------------------------------------------------
     // Main
