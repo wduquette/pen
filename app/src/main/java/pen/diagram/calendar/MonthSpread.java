@@ -6,7 +6,6 @@ import javafx.scene.text.FontWeight;
 import pen.calendars.Calendar;
 import pen.stencil.*;
 
-import static pen.stencil.Stencil.rectangle;
 import static pen.stencil.Stencil.text;
 
 /**
@@ -14,6 +13,7 @@ import static pen.stencil.Stencil.text;
  * title (the month name), the day symbols, and the days of the month in
  * columns below the day symbols
  */
+@SuppressWarnings("unused")
 public class MonthSpread extends ContentShape<MonthSpread> {
     //-------------------------------------------------------------------------
     // Instance Variables
