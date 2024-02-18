@@ -61,11 +61,11 @@ public class BoxedTextShape
     // Content Shape API
 
     @Override
-    public Dimension2D getSize() {
+    public Dimension2D getRealSize() {
         var textSize = Pen.getTextSize(getFont(), text);
         var minSize = getMinSize();
-        var w = Math.max(minSize.getWidth(), 2*pad + textSize.getWidth());
-        var h = Math.max(minSize.getHeight(), 2*pad + textSize.getHeight());
+        var w = 2*pad + textSize.getWidth();
+        var h = 2*pad + textSize.getHeight();
         return new Dimension2D(w, h);
     }
 

@@ -39,16 +39,38 @@ public abstract class ContentShape<Self extends ContentShape<Self>>
     // ContentShape API
 
     /**
-     * Gets the actual size of the shape given its minimum size and content.
+     * Gets the actual size of the shape, disregarding the minSize property.
      * @return the size
      */
-    public abstract Dimension2D getSize();
+    public abstract Dimension2D getRealSize();
 
     /**
-     * Gets the bounds of the shape given its origin, tack, and size.
+     * Gets the bounds of the shape given its origin, tack, and real size.
      * @return The bounds
      */
-    protected Bounds getBounds() {
+    public final Bounds getRealBounds() {
+        var size = getRealSize();
+        return Pen.tack2bounds(tack, x, y, size.getWidth(), size.getHeight());
+    }
+
+    /**
+     * Gets the full size of the shape, given the minSize property.
+     * @return
+     */
+    public final Dimension2D getSize() {
+        var real = getRealSize();
+
+        return new Dimension2D(
+            Math.max(minWidth, real.getWidth()),
+            Math.max(minHeight, real.getHeight())
+        );
+    }
+
+    /**
+     * Gets the bounds of the shape given its origin, tack, and full size.
+     * @return The bounds
+     */
+    public final Bounds getBounds() {
         var size = getSize();
         return Pen.tack2bounds(tack, x, y, size.getWidth(), size.getHeight());
     }

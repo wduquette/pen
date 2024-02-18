@@ -2,11 +2,13 @@
     - Review Javadoc
 - Next Steps
     - [x] Revise `SimpleCalendar` to include a week as `FundamentalCalendar` does.
+    - [x] Add a demo for drawing a monthly calendar using Stencil.
+    - [x] Add `MonthSpread` shape
+    - [ ] Review and cleanup `MonthSpread`.
     - [ ] Add `hasPriorEra()` to `Calendar`, etc.
         - Prep for `EraCalendar`
     - [ ] Provide a `FundamentalCalendar` tied to the modern calendar leap year and week.
     - [ ] Provide a `SimpleCalendar` tied to the modern "AD/BC" calendar.
-    - [ ] Add a demo for drawing a monthly calendar using Stencil.
     - [ ] Add the DateFormatter
 - Diagrams
     - [[Time Line Diagrams]]

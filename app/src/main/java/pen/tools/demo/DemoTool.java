@@ -153,16 +153,27 @@ Java API.
 
     private final ObservableList<DemoDrawing> drawings =
         FXCollections.observableArrayList(
-            drawing("Test Drawing", this::testDrawing),
-            drawing("Month Spread", this::testMonthSpread),
-            drawing("Shapes",       this::testShapes),
-            drawing("Rotation",     this::testRotation),
-            drawing("Symbols",      this::testSymbols),
-            drawing("Line Symbols", this::testLineSymbols),
-            drawing("Boxed Label",  this::testBoxedLabels)
+            drawing("Test Drawing",           this::testDrawing),
+            drawing("Month Spread (Stencil)", this::testMonthSpreadStencil),
+            drawing("Month Spread",           this::testMonthSpread),
+            drawing("Shapes",                 this::testShapes),
+            drawing("Rotation",               this::testRotation),
+            drawing("Symbols",                this::testSymbols),
+            drawing("Line Symbols",           this::testLineSymbols),
+            drawing("Boxed Label",            this::testBoxedLabels)
         );
 
     private void testDrawing(Stencil sten) {
+        sten.clear(Color.WHITE);
+        sten.draw(boxedText()
+            .at(250,250)
+            .minSize(200,200)
+            .tack(Tack.SOUTHEAST)
+            .text("ABC")
+        );
+    }
+
+    private void testMonthSpreadStencil(Stencil sten) {
         sten.clear(Color.WHITE);
         var week = new Week(List.of(StandardWeekDays.values()), 1);
         var cal = new SimpleCalendar.Builder()
@@ -192,10 +203,9 @@ Java API.
         var dayFont = new PenFont.Builder("day")
             .family("sans-serif").weight(FontWeight.BOLD).size(12).build();
         var dateFont = PenFont.SANS12;
-        // TODO: PenFont::fontHeight
-        var titleHeight = Pen.getTextHeight(titleFont, "ABC");
-        var dayHeight = Pen.getTextHeight(dayFont, "ABC");
-        var dateHeight = Pen.getTextHeight(dateFont, "ABC");
+        var titleHeight = titleFont.getHeight();
+        var dayHeight = dayFont.getHeight();
+        var dateHeight = dateFont.getHeight();
         var titlePad = 10;
         var pad = 5;
 
@@ -272,7 +282,10 @@ Java API.
             .week(week)
             .build();
         var spread = new MonthSpread()
-            .at(40, 10)
+//            .at(40, 10)
+            .at(250, 250)
+            .tack(Tack.SOUTHEAST)
+            .minSize(200, 200)
             .calendar(cal)
             .title(cal.month(1).fullForm())
             .year(1011)

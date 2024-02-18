@@ -4,35 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "e3401cb6a521986b",
+        "id": "6eaa1f59b3060e39",
         "type": "tabs",
         "children": [
           {
-            "id": "e106eae00d951de2",
+            "id": "cf64066fe3065df0",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Calendars.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "56b509f116f813a2",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Date Formatting.md",
+                "file": "To Do List.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -98,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Date Formatting.md",
+                "file": "To Do List.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Date Formatting.md",
+                "file": "To Do List.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Date Formatting.md"
+                "file": "To Do List.md"
               }
             }
           }
@@ -161,12 +148,12 @@
       "homepage:Open homepage": false
     }
   },
-  "active": "56b509f116f813a2",
+  "active": "cf64066fe3065df0",
   "lastOpenFiles": [
+    "Home.md",
     "Calendars.md",
     "Date Formatting.md",
     "To Do List.md",
-    "Home.md",
     "Ideas.md",
     "Regnal Calendars.md",
     "2024-02-07.md",

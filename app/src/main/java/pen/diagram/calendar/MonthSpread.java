@@ -9,6 +9,11 @@ import pen.stencil.*;
 import static pen.stencil.Stencil.rectangle;
 import static pen.stencil.Stencil.text;
 
+/**
+ * A shape for drawing one month for a particular calendar, including the
+ * title (the month name), the day symbols, and the days of the month in
+ * columns below the day symbols
+ */
 public class MonthSpread extends ContentShape<MonthSpread> {
     //-------------------------------------------------------------------------
     // Instance Variables
@@ -131,32 +136,19 @@ public class MonthSpread extends ContentShape<MonthSpread> {
     //-------------------------------------------------------------------------
     // ContentShape methods
 
-    @Override
-    public Dimension2D getSize() {
+    public Dimension2D getRealSize() {
         var dateWidth = Pen.getTextWidth(dateFont, "99");
         var w = calendar.daysInWeek()*(datePad + dateWidth) - datePad;
         var h = titleFont.getHeight() + titlePad
             + dayFont.getHeight()
             + weeksToDraw()*(dateFont.getHeight() + datePad);
-
-        return new Dimension2D(
-            Math.max(minWidth, w),
-            Math.max(minHeight, h)
-        );
+        return new Dimension2D(w, h);
     }
 
     @Override
     public Bounds draw(Stencil sten) {
-        var bounds = getBounds();
-        System.out.println("at     =" + getAt());
-        System.out.println("size   =" + getSize());
-        System.out.println("bounds =" + bounds);
-        sten.draw(rectangle()
-            .at(getAt())
-            .size(bounds.getWidth(), bounds.getHeight())
-        );
-
         // FIRST, draw the title
+        var bounds = getRealBounds();
         sten.draw(text()
             .at(bounds.getCenterX(), bounds.getMinY())
             .text(title)
