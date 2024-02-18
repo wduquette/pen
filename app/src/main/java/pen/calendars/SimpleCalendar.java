@@ -99,6 +99,10 @@ public class SimpleCalendar implements Calendar {
     //-------------------------------------------------------------------------
     // SimpleCalendar Methods
 
+    public boolean hasMonths() {
+        return true;
+    }
+
     public Month month(int monthOfYear) {
         return months.get(monthOfYear - 1).month;
     }
@@ -120,6 +124,10 @@ public class SimpleCalendar implements Calendar {
         } else {
             throw new CalendarException("Year cannot be 0.");
         }
+    }
+
+    public int monthsInYear() {
+        return months.size();
     }
 
     public int daysInMonth(int year, int monthOfYear) {

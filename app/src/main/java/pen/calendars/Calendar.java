@@ -41,6 +41,10 @@ public interface Calendar {
         throw noMonthlyCycle();
     }
 
+    default int monthsInYear() {
+        throw noMonthlyCycle();
+    }
+
     default int daysInMonth(int year, int monthOfYear) {
         throw noMonthlyCycle();
     }

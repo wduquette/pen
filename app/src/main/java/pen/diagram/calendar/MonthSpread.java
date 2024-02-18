@@ -79,9 +79,11 @@ public class MonthSpread extends ContentShape<MonthSpread> {
     // DSL
 
     public MonthSpread calendar(Calendar calendar) {
+        if (!calendar.hasMonths()) {
+            throw Calendar.noMonthlyCycle();
+        }
         if (!calendar.hasWeeks()) {
-            // TODO: Provide helper
-            throw new UnsupportedOperationException("Calendar lacks a weekly cycle.");
+            throw Calendar.noWeeklyCycle();
         }
         this.calendar = calendar;
         return this;
@@ -201,8 +203,6 @@ public class MonthSpread extends ContentShape<MonthSpread> {
             }
         }
 
-
-
-        return null;
+        return getBounds();
     }
 }

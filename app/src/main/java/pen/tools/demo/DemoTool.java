@@ -20,6 +20,7 @@ import pen.calendars.StandardMonths;
 import pen.calendars.StandardWeekDays;
 import pen.calendars.Week;
 import pen.diagram.calendar.MonthSpread;
+import pen.diagram.calendar.YearSpread;
 import pen.fx.FX;
 import pen.stencil.*;
 import pen.tools.FXTool;
@@ -156,6 +157,7 @@ Java API.
             drawing("Test Drawing",           this::testDrawing),
             drawing("Month Spread (Stencil)", this::testMonthSpreadStencil),
             drawing("Month Spread",           this::testMonthSpread),
+            drawing("Year Spread",            this::testYearSpread),
             drawing("Shapes",                 this::testShapes),
             drawing("Rotation",               this::testRotation),
             drawing("Symbols",                this::testSymbols),
@@ -282,14 +284,42 @@ Java API.
             .week(week)
             .build();
         var spread = new MonthSpread()
-//            .at(40, 10)
-            .at(250, 250)
-            .tack(Tack.SOUTHEAST)
-            .minSize(200, 200)
+            .at(40, 10)
             .calendar(cal)
             .title(cal.month(1).fullForm())
             .year(1011)
             .monthOfYear(1)
+            ;
+        sten.draw(spread);
+    }
+
+
+    private void testYearSpread(Stencil sten) {
+        sten.clear(Color.WHITE);
+        var week = new Week(List.of(StandardWeekDays.values()), 1);
+        var cal = new SimpleCalendar.Builder()
+            .era("ME")
+            .priorEra("BME")
+            .epochDay(-978 * 366)
+            .month(StandardMonths.JANUARY, 31)
+            .month(StandardMonths.FEBRUARY, 28)
+            .month(StandardMonths.MARCH, 31)
+            .month(StandardMonths.APRIL, 30)
+            .month(StandardMonths.MAY, 31)
+            .month(StandardMonths.JUNE, 30)
+            .month(StandardMonths.JULY, 31)
+            .month(StandardMonths.AUGUST, 31)
+            .month(StandardMonths.SEPTEMBER, 30)
+            .month(StandardMonths.OCTOBER, 31)
+            .month(StandardMonths.NOVEMBER, 31)
+            .month(StandardMonths.DECEMBER, 31)
+            .week(week)
+            .build();
+        var spread = new YearSpread()
+            .at(10, 10)
+            .calendar(cal)
+            .title("1011 " + cal.era())
+            .year(1011)
             ;
         sten.draw(spread);
     }
