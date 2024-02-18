@@ -130,7 +130,7 @@ public class MonthSpread extends ContentShape<MonthSpread> {
         do {
             ++numberOfWeeks;
             startDate += daysInWeek;
-        } while (startDate < daysInMonth);
+        } while (startDate <= daysInMonth);
 
         return numberOfWeeks;
     }
