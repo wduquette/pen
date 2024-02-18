@@ -1,5 +1,6 @@
 package pen.stencil;
 
+import javafx.geometry.Dimension2D;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -148,6 +149,33 @@ public final class PenFont {
      */
     public double getHeight() {
         return Pen.getTextHeight(this, "ABC");
+    }
+
+    /**
+     * Gets the height of the text string as drawn.
+     * @param text The text string
+     * @return The height in pixels
+     */
+    public double getTextHeight(String text) {
+        return Pen.getTextHeight(this, text);
+    }
+
+    /**
+     * Gets the size of the text string's bounding box
+     * @param text The text string
+     * @return The size
+     */
+    public Dimension2D getTextSize(String text) {
+        return Pen.getTextSize(this, text);
+    }
+
+    /**
+     * Gets the width of the text string as drawn.
+     * @param text The text string
+     * @return The width in pixels
+     */
+    public double getTextWidth(String text) {
+        return Pen.getTextWidth(this, text);
     }
 
     @Override
