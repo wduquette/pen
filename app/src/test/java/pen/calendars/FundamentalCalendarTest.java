@@ -208,11 +208,11 @@ public class FundamentalCalendarTest {
         checkThrows(() -> LEAP.yearDayOfYear2day(leap(0, 0)));
     }
 
-    private YearDayOfYear ten(int year, int day) {
-        return new YearDayOfYear(TEN, year, day);
+    private YearDay ten(int year, int day) {
+        return new YearDay(TEN, year, day);
     }
 
-    private YearDayOfYear leap(int year, int day) {
-        return new YearDayOfYear(LEAP, year, day);
+    private YearDay leap(int year, int day) {
+        return new YearDay(LEAP, year, day);
     }
 }

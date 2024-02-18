@@ -131,7 +131,7 @@ public class FundamentalCalendar implements Calendar {
      * @param day The day
      * @return The date
      */
-    public YearDayOfYear day2yearDayOfYear(int day) {
+    public YearDay day2yearDayOfYear(int day) {
         if (day >= 0) {
             int year = 1;
             var daysInYear = daysInYear(year);
@@ -142,7 +142,7 @@ public class FundamentalCalendar implements Calendar {
                 daysInYear = daysInYear(year);
             }
 
-            return new YearDayOfYear(this, year, day + 1);
+            return new YearDay(this, year, day + 1);
         } else {
             int year = -1;
             day = -day;
@@ -156,7 +156,7 @@ public class FundamentalCalendar implements Calendar {
             }
 
             var dayOfYear = daysInYear - day + 1;
-            return new YearDayOfYear(this, year, dayOfYear);
+            return new YearDay(this, year, dayOfYear);
         }
     }
 
@@ -166,7 +166,7 @@ public class FundamentalCalendar implements Calendar {
      * @return The day
      * @throws CalendarException if the date is invalid.
      */
-    public int yearDayOfYear2day(YearDayOfYear date) {
+    public int yearDayOfYear2day(YearDay date) {
         // FIRST, validate the dayOfYear.
         validate(date);
 
@@ -200,7 +200,7 @@ public class FundamentalCalendar implements Calendar {
      * @param date The date
      * @return The formatted string
      */
-    public String yearDayOfYear2string(YearDayOfYear date) {
+    public String yearDayOfYear2string(YearDay date) {
         validate(date);
 
         var sym = (date.year() >= 0) ? era : priorEra;
@@ -217,7 +217,7 @@ public class FundamentalCalendar implements Calendar {
      * @return The date
      * @throws CalendarException on parse error
      */
-    public YearDayOfYear string2yearDayOfYear(String dateString) {
+    public YearDay string2yearDayOfYear(String dateString) {
         dateString = dateString.trim().toUpperCase();
 
         // FIRST, get the symbol
@@ -244,7 +244,7 @@ public class FundamentalCalendar implements Calendar {
             var year = Integer.parseInt(tokens[0]);
             var dayOfYear = Integer.parseInt(tokens[1]);
 
-            var date = new YearDayOfYear(
+            var date = new YearDay(
                 this,
                 isBefore ? -year : year,
                 dayOfYear);
@@ -261,7 +261,7 @@ public class FundamentalCalendar implements Calendar {
      * @param date The date
      * @throws CalendarException if the date is invalid.
      */
-    public void validate(YearDayOfYear date) {
+    public void validate(YearDay date) {
         if (!date.calendar().equals(this)) {
             throw new CalendarException(
                 "Calendar mismatch, expected \"" + this + "\", got \"" +

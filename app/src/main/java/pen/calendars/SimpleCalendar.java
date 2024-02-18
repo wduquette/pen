@@ -132,13 +132,13 @@ public class SimpleCalendar implements Calendar {
         }
     }
 
-    public YearMonthDay date(int year, int month, int day) {
-        var date = new YearMonthDay(this, year, month, day);
+    public Date date(int year, int month, int day) {
+        var date = new Date(this, year, month, day);
         validate(date);
         return date;
     }
 
-    public void validate(YearMonthDay date) {
+    public void validate(Date date) {
         if (date.year() == 0) {
             throw new CalendarException("Year is 0!");
         }
@@ -160,7 +160,7 @@ public class SimpleCalendar implements Calendar {
      * @param fundamentalDay The fundamental day
      * @return The date
      */
-    public YearMonthDay day2date(int fundamentalDay) {
+    public Date day2date(int fundamentalDay) {
         var day = fundamentalDay - epochDay;
         int year;
         int dayOfYear;
@@ -198,7 +198,7 @@ public class SimpleCalendar implements Calendar {
     }
 
     // Given a year and a dayOfYear 1 to N, get the date
-    private YearMonthDay yearDay2date(int year, int dayOfYear) {
+    private Date yearDay2date(int year, int dayOfYear) {
         var monthOfYear = 0;
         var dayOfMonth = 0;
 
@@ -214,10 +214,10 @@ public class SimpleCalendar implements Calendar {
             dayOfYear -= daysInMonth;
         }
 
-        return new YearMonthDay(this, year, monthOfYear, dayOfMonth);
+        return new Date(this, year, monthOfYear, dayOfMonth);
     }
 
-    public int date2day(YearMonthDay date) {
+    public int date2day(Date date) {
         var year = date.year();
 
         // FIRST, days in this month
@@ -249,7 +249,7 @@ public class SimpleCalendar implements Calendar {
      * @param date The date
      * @return The formatted string
      */
-    public String date2string(YearMonthDay date) {
+    public String date2string(Date date) {
         validate(date);
 
         var sym = (date.year() >= 0) ? era : priorEra;
@@ -259,7 +259,7 @@ public class SimpleCalendar implements Calendar {
             + "-" + sym;
     }
 
-    YearMonthDay string2date(String dateString) {
+    Date string2date(String dateString) {
         var tokens = dateString.trim().split("-");
 
         if (tokens.length != 4) {
@@ -275,7 +275,7 @@ public class SimpleCalendar implements Calendar {
         try {
             var year = Integer.parseInt(tokens[0]);
 
-            var date = new YearMonthDay(
+            var date = new Date(
                 this,
                 sym.equals(era) ? year : -year,
                 Integer.parseInt(tokens[1]),

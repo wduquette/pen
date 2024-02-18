@@ -33,7 +33,7 @@ public interface Calendar {
         return false;
     }
 
-    default YearMonthDay date(int year, int monthOfYear, int dayOfMonth) {
+    default Date date(int year, int monthOfYear, int dayOfMonth) {
         throw noMonthlyCycle();
     }
 
@@ -45,11 +45,11 @@ public interface Calendar {
         throw noMonthlyCycle();
     }
 
-    default int date2day(YearMonthDay date) {
+    default int date2day(Date date) {
         throw noMonthlyCycle();
     }
 
-    default YearMonthDay day2date(int day) {
+    default Date day2date(int day) {
         throw noMonthlyCycle();
     }
 

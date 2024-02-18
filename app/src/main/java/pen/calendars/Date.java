@@ -7,7 +7,7 @@ package pen.calendars;
  * @param monthOfYear The month number, counting from 1
  * @param dayOfMonth The day of the month, counting from 1
  */
-public record YearMonthDay(
+public record Date(
     Calendar calendar,
     int year,
     int monthOfYear,

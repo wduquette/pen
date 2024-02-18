@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "To Do List.md",
+                "file": "2024-02-18.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "To Do List.md",
+                "file": "2024-02-18.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "To Do List.md",
+                "file": "2024-02-18.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "To Do List.md"
+                "file": "2024-02-18.md"
               }
             }
           }
@@ -150,10 +150,11 @@
   },
   "active": "cf64066fe3065df0",
   "lastOpenFiles": [
+    "To Do List.md",
+    "2024-02-18.md",
     "Home.md",
     "Calendars.md",
     "Date Formatting.md",
-    "To Do List.md",
     "Ideas.md",
     "Regnal Calendars.md",
     "2024-02-07.md",
@@ -175,7 +176,6 @@
     "Design Notes.md",
     "Creating Custom Shapes in Tcl.md",
     "Managing Pen State in Stencil.md",
-    "2024-01-11.md",
     "Testing Canvas.canvas",
     "Excalidraw"
   ]
