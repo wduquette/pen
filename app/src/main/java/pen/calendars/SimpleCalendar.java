@@ -9,8 +9,9 @@ import java.util.Objects;
  * A SimpleCalendar is a calendar with some number of months, tied to
  * an epoch day on a Fundamental Calendar.  New Year's Day is the first
  * day of the first month.  A SimpleCalendar can be modified by a
- * RegnalCalendar.
+ * EraCalendar.
  */
+@SuppressWarnings("unused")
 public class SimpleCalendar implements Calendar {
     //-------------------------------------------------------------------------
     // Instance Variables
@@ -18,7 +19,6 @@ public class SimpleCalendar implements Calendar {
     // The fundamental calendar day corresponding to 1/1/1 in this
     // calendar.
     private final int epochDay;
-
 
     // The era symbol for positive years.
     private final String era;
@@ -45,27 +45,125 @@ public class SimpleCalendar implements Calendar {
     }
 
     //-------------------------------------------------------------------------
-    // SimpleCalendar Getters (other than Calendar API getters)
+    // SimpleCalendar Methods, aside from the Calendar API
 
     public int epochDay() {
         return epochDay;
-    }
-
-    public String era() {
-        return era;
-    }
-
-    public String priorEra() {
-        return priorEra;
     }
 
     public List<Month> months() {
         return months.stream().map(MonthRecord::month).toList();
     }
 
-    //-------------------------------------------------------------------------
-    // Calendar API
+    public void validate(Date date) {
+        if (date.year() == 0) {
+            throw new CalendarException("Year is 0!");
+        }
 
+        if (date.monthOfYear() < 1 || date.monthOfYear() > months.size()) {
+            throw new CalendarException(
+                    "Month is out of range (1,...," + months.size() + ")");
+        }
+
+        var daysInMonth = daysInMonth(date.year(), date.monthOfYear());
+        if (date.dayOfMonth() < 1 || date.dayOfMonth() > daysInMonth) {
+            throw new CalendarException(
+                    "Day is out of range (1,...," + daysInMonth + ")");
+        }
+    }
+
+    // Given a year and a dayOfYear 1 to N, get the date
+    private Date yearDay2date(int year, int dayOfYear) {
+        var monthOfYear = 0;
+        var dayOfMonth = 0;
+
+        for (int i = 1; i <= months.size(); i++) {
+            var daysInMonth = daysInMonth(year, i);
+
+            if (dayOfYear <= daysInMonth) {
+                dayOfMonth = dayOfYear;
+                monthOfYear = i;
+                break;
+            }
+
+            dayOfYear -= daysInMonth;
+        }
+
+        return new Date(this, year, monthOfYear, dayOfMonth);
+    }
+
+    /**
+     * Returns the string "{year}-{monthOfYear}-{dayOfMonth} {era}" for
+     * positive years and "{-year}-{monthOfYear}-{dayOfMonty} {priorEra}"
+     * for negative years.
+     * @param date The date
+     * @return The formatted string
+     */
+    public String date2string(Date date) {
+        validate(date);
+
+        var sym = (date.year() >= 0) ? era : priorEra;
+        var year = Math.abs(date.year());
+
+        return year + "-" + date.monthOfYear() + "-" + date.dayOfMonth()
+                + "-" + sym;
+    }
+
+    Date string2date(String dateString) {
+        var tokens = dateString.trim().split("-");
+
+        if (tokens.length != 4) {
+            throw badFormat(dateString);
+        }
+
+        var sym = tokens[3].toUpperCase();
+
+        if (!sym.equals(era) && !sym.equals(priorEra)) {
+            throw badFormat(dateString);
+        }
+
+        try {
+            var year = Integer.parseInt(tokens[0]);
+
+            var date = new Date(
+                    this,
+                    sym.equals(era) ? year : -year,
+                    Integer.parseInt(tokens[1]),
+                    Integer.parseInt(tokens[2]));
+            validate(date);
+            return date;
+        } catch (IllegalArgumentException ex) {
+            throw badFormat(dateString);
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    // Calendar API: Basic Features, common to all implementations
+
+    @Override
+    public int daysInYear(int year) {
+        if (year > 0) {
+            return months.stream()
+                    .mapToInt(m -> m.daysInMonth().apply(year))
+                    .sum();
+        } else if (year < 0) {
+            return months.stream()
+                    .mapToInt(m -> m.daysInMonth().apply(year + 1))
+                    .sum();
+        } else {
+            throw new CalendarException("Year cannot be 0.");
+        }
+    }
+
+    // TODO: Replace with Era object
+    public String era() {
+        return era;
+    }
+    public String priorEra() {
+        return priorEra;
+    }
+
+    // TODO: Replace with DateFormatter
     @Override
     public String formatDate(int day) {
         return date2string(day2date(day));
@@ -76,98 +174,48 @@ public class SimpleCalendar implements Calendar {
         return date2day(string2date(dateString));
     }
 
-    @Override
-    public boolean hasWeeks() {
-        return week != null;
-    }
-
-    @Override
-    public Weekday day2weekday(int day) {
-        if (week != null) {
-            return week.day2weekday(day);
-        } else {
-            throw new UnsupportedOperationException(
-                "Calendar lacks a weekly cycle.");
-        }
-    }
-
-    @Override
-    public Week week() {
-        return week;
-    }
-
     //-------------------------------------------------------------------------
-    // SimpleCalendar Methods
+    // Calendar API: Months
 
+    @Override
     public boolean hasMonths() {
         return true;
     }
 
-    public Month month(int monthOfYear) {
-        return months.get(monthOfYear - 1).month;
-    }
-
-    /**
-     * Gets the number of days in the given calendar year.
-     * @param year The year, according to this calendar
-     * @return The number of days in that year.
-     */
-    public int daysInYear(int year) {
-        if (year > 0) {
-            return months.stream()
-                .mapToInt(m -> m.daysInMonth().apply(year))
-                .sum();
-        } else if (year < 0) {
-            return months.stream()
-                .mapToInt(m -> m.daysInMonth().apply(year + 1))
-                .sum();
-        } else {
-            throw new CalendarException("Year cannot be 0.");
-        }
-    }
-
-    public int monthsInYear() {
-        return months.size();
-    }
-
-    public int daysInMonth(int year, int monthOfYear) {
-        if (year > 0) {
-            return months.get(monthOfYear - 1).daysInMonth().apply(year);
-        } else if (year < 0) {
-            return months.get(monthOfYear - 1).daysInMonth().apply(year + 1);
-        } else {
-            throw new CalendarException("Year cannot be 0.");
-        }
-    }
-
+    @Override
     public Date date(int year, int month, int day) {
         var date = new Date(this, year, month, day);
         validate(date);
         return date;
     }
 
-    public void validate(Date date) {
-        if (date.year() == 0) {
-            throw new CalendarException("Year is 0!");
+    @Override
+    public int date2day(Date date) {
+        var year = date.year();
+
+        // FIRST, days in this month
+        var day = date.dayOfMonth() - 1;
+
+        // NEXT, days in earlier months
+        for (int m = 1; m <= date.monthOfYear() - 1; m++) {
+            day += daysInMonth(year, m);
         }
 
-        if (date.monthOfYear() < 1 || date.monthOfYear() > months.size()) {
-            throw new CalendarException(
-                "Month is out of range (1,...," + months.size() + ")");
+        // NEXT, days in years since era start.
+        if (year > 0) {
+            for (int y = 1; y < year; y++) {
+                day += daysInYear(y);
+            }
+        } else {
+            for (int y = -1; y >= year; y--) {
+                day -= daysInYear(y);
+            }
         }
 
-        var daysInMonth = daysInMonth(date.year(), date.monthOfYear());
-        if (date.dayOfMonth() < 1 || date.dayOfMonth() > daysInMonth) {
-            throw new CalendarException(
-                "Day is out of range (1,...," + daysInMonth + ")");
-        }
+        return day + epochDay;
     }
 
-    /**
-     * Converts an arbitrary day since the fundamental epoch to a date.
-     * @param fundamentalDay The fundamental day
-     * @return The date
-     */
+    @Override
     public Date day2date(int fundamentalDay) {
         var day = fundamentalDay - epochDay;
         int year;
@@ -205,94 +253,38 @@ public class SimpleCalendar implements Calendar {
         }
     }
 
-    // Given a year and a dayOfYear 1 to N, get the date
-    private Date yearDay2date(int year, int dayOfYear) {
-        var monthOfYear = 0;
-        var dayOfMonth = 0;
-
-        for (int i = 1; i <= months.size(); i++) {
-            var daysInMonth = daysInMonth(year, i);
-
-            if (dayOfYear <= daysInMonth) {
-                dayOfMonth = dayOfYear;
-                monthOfYear = i;
-                break;
-            }
-
-            dayOfYear -= daysInMonth;
-        }
-
-        return new Date(this, year, monthOfYear, dayOfMonth);
-    }
-
-    public int date2day(Date date) {
-        var year = date.year();
-
-        // FIRST, days in this month
-        var day = date.dayOfMonth() - 1;
-
-        // NEXT, days in earlier months
-        for (int m = 1; m <= date.monthOfYear() - 1; m++) {
-            day += daysInMonth(year, m);
-        }
-
-        // NEXT, days in years since era start.
+    @Override
+    public int daysInMonth(int year, int monthOfYear) {
         if (year > 0) {
-            for (int y = 1; y < year; y++) {
-                day += daysInYear(y);
-            }
+            return months.get(monthOfYear - 1).daysInMonth().apply(year);
+        } else if (year < 0) {
+            return months.get(monthOfYear - 1).daysInMonth().apply(year + 1);
         } else {
-            for (int y = -1; y >= year; y--) {
-                day -= daysInYear(y);
-            }
+            throw new CalendarException("Year cannot be 0.");
         }
-
-        return day + epochDay;
     }
 
-    /**
-     * Returns the string "{year}-{monthOfYear}-{dayOfMonth} {era}" for
-     * positive years and "{-year}-{monthOfYear}-{dayOfMonty} {priorEra}"
-     * for negative years.
-     * @param date The date
-     * @return The formatted string
-     */
-    public String date2string(Date date) {
-        validate(date);
-
-        var sym = (date.year() >= 0) ? era : priorEra;
-        var year = Math.abs(date.year());
-
-        return year + "-" + date.monthOfYear() + "-" + date.dayOfMonth()
-            + "-" + sym;
+    @Override
+    public int monthsInYear() {
+        return months.size();
     }
 
-    Date string2date(String dateString) {
-        var tokens = dateString.trim().split("-");
+    @Override
+    public Month month(int monthOfYear) {
+        return months.get(monthOfYear - 1).month;
+    }
 
-        if (tokens.length != 4) {
-            throw badFormat(dateString);
-        }
+    //-------------------------------------------------------------------------
+    // Calendar API: Week API, available if hasWeeks()
 
-        var sym = tokens[3].toUpperCase();
+    @Override
+    public boolean hasWeeks() {
+        return week != null;
+    }
 
-        if (!sym.equals(era) && !sym.equals(priorEra)) {
-            throw badFormat(dateString);
-        }
-
-        try {
-            var year = Integer.parseInt(tokens[0]);
-
-            var date = new Date(
-                this,
-                sym.equals(era) ? year : -year,
-                Integer.parseInt(tokens[1]),
-                Integer.parseInt(tokens[2]));
-            validate(date);
-            return date;
-        } catch (IllegalArgumentException ex) {
-            throw badFormat(dateString);
-        }
+    @Override
+    public Week week() {
+        return week;
     }
 
     //-------------------------------------------------------------------------

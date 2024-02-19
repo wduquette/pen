@@ -11,35 +11,34 @@ Goal: a way to represent fantasy calendars in Java code, providing easy conversi
 ## API Refactoring
 
 | Area | Flag | Method | Comment |
-| ---- | ---- | ------ | ------- |
-| Basic | -- | int daysInYear(year) | |
-| Basic | -- | String era()                        | Need Era |
-| Basic | -- | String priorEra()                   | Need hasPriorEra? |
-| Basic | -- | String formatDate(day)              | Need DateFormatter |
-| Basic | -- | int parseDate(dateString)           | Need DateFormatter |
+| ---- | ---- | ---- | ---- |
+| Basic | -- | int daysInYear(year) |  |
+| Basic | -- | String era() | Need Era |
+| Basic | -- | String priorEra() | Need hasPriorEra? |
+| Basic | -- | String formatDate(day) | Need DateFormatter |
+| Basic | -- | int parseDate(dateString) | Need DateFormatter |
 | Basic | FC | YearDay day2yearDayOfYear(day) | Should be day2yearDay |
 | Basic | FC | int yearDayOfYear2day(YearDay) | Should yearDay2day |
-| Basic | FC | void validate(YearDay) | |
-| Feature | -- | boolean hasMonths() | |
-| Feature | -- | boolean hasWeeks() | |
-| Feature | ?? | boolean hasPriorEra() | |
-| Months | -- | Date date(y, m) | |
-| Months | -- | int date2day(Date) | |
-| Months | -- | Date day2date(day) | |
-| Months | -- | int daysInMonth(y, mr) | |
-| Months | -- | int monthsInYear() | |
-| Months | -- | Month month(monthOfYear) | |
-| Months | SC | List<Month> months() | |
-| Months | SC | void validate(Date) | |
-| Months | SC | Date yearDay2date(YearDay)  | |
-| Months | ++ | YearDay date2yearDay(Date) | |
-| Weeks | -- | Week week() | |
-| Weeks | -- | int daysInWeek() | |
-| Weeks | -- | int day2dayOfWeek(day) | |
-| Weeks | -- | Weekday day2weekday(day) | |
-| Error | -- | noMonthlyCycle() | |
-| Error | -- | noWeeklyCycle | |
-| Error | SC | badFormat(message) | |
+| Basic | FC | void validate(YearDay) |  |
+| Feature | -- | boolean hasMonths() |  |
+| Feature | -- | boolean hasWeeks() |  |
+| Feature | ?? | boolean hasPriorEra() |  |
+| Months | -- | Date date(y, m) |  |
+| Months | -- | int date2day(Date) |  |
+| Months | -- | Date day2date(day) |  |
+| Months | -- | int daysInMonth(y, mr) |  |
+| Months | -- | int monthsInYear() |  |
+| Months | -- | Month month(monthOfYear) |  |
+| Months | SC | List<Month> months() |  |
+| Months | SC | void validate(Date) |  |
+| Months | SC | Date yearDay2date(YearDay) |  |
+| Months | ++ | YearDay date2yearDay(Date) |  |
+| Weeks | -- | Week week() |  |
+| Weeks | -- | int daysInWeek() |  |
+| Weeks | -- | int day2dayOfWeek(day) |  |
+| Weeks | -- | Weekday day2weekday(day) |  |
+| Error | -- | noMonthlyCycle() |  |
+| Error | -- | noWeeklyCycle |  |
 ## Needs
 
 - [ ] A general `Calendar` interface

@@ -59,7 +59,7 @@ public class FundamentalCalendar implements Calendar {
     }
 
     //-------------------------------------------------------------------------
-    // Basic Features, common to all implementations
+    // Calendar API: Basic Features, common to all implementations
 
     @Override
     public int daysInYear(int year) {
