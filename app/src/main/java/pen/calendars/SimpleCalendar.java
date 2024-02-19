@@ -165,8 +165,7 @@ public class SimpleCalendar implements Calendar {
 
     @Override
     public Date date(int year, int month, int day) {
-        var date = new Date(this, year, month, day);
-        return date;
+        return new Date(this, year, month, day);
     }
 
     @Override
