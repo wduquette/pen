@@ -4,66 +4,122 @@ package pen.calendars;
  * A calendar for general use.
  */
 public interface Calendar {
-    String era();
-    String priorEra();
+    //-------------------------------------------------------------------------
+    // Basic Features, common to all implementations
 
     /**
      * The number of days in the given year, per the calendar
      * @param year The year
      * @return The number of days
+     * @throws CalendarException for year 0
      */
     int daysInYear(int year);
 
-    /**
-     * Formats the fundamental day as a date string for the given calendar.
-     * @param day The fundamental day
-     * @return The string
-     */
-    String formatDate(int day);
+    // TODO: Replace with an Era object.
+    String era();
+    String priorEra();
 
-    /**
-     * Parses the date string, returning a fundamental day.
-     * @param dateString The date string
-     * @return The fundamental day
-     * @throws CalendarException on parse error
-     */
+    // TODO: Support a DateFormatter class
+    String formatDate(int day);
     int parseDate(String dateString);
 
+    //-------------------------------------------------------------------------
+    // Feature Queries: What features does this calendar support?
+
+    /**
+     * Does this calendar divide the year into months?
+     * See the Month API, below, if true.
+     * @return true or false
+     */
     default boolean hasMonths() {
         return false;
     }
 
-    default Date date(int year, int monthOfYear, int dayOfMonth) {
-        throw noMonthlyCycle();
-    }
-
-    default Month month(int monthOfYear) {
-        throw noMonthlyCycle();
-    }
-
-    default int monthsInYear() {
-        throw noMonthlyCycle();
-    }
-
-    default int daysInMonth(int year, int monthOfYear) {
-        throw noMonthlyCycle();
-    }
-
-    default int date2day(Date date) {
-        throw noMonthlyCycle();
-    }
-
-    default Date day2date(int day) {
-        throw noMonthlyCycle();
-    }
-
     /**
-     * Gets whether the calendar has a weekly cycle or not.
+     * Does calendar define a cycle of weekdays?
+     * See the Week API below, if true.
      * @return true or false
      */
     default boolean hasWeeks() {
         return week() != null;
     }
+
+    //-------------------------------------------------------------------------
+    // Month API, available if hasMonths().
+
+    // TODO Add months()
+    // TODO Include validate(Date)
+    // date2yearDay, yearDate2date
+
+    /**
+     * Returns a date given the components.  Dates are validated on creation.
+     * TODO: Decide whether it should throw CalendarException for invalid date?
+     * @param year The year number
+     * @param monthOfYear The monthOfYear, 1 to monthsInYear()
+     * @param dayOfMonth The dayOfMonth, 1 to daysInMonth(year, monthOfYear)
+     * @return The date
+     * @throws CalendarException if the date is invalid.
+     * @throws CalendarException if !hasMonths()
+     */
+    default Date date(int year, int monthOfYear, int dayOfMonth) {
+        throw noMonthlyCycle();
+    }
+
+    /**
+     * Converts a Date to a day since the fundamental epoch.
+     * @param date The date
+     * @return The fundamental day
+     * @throws CalendarException if !hasMonths()
+     */
+    default int date2day(Date date) {
+        throw noMonthlyCycle();
+    }
+
+    /**
+     * Converts a day since the fundamental epoch to a Date.
+     * @param day The day
+     * @return The date
+     * @throws CalendarException if !hasMonths()
+     */
+    default Date day2date(int day) {
+        throw noMonthlyCycle();
+    }
+
+    /**
+     * Returns the number of days in the given month in the given year.  (Month
+     * lengths can vary!)
+     * @param year The year
+     * @param monthOfYear The monthOfYear, 1 to monthsInYear()
+     * @return The number of days
+     * @throws CalendarException if !hasMonths()
+     */
+    default int daysInMonth(int year, int monthOfYear) {
+        throw noMonthlyCycle();
+    }
+
+    /**
+     * Returns the number of months in the year.  Calendar assumes that all
+     * years have the same number of months.
+     * @return The number
+     * @throws CalendarException if !hasMonths()
+     */
+    default int monthsInYear() {
+        throw noMonthlyCycle();
+    }
+
+    /**
+     * Returns the Month object for the given month of the year.  The Month
+     * object provides various forms of the month's name.
+     * @param monthOfYear The monthOfYear,1 to monthsInYear()
+     * @return The Month
+     * @throws CalendarException if !hasMonths()
+     */
+    default Month month(int monthOfYear) {
+        throw noMonthlyCycle();
+    }
+
+    //-------------------------------------------------------------------------
+    // Week API, available if hasWeeks()
 
     /**
      * Gets the calendar's weekly cycle, if it has one.
@@ -71,37 +127,6 @@ public interface Calendar {
      */
     default Week week() {
         return null;
-    }
-
-
-    /**
-     * Produces the weekday for the given fundamental day.
-     * @param day The day
-     * @return The weekday
-     * @throws CalendarException if this calendar lacks a
-     * weekly cycle.
-     */
-    default Weekday day2weekday(int day) {
-        if (hasWeeks()) {
-            return week().day2weekday(day);
-        } else {
-            throw noWeeklyCycle();
-        }
-    }
-
-    /**
-     * Produces the day-of-week (1 through daysInWeek) for the given day
-     * @param day The day
-     * @return The day-of-week
-     * @throws CalendarException if this calendar lacks a weekly cycle.
-     */
-    default int day2dayOfWeek(int day) {
-        if (hasWeeks()) {
-            var weekday = week().day2weekday(day);
-            return week().indexOf(weekday) + 1;
-        } else {
-            throw noWeeklyCycle();
-        }
     }
 
     /**
@@ -117,10 +142,50 @@ public interface Calendar {
         }
     }
 
+    /**
+     * Produces the day-of-week (1 through daysInWeek()) for the given day
+     * @param day The day
+     * @return The day-of-week
+     * @throws CalendarException if this calendar lacks a weekly cycle.
+     */
+    default int day2dayOfWeek(int day) {
+        if (hasWeeks()) {
+            var weekday = week().day2weekday(day);
+            return week().indexOf(weekday) + 1;
+        } else {
+            throw noWeeklyCycle();
+        }
+    }
+    /**
+     * Produces the weekday for the given fundamental day.
+     * @param day The day
+     * @return The weekday
+     * @throws CalendarException if this calendar lacks a
+     * weekly cycle.
+     */
+    default Weekday day2weekday(int day) {
+        if (hasWeeks()) {
+            return week().day2weekday(day);
+        } else {
+            throw noWeeklyCycle();
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    // Standard Exception Factories
+
+    /**
+     * Used to a throw a "Calendar lacks a weekly cycle." exception.
+     * @return The exception
+     */
     static CalendarException noWeeklyCycle() {
         return new CalendarException("Calendar lacks a weekly cycle.");
     }
 
+    /**
+     * Used to a throw a "Calendar lacks a monthly cycle." exception.
+     * @return The exception
+     */
     static CalendarException noMonthlyCycle() {
         return new CalendarException("Calendar lacks a monthly cycle.");
     }

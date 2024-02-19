@@ -8,6 +8,38 @@ Goal: a way to represent fantasy calendars in Java code, providing easy conversi
 - [ ] Ponder the date formatting/parsing API
 - [ ] Ponder the Tcl API for defining and managing calendars
 
+## API Refactoring
+
+| Area | Flag | Method | Comment |
+| ---- | ---- | ------ | ------- |
+| Basic | -- | int daysInYear(year) | |
+| Basic | -- | String era()                        | Need Era |
+| Basic | -- | String priorEra()                   | Need hasPriorEra? |
+| Basic | -- | String formatDate(day)              | Need DateFormatter |
+| Basic | -- | int parseDate(dateString)           | Need DateFormatter |
+| Basic | FC | YearDay day2yearDayOfYear(day) | Should be day2yearDay |
+| Basic | FC | int yearDayOfYear2day(YearDay) | Should yearDay2day |
+| Basic | FC | void validate(YearDay) | |
+| Feature | -- | boolean hasMonths() | |
+| Feature | -- | boolean hasWeeks() | |
+| Feature | ?? | boolean hasPriorEra() | |
+| Months | -- | Date date(y, m) | |
+| Months | -- | int date2day(Date) | |
+| Months | -- | Date day2date(day) | |
+| Months | -- | int daysInMonth(y, mr) | |
+| Months | -- | int monthsInYear() | |
+| Months | -- | Month month(monthOfYear) | |
+| Months | SC | List<Month> months() | |
+| Months | SC | void validate(Date) | |
+| Months | SC | Date yearDay2date(YearDay)  | |
+| Months | ++ | YearDay date2yearDay(Date) | |
+| Weeks | -- | Week week() | |
+| Weeks | -- | int daysInWeek() | |
+| Weeks | -- | int day2dayOfWeek(day) | |
+| Weeks | -- | Weekday day2weekday(day) | |
+| Error | -- | noMonthlyCycle() | |
+| Error | -- | noWeeklyCycle | |
+| Error | SC | badFormat(message) | |
 ## Needs
 
 - [ ] A general `Calendar` interface
@@ -18,6 +50,7 @@ Goal: a way to represent fantasy calendars in Java code, providing easy conversi
         - [ ] Parse date strings yielding fundamental days
         - [ ] Provide all support needed for the date formatting code
         - [ ] TBD: see [[#The `Calendar` API]].
+        - [ ] Easy look-up of era names in various formats
 - [x] `FundamentalCalendar` 
     - Purpose
         - A simple calendar for use in circumstances where only relative dates matter.
@@ -27,7 +60,7 @@ Goal: a way to represent fantasy calendars in Java code, providing easy conversi
         - [x] Conversion between fundamental days and year/day-of-year
         - [x] Support for leap-year-like patterns
         - [x] Dirt simple date formatting and parsing, for use with a Tcl extension
-        - [ ] A week
+        - [x] A week
 - [ ] `SimpleCalendar`
     - Purpose
         - A calendar with months of variable lengths, for use when actually dates are required.
@@ -36,15 +69,15 @@ Goal: a way to represent fantasy calendars in Java code, providing easy conversi
         - [x] Support for leap-year-like patterns, month by month
         - [x] Conversion between fundamental days and year/month-of-year/day-of-month
         - [x] Simple date formatting and parsing, for use with a Tcl extension
-        - [ ] Easy look-up of month names in various formats
-        - [ ] A week
+        - [x] Easy look-up of month names in various formats
+        - [x] A week
 - [ ] `Week`
     - Purpose
         - A cycle of week days, tied to the `FundamentalCalendar`'s epoch day.
     - The class should provide
         - [x] Conversion from a fundamental day to a day of the week.
         - [x] Access to the list of week days and the epoch day offset into the list.
-        - [ ] Easy look-up of day names in various formats
+        - [x] Easy look-up of day names in various formats
 - [ ] `EraCalendar`
     - Purpose
         - Support for [[Regnal Calendars]] and similar eras

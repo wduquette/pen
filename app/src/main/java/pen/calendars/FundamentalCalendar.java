@@ -9,6 +9,7 @@ import java.util.Objects;
  * length of a year in days given the year number.  The epoch is year 1; it
  * is preceded by year -1.  The days of the year are
  */
+@SuppressWarnings("unused")
 public class FundamentalCalendar implements Calendar {
     //-------------------------------------------------------------------------
     // Instance Variables
@@ -44,26 +45,44 @@ public class FundamentalCalendar implements Calendar {
     }
 
     //-------------------------------------------------------------------------
-    // FundamentalCalendar Getters (other than Calendar API getters)
+    // FundamentalCalendar Methods, aside from the Calendar API
 
-    public String era() {
-        return era;
-    }
-
-    public String priorEra() {
-        return priorEra;
-    }
-
+    /**
+     * Gets the function used to compute the length of the year in days for
+     * any given year.  Clients should prefer the {@code daysInYear(int)} method,
+     * as the {@code yearLength} function assumes there is a year 0 and so
+     * mishandles priorEra years.
+     * @return The function
+     */
     public YearDelta yearLength() {
         return yearLength;
     }
 
     //-------------------------------------------------------------------------
-    // Calendar API
+    // Basic Features, common to all implementations
 
-    public Month month(int monthOfYear) {
-        throw new UnsupportedOperationException(
-            "Calendar lacks a monthly cycle.");
+    @Override
+    public int daysInYear(int year) {
+        if (year > 0) {
+            return yearLength.apply(year);
+        } else if (year < 0) {
+            return yearLength.apply(year + 1);
+        } else {
+            throw new CalendarException("Year 0 is undefined.");
+        }
+    }
+
+
+    // TODO: Replace with an Era object
+    @Override
+    public String era() {
+        return era;
+    }
+
+    // TODO: Replace with an Era object
+    @Override
+    public String priorEra() {
+        return priorEra;
     }
 
     /**
@@ -74,7 +93,7 @@ public class FundamentalCalendar implements Calendar {
      */
     @Override
     public String formatDate(int day) {
-        return yearDayOfYear2string(day2yearDayOfYear(day));
+        return yearDay2string(day2yearDay(day));
     }
 
     /**
@@ -85,22 +104,15 @@ public class FundamentalCalendar implements Calendar {
      */
     @Override
     public int parseDate(String dateString) {
-        return yearDayOfYear2day(string2yearDayOfYear(dateString));
+        return yearDay2day(string2yearDay(dateString));
     }
+
+    //-------------------------------------------------------------------------
+    // Weeks API
 
     @Override
     public boolean hasWeeks() {
         return week != null;
-    }
-
-    @Override
-    public Weekday day2weekday(int day) {
-        if (week != null) {
-            return week.day2weekday(day);
-        } else {
-            throw new UnsupportedOperationException(
-                "Calendar lacks a weekly cycle.");
-        }
     }
 
     @Override
@@ -112,26 +124,12 @@ public class FundamentalCalendar implements Calendar {
     // FundamentalCalendar conversions
 
     /**
-     * Returns the number of days in the given year.
-     * @param year The year
-     * @return The number of days
-     */
-    public int daysInYear(int year) {
-        if (year > 0) {
-            return yearLength.apply(year);
-        } else if (year < 0) {
-            return yearLength.apply(year + 1);
-        } else {
-             throw new IllegalArgumentException("year is 0");
-        }
-    }
-
-    /**
      * Converts an arbitrary day since the epoch to a date.
+     * TODO: Define for all calendars
      * @param day The day
      * @return The date
      */
-    public YearDay day2yearDayOfYear(int day) {
+    public YearDay day2yearDay(int day) {
         if (day >= 0) {
             int year = 1;
             var daysInYear = daysInYear(year);
@@ -162,11 +160,12 @@ public class FundamentalCalendar implements Calendar {
 
     /**
      * Converts an arbitrary date to the day since the epoch.
+     * TODO: Define for all calendars
      * @param date The date
      * @return The day
      * @throws CalendarException if the date is invalid.
      */
-    public int yearDayOfYear2day(YearDay date) {
+    public int yearDay2day(YearDay date) {
         // FIRST, validate the dayOfYear.
         validate(date);
 
@@ -200,7 +199,7 @@ public class FundamentalCalendar implements Calendar {
      * @param date The date
      * @return The formatted string
      */
-    public String yearDayOfYear2string(YearDay date) {
+    public String yearDay2string(YearDay date) {
         validate(date);
 
         var sym = (date.year() >= 0) ? era : priorEra;
@@ -217,7 +216,7 @@ public class FundamentalCalendar implements Calendar {
      * @return The date
      * @throws CalendarException on parse error
      */
-    public YearDay string2yearDayOfYear(String dateString) {
+    public YearDay string2yearDay(String dateString) {
         dateString = dateString.trim().toUpperCase();
 
         // FIRST, get the symbol
