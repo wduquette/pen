@@ -17,8 +17,8 @@ Goal: a way to represent fantasy calendars in Java code, providing easy conversi
 | Basic | -- | String priorEra() | Need hasPriorEra? |
 | Basic | -- | String formatDate(day) | Need DateFormatter |
 | Basic | -- | int parseDate(dateString) | Need DateFormatter |
-| Basic | FC | YearDay day2yearDayOfYear(day) | Should be day2yearDay |
-| Basic | FC | int yearDayOfYear2day(YearDay) | Should yearDay2day |
+| Basic | FC | YearDay day2yearDay(day) |  |
+| Basic | FC | int yearDay2day(YearDay) |  |
 | Basic | FC | void validate(YearDay) |  |
 | Feature | -- | boolean hasMonths() |  |
 | Feature | -- | boolean hasWeeks() |  |
@@ -29,8 +29,8 @@ Goal: a way to represent fantasy calendars in Java code, providing easy conversi
 | Months | -- | int daysInMonth(y, mr) |  |
 | Months | -- | int monthsInYear() |  |
 | Months | -- | Month month(monthOfYear) |  |
-| Months | SC | List<Month> months() |  |
-| Months | SC | void validate(Date) |  |
+| Months | -- | List<Month> months() |  |
+| Months | -- | void validate(Date) |  |
 | Months | SC | Date yearDay2date(YearDay) |  |
 | Months | ++ | YearDay date2yearDay(Date) |  |
 | Weeks | -- | Week week() |  |

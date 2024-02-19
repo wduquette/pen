@@ -1,5 +1,7 @@
 package pen.calendars;
 
+import java.util.List;
+
 /**
  * A calendar for general use.
  */
@@ -22,6 +24,8 @@ public interface Calendar {
     // TODO: Support a DateFormatter class
     String formatDate(int day);
     int parseDate(String dateString);
+
+    // date2yearDay, yearDate2date
 
     //-------------------------------------------------------------------------
     // Feature Queries: What features does this calendar support?
@@ -47,18 +51,13 @@ public interface Calendar {
     //-------------------------------------------------------------------------
     // Month API, available if hasMonths().
 
-    // TODO Add months()
-    // TODO Include validate(Date)
-    // date2yearDay, yearDate2date
-
     /**
-     * Returns a date given the components.  Dates are validated on creation.
-     * TODO: Decide whether it should throw CalendarException for invalid date?
+     * Returns a date given the components, which are presumed to be valid for
+     * this calendar.
      * @param year The year number
      * @param monthOfYear The monthOfYear, 1 to monthsInYear()
      * @param dayOfMonth The dayOfMonth, 1 to daysInMonth(year, monthOfYear)
      * @return The date
-     * @throws CalendarException if the date is invalid.
      * @throws CalendarException if !hasMonths()
      */
     default Date date(int year, int monthOfYear, int dayOfMonth) {
@@ -115,6 +114,25 @@ public interface Calendar {
      * @throws CalendarException if !hasMonths()
      */
     default Month month(int monthOfYear) {
+        throw noMonthlyCycle();
+    }
+
+    /**
+     * Returns the list of Month objects.
+     * @return The list
+     * @throws CalendarException if !hasMonths()
+     */
+    default List<Month> months() {
+        throw noMonthlyCycle();
+    }
+
+    /**
+     * Throws CalendarException if the date is invalid for this calendar.
+     * @param date The date
+     * @throws CalendarException if the date is not valid.
+     * @throws CalendarException if !hasMonths().
+     */
+    default void validate(Date date) {
         throw noMonthlyCycle();
     }
 

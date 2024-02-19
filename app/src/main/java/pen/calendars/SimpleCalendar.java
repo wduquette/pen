@@ -51,27 +51,6 @@ public class SimpleCalendar implements Calendar {
         return epochDay;
     }
 
-    public List<Month> months() {
-        return months.stream().map(MonthRecord::month).toList();
-    }
-
-    public void validate(Date date) {
-        if (date.year() == 0) {
-            throw new CalendarException("Year is 0!");
-        }
-
-        if (date.monthOfYear() < 1 || date.monthOfYear() > months.size()) {
-            throw new CalendarException(
-                    "Month is out of range (1,...," + months.size() + ")");
-        }
-
-        var daysInMonth = daysInMonth(date.year(), date.monthOfYear());
-        if (date.dayOfMonth() < 1 || date.dayOfMonth() > daysInMonth) {
-            throw new CalendarException(
-                    "Day is out of range (1,...," + daysInMonth + ")");
-        }
-    }
-
     // Given a year and a dayOfYear 1 to N, get the date
     private Date yearDay2date(int year, int dayOfYear) {
         var monthOfYear = 0;
@@ -185,7 +164,6 @@ public class SimpleCalendar implements Calendar {
     @Override
     public Date date(int year, int month, int day) {
         var date = new Date(this, year, month, day);
-        validate(date);
         return date;
     }
 
@@ -273,6 +251,34 @@ public class SimpleCalendar implements Calendar {
     public Month month(int monthOfYear) {
         return months.get(monthOfYear - 1).month;
     }
+
+    @Override
+    public List<Month> months() {
+        return months.stream().map(MonthRecord::month).toList();
+    }
+
+    @Override
+    public void validate(Date date) {
+        if (date.calendar() != this) {
+            throw new CalendarException("Calendar mismatch");
+        }
+
+        if (date.year() == 0) {
+            throw new CalendarException("Year is 0!");
+        }
+
+        if (date.monthOfYear() < 1 || date.monthOfYear() > months.size()) {
+            throw new CalendarException(
+                    "Month is out of range (1,...," + months.size() + ")");
+        }
+
+        var daysInMonth = daysInMonth(date.year(), date.monthOfYear());
+        if (date.dayOfMonth() < 1 || date.dayOfMonth() > daysInMonth) {
+            throw new CalendarException(
+                    "Day is out of range (1,...," + daysInMonth + ")");
+        }
+    }
+
 
     //-------------------------------------------------------------------------
     // Calendar API: Week API, available if hasWeeks()
