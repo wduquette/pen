@@ -134,6 +134,8 @@ public class SimpleCalendar implements Calendar {
         }
     }
 
+
+
     // TODO: Replace with Era object
     public String era() {
         return era;
@@ -259,8 +261,10 @@ public class SimpleCalendar implements Calendar {
 
     @Override
     public void validate(Date date) {
-        if (date.calendar() != this) {
-            throw new CalendarException("Calendar mismatch");
+        if (!date.calendar().equals(this)) {
+            throw new CalendarException(
+                    "Calendar mismatch, expected \"" + this + "\", got \"" +
+                            date.calendar() + "\"");
         }
 
         if (date.year() == 0) {
@@ -278,7 +282,6 @@ public class SimpleCalendar implements Calendar {
                     "Day is out of range (1,...," + daysInMonth + ")");
         }
     }
-
 
     //-------------------------------------------------------------------------
     // Calendar API: Week API, available if hasWeeks()
