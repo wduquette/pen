@@ -43,6 +43,15 @@ public class Checker<Value> {
         }
     }
 
+    public Checker<Value> ne(Value unexpected) {
+        if (!Objects.equals(value, unexpected)) {
+            return this;
+        } else {
+            throw new AssertionError("ne: did not expect \"" + unexpected +
+                "\", got: \"" + value + "\"");
+        }
+    }
+
     public Checker<Value> hasString(String expected) {
         if (value != null && value.toString().equals(expected)) {
             return this;

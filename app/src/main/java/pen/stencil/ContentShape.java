@@ -5,7 +5,24 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 
 /**
- * A ContentShape is a shape that sizes itself to fit its content.
+ * A ContentShape is a shape that sizes itself to fit its content.  Each
+ * shape must define {@code getRealSize()} which computes its size without
+ * taking the {@code minSize} property into account.  Then,
+ *
+ * <ul>
+ * <li>{@code getSize()} computes its full size: the real size as modified by
+ *     its {@code minSize}.</li>
+ * <li>{@code getRealBounds()} computes its bounds on the canvas given its
+ *     {@code at}, {@code tack}, and real size.</li>
+ * <li>{@code getBounds()} computes its bounds on the canvas given its
+ *     {@code at}, {@code tack}, and full size.</li>
+ * </ul>
+ *
+ * <p>
+ * The shape may chose to expand to fill its full bounds, or it may choose to
+ * fill its real bounds, in which case it will be positioned within the full
+ * bounds according to its {@code tack}.
+ * </p>
  * @param <Self> the concrete shape class
  */
 @SuppressWarnings({"unchecked", "unused"})
@@ -39,16 +56,38 @@ public abstract class ContentShape<Self extends ContentShape<Self>>
     // ContentShape API
 
     /**
-     * Gets the actual size of the shape given its minimum size and content.
+     * Gets the actual size of the shape, disregarding the minSize property.
      * @return the size
      */
-    public abstract Dimension2D getSize();
+    public abstract Dimension2D getRealSize();
 
     /**
-     * Gets the bounds of the shape given its origin, tack, and size.
+     * Gets the bounds of the shape given its origin, tack, and real size.
      * @return The bounds
      */
-    protected Bounds getBounds() {
+    public final Bounds getRealBounds() {
+        var size = getRealSize();
+        return Pen.tack2bounds(tack, x, y, size.getWidth(), size.getHeight());
+    }
+
+    /**
+     * Gets the full size of the shape, given the minSize property.
+     * @return the size
+     */
+    public final Dimension2D getSize() {
+        var real = getRealSize();
+
+        return new Dimension2D(
+            Math.max(minWidth, real.getWidth()),
+            Math.max(minHeight, real.getHeight())
+        );
+    }
+
+    /**
+     * Gets the bounds of the shape given its origin, tack, and full size.
+     * @return The bounds
+     */
+    public final Bounds getBounds() {
         var size = getSize();
         return Pen.tack2bounds(tack, x, y, size.getWidth(), size.getHeight());
     }

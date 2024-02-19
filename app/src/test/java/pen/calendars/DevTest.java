@@ -10,7 +10,12 @@ import java.util.List;
 public class DevTest {
     // Fundamental Calendar
     private static final FundamentalCalendar FC =
-        new FundamentalCalendar("AE", "BE", dummy -> 366, 3);
+        new FundamentalCalendar.Builder()
+            .era("AE")
+            .priorEra("BE")
+            .yearLength(366)
+            .dayOfYearDigits(3)
+            .build();
 
     // Era for Armorica tales.
     // 979 ME = 1 AF.  Years have 366 days.

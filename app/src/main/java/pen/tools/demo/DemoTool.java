@@ -13,7 +13,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import pen.calendars.*;
+import pen.diagram.calendar.MonthSpread;
+import pen.diagram.calendar.YearSpread;
 import pen.fx.FX;
 import pen.stencil.*;
 import pen.tools.FXTool;
@@ -21,6 +25,7 @@ import pen.tools.ToolInfo;
 import pen.tools.draw.DrawTool;
 
 import java.util.Deque;
+import java.util.List;
 
 import static pen.stencil.Stencil.*;
 
@@ -146,23 +151,117 @@ Java API.
 
     private final ObservableList<DemoDrawing> drawings =
         FXCollections.observableArrayList(
-            drawing("Test Drawing", this::testDrawing),
-            drawing("Shapes",       this::testShapes),
-            drawing("Rotation",     this::testRotation),
-            drawing("Symbols",      this::testSymbols),
-            drawing("Line Symbols", this::testLineSymbols),
-            drawing("Boxed Label",  this::testBoxedLabels)
+            drawing("Test Drawing",           this::testDrawing),
+            drawing("Month Spread (Stencil)", this::testMonthSpreadStencil),
+            drawing("Month Spread",           this::testMonthSpread),
+            drawing("Year Spread",            this::testYearSpread),
+            drawing("Shapes",                 this::testShapes),
+            drawing("Rotation",               this::testRotation),
+            drawing("Symbols",                this::testSymbols),
+            drawing("Line Symbols",           this::testLineSymbols),
+            drawing("Boxed Label",            this::testBoxedLabels)
         );
 
     private void testDrawing(Stencil sten) {
         sten.clear(Color.WHITE);
-        sten.draw(rectangle().at(10,10).size(100,60).background(Color.LIGHTYELLOW));
-        sten.draw(line().to(10,10).to(110,70));
-        sten.draw(line().to(10,70).to(110,10));
-        sten.draw(text().at(60,80).tack(Tack.NORTH).text("Stencil Test"));
+        sten.draw(boxedText()
+            .at(250,250)
+            .minSize(200,200)
+            .tack(Tack.SOUTHEAST)
+            .text("ABC")
+        );
+    }
 
-        sten.draw(rectangle().at(60,150).size(60,40).tack(Tack.SOUTH));
-        sten.draw(rectangle().at(60,150).size(12,8).tack(Tack.SOUTH));
+    private void testMonthSpreadStencil(Stencil sten) {
+        sten.clear(Color.WHITE);
+        var date = ME.date(1011, 1, 1);
+        var funDay = ME.date2day(ME.date(1011, 1, 1));
+        var daysInMonth = ME.daysInMonth(1011, 1);
+        var daysInWeek = ME.daysInWeek();
+        var titleFont = new PenFont.Builder("title")
+            .family("sans-serif").weight(FontWeight.BOLD).size(14).build();
+        var dayFont = new PenFont.Builder("day")
+            .family("sans-serif").weight(FontWeight.BOLD).size(12).build();
+        var dateFont = PenFont.SANS12;
+        var titleHeight = titleFont.getHeight();
+        var dayHeight = dayFont.getHeight();
+        var dateHeight = dateFont.getHeight();
+        var titlePad = 10;
+        var pad = 5;
+
+        var title = date.month().fullForm();
+
+        // NEXT, compute the width of a month.
+        var dateWidth = Pen.getTextWidth(dateFont, "99");
+        var monthWidth = dateWidth + (daysInWeek - 1)*(dateWidth + pad);
+
+        // NEXT, draw the title
+        stencil.savePen().translate(10 + monthWidth/2.0, 10);
+        stencil.draw(text().at(0, 0).text(title).font(titleFont).tack(Tack.NORTH));
+        stencil.restorePen();
+
+        // NEXT, draw the day abbreviations
+        stencil.savePen().translate(10 + dateWidth, 10 + titleHeight + titlePad);
+        for (var i = 0; i < 7; i++) {
+            var x = i*(dateWidth + pad);
+            stencil.draw(text()
+                .at(x, 0)
+                .text(ME.week().weekdays().get(i).narrowForm())
+                .tack(Tack.NORTHEAST)
+                .font(dayFont)
+            );
+        }
+        stencil.restorePen();
+
+        // NEXT, get the start day
+        var startDayOfWeek = ME.day2dayOfWeek(funDay);
+        int startDate = 1 - (startDayOfWeek - 1);
+
+        var numWeeks = 1 + (daysInMonth/daysInWeek);
+
+        stencil.savePen()
+            .translate(10 + dateWidth, 10 + titleHeight + titlePad + dateHeight + pad);
+        for (int w = 0; w < numWeeks; w++) {
+            var y = w*(dayHeight + pad);
+            for (int i = 0; i < daysInWeek; i++) {
+                var x = i*(dateWidth + pad);
+
+                var dayOfMonth = startDate + w*daysInWeek + i;
+                if (dayOfMonth < 1 || dayOfMonth > daysInMonth) {
+                    continue;
+                }
+                stencil.draw(text()
+                    .at(x, y)
+                    .text(Integer.toString(dayOfMonth))
+                    .tack(Tack.NORTHEAST)
+                    .font(dateFont)
+                );
+            }
+        }
+    }
+
+    private void testMonthSpread(Stencil sten) {
+        sten.clear(Color.WHITE);
+        var spread = new MonthSpread()
+            .at(40, 10)
+            .calendar(ME)
+            .title(ME.month(6).fullForm())
+            .year(1011)
+            .monthOfYear(6)
+            ;
+        sten.draw(spread);
+    }
+
+
+    private void testYearSpread(Stencil sten) {
+        sten.clear(Color.WHITE);
+        var spread = new YearSpread()
+            .at(10, 10)
+            .calendar(ME)
+            .title("1011 " + ME.era())
+            .year(1011)
+            ;
+        sten.draw(spread);
     }
 
     private void testShapes(Stencil sten) {
@@ -262,6 +361,28 @@ Java API.
             .textColor(Color.BLUE)
         );
     }
+
+    //------------------------------------------------------------------------
+    // Calendar values
+    private static final Week ME_WEEK = new Week(List.of(StandardWeekDays.values()), 1);
+    private static final SimpleCalendar ME = new SimpleCalendar.Builder()
+        .era("ME")
+        .priorEra("BME")
+        .epochDay(-978 * 366)
+        .month(StandardMonths.JANUARY, 31)
+        .month(StandardMonths.FEBRUARY, 28)
+        .month(StandardMonths.MARCH, 31)
+        .month(StandardMonths.APRIL, 30)
+        .month(StandardMonths.MAY, 31)
+        .month(StandardMonths.JUNE, 30)
+        .month(StandardMonths.JULY, 31)
+        .month(StandardMonths.AUGUST, 31)
+        .month(StandardMonths.SEPTEMBER, 30)
+        .month(StandardMonths.OCTOBER, 31)
+        .month(StandardMonths.NOVEMBER, 31)
+        .month(StandardMonths.DECEMBER, 31)
+        .week(ME_WEEK)
+        .build();
 
     //------------------------------------------------------------------------
     // Main

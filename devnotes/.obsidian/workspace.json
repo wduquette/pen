@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "f1de0b2e138d615c",
+        "id": "607d0d338de1ed95",
         "type": "tabs",
         "children": [
           {
-            "id": "8ccd4ea8e32162ab",
+            "id": "368eaf1cf70fa4be",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Home.md",
+                "file": "Calendars.md",
                 "mode": "source",
                 "source": false
               }
@@ -69,7 +69,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "9ad1db49e5b0cead",
@@ -85,7 +86,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Home.md",
+                "file": "Calendars.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +103,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Home.md",
+                "file": "Calendars.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +126,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Home.md"
+                "file": "Calendars.md"
               }
             }
           }
@@ -143,19 +144,29 @@
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false,
-      "obsidian-excalidraw-plugin:Create new drawing": false,
-      "homepage:Open homepage": false
+      "command-palette:Open command palette": false
     }
   },
-  "active": "8ccd4ea8e32162ab",
+  "active": "368eaf1cf70fa4be",
   "lastOpenFiles": [
-    "Regnal Calendars.md",
-    "Calendars.md",
-    "To Do List.md",
-    "Home.md",
-    "2024-02-07.md",
     "Ideas.md",
+    "Home.md",
+    "Calendar 18.java",
+    "Calendar 17.java",
+    "Calendar 16.java",
+    "Calendar 15.java",
+    "Calendar 14.java",
+    "Calendar 13.java",
+    "Calendar 12.java",
+    "Calendar 11.java",
+    "Calendar 10.java",
+    "Calendar 9.java",
+    "To Do List.md",
+    "2024-02-18.md",
+    "Calendars.md",
+    "Date Formatting.md",
+    "Regnal Calendars.md",
+    "2024-02-07.md",
     "Time Line Diagrams.md",
     "2024-02-03.md",
     "2024-01-28.md",
@@ -173,10 +184,6 @@
     "Stencil Class Hierarchy.md",
     "Design Notes.md",
     "Creating Custom Shapes in Tcl.md",
-    "Managing Pen State in Stencil.md",
-    "2024-01-11.md",
-    "Testing Canvas.canvas",
-    "Ponder Arrowheads.md",
-    "Excalidraw"
+    "Testing Canvas.canvas"
   ]
 }

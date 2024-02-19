@@ -6,7 +6,7 @@ package pen.calendars;
  * @param year The year number, omitting 0.
  * @param dayOfYear The day of year, counting from 1.
  */
-public record YearDayOfYear(
+public record YearDay(
     Calendar calendar,
     int year,
     int dayOfYear
