@@ -15,7 +15,11 @@ public record Week(List<Weekday> weekdays, int epochOffset) {
      */
     public Weekday day2weekday(int day) {
         int ndx = (day + epochOffset) % weekdays.size();
-        return weekdays.get(ndx);
+        if (ndx >= 0) {
+            return weekdays.get(ndx);
+        } else {
+            return weekdays.get(ndx + weekdays.size());
+        }
     }
 
     /**

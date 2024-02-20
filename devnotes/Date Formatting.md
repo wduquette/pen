@@ -4,6 +4,8 @@ Date formatting is similar to Java's `DataTimeFormatter`.
 
 ## Relevant Conversions
 
+**Note:** The actually implementation differs from this.  See the `DateFormatter` Javadoc for the final details.
+
 | Symbol | Meaning | Type | Example |
 | ---- | ---- | ---- | ---- |
 | `E` | era | text | `AD` |
@@ -12,7 +14,7 @@ Date formatting is similar to Java's `DataTimeFormatter`.
 | `m` | month-of-year | text | `12` |
 | `M` | month-of-year | text | `JAN` |
 | `d` | day-of-month | number | `1` |
-| `w` | day-of-week | text | `Monday` |
+| `W` | day-of-week | text | `Monday` |
 | `'text'` | Escape for arbitrary text | text | `'foo'` |
 In `DateTimeFormatter`, the number of characters in a field has significance, depending on the data item and format.  `DateFormatter` will follow the same patterns, as reasonable.
 
