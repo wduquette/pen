@@ -6,19 +6,27 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A SimpleCalendar is a calendar with some number of months, tied to
- * an epoch day on a Fundamental Calendar.  New Year's Day is the first
- * day of the first month.  A SimpleCalendar can be modified by a
- * RegnalCalendar.
+ * A {@link Calendar} with a cycle of {@link Month} values and an optional
+ * {@link Week}.  Day-of-year 1 of any year is equivalent to
+ * (year 1, month-of-year 1, day-of-month 1).
+ *
+ * <p>It is intended  for support the following use cases.</p>
+ *
+ * <ul>
+ * <li>Being a fundamental calendar for worlds that have multiple reckonings
+ * (e.g., regnal calendars) based on the same monthly and weekly cycles.</li>
+ * <li>Mimicking the Gregorian Calendar at needed.</li>
+ * </ul>
  */
-public class SimpleCalendar implements Calendar {
+@SuppressWarnings("unused")
+public class BasicCalendar implements Calendar {
     //-------------------------------------------------------------------------
     // Instance Variables
 
-    // The fundamental calendar day corresponding to 1/1/1 in this
-    // calendar.
-    private final int epochDay;
-
+    // The epoch day corresponding to 1/1/1 in this calendar.  This can be set
+    // so that this calendar uses the same epoch days as other calendars in a
+    // setting.
+    private final int epochOffset;
 
     // The era symbol for positive years.
     private final String era;
@@ -36,8 +44,8 @@ public class SimpleCalendar implements Calendar {
     // Constructor
 
     // Creates the calendar given the builder parameters.
-    private SimpleCalendar(Builder builder) {
-        this.epochDay  = builder.epochDay;
+    private BasicCalendar(Builder builder) {
+        this.epochOffset = builder.epochOffset;
         this.era       = Objects.requireNonNull(builder.era);
         this.priorEra  = Objects.requireNonNull(builder.priorEra);
         this.months    = Collections.unmodifiableList(builder.months);
@@ -45,73 +53,16 @@ public class SimpleCalendar implements Calendar {
     }
 
     //-------------------------------------------------------------------------
-    // SimpleCalendar Getters (other than Calendar API getters)
+    // Methods specific to BasicCalendar
 
-    public int epochDay() {
-        return epochDay;
-    }
-
-    public String era() {
-        return era;
-    }
-
-    public String priorEra() {
-        return priorEra;
-    }
-
-    public List<Month> months() {
-        return months.stream().map(MonthRecord::month).toList();
+    public int epochOffset() {
+        return epochOffset;
     }
 
     //-------------------------------------------------------------------------
-    // Calendar API
+    // Calendar API: Features common to all implementations
 
     @Override
-    public String formatDate(int day) {
-        return date2string(day2date(day));
-    }
-
-    @Override
-    public int parseDate(String dateString) {
-        return date2day(string2date(dateString));
-    }
-
-    @Override
-    public boolean hasWeeks() {
-        return week != null;
-    }
-
-    @Override
-    public Weekday day2weekday(int day) {
-        if (week != null) {
-            return week.day2weekday(day);
-        } else {
-            throw new UnsupportedOperationException(
-                "Calendar lacks a weekly cycle.");
-        }
-    }
-
-    @Override
-    public Week week() {
-        return week;
-    }
-
-    //-------------------------------------------------------------------------
-    // SimpleCalendar Methods
-
-    public boolean hasMonths() {
-        return true;
-    }
-
-    public Month month(int monthOfYear) {
-        return months.get(monthOfYear - 1).month;
-    }
-
-    /**
-     * Gets the number of days in the given calendar year.
-     * @param year The year, according to this calendar
-     * @return The number of days in that year.
-     */
     public int daysInYear(int year) {
         if (year > 0) {
             return months.stream()
@@ -126,50 +77,68 @@ public class SimpleCalendar implements Calendar {
         }
     }
 
-    public int monthsInYear() {
-        return months.size();
+    @Override
+    public String era() {
+        return era;
     }
 
-    public int daysInMonth(int year, int monthOfYear) {
-        if (year > 0) {
-            return months.get(monthOfYear - 1).daysInMonth().apply(year);
-        } else if (year < 0) {
-            return months.get(monthOfYear - 1).daysInMonth().apply(year + 1);
-        } else {
-            throw new CalendarException("Year cannot be 0.");
-        }
+    @Override
+    public String priorEra() {
+        return priorEra;
     }
 
+    @Override
+    public String formatDate(int day) {
+        return date2string(day2date(day));
+    }
+
+    @Override
+    public int parseDate(String dateString) {
+        return date2day(string2date(dateString));
+    }
+
+    //-------------------------------------------------------------------------
+    // Calendar API: Months
+
+    @Override
+    public boolean hasMonths() {
+        return true;
+    }
+
+    @Override
     public Date date(int year, int month, int day) {
-        var date = new Date(this, year, month, day);
-        validate(date);
-        return date;
+        return new Date(this, year, month, day);
     }
 
-    public void validate(Date date) {
-        if (date.year() == 0) {
-            throw new CalendarException("Year is 0!");
+    @Override
+    public int date2day(Date date) {
+        var year = date.year();
+
+        // FIRST, days in this month
+        var day = date.dayOfMonth() - 1;
+
+        // NEXT, days in earlier months
+        for (int m = 1; m <= date.monthOfYear() - 1; m++) {
+            day += daysInMonth(year, m);
         }
 
-        if (date.monthOfYear() < 1 || date.monthOfYear() > months.size()) {
-            throw new CalendarException(
-                "Month is out of range (1,...," + months.size() + ")");
+        // NEXT, days in years since era start.
+        if (year > 0) {
+            for (int y = 1; y < year; y++) {
+                day += daysInYear(y);
+            }
+        } else {
+            for (int y = -1; y >= year; y--) {
+                day -= daysInYear(y);
+            }
         }
 
-        var daysInMonth = daysInMonth(date.year(), date.monthOfYear());
-        if (date.dayOfMonth() < 1 || date.dayOfMonth() > daysInMonth) {
-            throw new CalendarException(
-                "Day is out of range (1,...," + daysInMonth + ")");
-        }
+        return day + epochOffset;
     }
 
-    /**
-     * Converts an arbitrary day since the fundamental epoch to a date.
-     * @param fundamentalDay The fundamental day
-     * @return The date
-     */
-    public Date day2date(int fundamentalDay) {
-        var day = fundamentalDay - epochDay;
+    @Override
+    public Date day2date(int epochDay) {
+        var day = epochDay - epochOffset;
         int year;
         int dayOfYear;
 
@@ -205,6 +174,57 @@ public class SimpleCalendar implements Calendar {
         }
     }
 
+    @Override
+    public int daysInMonth(int year, int monthOfYear) {
+        if (year > 0) {
+            return months.get(monthOfYear - 1).daysInMonth().apply(year);
+        } else if (year < 0) {
+            return months.get(monthOfYear - 1).daysInMonth().apply(year + 1);
+        } else {
+            throw new CalendarException("Year cannot be 0.");
+        }
+    }
+
+    @Override
+    public List<Month> months() {
+        return months.stream().map(MonthRecord::month).toList();
+    }
+
+    @Override
+    public void validate(Date date) {
+        if (date.year() == 0) {
+            throw new CalendarException("Year is 0!");
+        }
+
+        if (date.monthOfYear() < 1 || date.monthOfYear() > months.size()) {
+            throw new CalendarException(
+                "Month is out of range (1,...," + months.size() + ")");
+        }
+
+        var daysInMonth = daysInMonth(date.year(), date.monthOfYear());
+        if (date.dayOfMonth() < 1 || date.dayOfMonth() > daysInMonth) {
+            throw new CalendarException(
+                "Day is out of range (1,...," + daysInMonth + ")");
+        }
+    }
+
+
+    //-------------------------------------------------------------------------
+    // Calendar API: Weeks
+
+    @Override
+    public boolean hasWeeks() {
+        return week != null;
+    }
+
+    @Override
+    public Week week() {
+        return week;
+    }
+
+    //-------------------------------------------------------------------------
+    // Helper Methods
+
     // Given a year and a dayOfYear 1 to N, get the date
     private Date yearDay2date(int year, int dayOfYear) {
         var monthOfYear = 0;
@@ -223,31 +243,6 @@ public class SimpleCalendar implements Calendar {
         }
 
         return new Date(this, year, monthOfYear, dayOfMonth);
-    }
-
-    public int date2day(Date date) {
-        var year = date.year();
-
-        // FIRST, days in this month
-        var day = date.dayOfMonth() - 1;
-
-        // NEXT, days in earlier months
-        for (int m = 1; m <= date.monthOfYear() - 1; m++) {
-            day += daysInMonth(year, m);
-        }
-
-        // NEXT, days in years since era start.
-        if (year > 0) {
-            for (int y = 1; y < year; y++) {
-                day += daysInYear(y);
-            }
-        } else {
-            for (int y = -1; y >= year; y--) {
-                day -= daysInYear(y);
-            }
-        }
-
-        return day + epochDay;
     }
 
     /**
@@ -303,9 +298,9 @@ public class SimpleCalendar implements Calendar {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SimpleCalendar that = (SimpleCalendar) o;
+        BasicCalendar that = (BasicCalendar) o;
 
-        if (epochDay != that.epochDay) return false;
+        if (epochOffset != that.epochOffset) return false;
         if (!era.equals(that.era)) return false;
         if (!priorEra.equals(that.priorEra)) return false;
         if (!months.equals(that.months)) return false;
@@ -314,7 +309,7 @@ public class SimpleCalendar implements Calendar {
 
     @Override
     public int hashCode() {
-        int result = epochDay;
+        int result = epochOffset;
         result = 31 * result + era.hashCode();
         result = 31 * result + priorEra.hashCode();
         result = 31 * result + months.hashCode();
@@ -334,7 +329,7 @@ public class SimpleCalendar implements Calendar {
     }
 
     public String toString() {
-        return "SimpleCalendar[" + era + "," + priorEra + "," + months.size()
+        return "BasicCalendar[" + era + "," + priorEra + "," + months.size()
             + "]";
     }
 
@@ -343,7 +338,7 @@ public class SimpleCalendar implements Calendar {
 
     /**
      * Defines a month in terms of an external object (an enum or a string)
-     * and the length of the month given the fundamental year.
+     * and the length of the month given the calendar year.
      * @param month The month
      * @param daysInMonth The month length function
      */
@@ -361,7 +356,7 @@ public class SimpleCalendar implements Calendar {
         //---------------------------------------------------------------------
         // Instance Data
 
-        private int epochDay = 0;
+        private int epochOffset = 0;
         private String era = "AE";
         private String priorEra = "BE";
         private final List<MonthRecord> months = new ArrayList<>();
@@ -379,17 +374,17 @@ public class SimpleCalendar implements Calendar {
          * Builds the calendar given the inputs.
          * @return The calendar
          */
-        public SimpleCalendar build() {
-            return new SimpleCalendar(this);
+        public BasicCalendar build() {
+            return new BasicCalendar(this);
         }
 
         /**
-         * Sets the fundamental day corresponding to year 1, month 1, day 1.
+         * Sets the epoch day corresponding to year 1, month 1, day 1.
          * @param day The epoch day
          * @return The builder
          */
-        public Builder epochDay(int day) {
-            this.epochDay = day;
+        public Builder epochOffset(int day) {
+            this.epochOffset = day;
             return this;
         }
 

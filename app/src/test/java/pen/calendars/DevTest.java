@@ -9,8 +9,8 @@ import java.util.List;
  */
 public class DevTest {
     // Fundamental Calendar
-    private static final FundamentalCalendar FC =
-        new FundamentalCalendar.Builder()
+    private static final TrivialCalendar FC =
+        new TrivialCalendar.Builder()
             .era("AE")
             .priorEra("BE")
             .yearLength(366)
@@ -20,10 +20,10 @@ public class DevTest {
     // Era for Armorica tales.
     // 979 ME = 1 AF.  Years have 366 days.
     // Let's set epochDay to -978*366
-    private static final SimpleCalendar ME = new SimpleCalendar.Builder()
+    private static final BasicCalendar ME = new BasicCalendar.Builder()
         .era("ME")
         .priorEra("BME")
-        .epochDay(-978*366)
+        .epochOffset(-978*366)
         .month(StandardMonths.JANUARY, 31)
         .month(StandardMonths.FEBRUARY, 28)
         .month(StandardMonths.MARCH, 31)

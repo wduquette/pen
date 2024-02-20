@@ -5,14 +5,14 @@ import org.junit.Test;
 import static pen.checker.Checker.check;
 import static pen.checker.Checker.checkThrows;
 
-public class FundamentalCalendarTest {
+public class TrivialCalendarTest {
     private static final YearDelta TEN_DAYS = dummy -> 10;
     private static final YearDelta LEAP_DAYS = y -> (y % 4) == 0 ? 11 : 10;
     private static final Week WEEK = new Week(StandardWeekDays.weekdays(), 0);
 
     // A calendar with 10 day "years"
-    private static final FundamentalCalendar TEN =
-        new FundamentalCalendar.Builder()
+    private static final TrivialCalendar TEN =
+        new TrivialCalendar.Builder()
             .era("AT")
             .priorEra("BT")
             .yearLength(TEN_DAYS)
@@ -21,8 +21,8 @@ public class FundamentalCalendarTest {
             .build();
 
     // A calendar with 10 day "years" plus a leap year every fourth year
-    private static final FundamentalCalendar LEAP =
-        new FundamentalCalendar.Builder()
+    private static final TrivialCalendar LEAP =
+        new TrivialCalendar.Builder()
             .era("AL")
             .priorEra("BL")
             .yearLength(LEAP_DAYS)
@@ -95,7 +95,7 @@ public class FundamentalCalendarTest {
 
         // Exception
         checkThrows(() -> TEN.validate(leap(1,1)))
-            .containsString("expected \"FundamentalCalendar[AT,BT]\", got \"FundamentalCalendar[AL,BL]");
+            .containsString("expected \"TrivialCalendar[AT,BT]\", got \"TrivialCalendar[AL,BL]");
         checkThrows(() -> TEN.validate(ten(0, 0)))
             .containsString("year is 0 in date");
         checkThrows(() -> TEN.validate(ten(1, 0)))

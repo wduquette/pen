@@ -1,5 +1,9 @@
 - Any time
     - Review Javadoc
+    - [x] `FundamentalCalendard` becomes `TrivalCalendar`
+    - [ ] "Fundamental days" become "epoch days"
+    - [ ] `SimpleCalendar` becomes `BasicCalendar`
+    - [ ] `BasicCalendar::epochDay` becomes `epochOffset`
 - Next Steps
     - [x] Revise `SimpleCalendar` to include a week as `FundamentalCalendar` does.
     - [x] Add a demo for drawing a monthly calendar using Stencil.
@@ -7,8 +11,8 @@
     - [ ] Review and cleanup `MonthSpread`.
     - [ ] Add `hasPriorEra()` to `Calendar`, etc.
         - Prep for `EraCalendar`
-    - [ ] Provide a `FundamentalCalendar` tied to the modern calendar leap year and week.
-    - [ ] Provide a `SimpleCalendar` tied to the modern "AD/BC" calendar.
+    - [ ] Provide a `TrivialCalendar` tied to the modern calendar leap year and week.
+    - [ ] Provide a `BasicCalendar` tied to the modern "AD/BC" calendar.
     - [ ] Add the DateFormatter
 - Diagrams
     - [[Time Line Diagrams]]

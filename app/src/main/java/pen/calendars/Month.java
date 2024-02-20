@@ -1,7 +1,7 @@
 package pen.calendars;
 
 /**
- * A month in a calendar
+ * A month in a {@link Calendar}.
  */
 public interface Month extends DateText {
     String name();

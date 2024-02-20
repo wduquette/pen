@@ -1,7 +1,8 @@
 package pen.calendars;
 
 /**
- * A date in a particular calendar
+ * A date in a particular {@link Calendar}.  Use {@code Calendar::validate} to
+ * validate the date against a specific calendar.
  * @param calendar The calendar in question
  * @param year The year number, omitting 0
  * @param monthOfYear The month number, counting from 1

@@ -4,13 +4,32 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Defines a fundamental calendar.  The name is typically a short symbol,
- * e.g., "FC".  The {@code yearLength} is a function that determines the
- * length of a year in days given the year number.  The epoch is year 1; it
- * is preceded by year -1.  The days of the year are
+ * Defines a {@link Calendar} with no notion of months, just days and years
+ * since the epoch.  It may optionally have a {@link Week}.
+ *
+ * <h2>Uses</h2>
+ *
+ * <p>This calendar is defined for two use cases:</p>
+ *
+ * <ul>
+ * <li>Defining the epoch for a family of calendars.</li>
+ * <li>Defining time scales when precise dates are not needed.</li>
+ * </ul>
+ *
+ * <h2>Leap Years</h2>
+ *
+ * <p>The year may vary in length to support leap years and similar constructs.
+ * The length of the year in days is determined by the {@code yearLength}
+ * function, which returns a number of days given a year number.</p>
+ *
+ * <p>Years prior to the epoch are usually counted from -1; for mathematical
+ * convenience, the {@code yearLength} function assumes prior years count
+ * down from 0.  The {@code TrivialCalendar::daysInYear} function takes this
+ * into account and works with standard calendar years, where there is
+ * no year 0.</p>
  */
 @SuppressWarnings("unused")
-public class FundamentalCalendar implements Calendar {
+public class TrivialCalendar implements Calendar {
     //-------------------------------------------------------------------------
     // Instance Variables
 
@@ -35,7 +54,7 @@ public class FundamentalCalendar implements Calendar {
     // Constructor
 
     // Creates the calendar given the builder parameters.
-    private FundamentalCalendar(Builder builder) {
+    private TrivialCalendar(Builder builder) {
         this.era             = Objects.requireNonNull(builder.era);
         this.priorEra        = Objects.requireNonNull(builder.priorEra);
         this.yearLength      = Objects.requireNonNull(builder.yearLength);
@@ -45,7 +64,7 @@ public class FundamentalCalendar implements Calendar {
     }
 
     //-------------------------------------------------------------------------
-    // FundamentalCalendar Methods, aside from the Calendar API
+    // TrivialCalendar Methods, aside from the Calendar API
 
     /**
      * Gets the function used to compute the length of the year in days for
@@ -88,7 +107,7 @@ public class FundamentalCalendar implements Calendar {
     /**
      * Returns the string "{era}{year}-{dayOfYear} for positive years and
      * "{priorEra}{-year}/{dayOfYear}" for negative years.
-     * @param day The fundamental day
+     * @param day The epoch day
      * @return The formatted string
      */
     @Override
@@ -97,7 +116,7 @@ public class FundamentalCalendar implements Calendar {
     }
 
     /**
-     * Parses a date string into a fundamental day.
+     * Parses a date string into a epoch day.
      * @param dateString the date string
      * @return The day
      * @throws CalendarException on parse error
@@ -121,7 +140,7 @@ public class FundamentalCalendar implements Calendar {
     }
 
     //-------------------------------------------------------------------------
-    // FundamentalCalendar conversions
+    // TrivialCalendar conversions
 
     /**
      * Converts an arbitrary day since the epoch to a date.
@@ -286,7 +305,7 @@ public class FundamentalCalendar implements Calendar {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        FundamentalCalendar that = (FundamentalCalendar) o;
+        TrivialCalendar that = (TrivialCalendar) o;
 
         if (!era.equals(that.era)) return false;
         if (!priorEra.equals(that.priorEra)) return false;
@@ -329,28 +348,28 @@ public class FundamentalCalendar implements Calendar {
          * Builds the calendar given the inputs.
          * @return The calendar
          */
-        public FundamentalCalendar build() {
-            return new FundamentalCalendar(this);
+        public TrivialCalendar build() {
+            return new TrivialCalendar(this);
         }
 
         /**
          * Sets the era string for this calendar.  Defaults to "FE",
-         * "Fundamental Epoch".
+         * "Trivial Epoch".
          * @param era The era string.
          * @return the builder
          */
-        public FundamentalCalendar.Builder era(String era) {
+        public TrivialCalendar.Builder era(String era) {
             this.era = Objects.requireNonNull(era).toUpperCase();
             return this;
         }
 
         /**
          * Sets the prior era string for this calendar.  Defaults to "BFE",
-         * "Before Fundamental Epoch".
+         * "Before Trivial Epoch".
          * @param priorEra The era string.
          * @return the builder
          */
-        public FundamentalCalendar.Builder priorEra(String priorEra) {
+        public TrivialCalendar.Builder priorEra(String priorEra) {
             this.priorEra = Objects.requireNonNull(priorEra).toUpperCase();
             return this;
         }
@@ -360,7 +379,7 @@ public class FundamentalCalendar implements Calendar {
          * @param function The function
          * @return The builder
          */
-        public FundamentalCalendar.Builder yearLength(YearDelta function) {
+        public TrivialCalendar.Builder yearLength(YearDelta function) {
             this.yearLength = function;
             return this;
         }
@@ -370,7 +389,7 @@ public class FundamentalCalendar implements Calendar {
          * @param length The length
          * @return The builder
          */
-        public FundamentalCalendar.Builder yearLength(int length) {
+        public TrivialCalendar.Builder yearLength(int length) {
             this.yearLength = (dummy -> length);
             return this;
         }
@@ -380,7 +399,7 @@ public class FundamentalCalendar implements Calendar {
          * @param digits The number
          * @return The builder
          */
-        public FundamentalCalendar.Builder dayOfYearDigits(int digits) {
+        public TrivialCalendar.Builder dayOfYearDigits(int digits) {
             this.dayOfYearDigits = digits;
             return this;
         }
@@ -390,7 +409,7 @@ public class FundamentalCalendar implements Calendar {
          * @param week The cycle
          * @return The builder
          */
-        public FundamentalCalendar.Builder week(Week week) {
+        public TrivialCalendar.Builder week(Week week) {
             this.week = week;
             return this;
         }
@@ -402,7 +421,7 @@ public class FundamentalCalendar implements Calendar {
          * @param offset The offset
          * @return The builder
          */
-        public FundamentalCalendar.Builder week(
+        public TrivialCalendar.Builder week(
             List<Weekday> weekdays,
             int offset
         ) {
@@ -421,6 +440,6 @@ public class FundamentalCalendar implements Calendar {
     }
 
     public String toString() {
-        return "FundamentalCalendar[" + era + "," + priorEra + "]";
+        return "TrivialCalendar[" + era + "," + priorEra + "]";
     }
 }
