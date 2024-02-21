@@ -3,11 +3,37 @@ package pen.calendars;
 import java.util.List;
 
 /**
- * A calendar for general use.
+ * A calendar for general use.  Time is measured in days since the epoch.
+ * Epoch days can be converted to and from {@link YearDay} values; day 0
+ * is year 1, day 1.  The year prior to year 1 is year -1.
+ *
+ * <h2>Weeks</h2>
+ *
+ * <p>Optionally the calendar may have a {@link Week}, a weekly cycle of N
+ * {@link Weekday} objects; use {@code hasWeeks()} to test for a weekly
+ * cycle.</p>
+ *
+ * <p>If the calendar has weeks, the cycle runs continuously backwards and
+ * forwards from day 0; there is no support for intercalary days that are not
+ * weekdays. (The real 7-day week stretches back unbroken into prehistory.)</p>
+ *
+ * <h2>Months</h2>
+ *
+ * <p>Optionally, the calendar may have a cycle of {@link Month} objects;
+ * use {@code hasMonths()} to test for a monthly cycle.</p>
+ *
+ * <p>If the calendar has months, then epoch days can be converted to and from
+ * {@link Date} values; day 0 is year 1, month 1, day 1. Months can vary
+ * in length to support leap years and similar patterns.</p>
+ *
+ * <h2>Converting Between Calendars</h2>
+ *
+ * <p>To convert dates between calendars, define them so that they have
+ * the same epoch (day 0).</p>
  */
 public interface Calendar {
     //-------------------------------------------------------------------------
-    // Basic Features, common to all implementations
+    // Features common to all implementations
 
     /**
      * The number of days in the given year, per the calendar
@@ -25,10 +51,111 @@ public interface Calendar {
     String formatDate(int day);
     int parseDate(String dateString);
 
-    // date2yearDay, yearDate2date
+    /**
+     * Creates a new YearDay value for this calendar.  Assumes that the
+     * year and day-of-year are valid for the calendar.  Use
+     * {@code validate(YearDay)} as needed.
+     * @param year The year
+     * @param dayOfYear The day of year
+     * @return The value
+     */
+    default YearDay yearDay(int year, int dayOfYear) {
+        return new YearDay(this, year, dayOfYear);
+    }
+
+    /**
+     * Converts an epoch day to a YearDay
+     * @param day The epoch day
+     * @return The year/day-of-year
+     */
+     default YearDay day2yearDay(int day) {
+        if (day >= 0) {
+            int year = 1;
+            var daysInYear = daysInYear(year);
+
+            while (day >= daysInYear) {
+                day -= daysInYear;
+                year++;
+                daysInYear = daysInYear(year);
+            }
+
+            return new YearDay(this, year, day + 1);
+        } else {
+            int year = -1;
+            day = -day;
+
+            var daysInYear = daysInYear(year);
+
+            while (day > daysInYear) {
+                day -= daysInYear;
+                year--;
+                daysInYear = daysInYear(year);
+            }
+
+            var dayOfYear = daysInYear - day + 1;
+            return yearDay(year, dayOfYear);
+        }
+    }
+
+    /**
+     * Converts a YearDay to epoch days.
+     * @param yearDay The year/day-of-year
+     * @return The day
+     * @throws CalendarException if the data is invalid.
+     */
+    default int yearDay2day(YearDay yearDay) {
+        // FIRST, validate the dayOfYear.
+        validate(yearDay);
+
+        // NEXT, positive years, then negative years
+        if (yearDay.year() > 0) {
+            var day = yearDay.dayOfYear() - 1;
+            var year = yearDay.year() - 1;
+
+            while (year >= 1) {
+                day += daysInYear(year);
+                year--;
+            }
+
+            return day;
+        } else {
+            var day = daysInYear(yearDay.year()) - yearDay.dayOfYear() + 1;
+            var year = yearDay.year() + 1;
+
+            while (year < 0) {
+                day += daysInYear(year);
+                year++;
+            }
+
+            return -day;
+        }
+    }
+
+    /**
+     * Validates the year/day-of-year against this calendar.
+     * @param yearDay The year/day-of-year
+     * @throws CalendarException if the data is invalid.
+     */
+    default void validate(YearDay yearDay) {
+        if (!yearDay.calendar().equals(this)) {
+            throw new CalendarException(
+                "Calendar mismatch, expected \"" + this + "\", got \"" +
+                    yearDay.calendar() + "\"");
+        }
+        if (yearDay.year() == 0) {
+            throw new CalendarException("year is 0 in date: \"" + yearDay + "\".");
+        }
+
+        if (yearDay.dayOfYear() < 1 ||
+            yearDay.dayOfYear() > daysInYear(yearDay.year()))
+        {
+            throw new CalendarException("dayOfYear out of range for year " +
+                yearDay.year() + " in date: \"" + yearDay + "\"");
+        }
+    }
 
     //-------------------------------------------------------------------------
-    // Feature Queries: What features does this calendar support?
+    // Month API, available if hasMonths().
 
     /**
      * Does this calendar divide the year into months?
@@ -39,25 +166,16 @@ public interface Calendar {
         return false;
     }
 
-    /**
-     * Does calendar define a cycle of weekdays?
-     * See the Week API below, if true.
-     * @return true or false
-     */
-    default boolean hasWeeks() {
-        return week() != null;
-    }
-
-    //-------------------------------------------------------------------------
-    // Month API, available if hasMonths().
+    // date2yearDay, yearDate2date
 
     /**
-     * Returns a date given the components, which are presumed to be valid for
-     * this calendar.
+     * Returns a date given the components. The components are presumed
+     * to be valid; use {@code validate()} to check user input.
      * @param year The year number
      * @param monthOfYear The monthOfYear, 1 to monthsInYear()
      * @param dayOfMonth The dayOfMonth, 1 to daysInMonth(year, monthOfYear)
      * @return The date
+     * @throws CalendarException if the date is invalid.
      * @throws CalendarException if !hasMonths()
      */
     default Date date(int year, int monthOfYear, int dayOfMonth) {
@@ -65,9 +183,9 @@ public interface Calendar {
     }
 
     /**
-     * Converts a Date to a day since the fundamental epoch.
+     * Converts a {@link Date} to an epoch day.
      * @param date The date
-     * @return The fundamental day
+     * @return The epoch day
      * @throws CalendarException if !hasMonths()
      */
     default int date2day(Date date) {
@@ -75,7 +193,7 @@ public interface Calendar {
     }
 
     /**
-     * Converts a day since the fundamental epoch to a Date.
+     * Converts an epoch day to a {@link Date}.
      * @param day The day
      * @return The date
      * @throws CalendarException if !hasMonths()
@@ -103,7 +221,7 @@ public interface Calendar {
      * @throws CalendarException if !hasMonths()
      */
     default int monthsInYear() {
-        throw noMonthlyCycle();
+        return months().size();
     }
 
     /**
@@ -114,11 +232,11 @@ public interface Calendar {
      * @throws CalendarException if !hasMonths()
      */
     default Month month(int monthOfYear) {
-        throw noMonthlyCycle();
+        return months().get(monthOfYear - 1);
     }
 
     /**
-     * Returns the list of Month objects.
+     * Returns the list of {@link Month} objects.
      * @return The list
      * @throws CalendarException if !hasMonths()
      */
@@ -127,10 +245,10 @@ public interface Calendar {
     }
 
     /**
-     * Throws CalendarException if the date is invalid for this calendar.
+     * Validates that a date is valid for this calendar.
      * @param date The date
-     * @throws CalendarException if the date is not valid.
-     * @throws CalendarException if !hasMonths().
+     * @throws CalendarException if the date is invalid.
+     * @throws CalendarException if !hasMonths.
      */
     default void validate(Date date) {
         throw noMonthlyCycle();
@@ -138,6 +256,15 @@ public interface Calendar {
 
     //-------------------------------------------------------------------------
     // Week API, available if hasWeeks()
+
+    /**
+     * Does calendar define a cycle of weekdays?
+     * See the Week API below, if true.
+     * @return true or false
+     */
+    default boolean hasWeeks() {
+        return week() != null;
+    }
 
     /**
      * Gets the calendar's weekly cycle, if it has one.
@@ -161,8 +288,9 @@ public interface Calendar {
     }
 
     /**
-     * Produces the day-of-week (1 through daysInWeek()) for the given day
-     * @param day The day
+     * Produces the day-of-week (1 through daysInWeek()) for the given
+     * epoch day.
+     * @param day The epoch day
      * @return The day-of-week
      * @throws CalendarException if this calendar lacks a weekly cycle.
      */
@@ -175,8 +303,8 @@ public interface Calendar {
         }
     }
     /**
-     * Produces the weekday for the given fundamental day.
-     * @param day The day
+     * Produces the weekday for the given epoch day.
+     * @param day The epoch day
      * @return The weekday
      * @throws CalendarException if this calendar lacks a
      * weekly cycle.

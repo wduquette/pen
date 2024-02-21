@@ -206,7 +206,7 @@ Java API.
             var x = i*(dateWidth + pad);
             stencil.draw(text()
                 .at(x, 0)
-                .text(ME.week().weekdays().get(i).narrowForm())
+                .text(ME.week().weekdays().get(i).tinyForm())
                 .tack(Tack.NORTHEAST)
                 .font(dayFont)
             );
@@ -365,10 +365,10 @@ Java API.
     //------------------------------------------------------------------------
     // Calendar values
     private static final Week ME_WEEK = new Week(List.of(StandardWeekDays.values()), 1);
-    private static final SimpleCalendar ME = new SimpleCalendar.Builder()
+    private static final BasicCalendar ME = new BasicCalendar.Builder()
         .era("ME")
         .priorEra("BME")
-        .epochDay(-978 * 366)
+        .epochOffset(-978 * 366)
         .month(StandardMonths.JANUARY, 31)
         .month(StandardMonths.FEBRUARY, 28)
         .month(StandardMonths.MARCH, 31)

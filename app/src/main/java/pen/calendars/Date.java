@@ -1,7 +1,8 @@
 package pen.calendars;
 
 /**
- * A date in a particular calendar
+ * A date in a particular {@link Calendar}.  Use {@code Calendar::validate} to
+ * validate the date against a specific calendar.
  * @param calendar The calendar in question
  * @param year The year number, omitting 0
  * @param monthOfYear The month number, counting from 1
@@ -18,6 +19,22 @@ public record Date(
         return calendar + ":" + year + "-" + monthOfYear + "-" + dayOfMonth;
     }
 
+    public int day() {
+        return calendar().date2day(this);
+    }
+
+    public int dayOfWeek() {
+        return calendar().day2dayOfWeek(calendar.date2day(this));
+    }
+
+    public int dayOfYear() {
+        return yearDay().dayOfYear();
+    }
+
+    public int daysInMonth() {
+        return calendar.daysInMonth(year, monthOfYear);
+    }
+
     public String era() {
         return (year > 0) ? calendar.era() : calendar.priorEra();
     }
@@ -26,16 +43,11 @@ public record Date(
         return calendar.month(monthOfYear);
     }
 
-    public int daysInMonth() {
-        return calendar.daysInMonth(year, monthOfYear);
-    }
-
     public Weekday weekday() {
         return calendar().day2weekday(calendar.date2day(this));
     }
 
-    public int dayOfWeek() {
-        return calendar().day2dayOfWeek(calendar.date2day(this));
+    public YearDay yearDay() {
+        return calendar().day2yearDay(day());
     }
-
 }

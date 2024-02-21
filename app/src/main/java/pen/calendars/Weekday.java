@@ -1,6 +1,6 @@
 package pen.calendars;
 
-public interface Weekday extends DateText {
+public interface Weekday extends CalendarName {
     /**
      * The day's full name, usually in mixed case.
      * @return The full name.
@@ -8,8 +8,13 @@ public interface Weekday extends DateText {
     String name();
 
     @Override
-    default String narrowForm() {
+    default String tinyForm() {
         return fullForm().substring(0,1);
+    }
+
+    @Override
+    default String unambiguousForm() {
+        return fullForm().substring(0,2);
     }
 
     @Override

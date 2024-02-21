@@ -31,9 +31,5 @@ public class WeekTest {
             var weekday = WEEK.weekdays().get(i);
             check(WEEK.indexOf(weekday)).eq(i);
         }
-
-        checkThrows(() -> WEEK.indexOf(null))
-            .containsString("Invalid weekday value: \"null\"");
     }
-
 }

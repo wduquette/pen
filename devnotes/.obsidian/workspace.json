@@ -4,22 +4,35 @@
     "type": "split",
     "children": [
       {
-        "id": "607d0d338de1ed95",
+        "id": "7a9d2b780617ca0a",
         "type": "tabs",
         "children": [
           {
-            "id": "368eaf1cf70fa4be",
+            "id": "7a48aa075c19ee81",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Calendars.md",
+                "file": "Ideas.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "a8cb107df4881ac8",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "To Do List.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -69,8 +82,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "9ad1db49e5b0cead",
@@ -86,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Calendars.md",
+                "file": "To Do List.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Calendars.md",
+                "file": "To Do List.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -126,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Calendars.md"
+                "file": "To Do List.md"
               }
             }
           }
@@ -144,13 +156,19 @@
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "command-palette:Open command palette": false,
+      "obsidian-excalidraw-plugin:Create new drawing": false,
+      "homepage:Open homepage": false
     }
   },
-  "active": "368eaf1cf70fa4be",
+  "active": "a8cb107df4881ac8",
   "lastOpenFiles": [
+    "Date Formatting.md",
+    "To Do List.md",
+    "Yearly Cycles.md",
     "Ideas.md",
     "Home.md",
+    "TCL Calendar Definition API.md",
     "Calendar 18.java",
     "Calendar 17.java",
     "Calendar 16.java",
@@ -161,10 +179,8 @@
     "Calendar 11.java",
     "Calendar 10.java",
     "Calendar 9.java",
-    "To Do List.md",
     "2024-02-18.md",
     "Calendars.md",
-    "Date Formatting.md",
     "Regnal Calendars.md",
     "2024-02-07.md",
     "Time Line Diagrams.md",
@@ -183,7 +199,6 @@
     "Fancy Boxed Label Shape.md",
     "Stencil Class Hierarchy.md",
     "Design Notes.md",
-    "Creating Custom Shapes in Tcl.md",
     "Testing Canvas.canvas"
   ]
 }

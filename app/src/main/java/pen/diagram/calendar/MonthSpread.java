@@ -168,7 +168,7 @@ public class MonthSpread extends ContentShape<MonthSpread> {
             var dx = x + dateWidth + i*(dateWidth + datePad);
             sten.draw(text()
                 .at(dx, y)
-                .text(calendar.week().weekdays().get(i).narrowForm())
+                .text(calendar.week().weekdays().get(i).tinyForm())
                 .tack(Tack.NORTHEAST)
                 .font(dayFont)
             );
