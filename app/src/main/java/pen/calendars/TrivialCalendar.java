@@ -116,7 +116,7 @@ public class TrivialCalendar implements Calendar {
     }
 
     /**
-     * Parses a date string into a epoch day.
+     * Parses a date string into an epoch day.
      * @param dateString the date string
      * @return The day
      * @throws CalendarException on parse error
@@ -142,75 +142,6 @@ public class TrivialCalendar implements Calendar {
     //-------------------------------------------------------------------------
     // TrivialCalendar conversions
 
-    /**
-     * Converts an arbitrary day since the epoch to a date.
-     * TODO: Define for all calendars
-     * @param day The day
-     * @return The date
-     */
-    public YearDay day2yearDay(int day) {
-        if (day >= 0) {
-            int year = 1;
-            var daysInYear = daysInYear(year);
-
-            while (day >= daysInYear) {
-                day -= daysInYear;
-                year++;
-                daysInYear = daysInYear(year);
-            }
-
-            return new YearDay(this, year, day + 1);
-        } else {
-            int year = -1;
-            day = -day;
-
-            var daysInYear = daysInYear(year);
-
-            while (day > daysInYear) {
-                day -= daysInYear;
-                year--;
-                daysInYear = daysInYear(year);
-            }
-
-            var dayOfYear = daysInYear - day + 1;
-            return new YearDay(this, year, dayOfYear);
-        }
-    }
-
-    /**
-     * Converts an arbitrary date to the day since the epoch.
-     * TODO: Define for all calendars
-     * @param date The date
-     * @return The day
-     * @throws CalendarException if the date is invalid.
-     */
-    public int yearDay2day(YearDay date) {
-        // FIRST, validate the dayOfYear.
-        validate(date);
-
-        // NEXT, positive years, then negative years
-        if (date.year() > 0) {
-            var day = date.dayOfYear() - 1;
-            var year = date.year() - 1;
-
-            while (year >= 1) {
-                day += daysInYear(year);
-                year--;
-            }
-
-            return day;
-        } else {
-            var day = daysInYear(date.year()) - date.dayOfYear() + 1;
-            var year = date.year() + 1;
-
-            while (year < 0) {
-                day += daysInYear(year);
-                year++;
-            }
-
-            return -day;
-        }
-    }
 
     /**
      * Returns the string "{era}{year}-{dayOfYear}" for positive years and
@@ -274,28 +205,6 @@ public class TrivialCalendar implements Calendar {
         }
     }
 
-    /**
-     * Validates that the date is a valid date.
-     * @param date The date
-     * @throws CalendarException if the date is invalid.
-     */
-    public void validate(YearDay date) {
-        if (!date.calendar().equals(this)) {
-            throw new CalendarException(
-                "Calendar mismatch, expected \"" + this + "\", got \"" +
-                date.calendar() + "\"");
-        }
-        if (date.year() == 0) {
-            throw new CalendarException("year is 0 in date: \"" + date + "\".");
-        }
-
-        if (date.dayOfYear() < 1 ||
-            date.dayOfYear() > daysInYear(date.year()))
-        {
-            throw new CalendarException("dayOfYear out of range for year " +
-                date.year() + " in date: \"" + date + "\"");
-        }
-    }
 
     //-------------------------------------------------------------------------
     // Object API
