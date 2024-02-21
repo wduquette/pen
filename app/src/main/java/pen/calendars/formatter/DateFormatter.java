@@ -58,7 +58,8 @@ import static pen.calendars.formatter.DateComponent.*;
  * <h2>String Literals</h2>
  *
  * <p>The format string can contain literal strings encloses in single quotes,
- * e.g., "'Year: 'yyyy 'Day of year: ' DDD"</p>.
+ * e.g., "'Year:' yyyy 'Day of year:' DDD"</p>.  Space characters, hyphens, and
+ * slashes (" ", "-", and "/") are retained as is.
  */
 public class DateFormatter {
     //-------------------------------------------------------------------------
@@ -85,13 +86,20 @@ public class DateFormatter {
     private static final char WEEKDAY = 'W';
     private static final char YEAR = 'y';
     private static final char QUOTE = '\'';
+    private static final char SPACE = ' ';
+    private static final char HYPHEN = '-';
+    private static final char SLASH = '/';
 
     public DateFormatter(String formatString) {
-        var scanner = new Scanner(formatString);
+        var scanner = new FormatScanner(formatString);
 
         while (!scanner.atEnd()) {
-            switch (scanner.peek()) {
-                case QUOTE -> components.add(new Text(scanner.getText()));
+            var ch = scanner.peek();
+            switch (ch) {
+                case QUOTE ->
+                    components.add(new Text(scanner.getText()));
+                case SPACE, HYPHEN, SLASH ->
+                    components.add(new Text(Character.toString(ch)));
                 case DAY_OF_MONTH ->
                     components.add(new DayOfMonth(scanner.getCount()));
                 case DAY_OF_YEAR ->
@@ -139,12 +147,12 @@ public class DateFormatter {
     //-----------------------------------------------------------------------------------------------------------------
     // Scanner
 
-    private static class Scanner {
+    private static class FormatScanner {
         private final String source;
         private int i = 0;
         private final int n;
 
-        public Scanner(String source) {
+        public FormatScanner(String source) {
             this.source = source;
             this.n = source.length();
         }
