@@ -1,19 +1,26 @@
 - Any time
     - Review Javadoc
-    - [x] `FundamentalCalendard` becomes `TrivalCalendar`
-    - [ ] "Fundamental days" become "epoch days"
-    - [ ] `SimpleCalendar` becomes `BasicCalendar`
-    - [ ] `BasicCalendar::epochDay` becomes `epochOffset`
 - Next Steps
     - [x] Revise `SimpleCalendar` to include a week as `FundamentalCalendar` does.
     - [x] Add a demo for drawing a monthly calendar using Stencil.
     - [x] Add `MonthSpread` shape
-    - [ ] Review and cleanup `MonthSpread`.
-    - [ ] Add `hasPriorEra()` to `Calendar`, etc.
-        - Prep for `EraCalendar`
-    - [ ] Provide a `TrivialCalendar` tied to the modern calendar leap year and week.
-    - [ ] Provide a `BasicCalendar` tied to the modern "AD/BC" calendar.
-    - [ ] Add the DateFormatter
+    - [x] Provide `Gregorian.CALENDAR`, a `BasicCalendar` tied to the modern "AD/BC" calendar.
+    - [x] `FundamentalCalendard` becomes `TrivalCalendar`
+    - [x] "Fundamental days" become "epoch days"
+    - [x] `SimpleCalendar` becomes `BasicCalendar`
+    - [x] `BasicCalendar::epochDay` becomes `epochOffset`
+    - `DateFormatter`
+        - [x] Define initial `DateComponents`
+        - [x] Create `DateFormatter`, with parser for format strings.
+        - [x] Add `DateFormatter::format`
+        - [x] Make `BasicCalendar` support `YearDay`
+        - [x] Make `DateFormatter` support the day-of-year
+        - [ ] Make `DateFormatter` support parsing.
+        - [ ] Make DateFormatter support formatting `YearDay` values
+            - Including for calendars that don't have months.
+    - [ ] Update the calendars to define standard formats
+    - [ ] Remove the `Calendar` formatting and parsing methods, as they will be obsolete.
+    - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams
     - [[Time Line Diagrams]]
         - [x] Flesh out `FundamentalCalendar`
