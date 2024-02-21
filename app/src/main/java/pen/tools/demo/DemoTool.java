@@ -206,7 +206,7 @@ Java API.
             var x = i*(dateWidth + pad);
             stencil.draw(text()
                 .at(x, 0)
-                .text(ME.week().weekdays().get(i).narrowForm())
+                .text(ME.week().weekdays().get(i).tinyForm())
                 .tack(Tack.NORTHEAST)
                 .font(dayFont)
             );

@@ -1,4 +1,4 @@
-package pen.calendars.formatter;
+package pen.calendars;
 
 /**
  * Ways to present an era, weekday, or month name.

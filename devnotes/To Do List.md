@@ -2,6 +2,7 @@
     - Review Javadoc
 - Next Steps
     - `DateFormatter`
+        - [ ] Add `Era` type, and beef up `Month` and `Weekday`.
         - [ ] Make `DateFormatter` support parsing.
         - [ ] Make DateFormatter support formatting `YearDay` values
             - Including for calendars that don't have months.

@@ -1,6 +1,7 @@
 package pen.calendars.formatter;
 
 import pen.calendars.Date;
+import pen.calendars.Form;
 
 public sealed interface DateComponent permits
     DateComponent.DayOfMonth,
@@ -45,7 +46,7 @@ public sealed interface DateComponent permits
         public String format(Date date) {
             // TODO Probably just call month.toForm(form);
             return switch (form) {
-                case TINY -> date.month().narrowForm();
+                case TINY -> date.month().tinyForm();
                 case SHORT,UNAMBIGUOUS -> date.month().shortForm();
                 case FULL -> date.month().fullForm();
             };
@@ -68,7 +69,7 @@ public sealed interface DateComponent permits
         public String format(Date date) {
             // TODO Probably just call weekday.toForm(form);
             return switch (form) {
-                case TINY, UNAMBIGUOUS -> date.weekday().narrowForm();
+                case TINY, UNAMBIGUOUS -> date.weekday().tinyForm();
                 case SHORT -> date.weekday().shortForm();
                 case FULL -> date.weekday().fullForm();
             };
