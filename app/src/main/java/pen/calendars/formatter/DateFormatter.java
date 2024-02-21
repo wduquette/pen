@@ -63,7 +63,7 @@ public class DateFormatter {
     //-------------------------------------------------------------------------
     // Static Factories
 
-    public static final DateFormatter define(String formatString) {
+    public static DateFormatter define(String formatString) {
         return new DateFormatter(formatString);
     }
 
