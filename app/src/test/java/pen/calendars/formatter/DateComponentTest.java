@@ -18,6 +18,16 @@ public class DateComponentTest {
     }
 
     @Test
+    public void testDayOfYear() {
+        var today = CALENDAR.date(2024,2,6);
+
+        check(new DayOfYear(0).format(today)).eq("37");
+        check(new DayOfYear(1).format(today)).eq("37");
+        check(new DayOfYear(2).format(today)).eq("37");
+        check(new DayOfYear(3).format(today)).eq("037");
+    }
+
+    @Test
     public void testEra() {
         var ad = CALENDAR.date(2024,2,6);
 

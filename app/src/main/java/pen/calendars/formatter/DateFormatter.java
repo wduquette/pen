@@ -77,6 +77,7 @@ public class DateFormatter {
     // Constructor
 
     private static final char DAY_OF_MONTH = 'd';
+    private static final char DAY_OF_YEAR = 'D';
     private static final char ERA = 'E';
     private static final char MONTH_NAME = 'M';
     private static final char MONTH = 'm';
@@ -92,6 +93,8 @@ public class DateFormatter {
                 case QUOTE -> components.add(new Text(scanner.getText()));
                 case DAY_OF_MONTH ->
                     components.add(new DayOfMonth(scanner.getCount()));
+                case DAY_OF_YEAR ->
+                    components.add(new DayOfYear(scanner.getCount()));
                 case ERA ->
                     components.add(new Era(count2form(scanner.getCount())));
                 case MONTH_NAME ->

@@ -4,6 +4,7 @@ import pen.calendars.Date;
 
 public sealed interface DateComponent permits
     DateComponent.DayOfMonth,
+    DateComponent.DayOfYear,
     DateComponent.Era,
     DateComponent.MonthName,
     DateComponent.MonthNumber,
@@ -24,6 +25,12 @@ public sealed interface DateComponent permits
     record DayOfMonth(int digits) implements DateComponent {
         public String format(Date date) {
             return zeroPad(date.dayOfMonth(), digits);
+        }
+    }
+
+    record DayOfYear(int digits) implements DateComponent {
+        public String format(Date date) {
+            return zeroPad(date.dayOfYear(), digits);
         }
     }
 
