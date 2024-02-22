@@ -50,4 +50,8 @@ public record Date(
     public YearDay yearDay() {
         return calendar().day2yearDay(day());
     }
+
+    public String format() {
+        return calendar.format(this);
+    }
 }

@@ -67,6 +67,15 @@ public interface Calendar {
     DateFormatter formatter();
 
     /**
+     * Formats the date given the standard formatter.
+     * @param date The date
+     * @return The string
+     */
+    default String format(Date date) {
+        return formatter().format(date);
+    }
+
+    /**
      * Creates a new YearDay value for this calendar.  Assumes that the
      * year and day-of-year are valid for the calendar.  Use
      * {@code validate(YearDay)} as needed.
