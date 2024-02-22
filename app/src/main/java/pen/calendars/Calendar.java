@@ -1,5 +1,7 @@
 package pen.calendars;
 
+import pen.calendars.formatter.DateFormatter;
+
 import java.util.List;
 
 /**
@@ -57,6 +59,12 @@ public interface Calendar {
      * @return The prior era
      */
     Era priorEra();
+
+    /**
+     * Gets the standard formatter for this calendar.
+     * @return The formatter
+     */
+    DateFormatter formatter();
 
     /**
      * Creates a new YearDay value for this calendar.  Assumes that the

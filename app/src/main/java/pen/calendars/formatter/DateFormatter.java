@@ -94,12 +94,11 @@ public class DateFormatter {
         var scanner = new FormatScanner(formatString);
 
         while (!scanner.atEnd()) {
-            var ch = scanner.peek();
-            switch (ch) {
+            switch (scanner.peek()) {
                 case QUOTE ->
                     components.add(new Text(scanner.getText()));
                 case SPACE, HYPHEN, SLASH ->
-                    components.add(new Text(Character.toString(ch)));
+                    components.add(new Text(Character.toString(scanner.next())));
                 case DAY_OF_MONTH ->
                     components.add(new DayOfMonth(scanner.getCount()));
                 case DAY_OF_YEAR ->
@@ -165,8 +164,10 @@ public class DateFormatter {
             return source.charAt(i);
         }
 
-        public void next() {
+        public char next() {
+            char ch = peek();
             ++i;
+            return ch;
         }
 
         public int getCount() {

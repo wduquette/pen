@@ -1,5 +1,7 @@
 package pen.calendars;
 
+import pen.calendars.formatter.DateFormatter;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -30,6 +32,9 @@ import java.util.Objects;
  */
 @SuppressWarnings("unused")
 public class TrivialCalendar implements Calendar {
+    public static final DateFormatter DEFAULT_FORMATTER =
+        DateFormatter.define("yyyy/DDD E");
+
     //-------------------------------------------------------------------------
     // Instance Variables
 
@@ -46,6 +51,9 @@ public class TrivialCalendar implements Calendar {
     // The weekly cycle; possibly null
     private final Week week;
 
+    // The default formatter
+    private final DateFormatter formatter;
+
     //-------------------------------------------------------------------------
     // Constructor
 
@@ -54,7 +62,7 @@ public class TrivialCalendar implements Calendar {
         this.era             = Objects.requireNonNull(builder.era);
         this.priorEra        = Objects.requireNonNull(builder.priorEra);
         this.yearLength      = Objects.requireNonNull(builder.yearLength);
-
+        this.formatter       = Objects.requireNonNull(builder.formatter);
         this.week            = builder.week;
     }
 
@@ -95,6 +103,11 @@ public class TrivialCalendar implements Calendar {
     @Override
     public Era priorEra() {
         return priorEra;
+    }
+
+    @Override
+    public DateFormatter formatter() {
+        return formatter;
     }
 
     //-------------------------------------------------------------------------
@@ -146,6 +159,7 @@ public class TrivialCalendar implements Calendar {
         private Era era = AFTER_EPOCH;
         private Era priorEra = BEFORE_EPOCH;
         private YearDelta yearLength = (y -> 365);
+        private DateFormatter formatter = DEFAULT_FORMATTER;
         private Week week = null;
 
         //---------------------------------------------------------------------
@@ -203,6 +217,11 @@ public class TrivialCalendar implements Calendar {
          */
         public TrivialCalendar.Builder yearLength(int length) {
             this.yearLength = (dummy -> length);
+            return this;
+        }
+
+        public TrivialCalendar.Builder formatter(DateFormatter formatter) {
+            this.formatter = formatter;
             return this;
         }
 

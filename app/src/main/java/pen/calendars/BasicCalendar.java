@@ -1,5 +1,7 @@
 package pen.calendars;
 
+import pen.calendars.formatter.DateFormatter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +22,9 @@ import java.util.Objects;
  */
 @SuppressWarnings("unused")
 public class BasicCalendar implements Calendar {
+    public static final DateFormatter DEFAULT_FORMATTER =
+        DateFormatter.define("yyyy-mm-dd E");
+
     //-------------------------------------------------------------------------
     // Instance Variables
 
@@ -37,6 +42,9 @@ public class BasicCalendar implements Calendar {
     // The month definitions
     private final List<MonthRecord> months;
 
+    // The standard formatter
+    private final DateFormatter formatter;
+
     // The weekly cycle; possibly null
     private final Week week;
 
@@ -49,6 +57,7 @@ public class BasicCalendar implements Calendar {
         this.era       = Objects.requireNonNull(builder.era);
         this.priorEra  = Objects.requireNonNull(builder.priorEra);
         this.months    = Collections.unmodifiableList(builder.months);
+        this.formatter = Objects.requireNonNull(builder.formatter);
         this.week      = builder.week;
     }
 
@@ -86,6 +95,12 @@ public class BasicCalendar implements Calendar {
     public Era priorEra() {
         return priorEra;
     }
+
+    @Override
+    public DateFormatter formatter() {
+        return formatter;
+    }
+
 
     //-------------------------------------------------------------------------
     // Calendar API: Months
@@ -305,6 +320,7 @@ public class BasicCalendar implements Calendar {
         private Era era = AFTER_EPOCH;
         private Era priorEra = BEFORE_EPOCH;
         private final List<MonthRecord> months = new ArrayList<>();
+        private DateFormatter formatter = DEFAULT_FORMATTER;
         private Week week = null;
 
         //---------------------------------------------------------------------
@@ -379,6 +395,12 @@ public class BasicCalendar implements Calendar {
             months.add(new MonthRecord(month, length));
             return this;
         }
+
+        public BasicCalendar.Builder formatter(DateFormatter formatter) {
+            this.formatter = formatter;
+            return this;
+        }
+
 
         /**
          * Sets the weekly cycle.
