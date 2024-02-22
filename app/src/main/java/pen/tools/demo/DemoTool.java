@@ -366,8 +366,8 @@ Java API.
     // Calendar values
     private static final Week ME_WEEK = new Week(List.of(StandardWeekDays.values()), 1);
     private static final BasicCalendar ME = new BasicCalendar.Builder()
-        .era("ME")
-        .priorEra("BME")
+        .era(new Era("ME", "Modern Era"))
+        .priorEra(new Era("BME", "Before Modern Era"))
         .epochOffset(-978 * 366)
         .month(StandardMonths.JANUARY, 31)
         .month(StandardMonths.FEBRUARY, 28)

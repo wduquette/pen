@@ -29,10 +29,10 @@ public class BasicCalendar implements Calendar {
     private final int epochOffset;
 
     // The era symbol for positive years.
-    private final String era;
+    private final Era era;
 
     // The era symbol for negative years
-    private final String priorEra;
+    private final Era priorEra;
 
     // The month definitions
     private final List<MonthRecord> months;
@@ -78,23 +78,13 @@ public class BasicCalendar implements Calendar {
     }
 
     @Override
-    public String era() {
+    public Era era() {
         return era;
     }
 
     @Override
-    public String priorEra() {
+    public Era priorEra() {
         return priorEra;
-    }
-
-    @Override
-    public String formatDate(int day) {
-        return date2string(day2date(day));
-    }
-
-    @Override
-    public int parseDate(String dateString) {
-        return date2day(string2date(dateString));
     }
 
     //-------------------------------------------------------------------------
@@ -245,51 +235,6 @@ public class BasicCalendar implements Calendar {
         return new Date(this, year, monthOfYear, dayOfMonth);
     }
 
-    /**
-     * Returns the string "{year}-{monthOfYear}-{dayOfMonth} {era}" for
-     * positive years and "{-year}-{monthOfYear}-{dayOfMonty} {priorEra}"
-     * for negative years.
-     * @param date The date
-     * @return The formatted string
-     */
-    public String date2string(Date date) {
-        validate(date);
-
-        var sym = (date.year() >= 0) ? era : priorEra;
-        var year = Math.abs(date.year());
-
-        return year + "-" + date.monthOfYear() + "-" + date.dayOfMonth()
-            + "-" + sym;
-    }
-
-    Date string2date(String dateString) {
-        var tokens = dateString.trim().split("-");
-
-        if (tokens.length != 4) {
-            throw badFormat(dateString);
-        }
-
-        var sym = tokens[3].toUpperCase();
-
-        if (!sym.equals(era) && !sym.equals(priorEra)) {
-            throw badFormat(dateString);
-        }
-
-        try {
-            var year = Integer.parseInt(tokens[0]);
-
-            var date = new Date(
-                this,
-                sym.equals(era) ? year : -year,
-                Integer.parseInt(tokens[1]),
-                Integer.parseInt(tokens[2]));
-            validate(date);
-            return date;
-        } catch (IllegalArgumentException ex) {
-            throw badFormat(dateString);
-        }
-    }
-
     //-------------------------------------------------------------------------
     // Object API
 
@@ -357,8 +302,8 @@ public class BasicCalendar implements Calendar {
         // Instance Data
 
         private int epochOffset = 0;
-        private String era = "AE";
-        private String priorEra = "BE";
+        private Era era = AFTER_EPOCH;
+        private Era priorEra = BEFORE_EPOCH;
         private final List<MonthRecord> months = new ArrayList<>();
         private Week week = null;
 
@@ -389,24 +334,24 @@ public class BasicCalendar implements Calendar {
         }
 
         /**
-         * Sets the era string for this calendar.  Defaults to "AE",
+         * Sets the era for this calendar.  Defaults to "AE",
          * "After Epoch".
-         * @param era The era string.
+         * @param era The era.
          * @return the builder
          */
-        public Builder era(String era) {
-            this.era = Objects.requireNonNull(era).toUpperCase();
+        public Builder era(Era era) {
+            this.era = Objects.requireNonNull(era);
             return this;
         }
 
         /**
-         * Sets the prior era string for this calendar.  Defaults to "BE",
+         * Sets the prior era for this calendar.  Defaults to "BE",
          * "Before Epoch".
-         * @param priorEra The era string.
+         * @param priorEra The era.
          * @return the builder
          */
-        public Builder priorEra(String priorEra) {
-            this.priorEra = Objects.requireNonNull(priorEra).toUpperCase();
+        public Builder priorEra(Era priorEra) {
+            this.priorEra = Objects.requireNonNull(priorEra);
             return this;
         }
 

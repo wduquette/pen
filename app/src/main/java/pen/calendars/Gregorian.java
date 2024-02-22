@@ -8,8 +8,8 @@ public class Gregorian {
 
     public static final Week WEEK = new Week(StandardWeekDays.weekdays(), 1);
     public static final BasicCalendar CALENDAR = new BasicCalendar.Builder()
-        .era("AD")
-        .priorEra("BC")
+        .era(new Era("AD", "Anno Domini"))
+        .priorEra(new Era("BC", "Before Christ"))
         .month(StandardMonths.JANUARY, 31)
         .month(StandardMonths.FEBRUARY, Gregorian::lengthOfFebruary)
         .month(StandardMonths.MARCH, 31)

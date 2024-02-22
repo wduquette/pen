@@ -105,7 +105,7 @@ public class DateFormatter {
                 case DAY_OF_YEAR ->
                     components.add(new DayOfYear(scanner.getCount()));
                 case ERA ->
-                    components.add(new Era(count2form(scanner.getCount())));
+                    components.add(new EraName(count2form(scanner.getCount())));
                 case MONTH_NAME ->
                     components.add(new MonthName(count2form(scanner.getCount())));
                 case MONTH ->

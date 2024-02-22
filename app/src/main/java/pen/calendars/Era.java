@@ -16,4 +16,9 @@ public record Era(String shortForm, String fullForm)
     public String tinyForm() {
         return shortForm;
     }
+
+    @Override
+    public String toString() {
+        return "Era(" + shortForm + "," + fullForm + ")";
+    }
 }

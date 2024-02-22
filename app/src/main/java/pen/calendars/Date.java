@@ -35,7 +35,7 @@ public record Date(
         return calendar.daysInMonth(year, monthOfYear);
     }
 
-    public String era() {
+    public Era era() {
         return (year > 0) ? calendar.era() : calendar.priorEra();
     }
 

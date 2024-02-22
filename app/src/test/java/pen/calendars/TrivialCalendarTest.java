@@ -13,32 +13,24 @@ public class TrivialCalendarTest {
     // A calendar with 10 day "years"
     private static final TrivialCalendar TEN =
         new TrivialCalendar.Builder()
-            .era("AT")
-            .priorEra("BT")
             .yearLength(TEN_DAYS)
-            .dayOfYearDigits(2)
             .week(WEEK)
             .build();
 
     // A calendar with 10 day "years" plus a leap year every fourth year
     private static final TrivialCalendar LEAP =
         new TrivialCalendar.Builder()
-            .era("AL")
-            .priorEra("BL")
             .yearLength(LEAP_DAYS)
-            .dayOfYearDigits(2)
             .week(WEEK)
             .build();
 
     @Test
     public void testBasics() {
-        check(TEN.era()).eq("AT");
-        check(TEN.priorEra()).eq("BT");
+        check(TEN.era()).eq(Calendar.AFTER_EPOCH);
+        check(TEN.priorEra()).eq(Calendar.BEFORE_EPOCH);
         check(TEN.yearLength()).eq(TEN_DAYS);
         check(TEN.week()).eq(WEEK);
 
-        check(LEAP.era()).eq("AL");
-        check(LEAP.priorEra()).eq("BL");
         check(LEAP.yearLength()).eq(LEAP_DAYS);
         check(LEAP.week()).eq(WEEK);
 
@@ -95,7 +87,7 @@ public class TrivialCalendarTest {
 
         // Exception
         checkThrows(() -> TEN.validate(leap(1,1)))
-            .containsString("expected \"TrivialCalendar[AT,BT]\", got \"TrivialCalendar[AL,BL]");
+            .containsString("mismatch");
         checkThrows(() -> TEN.validate(ten(0, 0)))
             .containsString("year is 0 in date");
         checkThrows(() -> TEN.validate(ten(1, 0)))
@@ -104,57 +96,6 @@ public class TrivialCalendarTest {
             .containsString("dayOfYear out of range for year 1 in date:");
         checkThrows(() -> TEN.validate(ten(1, 11)))
             .containsString("dayOfYear out of range for year 1 in date:");
-    }
-
-    @Test
-    public void testDate2stringTEN() {
-        // Positive dates
-        check(TEN.yearDay2string(ten(1,1))).eq("AT1-01");
-        check(TEN.yearDay2string(ten(1,2))).eq("AT1-02");
-        check(TEN.yearDay2string(ten(1,10))).eq("AT1-10");
-        check(TEN.yearDay2string(ten(2,1))).eq("AT2-01");
-        check(TEN.yearDay2string(ten(2,2))).eq("AT2-02");
-
-        // Negative dates
-        check(TEN.yearDay2string(ten(-1,10))).eq("BT1-10");
-        check(TEN.yearDay2string(ten(-1,9))).eq("BT1-09");
-        check(TEN.yearDay2string(ten(-1,1))).eq("BT1-01");
-        check(TEN.yearDay2string(ten(-2,10))).eq("BT2-10");
-
-        // From day
-        for (int day = -101; day <= 101; day++) {
-            var date = TEN.day2yearDay(day);
-            check(TEN.formatDate(day)).eq(TEN.yearDay2string(date));
-        }
-
-        // Exception
-        checkThrows(() -> TEN.yearDay2string(ten(1, 0)));
-    }
-
-    @Test
-    public void testParseDate_TEN() {
-        // Positive dates
-        check(TEN.parseDate("AT1-01")).eq(0);
-        check(TEN.parseDate("AT1-02")).eq(1);
-        check(TEN.parseDate("AT1-10")).eq(9);
-        check(TEN.parseDate("AT2-01")).eq(10);
-        check(TEN.parseDate("AT2-02")).eq(11);
-
-        // Negative dates
-        check(TEN.parseDate("BT1-10")).eq(-1);
-        check(TEN.parseDate("BT1-09")).eq(-2);
-        check(TEN.parseDate("BT1-01")).eq(-10);
-        check(TEN.parseDate("BT2-10")).eq(-11);
-
-        // Errors
-        checkThrows(() -> TEN.parseDate("ABC1-01"))
-            .containsString("Invalid format, expected \"AT|BT<year>-<dayOfYear>");
-        checkThrows(() -> TEN.parseDate("AT-01"))
-            .containsString("Invalid format, expected \"AT|BT<year>-<dayOfYear>");
-        checkThrows(() -> TEN.parseDate("AT1-01-xxx"))
-            .containsString("Invalid format, expected \"AT|BT<year>-<dayOfYear>");
-        checkThrows(() -> TEN.parseDate("AT1-00"))
-            .containsString("dayOfYear out of range");
     }
 
     @Test
