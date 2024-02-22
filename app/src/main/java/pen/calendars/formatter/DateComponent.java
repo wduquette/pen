@@ -6,7 +6,7 @@ import pen.calendars.Form;
 public sealed interface DateComponent permits
     DateComponent.DayOfMonth,
     DateComponent.DayOfYear,
-    DateComponent.Era,
+    DateComponent.EraName,
     DateComponent.MonthName,
     DateComponent.MonthNumber,
     DateComponent.Text,
@@ -35,21 +35,15 @@ public sealed interface DateComponent permits
         }
     }
 
-    record Era(Form form) implements DateComponent {
+    record EraName(Form form) implements DateComponent {
         public String format(Date date) {
-            // TODO: Define Era class, and pick string based on Form
-            return date.era();
+            return date.era().getForm(form);
         }
     }
 
     record MonthName(Form form) implements DateComponent {
         public String format(Date date) {
-            // TODO Probably just call month.toForm(form);
-            return switch (form) {
-                case TINY -> date.month().tinyForm();
-                case SHORT,UNAMBIGUOUS -> date.month().shortForm();
-                case FULL -> date.month().fullForm();
-            };
+            return date.month().getForm(form);
         }
     }
 
@@ -67,12 +61,7 @@ public sealed interface DateComponent permits
 
     record Weekday(Form form) implements DateComponent {
         public String format(Date date) {
-            // TODO Probably just call weekday.toForm(form);
-            return switch (form) {
-                case TINY, UNAMBIGUOUS -> date.weekday().tinyForm();
-                case SHORT -> date.weekday().shortForm();
-                case FULL -> date.weekday().fullForm();
-            };
+            return date.weekday().getForm(form);
         }
     }
 

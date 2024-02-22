@@ -3,13 +3,10 @@ package pen.calendars;
 import org.junit.Test;
 
 import static pen.checker.Checker.check;
-import static pen.checker.Checker.checkThrows;
 
 public class BasicCalendarTest {
     // A calendar with 10 day "years"
     private static final BasicCalendar AE = new BasicCalendar.Builder()
-        .era("AE")
-        .priorEra("BE")
         .epochOffset(0)
         .month(StandardMonths.JANUARY, 31)
         .month(StandardMonths.FEBRUARY, y -> isLeapYear(y) ? 29 : 28)
@@ -127,36 +124,5 @@ public class BasicCalendarTest {
         check(AE.date2day(AE.date(-1,  2,  29))).eq(-307);
         check(AE.date2day(AE.date(-1,  3,   1))).eq(-306);
         check(AE.date2day(AE.date(-1,  12, 31))).eq(-1);
-    }
-
-    @Test
-    public void testDate2String() {
-        // Positive Days
-        check(AE.date2string(AE.date(1,  2, 28))).eq("1-2-28-AE");
-
-        // Negative days
-        check(AE.date2string(AE.date(-1,  2,  29))).eq("1-2-29-BE");
-    }
-
-    @Test
-    public void testString2Date() {
-        check(AE.string2date("1-2-28-AE")).eq(AE.date(1,2,28));
-        check(AE.string2date("1-2-29-BE")).eq(AE.date(-1,2,29));
-
-        checkThrows(() -> AE.string2date("1-2-29-AE"));
-    }
-
-    @Test
-    public void testFormatDate() {
-        // Spot check; formatDate just composes day2date and date2string.
-        var day = AE.date2day(AE.date(2024,2,29));
-        check(AE.formatDate(day)).eq("2024-2-29-AE");
-    }
-
-    @Test
-    public void testParseDate() {
-        // Spot check; parseDate just composes string2date and date2day
-        var day = AE.date2day(AE.date(2024,2,29));
-        check(AE.parseDate("2024-2-29-AE")).eq(day);
     }
 }

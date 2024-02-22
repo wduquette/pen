@@ -34,7 +34,7 @@ public class DateComponentTest {
         var ad = CALENDAR.date(2024,2,6);
 
         // TODO Should be "Anno Domini", "AD", "AD"
-        check(new Era(null).format(ad)).eq("AD");
+        check(new EraName(Form.SHORT).format(ad)).eq("AD");
     }
 
     @Test
@@ -72,7 +72,7 @@ public class DateComponentTest {
         // TODO: Should be "Tuesday", "Tue", "Tu", "T"
         check(new Weekday(Form.FULL).format(ad)).eq("TUESDAY");
         check(new Weekday(Form.SHORT).format(ad)).eq("TUE");
-        check(new Weekday(Form.UNAMBIGUOUS).format(ad)).eq("T");
+        check(new Weekday(Form.UNAMBIGUOUS).format(ad)).eq("TU");
         check(new Weekday(Form.TINY).format(ad)).eq("T");
     }
 

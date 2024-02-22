@@ -1,5 +1,7 @@
 package pen.calendars;
 
+import pen.calendars.formatter.DateFormatter;
+
 import java.util.List;
 
 /**
@@ -32,6 +34,9 @@ import java.util.List;
  * the same epoch (day 0).</p>
  */
 public interface Calendar {
+    Era AFTER_EPOCH = new Era("AE", "After Epoch");
+    Era BEFORE_EPOCH = new Era("BE", "Before Epoch");
+
     //-------------------------------------------------------------------------
     // Features common to all implementations
 
@@ -43,13 +48,32 @@ public interface Calendar {
      */
     int daysInYear(int year);
 
-    // TODO: Replace with an Era object.
-    String era();
-    String priorEra();
+    /**
+     * Gets the era for positive years.
+     * @return The era
+     */
+    Era era();
 
-    // TODO: Support a DateFormatter class
-    String formatDate(int day);
-    int parseDate(String dateString);
+    /**
+     * Gets the era for negative years.
+     * @return The prior era
+     */
+    Era priorEra();
+
+    /**
+     * Gets the standard formatter for this calendar.
+     * @return The formatter
+     */
+    DateFormatter formatter();
+
+    /**
+     * Formats the date given the standard formatter.
+     * @param date The date
+     * @return The string
+     */
+    default String format(Date date) {
+        return formatter().format(date);
+    }
 
     /**
      * Creates a new YearDay value for this calendar.  Assumes that the
