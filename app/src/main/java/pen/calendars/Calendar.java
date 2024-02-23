@@ -60,6 +60,18 @@ public interface Calendar {
      */
     Era priorEra();
 
+    /**
+     * Gets the calendar's default formatter.
+     * @return The formatter.
+     */
+    DateFormatter formatter();
+
+    /**
+     * Gets a formatter for this calendar using the
+     * given format string.
+     * @param formatString The format string.
+     * @return The formatter.
+     */
     default DateFormatter formatter(String formatString) {
         return new DateFormatter(this, formatString);
     }

@@ -1,5 +1,7 @@
 package pen.calendars;
 
+import pen.calendars.formatter.DateFormatter;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -46,6 +48,10 @@ public class TrivialCalendar implements Calendar {
     // The weekly cycle; possibly null
     private final Week week;
 
+    // Default format and formatter
+    private final String defaultFormat;
+    private DateFormatter formatter;
+
     //-------------------------------------------------------------------------
     // Constructor
 
@@ -55,6 +61,7 @@ public class TrivialCalendar implements Calendar {
         this.priorEra        = Objects.requireNonNull(builder.priorEra);
         this.yearLength      = Objects.requireNonNull(builder.yearLength);
         this.week            = builder.week;
+        this.defaultFormat   = builder.defaultFormat;
     }
 
     //-------------------------------------------------------------------------
@@ -94,6 +101,14 @@ public class TrivialCalendar implements Calendar {
     @Override
     public Era priorEra() {
         return priorEra;
+    }
+
+    @Override
+    public DateFormatter formatter() {
+        if (formatter == null) {
+            formatter = new DateFormatter(this, defaultFormat);
+        }
+        return formatter;
     }
 
     //-------------------------------------------------------------------------
@@ -146,6 +161,7 @@ public class TrivialCalendar implements Calendar {
         private Era priorEra = BEFORE_EPOCH;
         private YearDelta yearLength = (y -> 365);
         private Week week = null;
+        private String defaultFormat = "E-yyyy/ddd";
 
         //---------------------------------------------------------------------
         // Constructor
@@ -160,7 +176,9 @@ public class TrivialCalendar implements Calendar {
          * @return The calendar
          */
         public TrivialCalendar build() {
-            return new TrivialCalendar(this);
+            var cal = new TrivialCalendar(this);
+            cal.formatter(); // Builds the formatter, lazily.
+            return cal;
         }
 
         /**
@@ -228,17 +246,20 @@ public class TrivialCalendar implements Calendar {
         ) {
             return week(new Week(weekdays, offset));
         }
+
+        /**
+         * Gets the default format string for this calendar.
+         * @param formatString The format string
+         * @return The builder
+         */
+        public TrivialCalendar.Builder defaultFormat(String formatString) {
+            this.defaultFormat = Objects.requireNonNull(formatString);
+            return this;
+        }
     }
 
     //-------------------------------------------------------------------------
     // Helpers
-
-    private CalendarException badFormat(String dateString) {
-        throw new CalendarException(
-            "Invalid format, expected \"" +
-                era + "|" + priorEra + "<year>-<dayOfYear>\": \"" +
-            dateString + "\".");
-    }
 
     public String toString() {
         return "TrivialCalendar[" + era + "," + priorEra + "]";

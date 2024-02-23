@@ -82,6 +82,11 @@ public class DateFormatter {
     private static final char HYPHEN = '-';
     private static final char SLASH = '/';
 
+    /**
+     * Creates a date formatter for the given calendar and format string.
+     * @param calendar The calendar
+     * @param formatString The format string
+     */
     public DateFormatter(Calendar calendar, String formatString) {
         this.calendar = calendar;
         var scanner = new FormatScanner(formatString);
@@ -145,19 +150,11 @@ public class DateFormatter {
     //-------------------------------------------------------------------------
     // Public Methods
 
-    // Requiring that the calendar be known at construction time is
-    // annoying.
-    // We'd like to create a default formatter for each calendar.
-    // - Create it lazily based on default format string?
-    // The calendar will certainly be needed at formatting/parsing time.
-    // We don't want to recompute fields more than once.
-    // We don't want to validate hasMonths/hasWeeks constantly.
-    //
-    // Ponder:
-    // - Make `Date` contain all valid field values.
-    // - Make `Date` be a (Calendar + day) and compute field values on demand
-    // - Make weeks and months non-optional.
-
+    /**
+     * Formats an epoch day as a date string.
+     * @param day The epoch day
+     * @return The string
+     */
     @SuppressWarnings("DataFlowIssue")
     public String format(int day) {
         var buff = new StringBuilder();
@@ -202,11 +199,27 @@ public class DateFormatter {
             : padChar.repeat(width - text.length()) + text;
     }
 
+    /**
+     * Formats a date for this calendar as a date string.
+     * @param date The date
+     * @return The date string.
+     */
     public String format(Date date) {
+        if (!date.calendar().equals(calendar)) {
+            throw new CalendarException("Mismatch between Date and Calendar.");
+        }
         return format(calendar.date2day(date));
     }
 
+    /**
+     * Formats a YearDay for this calendar as a date string.
+     * @param yearDay The date
+     * @return The date string.
+     */
     public String format(YearDay yearDay) {
+        if (!yearDay.calendar().equals(calendar)) {
+            throw new CalendarException("Mismatch between YearDay and Calendar.");
+        }
         return format(calendar.yearDay2day(yearDay));
     }
 

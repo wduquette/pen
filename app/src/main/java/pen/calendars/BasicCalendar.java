@@ -1,5 +1,7 @@
 package pen.calendars;
 
+import pen.calendars.formatter.DateFormatter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,21 +42,31 @@ public class BasicCalendar implements Calendar {
     // The weekly cycle; possibly null
     private final Week week;
 
+    // Default format and formatter
+    private final String defaultFormat;
+    private DateFormatter formatter;
+
     //-------------------------------------------------------------------------
     // Constructor
 
     // Creates the calendar given the builder parameters.
     private BasicCalendar(Builder builder) {
-        this.epochOffset = builder.epochOffset;
-        this.era       = Objects.requireNonNull(builder.era);
-        this.priorEra  = Objects.requireNonNull(builder.priorEra);
-        this.months    = Collections.unmodifiableList(builder.months);
-        this.week      = builder.week;
+        this.epochOffset   = builder.epochOffset;
+        this.era           = Objects.requireNonNull(builder.era);
+        this.priorEra      = Objects.requireNonNull(builder.priorEra);
+        this.months        = Collections.unmodifiableList(builder.months);
+        this.week          = builder.week;
+        this.defaultFormat = builder.defaultFormat;
     }
 
     //-------------------------------------------------------------------------
     // Methods specific to BasicCalendar
 
+    /**
+     * Gets the offset between the epoch day 0 and this calendar's
+     * (year 1, month 1, day 1).
+     * @return
+     */
     public int epochOffset() {
         return epochOffset;
     }
@@ -85,6 +97,14 @@ public class BasicCalendar implements Calendar {
     @Override
     public Era priorEra() {
         return priorEra;
+    }
+
+    @Override
+    public DateFormatter formatter() {
+        if (formatter == null) {
+            formatter = new DateFormatter(this, defaultFormat);
+        }
+        return formatter;
     }
 
     //-------------------------------------------------------------------------
@@ -262,7 +282,6 @@ public class BasicCalendar implements Calendar {
         return result;
     }
 
-
     //-------------------------------------------------------------------------
     // Helpers
 
@@ -306,6 +325,7 @@ public class BasicCalendar implements Calendar {
         private Era priorEra = BEFORE_EPOCH;
         private final List<MonthRecord> months = new ArrayList<>();
         private Week week = null;
+        private String defaultFormat = "yyyy-mm-dd E";
 
         //---------------------------------------------------------------------
         // Constructor
@@ -320,7 +340,10 @@ public class BasicCalendar implements Calendar {
          * @return The calendar
          */
         public BasicCalendar build() {
-            return new BasicCalendar(this);
+            var cal = new BasicCalendar(this);
+            cal.formatter(); // Builds the formatter, lazily.
+            return cal;
+
         }
 
         /**
@@ -402,6 +425,16 @@ public class BasicCalendar implements Calendar {
             int offset
         ) {
             return week(new Week(weekdays, offset));
+        }
+
+        /**
+         * Gets the default format string for this calendar.
+         * @param formatString The format string
+         * @return The builder
+         */
+        public Builder defaultFormat(String formatString) {
+            this.defaultFormat = Objects.requireNonNull(formatString);
+            return this;
         }
     }
 }
