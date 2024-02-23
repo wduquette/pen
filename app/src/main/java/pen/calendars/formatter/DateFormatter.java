@@ -145,6 +145,20 @@ public class DateFormatter {
     //-------------------------------------------------------------------------
     // Public Methods
 
+    // Requiring that the calendar be known at construction time is
+    // annoying.
+    // We'd like to create a default formatter for each calendar.
+    // - Create it lazily based on default format string?
+    // The calendar will certainly be needed at formatting/parsing time.
+    // We don't want to recompute fields more than once.
+    // We don't want to validate hasMonths/hasWeeks constantly.
+    //
+    // Ponder:
+    // - Make `Date` contain all valid field values.
+    // - Make `Date` be a (Calendar + day) and compute field values on demand
+    // - Make weeks and months non-optional.
+
+    @SuppressWarnings("DataFlowIssue")
     public String format(int day) {
         var buff = new StringBuilder();
         var yearDay = calendar.day2yearDay(day);
