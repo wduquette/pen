@@ -10,9 +10,9 @@ public class DateFormatterTest {
     private final Date ad = CALENDAR.date(2024, 2, 20);
     private final Date bc = CALENDAR.date(-44, 3, 15);
     private final DateFormatter NUMERIC =
-        DateFormatter.define("yyyy'-'mm'-'dd' 'E");
+        CALENDAR.formatter("yyyy'-'mm'-'dd' 'E");
     private final DateFormatter FANCY =
-        DateFormatter.define("WWWW', 'MMMM' 'd', 'y' 'E");
+        CALENDAR.formatter("WWWW', 'MMMM' 'd', 'y' 'E");
 
     @Test
     public void testFormat() {
@@ -21,5 +21,4 @@ public class DateFormatterTest {
         check(FANCY.format(ad)).eq("TUESDAY, FEBRUARY 20, 2024 AD");
         check(FANCY.format(bc)).eq("FRIDAY, MARCH 15, 44 BC");
     }
-
 }

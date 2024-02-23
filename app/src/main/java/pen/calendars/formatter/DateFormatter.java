@@ -1,14 +1,11 @@
 package pen.calendars.formatter;
 
-import pen.calendars.CalendarException;
-import pen.calendars.Date;
-import pen.calendars.Form;
+import pen.calendars.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static pen.calendars.formatter.DateComponent.*;
+import static pen.calendars.formatter.DateField.*;
 
 /**
  * DateFormatters format and parse dates according to a format string.
@@ -63,17 +60,12 @@ import static pen.calendars.formatter.DateComponent.*;
  */
 public class DateFormatter {
     //-------------------------------------------------------------------------
-    // Static Factories
-
-    public static DateFormatter define(String formatString) {
-        return new DateFormatter(formatString);
-    }
-
-    //-------------------------------------------------------------------------
     // Instance Variables
 
+    private final Calendar calendar;
+
     // The compiled list of components
-    private final List<DateComponent> components = new ArrayList<>();
+    private final List<DateField> fields = new ArrayList<>();
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -90,29 +82,50 @@ public class DateFormatter {
     private static final char HYPHEN = '-';
     private static final char SLASH = '/';
 
-    public DateFormatter(String formatString) {
+    public DateFormatter(Calendar calendar, String formatString) {
+        this.calendar = calendar;
         var scanner = new FormatScanner(formatString);
 
         while (!scanner.atEnd()) {
             switch (scanner.peek()) {
                 case QUOTE ->
-                    components.add(new Text(scanner.getText()));
+                    fields.add(new Text(scanner.getText()));
                 case SPACE, HYPHEN, SLASH ->
-                    components.add(new Text(Character.toString(scanner.next())));
-                case DAY_OF_MONTH ->
-                    components.add(new DayOfMonth(scanner.getCount()));
+                    fields.add(new Text(Character.toString(scanner.next())));
+                case DAY_OF_MONTH -> {
+                    if (calendar.hasMonths()) {
+                        fields.add(new DayOfMonth(scanner.getCount()));
+                    } else {
+                        throw Calendar.noMonthlyCycle();
+                    }
+                }
                 case DAY_OF_YEAR ->
-                    components.add(new DayOfYear(scanner.getCount()));
+                    fields.add(new DayOfYear(scanner.getCount()));
                 case ERA ->
-                    components.add(new EraName(count2form(scanner.getCount())));
-                case MONTH_NAME ->
-                    components.add(new MonthName(count2form(scanner.getCount())));
-                case MONTH ->
-                    components.add(new MonthNumber(scanner.getCount()));
-                case WEEKDAY ->
-                    components.add(new Weekday(count2form(scanner.getCount())));
+                    fields.add(new EraName(count2form(scanner.getCount())));
+                case MONTH_NAME -> {
+                    if (calendar.hasMonths()) {
+                        fields.add(new MonthName(count2form(scanner.getCount())));
+                    } else {
+                        throw Calendar.noMonthlyCycle();
+                    }
+                }
+                case MONTH -> {
+                    if (calendar.hasMonths()) {
+                        fields.add(new MonthNumber(scanner.getCount()));
+                    } else {
+                        throw Calendar.noMonthlyCycle();
+                    }
+                }
+                case WEEKDAY -> {
+                    if (calendar.hasWeeks()) {
+                        fields.add(new WeekdayName(count2form(scanner.getCount())));
+                    } else {
+                        throw Calendar.noMonthlyCycle();
+                    }
+                }
                 case YEAR ->
-                    components.add(new YearNumber(scanner.getCount()));
+                    fields.add(new YearNumber(scanner.getCount()));
                 default ->
                     throw new CalendarException("Unknown conversion character: " +
                         "\"" + scanner.peek() + "\".");
@@ -132,15 +145,60 @@ public class DateFormatter {
     //-------------------------------------------------------------------------
     // Public Methods
 
-    @SuppressWarnings("unused")
-    public void dump() {
-        components.forEach(System.out::println);
+    public String format(int day) {
+        var buff = new StringBuilder();
+        var yearDay = calendar.day2yearDay(day);
+        var date = calendar.hasMonths() ? calendar.day2date(day) : null;
+        var weekday = calendar.hasWeeks() ? calendar.day2weekday(day) : null;
+
+        for (var field : fields) {
+            switch (field) {
+                case DayOfMonth fld ->
+                    buff.append(zeroPad(date.dayOfMonth(), fld.digits()));
+                case DayOfYear fld ->
+                    buff.append(zeroPad(yearDay.dayOfYear(), fld.digits()));
+                case EraName fld ->
+                    buff.append(yearDay.year() > 0
+                        ? calendar.era().getForm(fld.form())
+                        : calendar.priorEra().getForm(fld.form()));
+                case MonthName fld ->
+                    buff.append(date.month().getForm(fld.form()));
+                case MonthNumber fld ->
+                    buff.append(zeroPad(date.monthOfYear(), fld.digits()));
+                case Text fld ->
+                    buff.append(fld.text());
+                case WeekdayName fld ->
+                    buff.append(weekday.getForm(fld.form()));
+                case YearNumber fld ->
+                    buff.append(zeroPad(yearDay.year(), fld.digits()));
+            }
+        }
+
+        return buff.toString();
+    }
+
+    private static String zeroPad(int number, int width) {
+        return pad(Integer.toString(Math.abs(number)), "0", width);
+
+    }
+
+    private static String pad(String text, String padChar, int width) {
+        return text.length() >= width
+            ? text
+            : padChar.repeat(width - text.length()) + text;
     }
 
     public String format(Date date) {
-        return components.stream()
-            .map(c -> c.format(date))
-            .collect(Collectors.joining());
+        return format(calendar.date2day(date));
+    }
+
+    public String format(YearDay yearDay) {
+        return format(calendar.yearDay2day(yearDay));
+    }
+
+    @SuppressWarnings("unused")
+    public void dump() {
+        fields.forEach(System.out::println);
     }
 
     //-----------------------------------------------------------------------------------------------------------------
