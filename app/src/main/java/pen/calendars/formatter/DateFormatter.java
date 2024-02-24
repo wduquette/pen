@@ -261,7 +261,11 @@ public class DateFormatter {
 
     /**
      * Parses the given dateString with respect to the given calendar,
-     * returning the corresponding epoch day.
+     * returning the corresponding epoch day.  Era, month, and weekday
+     * names are expected to match the precise form indicated by the
+     * format string.  Numeric fields are expected to have the exact
+     * number of digits given in the format string, unless that number is
+     * 1; in that case, the field will consume available digits.
      * @param cal The calendar
      * @param dateString The date string
      * @return The epoch day
