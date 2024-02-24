@@ -25,7 +25,6 @@ import pen.tools.ToolInfo;
 import pen.tools.draw.DrawTool;
 
 import java.util.Deque;
-import java.util.List;
 
 import static pen.stencil.Stencil.*;
 

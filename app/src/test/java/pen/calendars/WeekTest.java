@@ -2,8 +2,6 @@ package pen.calendars;
 
 import org.junit.Test;
 
-import java.util.List;
-
 import static pen.checker.Checker.check;
 
 public class WeekTest {
