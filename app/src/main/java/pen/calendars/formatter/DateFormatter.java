@@ -62,10 +62,12 @@ public class DateFormatter {
     //-------------------------------------------------------------------------
     // Instance Variables
 
-    private final Calendar calendar;
-
     // The compiled list of components
     private final List<DateField> fields = new ArrayList<>();
+
+    // Whether months and/or weeks are required by this format string.
+    private final boolean needsWeeks;
+    private final boolean needsMonths;
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -83,13 +85,13 @@ public class DateFormatter {
     private static final char SLASH = '/';
 
     /**
-     * Creates a date formatter for the given calendar and format string.
-     * @param calendar The calendar
+     * Creates a date formatter for the given format string.
      * @param formatString The format string
      */
-    public DateFormatter(Calendar calendar, String formatString) {
-        this.calendar = calendar;
+    public DateFormatter(String formatString) {
         var scanner = new FormatScanner(formatString);
+        var hasMonths = false;
+        var hasWeeks = false;
 
         while (!scanner.atEnd()) {
             switch (scanner.peek()) {
@@ -98,36 +100,24 @@ public class DateFormatter {
                 case SPACE, HYPHEN, SLASH ->
                     fields.add(new Text(Character.toString(scanner.next())));
                 case DAY_OF_MONTH -> {
-                    if (calendar.hasMonths()) {
-                        fields.add(new DayOfMonth(scanner.getCount()));
-                    } else {
-                        throw Calendar.noMonthlyCycle();
-                    }
+                    hasMonths = true;
+                    fields.add(new DayOfMonth(scanner.getCount()));
                 }
                 case DAY_OF_YEAR ->
                     fields.add(new DayOfYear(scanner.getCount()));
                 case ERA ->
                     fields.add(new EraName(count2form(scanner.getCount())));
                 case MONTH_NAME -> {
-                    if (calendar.hasMonths()) {
-                        fields.add(new MonthName(count2form(scanner.getCount())));
-                    } else {
-                        throw Calendar.noMonthlyCycle();
-                    }
+                    hasMonths = true;
+                    fields.add(new MonthName(count2form(scanner.getCount())));
                 }
                 case MONTH -> {
-                    if (calendar.hasMonths()) {
-                        fields.add(new MonthNumber(scanner.getCount()));
-                    } else {
-                        throw Calendar.noMonthlyCycle();
-                    }
+                    hasMonths = true;
+                    fields.add(new MonthNumber(scanner.getCount()));
                 }
                 case WEEKDAY -> {
-                    if (calendar.hasWeeks()) {
-                        fields.add(new WeekdayName(count2form(scanner.getCount())));
-                    } else {
-                        throw Calendar.noMonthlyCycle();
-                    }
+                    hasWeeks = true;
+                    fields.add(new WeekdayName(count2form(scanner.getCount())));
                 }
                 case YEAR ->
                     fields.add(new YearNumber(scanner.getCount()));
@@ -136,6 +126,9 @@ public class DateFormatter {
                         "\"" + scanner.peek() + "\".");
             }
         }
+
+        this.needsMonths = hasMonths;
+        this.needsWeeks = hasWeeks;
     }
 
     private Form count2form(int count) {
@@ -151,35 +144,71 @@ public class DateFormatter {
     // Public Methods
 
     /**
-     * Formats an epoch day as a date string.
+     * Gets whether this formatter is compatible with the given calendar.
+     * @param calendar The calendar
+     * @return true or false
+     */
+    public boolean isCompatibleWith(Calendar calendar) {
+        return (!needsMonths || calendar.hasMonths())
+            && (!needsWeeks  || calendar.hasWeeks());
+    }
+
+    /**
+     * Returns true if the formatter requires a calendar that defines a
+     * monthly cycle.
+     * @return true or false
+     */
+    public boolean needsMonths() {
+        return needsMonths;
+    }
+
+    /**
+     * Returns true if the formatter requires a calendar that defines a weekly
+     * cycle.
+     * @return true or false
+     */
+    public boolean needsWeeks() {
+        return needsWeeks;
+    }
+
+    /**
+     * Formats an epoch day as a date string for the given calendar.
+     * @param cal The calendar
      * @param day The epoch day
      * @return The string
      */
-    @SuppressWarnings("DataFlowIssue")
-    public String format(int day) {
+    public String format(Calendar cal, int day) {
         var buff = new StringBuilder();
-        var yearDay = calendar.day2yearDay(day);
-        var date = calendar.hasMonths() ? calendar.day2date(day) : null;
-        var weekday = calendar.hasWeeks() ? calendar.day2weekday(day) : null;
+        var yearDay = cal.day2yearDay(day);
+        var date = cal.hasMonths() ? cal.day2date(day) : null;
+        var weekday = cal.hasWeeks() ? cal.day2weekday(day) : null;
 
         for (var field : fields) {
             switch (field) {
-                case DayOfMonth fld ->
+                case DayOfMonth fld -> {
+                    assert date != null;
                     buff.append(zeroPad(date.dayOfMonth(), fld.digits()));
+                }
                 case DayOfYear fld ->
                     buff.append(zeroPad(yearDay.dayOfYear(), fld.digits()));
                 case EraName fld ->
                     buff.append(yearDay.year() > 0
-                        ? calendar.era().getForm(fld.form())
-                        : calendar.priorEra().getForm(fld.form()));
-                case MonthName fld ->
+                        ? cal.era().getForm(fld.form())
+                        : cal.priorEra().getForm(fld.form()));
+                case MonthName fld -> {
+                    assert date !=  null;
                     buff.append(date.month().getForm(fld.form()));
-                case MonthNumber fld ->
+                }
+                case MonthNumber fld -> {
+                    assert date != null;
                     buff.append(zeroPad(date.monthOfYear(), fld.digits()));
+                }
                 case Text fld ->
                     buff.append(fld.text());
-                case WeekdayName fld ->
+                case WeekdayName fld -> {
+                    assert weekday != null;
                     buff.append(weekday.getForm(fld.form()));
+                }
                 case YearNumber fld ->
                     buff.append(zeroPad(yearDay.year(), fld.digits()));
             }
@@ -200,27 +229,29 @@ public class DateFormatter {
     }
 
     /**
-     * Formats a date for this calendar as a date string.
+     * Formats a date for the given calendar as a date string.
+     * @param cal The calendar
      * @param date The date
      * @return The date string.
      */
-    public String format(Date date) {
-        if (!date.calendar().equals(calendar)) {
+    public String format(Calendar cal, Date date) {
+        if (!date.calendar().equals(cal)) {
             throw new CalendarException("Mismatch between Date and Calendar.");
         }
-        return format(calendar.date2day(date));
+        return format(cal, cal.date2day(date));
     }
 
     /**
-     * Formats a YearDay for this calendar as a date string.
+     * Formats a YearDay for the given calendar as a date string.
+     * @param cal The calendar
      * @param yearDay The date
      * @return The date string.
      */
-    public String format(YearDay yearDay) {
-        if (!yearDay.calendar().equals(calendar)) {
+    public String format(Calendar cal, YearDay yearDay) {
+        if (!yearDay.calendar().equals(cal)) {
             throw new CalendarException("Mismatch between YearDay and Calendar.");
         }
-        return format(calendar.yearDay2day(yearDay));
+        return format(cal, cal.yearDay2day(yearDay));
     }
 
     @SuppressWarnings("unused")
