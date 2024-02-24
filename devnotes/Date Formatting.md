@@ -2,6 +2,7 @@
 
 Date formatting is similar to Java's `DataTimeFormatter`.
 
+
 ## Relevant Conversions
 
 | Symbol | Meaning | Type | Example |
@@ -35,3 +36,32 @@ This scheme is somewhat simpler than `DateTimeFormatter`'s.
 - Four or more characters gives the `FULL` form, the entire name.
 
 The examples shown in the table above reflect standard abbreviations for the Gregorian calendar; each fictional calendar can define these forms as it likes.
+
+## DateFormatter/Calendar Relationship
+
+At present each `DateFormatter` wraps a calendar, and format strings cannot be validated until the calendar exists.  But we often want to define a format string as part of building the calendar.  Chicken and egg.
+
+I've finessed this for the moment: 
+
+- The builder accepts a format string.
+- The Calendar retains the format string.
+- The `BasicCalendar::formatter()` method builds the formatter in a lazy fashion.
+- The builder calls `formatter()` right after building the Calendar, so that any error appears immediately.
+
+But this is clunky.
+
+Another approach: 
+
+- The `DateFormatter` is calendar independent.
+- The `DateFormatter` remembers whether it needs weeks and/or months.
+- A `DateFormatter` can be associated with a Calendar when the Calendar is constructed; it's an error if it needs weeks/months and the Calendar doesn't have them.
+- A `DateFormatter` requires a Calendar to format; it assumes that the calendar has what's needed.  Throws an error on format if it doesn't.
+- The check on format is incidental.
+
+Yet another approach:
+
+- Calendars don't provide formatting/parsing.
+- The client has to create their own formatter, when they need it.
+- No chicken and egg in this case.
+
+Think about this.

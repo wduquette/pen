@@ -4,35 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "7a9d2b780617ca0a",
+        "id": "691325faa677e060",
         "type": "tabs",
         "children": [
           {
-            "id": "7a48aa075c19ee81",
+            "id": "12bc19f24e7a883c",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Ideas.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "a8cb107df4881ac8",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "To Do List.md",
+                "file": "Date Formatting.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -98,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "To Do List.md",
+                "file": "Date Formatting.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "To Do List.md",
+                "file": "Date Formatting.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "To Do List.md"
+                "file": "Date Formatting.md"
               }
             }
           }
@@ -161,13 +148,14 @@
       "homepage:Open homepage": false
     }
   },
-  "active": "a8cb107df4881ac8",
+  "active": "12bc19f24e7a883c",
   "lastOpenFiles": [
+    "Calendars.md",
+    "Home.md",
     "Date Formatting.md",
     "To Do List.md",
     "Yearly Cycles.md",
     "Ideas.md",
-    "Home.md",
     "TCL Calendar Definition API.md",
     "Calendar 18.java",
     "Calendar 17.java",
@@ -180,7 +168,6 @@
     "Calendar 10.java",
     "Calendar 9.java",
     "2024-02-18.md",
-    "Calendars.md",
     "Regnal Calendars.md",
     "2024-02-07.md",
     "Time Line Diagrams.md",
