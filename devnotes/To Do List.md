@@ -6,7 +6,7 @@
         - [x] Add `Era` type, and beef up `Month` and `Weekday`.
         - [x] Make DateFormatter support formatting `YearDay` values
             - Including for calendars that don't have months.
-        - [ ] Make `DateFormatter` support parsing.
+        - [x] Make `DateFormatter` support parsing.
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams
     - [[Time Line Diagrams]]
