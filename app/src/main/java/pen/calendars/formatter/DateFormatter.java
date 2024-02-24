@@ -259,8 +259,225 @@ public class DateFormatter {
         fields.forEach(System.out::println);
     }
 
-    //-----------------------------------------------------------------------------------------------------------------
-    // Scanner
+    /**
+     * Parses the given dateString with respect to the given calendar,
+     * returning the corresponding epoch day.
+     * @param cal The calendar
+     * @param dateString The date string
+     * @return The epoch day
+     * @throws CalendarException on parse failure
+     */
+    public int parse(Calendar cal, String dateString) {
+        if (!isCompatibleWith(cal)) {
+            throw new IllegalArgumentException(
+                "Calendar is not compatible with this DateFormatter.");
+        }
+
+        return new DateParser(cal, dateString).parse();
+    }
+
+    //-------------------------------------------------------------------------
+    // DateParser
+
+    // We have a separate class for parsing to hold the transient state.
+    private class DateParser {
+        // Input data
+        private final Calendar cal;
+        private final String dateString;
+
+        // Parsed Information
+        private boolean isPriorEra = false;
+        private Integer year = null;
+        private Integer monthOfYear = null;
+        private Integer dayOfMonth = null;
+        private Integer dayOfYear = null;
+
+        // Parsing Progress
+        private final int n;
+        private int i = 0;
+
+        DateParser(Calendar cal, String dateString) {
+            this.cal = cal;
+            this.dateString = dateString.toUpperCase();
+            this.n = dateString.length();
+        }
+
+        // Parses the string according to the fields, and computes an epoch
+        // day if possible.
+        int parse() {
+            // FIRST, parse available fields
+            for (var field : fields) {
+                parseField(field);
+            }
+
+            // NEXT, See if we have sufficient data to compute the epoch day.
+            return computeEpochDay();
+        }
+
+        private void parseField(DateField field) {
+            if (atEnd()) {
+                throw expected(field.getClass().getSimpleName(), "");
+            }
+
+            switch (field) {
+                case DayOfMonth fld ->
+                    dayOfMonth = nextInt("d", fld.digits());
+                case DayOfYear fld ->
+                    dayOfYear = nextInt("D", fld.digits());
+                case EraName fld -> {
+                    var era = cal.era().getForm(fld.form()).toUpperCase();
+                    var prior = cal.priorEra().getForm(fld.form()).toUpperCase();
+
+                    if (peekString().startsWith(era)) {
+                        skipString(era);
+                    } else if (peekString().startsWith(prior)) {
+                        skipString(prior);
+                        isPriorEra = true;
+                    } else {
+                        throw expected("era", peekString());
+                    }
+                }
+                case MonthName fld ->
+                    monthOfYear = findName("month", cal.months(), fld.form()) + 1;
+                case MonthNumber fld ->
+                    monthOfYear = nextInt("m", fld.digits());
+                case Text fld -> {
+                    var text = fld.text().toUpperCase();
+                    if (peekString().startsWith(text)) {
+                        skipString(text);
+                    } else {
+                        throw expected("\"" + fld.text() + "\"", peekString());
+                    }
+                }
+                case WeekdayName fld ->
+                    // We don't care which weekday it is, but we have to
+                    // parse it.
+                    findName("weekday", cal.week().weekdays(), fld.form());
+                case YearNumber fld ->
+                    year = nextInt("y", fld.digits());
+            }
+        }
+
+        private int computeEpochDay() {
+            // FIRST, if we don't know the year we're out of luck.
+            if (year == null) {
+                throw badInfo();
+            }
+
+            // NEXT, if they gave us the prior era, negate the year.
+            if (isPriorEra) {
+                year = -year;
+            }
+
+            // NEXT, if we have dayOfYear, that's sufficient.
+            if (dayOfYear != null) {
+                var yearDay = cal.yearDay(year, dayOfYear);
+                cal.validate(yearDay);
+                return cal.yearDay2day(yearDay);
+            }
+
+            // NEXT, we need monthOfYear and dayOfMonth
+            if (monthOfYear != null && dayOfMonth != null) {
+                var date = cal.date(year, monthOfYear, dayOfMonth);
+                cal.validate(date);
+                return cal.date2day(date);
+            }
+
+            throw badInfo();
+        }
+
+        //---------------------------------------------------------------------
+        // Scanner Methods
+
+        private boolean atEnd() {
+            return i >= n;
+        }
+
+        private int charsLeft() {
+            return n - i;
+        }
+
+        private int nextInt(String conv, int count) {
+            // FIRST, make sure we've got at least the desired number of
+            // characters
+            if (count > charsLeft()) {
+                throw expected("Field \"" + conv.repeat(count) + "\"",
+                    peekString());
+            }
+
+            // NEXT, if count is 1, take all available digits.
+            if (count == 1) {
+                count = countLeadingDigits();
+            }
+
+            // NEXT, extract the characters and convert to integer.
+            var token = dateString.substring(i, i + count);
+            i += count;
+
+            try {
+                return Integer.parseInt(token);
+            } catch (Exception ex) {
+                throw expected("Field \"" + conv.repeat(count) + "\"",
+                    token);
+            }
+        }
+
+        private int countLeadingDigits() {
+            var count = 0;
+            var ndx = i;
+
+            while (!atEnd() && Character.isDigit(dateString.charAt(ndx))) {
+                ++ndx;
+                ++count;
+            }
+
+            return count;
+        }
+
+        private int findName(
+            String what,
+            List<? extends CalendarName> names,
+            Form form
+        ) {
+            for (var ndx = 0; ndx < names.size(); ndx++) {
+                var text = names.get(ndx).getForm(form).toUpperCase();
+
+                if (peekString().startsWith(text)) {
+                    skipString(text);
+                    return ndx;
+                }
+            }
+
+            throw expected(what, peekString());
+        }
+
+        private String peekString() {
+            return atEnd() ? "" : dateString.substring(i);
+        }
+
+        private void skipString(String token) {
+            if (peekString().startsWith(token)) {
+                i += token.length();
+            } else {
+                throw expected("\"" + token + "\"", peekString());
+            }
+        }
+
+        //---------------------------------------------------------------------
+        // Parsing Exceptions
+
+        private CalendarException expected(String what, String got) {
+            return new CalendarException("Expected " + what + ", got: \"" +
+                got + "\".");
+        }
+
+        private CalendarException badInfo() {
+            return new CalendarException("Insufficient information to compute the epoch day.");
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    // FormatScanner
 
     private static class FormatScanner {
         private final String source;
