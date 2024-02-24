@@ -59,4 +59,15 @@ public class DateFormatterTest {
         check(NUMERIC.format(GREG, adYearDay)).eq("2024-02-20 AD");
         check(YEARDAY.format(GREG, adYearDay)).eq("2024/051");
     }
+
+    @Test
+    public void testParseDate() {
+        check(date(NUMERIC.parse(GREG, "2024-02-20 AD"))).eq(ad);
+        check(date(NUMERIC.parse(GREG, "0044-03-15 BC"))).eq(bc);
+        check(date(FANCY.parse(GREG, "Tuesday, February 20, 2024 AD"))).eq(ad);
+        check(date(FANCY.parse(GREG, "Friday, March 15, 44 BC"))).eq(bc);
+        check(date(YEARDAY.parse(GREG, "2024/051"))).eq(ad);
+    }
+
+    private Date date(int day) { return GREG.day2date(day); }
 }
