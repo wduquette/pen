@@ -6,6 +6,9 @@ import java.util.List;
  * The days of a normal week.
  */
 public class StandardWeek {
+    private StandardWeek() {} // Not instantiable
+
+    // The days
     public static final Weekday SUNDAY =
         new Weekday("Sunday", "Sun", "Su", "S");
     public static final Weekday MONDAY =

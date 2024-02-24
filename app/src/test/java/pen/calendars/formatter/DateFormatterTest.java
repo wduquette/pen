@@ -43,8 +43,8 @@ public class DateFormatterTest {
     public void testFormatDate() {
         check(NUMERIC.format(GREG, ad)).eq("2024-02-20 AD");
         check(NUMERIC.format(GREG, bc)).eq("0044-03-15 BC");
-        check(FANCY.format(GREG, ad)).eq("Tuesday, FEBRUARY 20, 2024 AD");
-        check(FANCY.format(GREG, bc)).eq("Friday, MARCH 15, 44 BC");
+        check(FANCY.format(GREG, ad)).eq("Tuesday, February 20, 2024 AD");
+        check(FANCY.format(GREG, bc)).eq("Friday, March 15, 44 BC");
         check(YEARDAY.format(GREG, ad)).eq("2024/051");
     }
 
