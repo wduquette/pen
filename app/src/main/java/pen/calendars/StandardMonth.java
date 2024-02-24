@@ -2,6 +2,7 @@ package pen.calendars;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class StandardMonth {
     private StandardMonth() {} // Not instantiable
 
