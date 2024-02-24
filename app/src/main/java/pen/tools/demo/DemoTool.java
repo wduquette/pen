@@ -25,7 +25,6 @@ import pen.tools.ToolInfo;
 import pen.tools.draw.DrawTool;
 
 import java.util.Deque;
-import java.util.List;
 
 import static pen.stencil.Stencil.*;
 
@@ -364,23 +363,23 @@ Java API.
 
     //------------------------------------------------------------------------
     // Calendar values
-    private static final Week ME_WEEK = new Week(List.of(StandardWeekDays.values()), 1);
+    private static final Week ME_WEEK = new Week(StandardWeek.DAYS, 1);
     private static final BasicCalendar ME = new BasicCalendar.Builder()
         .era(new Era("ME", "Modern Era"))
         .priorEra(new Era("BME", "Before Modern Era"))
         .epochOffset(-978 * 366)
-        .month(StandardMonths.JANUARY, 31)
-        .month(StandardMonths.FEBRUARY, 28)
-        .month(StandardMonths.MARCH, 31)
-        .month(StandardMonths.APRIL, 30)
-        .month(StandardMonths.MAY, 31)
-        .month(StandardMonths.JUNE, 30)
-        .month(StandardMonths.JULY, 31)
-        .month(StandardMonths.AUGUST, 31)
-        .month(StandardMonths.SEPTEMBER, 30)
-        .month(StandardMonths.OCTOBER, 31)
-        .month(StandardMonths.NOVEMBER, 31)
-        .month(StandardMonths.DECEMBER, 31)
+        .month(StandardMonth.JANUARY, 31)
+        .month(StandardMonth.FEBRUARY, 28)
+        .month(StandardMonth.MARCH, 31)
+        .month(StandardMonth.APRIL, 30)
+        .month(StandardMonth.MAY, 31)
+        .month(StandardMonth.JUNE, 30)
+        .month(StandardMonth.JULY, 31)
+        .month(StandardMonth.AUGUST, 31)
+        .month(StandardMonth.SEPTEMBER, 30)
+        .month(StandardMonth.OCTOBER, 31)
+        .month(StandardMonth.NOVEMBER, 31)
+        .month(StandardMonth.DECEMBER, 31)
         .week(ME_WEEK)
         .build();
 
