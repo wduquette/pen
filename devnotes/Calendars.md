@@ -5,103 +5,63 @@ Goal: a way to represent fantasy calendars in Java code, providing easy conversi
 ## Next Steps
 
 - [x] Ponder how to associate weeks with calendars.
-- [ ] Ponder the date formatting/parsing API
+- [x] Ponder the date formatting/parsing API
+- [x] Implement the  date formatting code
+- [ ] Implement the date parsing code.
 - [ ] Ponder the Tcl API for defining and managing calendars
 
-## API Refactoring
-
-| Area | Flag | Method | Comment |
-| ---- | ---- | ---- | ---- |
-| Basic | -- | int daysInYear(year) |  |
-| Basic | -- | String era() | Need Era |
-| Basic | -- | String priorEra() | Need hasPriorEra? |
-| Basic | -- | String formatDate(day) | Need DateFormatter |
-| Basic | -- | int parseDate(dateString) | Need DateFormatter |
-| Basic | FC | YearDay day2yearDay(day) |  |
-| Basic | FC | int yearDay2day(YearDay) |  |
-| Basic | FC | void validate(YearDay) |  |
-| Feature | -- | boolean hasMonths() |  |
-| Feature | -- | boolean hasWeeks() |  |
-| Feature | ?? | boolean hasPriorEra() |  |
-| Months | -- | Date date(y, m) |  |
-| Months | -- | int date2day(Date) |  |
-| Months | -- | Date day2date(day) |  |
-| Months | -- | int daysInMonth(y, mr) |  |
-| Months | -- | int monthsInYear() |  |
-| Months | -- | Month month(monthOfYear) |  |
-| Months | -- | List<Month> months() |  |
-| Months | -- | void validate(Date) |  |
-| Months | SC | Date yearDay2date(YearDay) |  |
-| Months | ++ | YearDay date2yearDay(Date) |  |
-| Weeks | -- | Week week() |  |
-| Weeks | -- | int daysInWeek() |  |
-| Weeks | -- | int day2dayOfWeek(day) |  |
-| Weeks | -- | Weekday day2weekday(day) |  |
-| Error | -- | noMonthlyCycle() |  |
-| Error | -- | noWeeklyCycle |  |
 ## Needs
 
-- [ ] A general `Calendar` interface
+- `Calendar` interface
     - Purpose
         - So that various components can use a calendar without knowing any of the details.
-    - The `Calendar` should
-        - [ ] Convert fundamental days to date strings
-        - [ ] Parse date strings yielding fundamental days
-        - [ ] Provide all support needed for the date formatting code
-        - [ ] TBD: see [[#The `Calendar` API]].
-        - [ ] Easy look-up of era names in various formats
-- [x] `FundamentalCalendar` 
+    - The `Calendar`
+        - Supports calendars lacking weeks and/or months.
+        - Provides conversion between epoch days, `Dates`, and `YearDays`.
+        - Provides all support needed for the date formatting code
+        - Provides easy look-up of era, month, and weekday names in various formats
+- `TrivialCalendar`  class
     - Purpose
         - A simple calendar for use in circumstances where only relative dates matter.
         - A basis for conversion between other calendars
-    - The calendar should provide
-        - [x] A fundamental epoch day 0
-        - [x] Conversion between fundamental days and year/day-of-year
-        - [x] Support for leap-year-like patterns
-        - [x] Dirt simple date formatting and parsing, for use with a Tcl extension
-        - [x] A week
-- [ ] `SimpleCalendar`
+    - The calendar provides
+        - Standard `Calendar` operations
+        - Support for variable year lengths, i.e., leap-year-like patterns
+        - Optional support for a `Week` cycle.
+- `BasicCalendar`
     - Purpose
-        - A calendar with months of variable lengths, for use when actually dates are required.
-    - The calendar should provide
-        - [x] Conversion to `FundamentalCalendar` days
-        - [x] Support for leap-year-like patterns, month by month
-        - [x] Conversion between fundamental days and year/month-of-year/day-of-month
-        - [x] Simple date formatting and parsing, for use with a Tcl extension
-        - [x] Easy look-up of month names in various formats
-        - [x] A week
-- [ ] `Week`
+        - A calendar with months of variable lengths, for use when actual dates are required.
+    - The calendar provides
+        - Standard `Calendar` operations
+        - An epoch offset, so that `0001-01-01` need not be day 0.
+        - Support for variable-length months, i.e., leap-year-like patterns 
+        - Optional support for a `Week` cycle.
+- `Week`
     - Purpose
-        - A cycle of week days, tied to the `FundamentalCalendar`'s epoch day.
+        - A cycle of week days
     - The class should provide
-        - [x] Conversion from a fundamental day to a day of the week.
-        - [x] Access to the list of week days and the epoch day offset into the list.
-        - [x] Easy look-up of day names in various formats
+        - An epoch offset, so that day 0 need not be the first day of the week.
+        - Conversion from epoch days to weekdays
+        - Easy look-up of weekday names in various formats
+- [ ] `DateFormatter` 
+    - Purpose
+        - High-quality pattern-based [[Date Formatting]] and parsing
+        - For use in drawing timelines, calendars, etc.
+        - Similar to Java's standard `DateTimeFormatter`
+    - [x] Formatting
+    - [ ] Parsing
 - [ ] `EraCalendar`
     - Purpose
         - Support for [[Regnal Calendars]] and similar eras
     - The calendar should
-        - [ ] Be based on an underlying simple calendar.
-        - [ ] Convert between fundamental days and calendar dates
+        - [ ] Be based on an underlying `BasicCalendar`
         - [ ] Support an arbitrary new year's day
-- [ ] High-quality pattern-based [[Date Formatting]] and parsing
-    - Purpose
-        - For use in drawing timelines, calendars, etc.
-    - Ideally, the patterns should be identical to those used by Java's `DateTimeFormatter`.
-        - Insofar as they make sense in this context. 
+        - [ ] Provide all standard `Calendar` operations
+- [ ] Yearly cycle (no design yet)
+    - [ ] Cycle of year names, e.g., "Year of the Dragon"
+    - [ ] Epoch offset, so that day 0 need not be the first day of the first year in the cycle.
+    - [ ] Ability to determine the number of years of a given name since the epoch offset, e.g., The 717th Year of the Dragon
 
-## The `Calendar` API
-
-Some important questions:
-
-- **Q**: what methods must the `Calendar` interface provide?
-- **Q**: Do we need two calendar interfaces, a dirt simple interface, and a fancier interface?
-
-At least we need:
-
-- `String formatDate(fundamentalDay)`
-- `int parseDate(dateString)`
- 
 ## Initial Concept 
 
 I'm looking here for the simplest way to represent fantasy calendars in Java code.

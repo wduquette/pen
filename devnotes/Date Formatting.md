@@ -1,20 +1,19 @@
 [[Home]] > [[Ideas]] > [[Calendars]]
 
-Date formatting is similar to Java's `DataTimeFormatter`.
-
+Date formatting is similar to Java's `DataTimeFormatter`, though the format conversion characters differ.
 
 ## Relevant Conversions
 
-| Symbol | Meaning | Type | Example |
-| ---- | ---- | ---- | ---- |
-| `d` | day-of-month | number | `1` |
-| `D` | day-of-year | number | `123` |
-| `E` | era | text | `AD` |
-| `m` | month-of-year | number | `12` |
-| `M` | month-of-year | text | `JAN` |
-| `W` | weekday | text | `Monday` |
-| `y` | year-of-era | number | `2024` |
-| `'text'` | Escape for arbitrary text | text | `'foo'` |
+| Symbol   | Meaning                   | Type   | Example  |
+| -------- | ------------------------- | ------ | -------- |
+| `d`      | day-of-month              | number | `1`      |
+| `D`      | day-of-year               | number | `123`    |
+| `E`      | era                       | text   | `AD`     |
+| `m`      | month-of-year             | number | `12`     |
+| `M`      | month-of-year             | text   | `JAN`    |
+| `W`      | weekday                   | text   | `Monday` |
+| `y`      | year-of-era               | number | `2024`   |
+| `'text'` | Escape for arbitrary text | text   | `'foo'`  |
 In `DateTimeFormatter`, the number of characters in a field has significance, depending on the data item and format.  `DateFormatter` will follow the same patterns, as reasonable.
 
 **For Numbers:** a single character field (e.g., `y`) presents the number without padding.  Multiple characters enables padding (e.g., `yyyy`).  If the number is too long for the field, the whole number will be displayed.
@@ -23,11 +22,11 @@ In `DateTimeFormatter`, the number of characters in a field has significance, de
 
 **For Text:** `DateTimeFormatter` understands four output `Forms`: `FULL`, `SHORT`, `UNAMBIGUOUS`, and `TINY`.
 
-| Symbol | Full, Short, Unambigous, Tiny | Field |
-| ---- | ---- | ---- |
-| `E` | `Anno Domini`, `AD`, `AD`, `AD` | `EEEE`, `EEE`, `EE`, `E` |
-| `M` | `January`, `Jan`, `Jan`, `J` | `MMMM`, `MMM`, `MM`, `M`  |
-| `W` | `Tuesday`, `Tue`, `Tu`, `T` | `WWWW`, `WWW`, `WW`, `W` |
+| Symbol | Full, Short, Unambigous, Tiny   | Field                    |
+| ------ | ------------------------------- | ------------------------ |
+| `E`    | `Anno Domini`, `AD`, `AD`, `AD` | `EEEE`, `EEE`, `EE`, `E` |
+| `M`    | `January`, `Jan`, `Jan`, `J`    | `MMMM`, `MMM`, `MM`, `M` |
+| `W`    | `Tuesday`, `Tue`, `Tu`, `T`     | `WWWW`, `WWW`, `WW`, `W` |
 This scheme is somewhat simpler than `DateTimeFormatter`'s.
 
 - One character gives the `TINY` form, which is usually the initial character of the name.
@@ -39,29 +38,11 @@ The examples shown in the table above reflect standard abbreviations for the Gre
 
 ## DateFormatter/Calendar Relationship
 
-At present each `DateFormatter` wraps a calendar, and format strings cannot be validated until the calendar exists.  But we often want to define a format string as part of building the calendar.  Chicken and egg.
+`Calendars` and `DateFormatters` are loosely coupled.
 
-I've finessed this for the moment: 
+- An instance of `DateFormatter` isn't tied to a specific `Calendar`
+- The `DateFormatter` remembers whether it needs weeks and/or months, and can check whether it is compatible with a given `Calendar`.
+- All forms of `DateFormatter::format` takes a `Calendar` as the first argument.
+- `Calendars` do not have a built-in formatter.
 
-- The builder accepts a format string.
-- The Calendar retains the format string.
-- The `BasicCalendar::formatter()` method builds the formatter in a lazy fashion.
-- The builder calls `formatter()` right after building the Calendar, so that any error appears immediately.
-
-But this is clunky.
-
-Another approach: 
-
-- The `DateFormatter` is calendar independent.
-- The `DateFormatter` remembers whether it needs weeks and/or months.
-- A `DateFormatter` can be associated with a Calendar when the Calendar is constructed; it's an error if it needs weeks/months and the Calendar doesn't have them.
-- A `DateFormatter` requires a Calendar to format; it assumes that the calendar has what's needed.  Throws an error on format if it doesn't.
-- The check on format is incidental.
-
-Yet another approach:
-
-- Calendars don't provide formatting/parsing.
-- The client has to create their own formatter, when they need it.
-- No chicken and egg in this case.
-
-Think about this.
+It's very tempting to give calendars built-in formatters, but it leads to chicken-and-egg definition problems.  The above design was reached after a great deal of floundering.

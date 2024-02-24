@@ -2,12 +2,11 @@
     - Review Javadoc
 - Next Steps
     - `DateFormatter`
-        - [ ] Add `Era` type, and beef up `Month` and `Weekday`.
-        - [ ] Make `DateFormatter` support parsing.
-        - [ ] Make DateFormatter support formatting `YearDay` values
+        - [x] Remove the `Calendar` formatting and parsing methods, as they will be obsolete.
+        - [x] Add `Era` type, and beef up `Month` and `Weekday`.
+        - [x] Make DateFormatter support formatting `YearDay` values
             - Including for calendars that don't have months.
-    - [ ] Update the calendars to define standard formats
-    - [ ] Remove the `Calendar` formatting and parsing methods, as they will be obsolete.
+        - [ ] Make `DateFormatter` support parsing.
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams
     - [[Time Line Diagrams]]
