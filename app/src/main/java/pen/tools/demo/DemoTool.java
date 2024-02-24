@@ -364,7 +364,7 @@ Java API.
 
     //------------------------------------------------------------------------
     // Calendar values
-    private static final Week ME_WEEK = new Week(List.of(StandardWeekDays.values()), 1);
+    private static final Week ME_WEEK = new Week(StandardWeek.DAYS, 1);
     private static final BasicCalendar ME = new BasicCalendar.Builder()
         .era(new Era("ME", "Modern Era"))
         .priorEra(new Era("BME", "Before Modern Era"))

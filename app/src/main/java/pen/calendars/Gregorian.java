@@ -6,7 +6,7 @@ package pen.calendars;
 public class Gregorian {
     private Gregorian() {} // Not instantiable.
 
-    public static final Week WEEK = new Week(StandardWeekDays.weekdays(), 1);
+    public static final Week WEEK = new Week(StandardWeek.DAYS, 1);
     public static final BasicCalendar CALENDAR = new BasicCalendar.Builder()
         .era(new Era("AD", "Anno Domini"))
         .priorEra(new Era("BC", "Before Christ"))

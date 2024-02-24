@@ -8,7 +8,7 @@ import static pen.checker.Checker.checkThrows;
 public class TrivialCalendarTest {
     private static final YearDelta TEN_DAYS = dummy -> 10;
     private static final YearDelta LEAP_DAYS = y -> (y % 4) == 0 ? 11 : 10;
-    private static final Week WEEK = new Week(StandardWeekDays.weekdays(), 0);
+    private static final Week WEEK = new Week(StandardWeek.DAYS, 0);
 
     // A calendar with 10 day "years"
     private static final TrivialCalendar TEN =
@@ -38,9 +38,9 @@ public class TrivialCalendarTest {
         check(TEN.week()).ne(null);
         check(TEN.hasWeeks()).eq(true);
 
-        check(TEN.day2weekday(0)).eq(StandardWeekDays.SUNDAY);
-        check(TEN.day2weekday(1)).eq(StandardWeekDays.MONDAY);
-        check(TEN.day2weekday(7)).eq(StandardWeekDays.SUNDAY);
+        check(TEN.day2weekday(0)).eq(StandardWeek.SUNDAY);
+        check(TEN.day2weekday(1)).eq(StandardWeek.MONDAY);
+        check(TEN.day2weekday(7)).eq(StandardWeek.SUNDAY);
     }
 
     @Test

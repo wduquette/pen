@@ -5,24 +5,23 @@ import org.junit.Test;
 import java.util.List;
 
 import static pen.checker.Checker.check;
-import static pen.checker.Checker.checkThrows;
 
 public class WeekTest {
     private static final Week WEEK =
-        new Week(List.of(StandardWeekDays.values()), 2);
+        new Week(StandardWeek.DAYS, 2);
 
     @Test
     public void testDayToWeekday() {
-        check(WEEK.day2weekday(-2)).eq(StandardWeekDays.SUNDAY);
-        check(WEEK.day2weekday(-1)).eq(StandardWeekDays.MONDAY);
-        check(WEEK.day2weekday(0)).eq(StandardWeekDays.TUESDAY);
-        check(WEEK.day2weekday(1)).eq(StandardWeekDays.WEDNESDAY);
-        check(WEEK.day2weekday(2)).eq(StandardWeekDays.THURSDAY);
-        check(WEEK.day2weekday(3)).eq(StandardWeekDays.FRIDAY);
-        check(WEEK.day2weekday(4)).eq(StandardWeekDays.SATURDAY);
-        check(WEEK.day2weekday(5)).eq(StandardWeekDays.SUNDAY);
-        check(WEEK.day2weekday(6)).eq(StandardWeekDays.MONDAY);
-        check(WEEK.day2weekday(7)).eq(StandardWeekDays.TUESDAY);
+        check(WEEK.day2weekday(-2)).eq(StandardWeek.SUNDAY);
+        check(WEEK.day2weekday(-1)).eq(StandardWeek.MONDAY);
+        check(WEEK.day2weekday(0)).eq(StandardWeek.TUESDAY);
+        check(WEEK.day2weekday(1)).eq(StandardWeek.WEDNESDAY);
+        check(WEEK.day2weekday(2)).eq(StandardWeek.THURSDAY);
+        check(WEEK.day2weekday(3)).eq(StandardWeek.FRIDAY);
+        check(WEEK.day2weekday(4)).eq(StandardWeek.SATURDAY);
+        check(WEEK.day2weekday(5)).eq(StandardWeek.SUNDAY);
+        check(WEEK.day2weekday(6)).eq(StandardWeek.MONDAY);
+        check(WEEK.day2weekday(7)).eq(StandardWeek.TUESDAY);
     }
 
     @Test
