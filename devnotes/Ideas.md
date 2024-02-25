@@ -4,9 +4,11 @@ A collection of things I want to consider
 
 - [[Tree Diagrams]]
 - [[Time Line Diagrams]]
-    - [[Calendars]]
-        - [[Yearly Cycles]]
-        - [[TCL Calendar Definition API]]
+- [[Calendars]]
+    - [[Calendar Tool]]
+    - [[Regnal Calendars]]
+    - [[Yearly Cycles]]
+    - [[TCL Calendar Definition API]]
 - [[Output Color Names]]
 - [[AceFX]]
 

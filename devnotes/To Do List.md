@@ -1,23 +1,18 @@
 - Any time
     - Review Javadoc
 - Next Steps
-    - `DateFormatter`
-        - [x] Remove the `Calendar` formatting and parsing methods, as they will be obsolete.
-        - [x] Add `Era` type, and beef up `Month` and `Weekday`.
-        - [x] Make DateFormatter support formatting `YearDay` values
-            - Including for calendars that don't have months.
-        - [x] Make `DateFormatter` support parsing.
+    - [ ] Prototype timeline charts.
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams
     - [[Time Line Diagrams]]
         - [x] Flesh out `FundamentalCalendar`
         - [x] Add `SimpleCalendar`
+        - [ ] Define a `TimeLineDiagram` class
+        - [ ] Prototype a simple Time Line Diagram using Stencil
+            - Add capabilities to Stencil as needed.
         - [ ] Add calendar definition and conversion Tcl extension
         - [ ] Add tool to define and output month and year calendars
         - [ ] Implement [[Regnal Calendars]]
-        - [ ] Prototype a simple Time Line Diagram using Stencil
-            - Add capabilities to Stencil as needed.
-        - [ ] Define a `TimeLineDiagram` class
     - [ ] Tree Diagram
 - [ ] `pen` Application
     -  `draw` tool
@@ -37,6 +32,7 @@
     - Add remaining `GraphicsContext` methods, as needed.
     - [ ] Line types (dash, dot, solid, at least)
 - `Stencil` 
+    - [x] Save, restore, and transforms
     - [ ] Explicit background, used when clearing.  Defaults to white.
     - [ ] Shapes
         - [x] Arrowheads
@@ -45,6 +41,7 @@
     - [ ] Position support for relevant shapes
 - [ ] Tcl bindings
     - Update `stencil` for `Stencil` class, as features are added.
+        - [x] Add `stencil save` and `stencil restore`
         - [ ] Add `stencil boxedtext` command.
     - [ ] `pen` for `Pen` class 
     - Enum commands?
