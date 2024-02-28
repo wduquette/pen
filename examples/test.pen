@@ -1,8 +1,90 @@
-# Simple test file
+# Example Timeline
 
-set y 20
-foreach sym [symbol names] {
-    stencil line -from 20,$y -tox 100 -start $sym -end $sym
-    stencil text $sym -at 110,$y -tack WEST
-    incr y 20
+set barWidth 18   ;# Width of a timeline bar in pixels
+set xPad 8        ;# pixels between timeline bars
+set xBar 80       ;# X of leftmost timeline bar
+set yEvent 40     ;# Y of topmost event
+set yStep 20      ;# interval between event centers
+set yFudge 10     ;# Event half-height
+set yPad 4        ;# Pad between bars and bar titles
+
+# Left X coordinate of timeline bar 1
+proc left {ndx} {
+    global barWidth
+    global xPad
+    global xBar
+
+    expr {$xBar + ($barWidth + $xPad)*($ndx - 1)}
 }
+
+proc xbar {ndx} {
+    global barWidth
+    expr {[left $ndx] + ($barWidth/2.0)}
+}
+
+proc eventY {ndx} {
+    global yEvent
+    global yStep
+    expr {$yEvent + $yStep*($ndx - 1)}
+}
+
+proc top {ndx} {
+    global yFudge
+    expr {[eventY $ndx] - $yFudge}
+}
+
+proc bottom {ndx} {
+    global yFudge
+    expr {[eventY $ndx] + $yFudge}
+}
+
+proc drawBar {ndx start stop title} {
+    global barWidth
+    global yPad
+    set x [left $ndx]
+    set y0 [top $start]
+    set y1 [bottom $stop]
+    set height [expr {$y1 - $y0}]
+
+    stencil rectangle -at $x,$y0 -size $barWidth,$height \
+        -foreground black -background lightyellow
+
+    set x [xbar $ndx]
+    set y [expr {$y0 + $yPad}]
+    stencil save -translate $x,$y -rotate 90.0
+    stencil text $title -tack west
+    stencil restore
+}
+
+stencil text "Sample Timeline Diagram" -at 10,10
+
+for {set i 1} {$i <= 25} {incr i} {
+    set x 10
+    set y [eventY $i]
+    stencil text "Event #$i" -at $x,$y -tack west
+}
+
+set x0 [expr {[left 1] - $xPad/2.0}]
+set y0 [top 1]
+set x1 [expr {[left 3] - $xPad/2.0}]
+set y1 [bottom 25]
+stencil rectangle -at $x0,$y0 \
+    -size [expr {$x1 - $x0}],[expr {$y1 - $y0}] \
+    -foreground transparent \
+    -background pink
+
+set x0 [expr {[left 3] - $xPad/2.0}]
+set y0 [top 1]
+set x1 [expr {[left 5] - $xPad/2.0}]
+set y1 [bottom 25]
+stencil rectangle -at $x0,$y0 \
+    -size [expr {$x1 - $x0}],[expr {$y1 - $y0}] \
+    -foreground transparent \
+    -background lightgray
+
+drawBar 1 2 15 "Character 1"
+drawBar 2 3 22 "Character 2"
+stencil symbol dot_solid -at [left 2],[eventY 4]
+
+drawBar 3 5 17 "Subplot A"
+drawBar 4 9 13 "Subplot B"

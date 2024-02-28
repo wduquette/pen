@@ -67,6 +67,8 @@ public class StencilExtension implements TclExtension {
         sten.add("line",      this::cmd_stencilLine);
         sten.add("oval",      this::cmd_stencilOval);
         sten.add("rectangle", this::cmd_stencilRectangle);
+        sten.add("restore",   this::cmd_stencilRestore);
+        sten.add("save",      this::cmd_stencilSave);
         sten.add("symbol",    this::cmd_stencilSymbol);
         sten.add("text",      this::cmd_stencilText);
 
@@ -291,6 +293,61 @@ public class StencilExtension implements TclExtension {
         }
 
         stencil.draw(obj);
+    }
+
+    // stencil restore
+    //
+    // Restores the previous pen settings
+    private void cmd_stencilRestore(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkArgs(argq, 0, 0, "");
+        stencil.restorePen();
+    }
+
+    // stencil save ?option value...?
+    //
+    // Saves the pen settings, then performs transformations.
+    private void cmd_stencilSave(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkMinArgs(argq, 0, "?option value?...");
+
+        // FIRST, save the settings
+        stencil.savePen();
+
+        // If we were provided the options and values as a list, convert it to
+        // an Argq.  Note: we lose the command prefix.
+        argq = argq.argsLeft() != 1 ? argq : tcl.toArgq(argq.next());
+
+        try {
+            while (argq.hasNext()) {
+                var opt = argq.next().toString();
+
+                switch (opt) {
+                    case "-translate": {
+                        var point = tcl.toPoint(opt, argq);
+                        // TODO: Add Stencil::translate(Point2D)
+                        stencil.translate(point.getX(), point.getY());
+                        break;
+                    }
+                    case "-rotate":
+                        stencil.rotate(tcl.toDouble(opt, argq));
+                        break;
+                    case "-scale": {
+                        var point = tcl.toPoint(opt, argq);
+                        stencil.scale(point.getX(), point.getY());
+                        break;
+                    }
+                    default:
+                        throw tcl.unknownOption(opt);
+                }
+            }
+        } catch (TclException ex) {
+            // On error, pop the saved settings.
+            stencil.restorePen();
+            throw ex;
+        }
     }
 
     // stencil symbol name ?option value?...
