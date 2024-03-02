@@ -1,32 +1,26 @@
 package pen.tools.calendar;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pen.App;
 import pen.apis.CalendarExtension;
-import pen.apis.StencilExtension;
 import pen.fx.FX;
 import pen.stencil.Stencil;
 import pen.tcl.TclEngine;
 import pen.tcl.TclEngineException;
 import pen.tools.FXTool;
 import pen.tools.ToolInfo;
-import tcl.lang.TclException;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
 public class CalendarTool extends FXTool {
@@ -35,7 +29,7 @@ public class CalendarTool extends FXTool {
         "calendar.tcl...",
         "Displays fictional calendars in a window.",
         """
-            Given one or more "calendar.tcl" calendar definition scripts on the 
+            Given one or more "calendar.tcl" calendar definition scripts on the
             command line, this tool will display yearly and monthly calendars in
             a window, do date conversions, and so forth.
             
@@ -55,8 +49,8 @@ public class CalendarTool extends FXTool {
 
     private TclEngine tcl = new TclEngine();
     private Stencil stencil;
-    private CalendarExtension cal = new CalendarExtension();
-    private List<Path> definitionScripts = new ArrayList<>();
+    private final CalendarExtension cal = new CalendarExtension();
+    private final List<Path> definitionScripts = new ArrayList<>();
 
     //------------------------------------------------------------------------
     // Constructor
