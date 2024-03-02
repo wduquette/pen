@@ -6,10 +6,12 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pen.App;
 import pen.apis.CalendarExtension;
+import pen.diagram.calendar.YearSpread;
 import pen.fx.FX;
 import pen.stencil.Stencil;
 import pen.tcl.TclEngine;
@@ -90,7 +92,7 @@ public class CalendarTool extends FXTool {
                     )
                 )
             )
-            .child(FX.pane(canvasPane)
+            .child(FX.pane(canvasPane).vgrow()
                 .child(FX.node(canvas)
                     .onMouseMoved(this::showMousePosition))
             )
@@ -121,11 +123,10 @@ public class CalendarTool extends FXTool {
         canvas.heightProperty().bind(canvasPane.heightProperty());
 
         // NEXT, repaint on window size change.
-//        canvas.widthProperty().addListener((p,o,n) -> repaint());
-//        canvas.heightProperty().addListener((p,o,n) -> repaint());
+        canvas.widthProperty().addListener((p,o,n) -> repaint());
+        canvas.heightProperty().addListener((p,o,n) -> repaint());
 
         onReloadCalendars();
-        exit(); // TEMP
     }
 
     //-------------------------------------------------------------------------
@@ -135,6 +136,7 @@ public class CalendarTool extends FXTool {
         // FIRST, clear previous data.
         tcl.resetExtensions();
 
+        // NEXT, run the scripts
         for (var path : definitionScripts) {
             try {
                 var script = Files.readString(path);
@@ -150,6 +152,10 @@ public class CalendarTool extends FXTool {
         dumpEras();
         dumpWeeks();
         dumpMonths();
+        dumpCalendars();
+
+        // NEXT, repaint
+        repaint();
     }
 
     private void dumpEras() {
@@ -205,25 +211,34 @@ public class CalendarTool extends FXTool {
         }
     }
 
-//    private void repaint() {
-//        stencil.background(Color.WHITE);
-//        stencil.clear();
-//        tcl.resetExtensions();
-//
-//        try {
-//            if (script != null) {
-//                tcl.eval(script);
-//            }
-//        } catch (TclException ex) {
-//            // TODO: need better way to show errors alongside partial results.
-//            var alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Error");
-//            alert.setHeaderText("Error in script");
-//            alert.setContentText(tcl.interp().getResult().toString());
-//            alert.showAndWait();
-//            script = null;
-//        }
-//    }
+    private void dumpCalendars() {
+        println("Calendars:");
+
+        for (var e : cal.getCalendars().entrySet()) {
+            var c = e.getValue();
+            println("   " + e.getKey() +
+                ": " + c.era().shortForm() + ", " + c.priorEra().shortForm()
+            );
+        }
+    }
+
+    private void repaint() {
+        stencil.background(Color.WHITE);
+        stencil.clear();
+
+        var calendar = cal.getCalendars().get("gregorian");
+
+        if (calendar == null) {
+            return;
+        }
+
+        stencil.draw(new YearSpread()
+            .at(10,10)
+            .calendar(calendar)
+            .year(2024)
+            .title("2024 AD")
+        );
+    }
 
     // Shows the mouse position in the status label.
     private void showMousePosition(MouseEvent evt) {

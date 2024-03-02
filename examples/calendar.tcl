@@ -8,7 +8,7 @@ weekday define friday    -full "Friday"    -short "Fri" -unambiguous "F"  -tiny 
 weekday define saturday  -full "Saturday"  -short "Sat" -unambiguous "Sa" -tiny "S"
 
 # Standard Week
-week define standard -offset 2 \
+week define standard -offset 1 \
     -days {sunday monday tuesday wednesday thursday friday saturday}
 
 # Eras
@@ -33,7 +33,6 @@ month define december  -days 31           -full "December"  -short "Dec" -unambi
 # Gregorian Calendar
 
 calendar basic gregorian \
-    -offset 12345         \
     -era    ad            \
     -prior  bc            \
     -week   standard      \
