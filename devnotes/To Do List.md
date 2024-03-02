@@ -3,6 +3,7 @@
 - Next Steps
     - [ ] Calendar definition Tcl extension
     - [ ] Calendar Tool prototype
+    - [ ] Consider replacing `Calendar.MonthRecord` with `CalendarMonth`, a month record that includes both the name data and the length.
     - [ ] ScrollingCanvasPane widget
     - [ ] Prototype timeline charts.
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`

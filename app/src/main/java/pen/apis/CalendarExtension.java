@@ -44,6 +44,12 @@ public class CalendarExtension implements TclExtension {
         tcl.add("isLeapYear", this::cmd_isLeapYear);
         tcl.add("februaryDays", this::cmd_februaryDays);
 
+        // calendar *
+        var cal = tcl.ensemble("calendar");
+
+        cal.add("basic",  this::cmd_calendarBasic);
+        cal.add("names",   this::cmd_calendarNames);
+
         // era *
         var era = tcl.ensemble("era");
 
@@ -111,6 +117,72 @@ public class CalendarExtension implements TclExtension {
 
         var year = tcl.toInteger(argq.next());
         tcl.setResult(Gregorian.februaryDays(year));
+    }
+
+    //-------------------------------------------------------------------------
+    // Ensemble: calendar *
+
+    // calendar basic symbol ?options...?
+    private void cmd_calendarBasic(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkMinArgs(argq, 1, "?option value...?");
+        var symbol = argq.next().toString();
+
+        // If we were provided the options and values as a list, convert it to
+        // an Argq.  Note: we lose the command prefix.
+        argq = argq.argsLeft() != 1 ? argq : tcl.toArgq(argq.next());
+
+        // NEXT, get the details.
+        var basic = new BasicCalendar.Builder();
+        Argq monq = null;
+
+        while (argq.hasNext()) {
+            var opt = argq.next().toString();
+
+            switch (opt) {
+                case "-offset":
+                    basic.epochOffset(tcl.toInteger(opt, argq));
+                    break;
+                case "-era":
+                    basic.era(toMapEntry("era", eras, opt, argq));
+                    break;
+                case "-prior":
+                    basic.priorEra(toMapEntry("era", eras, opt, argq));
+                    break;
+                case "-week":
+                    basic.week(toMapEntry("week", weeks, opt, argq));
+                    break;
+                case "-months":
+                    monq = tcl.toArgq(opt, argq);
+                    break;
+                default:
+                    throw tcl.unknownOption(opt);
+            }
+        }
+
+        // TODO: Check required fields
+
+        if (monq == null || !monq.hasNext()) {
+            throw tcl.error("expected -months, but no months defined.");
+        }
+
+        while (monq.hasNext()) {
+            var info = toMapEntry("month", months, monq.next());
+            basic.month(info.month(), info.length);
+        }
+
+        calendars.put(symbol, basic.build());
+
+        tcl.setResult(symbol);
+    }
+
+    // calendar names
+    private void cmd_calendarNames(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkArgs(argq, 0, 0, "");
+        tcl.setResult(new ArrayList<>(calendars.keySet()));
     }
 
     //-------------------------------------------------------------------------
@@ -334,7 +406,7 @@ public class CalendarExtension implements TclExtension {
 
         List<Weekday> days = new ArrayList<>();
         while (dayq.hasNext()) {
-            days.add(toWeekday(dayq.next()));
+            days.add(toMapEntry("weekday", weekdays, dayq.next()));
         }
 
         var week = new Week(days, offset);
@@ -368,6 +440,34 @@ public class CalendarExtension implements TclExtension {
         return year -> tclIntegerFunc(prefix, year);
     }
 
+    private YearDelta toMonthLength(String opt, Argq argq)
+        throws TclException
+    {
+        return toMonthLength(tcl.toOptArg(opt, argq));
+    }
+
+    private <V> V toMapEntry(String what, Map<String,V> map, TclObject arg)
+        throws TclException
+    {
+        var key = arg.toString();
+
+        var value = map.get(key);
+        if (value == null) {
+            throw tcl.expected(what, key);
+        }
+
+        return value;
+    }
+
+    private <V> V toMapEntry(
+        String what,
+        Map<String,V> map,
+        String opt,
+        Argq argq
+    ) throws TclException {
+        return toMapEntry(what, map, tcl.toOptArg(opt, argq));
+    }
+
     private int tclIntegerFunc(String prefix, int input) {
         try {
             var command = prefix + " " + input;
@@ -376,25 +476,6 @@ public class CalendarExtension implements TclExtension {
             throw new CalendarException("Invalid Tcl command prefix: \"" +
                 prefix + "\"", ex);
         }
-    }
-
-    private YearDelta toMonthLength(String opt, Argq argq)
-        throws TclException
-    {
-        return toMonthLength(tcl.toOptArg(opt, argq));
-    }
-
-    private Weekday toWeekday(TclObject arg)
-        throws TclException
-    {
-        var key = arg.toString();
-
-        var weekday = weekdays.get(key);
-        if (weekday == null) {
-            throw tcl.badValue("Undefined weekday", key);
-        }
-
-        return weekday;
     }
 
     private String first(String source, int numberOfChars) {
@@ -421,6 +502,3 @@ public class CalendarExtension implements TclExtension {
      */
     public record MonthInfo(Month month, YearDelta length) { }
 }
-
-
-

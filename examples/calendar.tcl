@@ -32,15 +32,12 @@ month define december  -days 31           -full "December"  -short "Dec" -unambi
 
 # Gregorian Calendar
 
-if 0 {
-calendar define gregorian \
-    -type   basic         \
+calendar basic gregorian \
     -offset 12345         \
     -era    ad            \
     -prior  bc            \
     -week   standard      \
     -months {january february march april may june july august september october november december}
-}
 
 
 
