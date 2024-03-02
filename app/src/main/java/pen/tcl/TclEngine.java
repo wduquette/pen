@@ -55,6 +55,21 @@ public class TclEngine {
     }
 
     /**
+     * Evaluates the object as a Tcl script, returning the result.
+     * @param script The script.
+     * @return The result
+     * @throws TclEngineException on error.
+     */
+    public TclObject eval(TclObject script) throws TclEngineException {
+        try {
+            interp.eval(script, TCL.EVAL_GLOBAL);
+            return interp.getResult();
+        } catch (TclException ex) {
+            throw new TclEngineException(this, ex);
+        }
+    }
+
+    /**
      * Evaluates the file's content as a Tcl script.
      * @param file The file
      * @throws TclEngineException on Tcl error
@@ -153,6 +168,10 @@ public class TclEngine {
         return new Argq(TclList.getElements(interp, arg), 0);
     }
 
+    public Argq toArgq(String opt, Argq argq) throws TclException {
+        return toArgq(toOptArg(opt, argq));
+    }
+
     public TclObject toOptArg(String opt, Argq argq) throws TclException {
         if (argq.hasNext()) {
             return argq.next();
@@ -209,6 +228,14 @@ public class TclEngine {
         throws TclException
     {
         return toEnum(cls, toOptArg(opt, argq));
+    }
+
+    public int toInteger(TclObject arg) throws TclException {
+        return TclInteger.getInt(interp, arg);
+    }
+
+    public int toInteger(String opt, Argq argq) throws TclException {
+        return TclInteger.getInt(interp, toOptArg(opt, argq));
     }
 
     /**

@@ -1,15 +1,19 @@
 # Standard Days
-day define sunday    -full "Sunday"    -short "Sun" -unambiguous "Su" -tiny "S"
-day define monday    -full "Monday"    -short "Mon" -unambiguous "M"  -tiny "M"
-day define tuesday   -full "Tuesday"   -short "Tue" -unambiguous "Tu" -tiny "T"
-day define wednesday -full "Wednesday" -short "Wed" -unambiguous "W"  -tiny "W"
-day define thursday  -full "Thursday"  -short "Thu" -unambiguous "Th" -tiny "T"
-day define friday    -full "Friday"    -short "Fri" -unambiguous "F"  -tiny "F"
-day define saturday  -full "Saturday"  -short "Sat" -unambiguous "Sa" -tiny "S"
+weekday define sunday    -full "Sunday"    -short "Sun" -unambiguous "Su" -tiny "S"
+weekday define monday    -full "Monday"    -short "Mon" -unambiguous "M"  -tiny "M"
+weekday define tuesday   -full "Tuesday"   -short "Tue" -unambiguous "Tu" -tiny "T"
+weekday define wednesday -full "Wednesday" -short "Wed" -unambiguous "W"  -tiny "W"
+weekday define thursday  -full "Thursday"  -short "Thu" -unambiguous "Th" -tiny "T"
+weekday define friday    -full "Friday"    -short "Fri" -unambiguous "F"  -tiny "F"
+weekday define saturday  -full "Saturday"  -short "Sat" -unambiguous "Sa" -tiny "S"
 
 # Standard Week
 week define standard -offset 2 \
     -days {sunday monday tuesday wednesday thursday friday saturday}
+
+# Eras
+era define ad -full "Anno Domini"
+era define bc -full "Before Christ"
 
 # Standard Months
 month define january   -days 31           -full "January"   -short "Jan" -unambiguous "Jan" -tiny "J"
@@ -25,11 +29,10 @@ month define october   -days 31           -full "October"   -short "Oct" -unambi
 month define november  -days 30           -full "November"  -short "Nov" -unambiguous "Nov" -tiny "N" 
 month define december  -days 31           -full "December"  -short "Dec" -unambiguous "Dec" -tiny "D" 
 
-# Eras
-era define ad -full "Anno Domini"
-era define bc -full "Before Christ"
 
 # Gregorian Calendar
+
+if 0 {
 calendar define gregorian \
     -type   basic         \
     -offset 12345         \
@@ -37,7 +40,7 @@ calendar define gregorian \
     -prior  bc            \
     -week   standard      \
     -months {january february march april may june july august september october november december}
-
+}
 
 
 

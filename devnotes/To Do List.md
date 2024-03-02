@@ -1,6 +1,9 @@
 - Any time
     - Review Javadoc
 - Next Steps
+    - [ ] Calendar definition Tcl extension
+    - [ ] Calendar Tool prototype
+    - [ ] ScrollingCanvasPane widget
     - [ ] Prototype timeline charts.
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams
@@ -15,6 +18,8 @@
         - [ ] Implement [[Regnal Calendars]]
     - [ ] Tree Diagram
 - [ ] `pen` Application
+    -   calendar tool
+        - [ ] Basic tool, for exercising Calendar scripts
     -  `draw` tool
         - [ ] Execute multiple Tcl scripts, save PNG files
     - `view` tool
