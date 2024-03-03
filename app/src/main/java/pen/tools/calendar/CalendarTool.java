@@ -226,7 +226,7 @@ public class CalendarTool extends FXTool {
         stencil.background(Color.WHITE);
         stencil.clear();
 
-        var calendar = cal.getCalendars().get("gregorian");
+        var calendar = cal.getCalendars().get("cumbrian");
 
         if (calendar == null) {
             return;
@@ -235,8 +235,8 @@ public class CalendarTool extends FXTool {
         stencil.draw(new YearSpread()
             .at(10,10)
             .calendar(calendar)
-            .year(2024)
-            .title("2024 AD")
+            .year(1011)
+            .title("1011 ME")
         );
     }
 
