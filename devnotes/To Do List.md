@@ -2,7 +2,7 @@
     - Review Javadoc
 - Next Steps
     - [x] Calendar definition Tcl extension
-    - [ ] Armorica Calendar
+    - [x] Armorican Calendar
     - [ ] Calendar Tool prototype
     - [ ] Consider replacing `Calendar.MonthRecord` with `CalendarMonth`, a month record that includes both the name data and the length.
     - [ ] ScrollingCanvasPane widget
