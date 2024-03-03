@@ -20,7 +20,7 @@
             }
           },
           {
-            "id": "d70b608ba86730c4",
+            "id": "e2798cc15d294abc",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -30,45 +30,9 @@
                 "source": false
               }
             }
-          },
-          {
-            "id": "c794a67d025730d7",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Ideas.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "b307f79cadb818fc",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Ideas.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "e2798cc15d294abc",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Calendar Items.md",
-                "mode": "source",
-                "source": false
-              }
-            }
           }
         ],
-        "currentTab": 4
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -134,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Calendar Items.md",
+                "file": "To Do List.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -151,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Calendar Items.md",
+                "file": "To Do List.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -174,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Calendar Items.md"
+                "file": "To Do List.md"
               }
             }
           }
@@ -197,8 +161,9 @@
   },
   "active": "e2798cc15d294abc",
   "lastOpenFiles": [
-    "Calendar Tool.md",
+    "TCL Calendar Definition API.md",
     "Calendar Items.md",
+    "Calendar Tool.md",
     "Ideas.md",
     "Regnal Calendars.md",
     "To Do List.md",
@@ -206,7 +171,6 @@
     "Calendars.md",
     "Home.md",
     "Yearly Cycles.md",
-    "TCL Calendar Definition API.md",
     "Calendar 18.java",
     "Calendar 17.java",
     "Calendar 16.java",

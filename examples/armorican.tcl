@@ -1,0 +1,79 @@
+# Armorican Calendars
+
+# Cumbrian Days
+weekday define sunday    -full "Sunday"    -short "Sun" -unambiguous "Su" -tiny "S"
+weekday define monday    -full "Monday"    -short "Mon" -unambiguous "M"  -tiny "M"
+weekday define tuesday   -full "Tuesday"   -short "Tue" -unambiguous "Tu" -tiny "T"
+weekday define wednesday -full "Wednesday" -short "Wed" -unambiguous "W"  -tiny "W"
+weekday define thursday  -full "Thursday"  -short "Thu" -unambiguous "Th" -tiny "T"
+weekday define friday    -full "Friday"    -short "Fri" -unambiguous "F"  -tiny "F"
+weekday define saturday  -full "Saturday"  -short "Sat" -unambiguous "Sa" -tiny "S"
+
+# Provençese Days
+weekday define sonnedi  -full "Sonnedi"  -short "Son" -unambiguous "So" -tiny "S"
+weekday define lundi    -full "Lundi"    -short "Lun" -unambiguous "L"  -tiny "L"
+weekday define mardi    -full "Mardi"    -short "Mar" -unambiguous "Ma" -tiny "M"
+weekday define mercredi -full "Mercredi" -short "Mer" -unambiguous "Me" -tiny "M"
+weekday define jeudi    -full "Jeudi"    -short "Jeu" -unambiguous "J"  -tiny "J"
+weekday define vendredi -full "Vendredi" -short "Ven" -unambiguous "V"  -tiny "V"
+weekday define samedi   -full "Samedi"   -short "Sam" -unambiguous "Sa" -tiny "S"
+
+# Weeks
+week define cumbrian -offset 1 \
+    -days {sunday monday tuesday wednesday thursday friday saturday}
+week define armorican -offset 1 \
+    -days {sonnedi lundi mardi mercredi jeudi vendredi samedi}
+
+# Eras: Cumbrian
+era define me  -full "Modern Era"
+era define bme -full "Before Modern Era"
+
+# Eras: Armorican
+era define af  -full "After Founding"
+era define bf  -full "Before Founding"
+
+# Cumbrian Months
+month define january   -days 31 -full "January"   -short "Jan" -tiny "J"
+month define february  -days 28 -full "February"  -short "Feb" -tiny "F"
+month define march     -days 31 -full "March"     -short "Mar" -tiny "M"
+month define april     -days 30 -full "April"     -short "Apr" -tiny "A"
+month define may       -days 31 -full "May"       -short "May" -tiny "M"
+month define june      -days 30 -full "June"      -short "Jun" -tiny "J"
+month define july      -days 31 -full "July"      -short "Jul" -tiny "J"
+month define august    -days 31 -full "August"    -short "Aug" -tiny "A"
+month define september -days 30 -full "September" -short "Sep" -tiny "S"
+month define october   -days 31 -full "October"   -short "Oct" -tiny "O"
+month define november  -days 31 -full "November"  -short "Nov" -tiny "N"
+month define december  -days 31 -full "December"  -short "Dec" -tiny "D"
+
+# Armorican/Provencese Months
+month define janvier   -days 31 -full "Janvier"   -short "Jan"  -tiny "J"
+month define fevrier   -days 28 -full "Février"   -short "Fév"  -tiny "F"
+month define mars      -days 31 -full "Mars"      -short "Mar"  -tiny "M"
+month define avril     -days 30 -full "Avril"     -short "Avr"  -tiny "A"
+month define mai       -days 31 -full "Mai"       -short "Mai"  -tiny "M"
+month define juin      -days 30 -full "Juin"      -short "Juin" -tiny "J"
+month define juillet   -days 31 -full "Juillet"   -short "Juil" -tiny "J"
+month define aout      -days 31 -full "Août"      -short "Août" -tiny "A"
+month define septembre -days 30 -full "Septembre" -short "Sept" -tiny "S"
+month define octobre   -days 31 -full "Octobre"   -short "Oct"  -tiny "O"
+month define novembre  -days 31 -full "Novembre"  -short "Nov"  -tiny "N"
+month define decembre  -days 31 -full "Décembre"  -short "Déc"  -tiny "D"
+
+# Cumbrian Calendar
+
+calendar basic armorican \
+    -era af              \
+    -prior bf            \
+    -week armorican      \
+    -months {janvier fevrier mars avril mai juin juillet aout septembre octobre novembre decembre}
+
+calendar basic cumbrian \
+    -offset [expr {-978 * 366}] \
+    -era    me                  \
+    -prior  bme                 \
+    -week   cumbrian            \
+    -months {january february march april may june july august september october november december}
+
+
+

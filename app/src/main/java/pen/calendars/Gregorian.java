@@ -11,7 +11,7 @@ public class Gregorian {
         .era(new Era("AD", "Anno Domini"))
         .priorEra(new Era("BC", "Before Christ"))
         .month(StandardMonth.JANUARY, 31)
-        .month(StandardMonth.FEBRUARY, Gregorian::lengthOfFebruary)
+        .month(StandardMonth.FEBRUARY, Gregorian::februaryDays)
         .month(StandardMonth.MARCH, 31)
         .month(StandardMonth.APRIL, 30)
         .month(StandardMonth.MAY, 31)
@@ -25,15 +25,17 @@ public class Gregorian {
         .week(WEEK)
         .build();
 
-    private static int lengthOfFebruary(int year) {
+    public static boolean isLeapYear(int year) {
         if (year % 400 == 0) {
-            return 29;
+            return true;
         } else if (year % 100 == 0) {
-            return 28;
-        } else if (year % 4 == 0) {
-            return 29;
+            return false;
         } else {
-            return 28;
+            return year % 4 == 0;
         }
+    }
+
+    public static int februaryDays(int year) {
+        return isLeapYear(year) ? 29 : 28;
     }
 }

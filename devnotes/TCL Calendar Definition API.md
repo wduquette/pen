@@ -2,6 +2,7 @@
 
 This page is for pondering what the calendar definition APIs should look like.  These are tricky, because there's nesting involved.  That's easy in Java, less easy in Tcl.
 
+**Status**: Use the [[#Alternative Approach]]; it's more flexible.
 ## Topics
 
 - [ ] `Week` definition API
@@ -71,17 +72,16 @@ week create standard {
 puts [week names]
 
 ## Get details: returns definition list
-week cget standard
+week details standard
 ```
 
-## FundamentalCalendar Definition API
+## TrivialCalendar Definition API
 
-The `FundamentalCalendar` is defined by
+The `TrivialCalendar` is defined by
 
 - The `era` and `priorEra`
 - The `Week`
 - The length of the year
-- At present the number of digits for dayOfYear, but that will go away.
 
 **Q:** How to represent the length-of-year function?
 
@@ -90,10 +90,11 @@ The `FundamentalCalendar` is defined by
     - Haven't done this in JTcl
 
 ```tcl
-calendar create fun {
-    -type fundamental
-    -era   {FE "Fundamental Era"} 
-    -prior {BFE "Before Fundamental Era"}
+calendar create triv {
+    -type trivial
+    -era   {TE "Trivial Era"} 
+    -prior {BTE "Before Trivial Era"}
+    -week standardWeek
     -daysinyear 365
 }
 
@@ -102,13 +103,94 @@ proc leapYearDays {year} {
     return $days
 }
 
-calendar create fun {
-    -type fundamental
-    -era   {FE "Fundamental Era"} 
-    -prior {BFE "Before Fundamental Era"}
+calendar create triv {
+    -type       trivial
+    -era        {TE "Trivial Era"} 
+    -prior      {BTE "Before Trivial Era"}
+    -week       standardWeek
     -daysinyear leapYearDays
 }
 ```
+
+## BasicCalendar Definition API
+
+The `BasicCalendar` is defined by
+
+- The `era` and `priorEra`
+- The `epochOffset`
+- The months
+- The `Week`
+
+```tcl
+calendar create gregorian {
+    -type   basic
+    -offset 12345
+    -era    {AD "Anno Domini"} 
+    -prior  {BC "Before Christ"}
+    -week   standardWeek
+    -month {
+        -name {"January" "Jan" "Jan" "J"}
+        -days 31
+    }
+    -month {
+        -name {"February" "Feb" "Feb" "F"}
+        -days februaryDays
+    }
+    ...
+}
+
+proc februaryDays {year} {
+    ...
+    return $days
+}
+```
+
+## Alternative Approach
+
+```tcl
+# Standard Days
+day define sunday    -full "Sunday"    -short "Sun" -unambiguous "Su" -tiny "S"
+day define monday    -full "Monday"    -short "Mon" -unambiguous "M"  -tiny "M"
+day define tuesday   -full "Tuesday"   -short "Tue" -unambiguous "Tu" -tiny "T"
+day define wednesday -full "Wednesday" -short "Wed" -unambiguous "W"  -tiny "W"
+day define thursday  -full "Thursday"  -short "Thu" -unambiguous "Th" -tiny "T"
+day define friday    -full "Friday"    -short "Fri" -unambiguous "F"  -tiny "F"
+day define saturday  -full "Saturday"  -short "Sat" -unambiguous "Sa" -tiny "S"
+
+# Standard Week
+week define standard -offset 2 \
+    -days {sunday monday tuesday wednesday thursday friday saturday}
+
+# Standard Months
+month define january   -days 31           -full "January"   -short "Jan" -unambiguous "Jan" -tiny "J"
+month define february  -days februaryDays -full "February"  -short "Feb" -unambiguous "Feb" -tiny "F"
+month define march     -days 31           -full "March"     -short "Mar" -unambiguous "Mar" -tiny "M"
+month define april     -days 30           -full "April"     -short "Apr" -unambiguous "Apr" -tiny "A"
+month define may       -days 31           -full "May"       -short "May" -unambiguous "May" -tiny "M"
+month define june      -days 30           -full "June"      -short "Jun" -unambiguous "Jun" -tiny "J"
+month define july      -days 31           -full "July"      -short "Jul" -unambiguous "Jul" -tiny "J"
+month define august    -days 31           -full "August"    -short "Aug" -unambiguous "Aug" -tiny "A"
+month define september -days 30           -full "September" -short "Sep" -unambiguous "Sep" -tiny "S" 
+month define october   -days 31           -full "October"   -short "Oct" -unambiguous "Oct" -tiny "O" 
+month define november  -days 30           -full "November"  -short "Nov" -unambiguous "Nov" -tiny "N" 
+month define december  -days 31           -full "December"  -short "Dec" -unambiguous "Dec" -tiny "D" 
+
+# Eras
+era define ad -full "Anno Domini"
+era define bc -full "Before Christ"
+
+# Gregorian Calendar
+calendar define gregorian \
+    -type   basic         \
+    -offset 12345         \
+    -era    ad            \
+    -prior  bc            \
+    -week   standard      \
+    -months {january february march april may june july august september october november december}
+```
+
+
+
 
 
 

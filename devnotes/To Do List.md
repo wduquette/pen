@@ -1,6 +1,11 @@
 - Any time
     - Review Javadoc
 - Next Steps
+    - [x] Calendar definition Tcl extension
+    - [x] Armorican Calendar
+    - [ ] Calendar Tool prototype
+    - [ ] Consider replacing `Calendar.MonthRecord` with `CalendarMonth`, a month record that includes both the name data and the length.
+    - [ ] ScrollingCanvasPane widget
     - [ ] Prototype timeline charts.
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams
@@ -15,6 +20,8 @@
         - [ ] Implement [[Regnal Calendars]]
     - [ ] Tree Diagram
 - [ ] `pen` Application
+    -   calendar tool
+        - [ ] Basic tool, for exercising Calendar scripts
     -  `draw` tool
         - [ ] Execute multiple Tcl scripts, save PNG files
     - `view` tool
