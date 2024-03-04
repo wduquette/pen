@@ -5,6 +5,9 @@ import org.junit.Test;
 import static pen.checker.Checker.check;
 
 public class BasicCalendarTest {
+    private static final Calendar AF = Armorican.AF;
+    private static final Calendar ME = Armorican.ME;
+
     // A calendar with 10 day "years"
     private static final BasicCalendar AE = new BasicCalendar.Builder()
         .epochOffset(0)
@@ -124,5 +127,16 @@ public class BasicCalendarTest {
         check(AE.date2day(AE.date(-1,  2,  29))).eq(-307);
         check(AE.date2day(AE.date(-1,  3,   1))).eq(-306);
         check(AE.date2day(AE.date(-1,  12, 31))).eq(-1);
+    }
+
+    @Test public void testArmoricanSpotChecks() {
+        var meDate = ME.yearDay(1011,1);
+        var meDay = ME.yearDay2day(meDate);
+        var afDate = AF.yearDay(33,1);
+        var afDay = AF.yearDay2day(afDate);
+
+        check(meDay).eq(afDay);
+        check(ME.day2yearDay(meDay)).eq(meDate);
+        check(AF.day2yearDay(afDay)).eq(afDate);
     }
 }
