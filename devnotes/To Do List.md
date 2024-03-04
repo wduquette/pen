@@ -15,6 +15,7 @@
         - Add tests to `BasicCalendarTest` to ensure they are working correctly.
     - [ ] Convert `Calendar` to an abstract base class.
     - [ ] Calendar Tool prototype
+    - [ ] Move the `DateFormatter` formatting and parsing logic into `Calendar`; leave `DateFormatter` objects as immutable `DateFormat` objects with no significant public methods other than the capability predicates.
     - [ ] Consider replacing `Calendar.MonthRecord` with `CalendarMonth`, a month record that includes both the name data and the length.
     - [ ] ScrollingCanvasPane widget
     - [ ] Prototype timeline charts.
