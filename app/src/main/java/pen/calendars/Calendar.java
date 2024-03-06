@@ -65,6 +65,8 @@ public interface Calendar {
      */
     int daysInYear(int year);
 
+    //-------------------------------------------------------------------------
+    // Year/Day-of-year API
 
     /**
      * Creates a new YearDay value for this calendar.  Assumes that the
@@ -74,45 +76,14 @@ public interface Calendar {
      * @param dayOfYear The day of year
      * @return The value
      */
-    default YearDay yearDay(int year, int dayOfYear) {
-        return new YearDay(this, year, dayOfYear);
-    }
+    YearDay yearDay(int year, int dayOfYear);
 
     /**
      * Converts an epoch day to a YearDay
      * @param epochDay The epoch day
      * @return The year/day-of-year
      */
-    default YearDay day2yearDay(int epochDay) {
-        var day = epochDay - epochOffset();
-
-        if (day >= 0) {
-            int year = 1;
-            var daysInYear = daysInYear(year);
-
-            while (day >= daysInYear) {
-                day -= daysInYear;
-                year++;
-                daysInYear = daysInYear(year);
-            }
-
-            return new YearDay(this, year, day + 1);
-        } else {
-            int year = -1;
-            day = -day;
-
-            var daysInYear = daysInYear(year);
-
-            while (day > daysInYear) {
-                day -= daysInYear;
-                year--;
-                daysInYear = daysInYear(year);
-            }
-
-            var dayOfYear = daysInYear - day + 1;
-            return yearDay(year, dayOfYear);
-        }
-    }
+    YearDay day2yearDay(int epochDay);
 
     /**
      * Converts a YearDay to epoch days.
@@ -120,56 +91,14 @@ public interface Calendar {
      * @return The day
      * @throws CalendarException if the data is invalid.
      */
-    default int yearDay2day(YearDay yearDay) {
-        // FIRST, validate the dayOfYear.
-        validate(yearDay);
-
-        // NEXT, positive years, then negative years
-        if (yearDay.year() > 0) {
-            var day = yearDay.dayOfYear() - 1;
-            var year = yearDay.year() - 1;
-
-            while (year >= 1) {
-                day += daysInYear(year);
-                year--;
-            }
-
-            return day + epochOffset();
-        } else {
-            var day = daysInYear(yearDay.year()) - yearDay.dayOfYear() + 1;
-            var year = yearDay.year() + 1;
-
-            while (year < 0) {
-                day += daysInYear(year);
-                year++;
-            }
-
-            return -day + epochOffset();
-        }
-    }
+    int yearDay2day(YearDay yearDay);
 
     /**
      * Validates the year/day-of-year against this calendar.
      * @param yearDay The year/day-of-year
      * @throws CalendarException if the data is invalid.
      */
-    default void validate(YearDay yearDay) {
-        if (!yearDay.calendar().equals(this)) {
-            throw new CalendarException(
-                "Calendar mismatch, expected \"" + this + "\", got \"" +
-                    yearDay.calendar() + "\"");
-        }
-        if (yearDay.year() == 0) {
-            throw new CalendarException("year is 0 in date: \"" + yearDay + "\".");
-        }
-
-        if (yearDay.dayOfYear() < 1 ||
-            yearDay.dayOfYear() > daysInYear(yearDay.year()))
-        {
-            throw new CalendarException("dayOfYear out of range for year " +
-                yearDay.year() + " in date: \"" + yearDay + "\"");
-        }
-    }
+    void validate(YearDay yearDay);
 
     //-------------------------------------------------------------------------
     // Month API, available if hasMonths().
@@ -182,8 +111,6 @@ public interface Calendar {
     default boolean hasMonths() {
         return false;
     }
-
-    // date2yearDay, yearDate2date
 
     /**
      * Returns a date given the components. The components are presumed
