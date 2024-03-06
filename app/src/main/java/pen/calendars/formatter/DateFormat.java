@@ -381,6 +381,10 @@ public class DateFormat {
             return i >= n;
         }
 
+        private boolean atEnd(int ndx) {
+            return ndx >= n;
+        }
+
         private int charsLeft() {
             return n - i;
         }
@@ -414,7 +418,7 @@ public class DateFormat {
             var count = 0;
             var ndx = i;
 
-            while (!atEnd() && Character.isDigit(dateString.charAt(ndx))) {
+            while (!atEnd(ndx) && Character.isDigit(dateString.charAt(ndx))) {
                 ++ndx;
                 ++count;
             }
