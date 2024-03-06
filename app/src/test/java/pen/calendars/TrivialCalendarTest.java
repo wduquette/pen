@@ -149,6 +149,14 @@ public class TrivialCalendarTest {
         checkThrows(() -> LEAP.yearDay2day(leap(0, 0)));
     }
 
+    @Test
+    public void testFormatParse() {
+        var yearDay = TEN.yearDay(2,5);
+
+        check(TEN.format(yearDay)).eq("AE-2-5");
+        check(TEN.parse("AE-2-5")).eq(TEN.yearDay2day(yearDay));
+    }
+
     private YearDay ten(int year, int day) {
         return new YearDay(TEN, year, day);
     }
