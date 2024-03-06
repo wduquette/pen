@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A wrapper for the JTcl Interp, focusing on the needs of embedding.
@@ -236,6 +237,47 @@ public class TclEngine {
 
     public int toInteger(String opt, Argq argq) throws TclException {
         return TclInteger.getInt(interp, toOptArg(opt, argq));
+    }
+
+    /**
+     * Converts a string argument value to a map entry value
+     * @param what What we are looking for, for error messages.
+     * @param map The map
+     * @param arg The argument
+     * @return The entry's value
+     * @param <V> The value type
+     * @throws TclException If the value is not found.
+     */
+    public <V> V toMapEntry(String what, Map<String,V> map, TclObject arg)
+        throws TclException
+    {
+        var key = arg.toString();
+
+        var value = map.get(key);
+        if (value == null) {
+            throw expected(what, key);
+        }
+
+        return value;
+    }
+
+    /**
+     * Converts a string option argument to a map entry value
+     * @param what What we are looking for, for error messages.
+     * @param map The map
+     * @param opt The option
+     * @param argq The argument queue
+     * @return The entry's value
+     * @param <V> The value type
+     * @throws TclException If the value is not found.
+     */
+    public <V> V toMapEntry(
+        String what,
+        Map<String,V> map,
+        String opt,
+        Argq argq
+    ) throws TclException {
+        return toMapEntry(what, map, toOptArg(opt, argq));
     }
 
     /**

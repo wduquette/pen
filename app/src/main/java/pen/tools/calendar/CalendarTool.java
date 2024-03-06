@@ -11,13 +11,17 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pen.App;
 import pen.apis.CalendarExtension;
+import pen.calendars.formatter.DateFormatter;
 import pen.diagram.calendar.YearSpread;
 import pen.fx.FX;
 import pen.stencil.Stencil;
+import pen.tcl.Argq;
 import pen.tcl.TclEngine;
 import pen.tcl.TclEngineException;
 import pen.tools.FXTool;
 import pen.tools.ToolInfo;
+import tcl.lang.TclException;
+import tcl.lang.TclObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +43,8 @@ public class CalendarTool extends FXTool {
             """,
         CalendarTool::main
     );
+    public static final DateFormatter YEAR_ERA =
+        new DateFormatter("y E");
 
     //------------------------------------------------------------------------
     // Instance Variables
@@ -51,8 +57,12 @@ public class CalendarTool extends FXTool {
 
     private TclEngine tcl = new TclEngine();
     private Stencil stencil;
-    private final CalendarExtension cal = new CalendarExtension();
+    private final CalendarExtension calendarExtension = new CalendarExtension();
     private final List<Path> definitionScripts = new ArrayList<>();
+
+    // Currently Displayed Data
+    private String currentCalendar = null;
+    private Integer currentYear = null;
 
     //------------------------------------------------------------------------
     // Constructor
@@ -107,7 +117,8 @@ public class CalendarTool extends FXTool {
         // NEXT, create the stencil and initialize the TclEngine
         stencil = new Stencil(canvas.getGraphicsContext2D());
         tcl = new TclEngine();
-        tcl.install(cal);
+        tcl.install(calendarExtension);
+        tcl.add("show", this::cmd_show);
 
         // NEXT, pop up the window
         Scene scene = new Scene(root, 800, 600);
@@ -154,6 +165,16 @@ public class CalendarTool extends FXTool {
         dumpMonths();
         dumpCalendars();
 
+        // NEXT, pick current calendar, etc., if not set.
+        if (currentCalendar == null) {
+            var list = new ArrayList<>(calendarExtension.getCalendars().keySet());
+            currentCalendar = list.getFirst();
+        }
+
+        if (currentYear == null) {
+            currentYear = 1;
+        }
+
         // NEXT, repaint
         repaint();
     }
@@ -161,10 +182,10 @@ public class CalendarTool extends FXTool {
     private void dumpEras() {
         println("Eras:");
 
-        if (cal.getEras().isEmpty()) {
+        if (calendarExtension.getEras().isEmpty()) {
             println("   None");
         } else {
-            for (var e : cal.getEras().entrySet()) {
+            for (var e : calendarExtension.getEras().entrySet()) {
                 println("   " + e.getKey() +
                     ": " + e.getValue().shortForm() +
                     " (" + e.getValue().fullForm() + ")"
@@ -176,12 +197,12 @@ public class CalendarTool extends FXTool {
     private void dumpWeeks() {
         println("Weeks:");
 
-        if (cal.getWeeks().isEmpty()) {
+        if (calendarExtension.getWeeks().isEmpty()) {
             println("   None");
             return;
         }
 
-        for (var e : cal.getWeeks().entrySet()) {
+        for (var e : calendarExtension.getWeeks().entrySet()) {
             println("   " + e.getKey() +
                 ": -offset " + e.getValue().epochOffset());
             for (var d : e.getValue().weekdays()) {
@@ -196,12 +217,12 @@ public class CalendarTool extends FXTool {
     private void dumpMonths() {
         println("Months:");
 
-        if (cal.getMonths().isEmpty()) {
+        if (calendarExtension.getMonths().isEmpty()) {
             println("   None");
             return;
         }
 
-        for (var e : cal.getMonths().entrySet()) {
+        for (var e : calendarExtension.getMonths().entrySet()) {
             var m = e.getValue().month();
             println("   " + e.getKey() + ": " + m.fullForm() +
                 " (" + m.shortForm() + ", " + m.unambiguousForm() +
@@ -214,7 +235,7 @@ public class CalendarTool extends FXTool {
     private void dumpCalendars() {
         println("Calendars:");
 
-        for (var e : cal.getCalendars().entrySet()) {
+        for (var e : calendarExtension.getCalendars().entrySet()) {
             var c = e.getValue();
             println("   " + e.getKey() +
                 ": " + c.era().shortForm() + ", " + c.priorEra().shortForm()
@@ -226,17 +247,19 @@ public class CalendarTool extends FXTool {
         stencil.background(Color.WHITE);
         stencil.clear();
 
-        var calendar = cal.getCalendars().get("cumbrian");
-
-        if (calendar == null) {
+        if (currentCalendar == null) {
             return;
         }
+
+        var calendar = calendarExtension.getCalendars().get(currentCalendar);
+        var date = calendar.date(currentYear, 1, 1);
 
         stencil.draw(new YearSpread()
             .at(10,10)
             .calendar(calendar)
-            .year(1011)
-            .title("1011 ME")
+            .year(currentYear)
+            .columns(4)
+            .title(YEAR_ERA.format(calendar, date))
         );
     }
 
@@ -244,6 +267,51 @@ public class CalendarTool extends FXTool {
     private void showMousePosition(MouseEvent evt) {
         statusLabel.setText(String.format("(x=%4.0f, y=%4.0f)",
             evt.getX(), evt.getY()));
+    }
+
+    //------------------------------------------------------------------------
+    // Tool-specific Tcl Commands
+
+    // show calendar ?-year value? ?-month value?
+    private void cmd_show(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkMinArgs(argq, 1, "?options...?");
+
+        // FIRST, get the calendar.
+        var name = argq.next();
+        tcl.toMapEntry("calendar", calendarExtension.getCalendars(),
+            name);
+        currentCalendar = name.toString();
+
+        // If we were provided the options and values as a list, convert it to
+        // an Argq.  Note: we lose the command prefix.
+        argq = argq.argsLeft() != 1 ? argq : tcl.toArgq(argq.next());
+
+        while (argq.hasNext()) {
+            var opt = argq.next().toString();
+
+            switch (opt) {
+                case "-year" -> currentYear = toYear(opt, argq);
+                default -> throw tcl.unknownOption(opt);
+            }
+        }
+    }
+
+    private int toYear(TclObject arg)
+        throws TclException
+    {
+        var year = tcl.toInteger(arg);
+        if (year == 0) {
+            throw tcl.expected("calendar year", 0);
+        }
+        return year;
+    }
+
+    private int toYear(String opt, Argq argq)
+        throws TclException
+    {
+        return toYear(tcl.toOptArg(opt, argq));
     }
 
     //------------------------------------------------------------------------

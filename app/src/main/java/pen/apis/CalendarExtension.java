@@ -22,10 +22,10 @@ public class CalendarExtension implements TclExtension {
 
     // Data stores
     private final Map<String, Era> eras = new TreeMap<>();
-    private final Map<String, Weekday> weekdays = new LinkedHashMap<>();
-    private final Map<String, MonthInfo> months = new LinkedHashMap<>();
+    private final LinkedHashMap<String, Weekday> weekdays = new LinkedHashMap<>();
+    private final LinkedHashMap<String, MonthInfo> months = new LinkedHashMap<>();
     private final Map<String, Week> weeks = new TreeMap<>();
-    private final Map<String, Calendar> calendars = new TreeMap<>();
+    private final LinkedHashMap<String, Calendar> calendars = new LinkedHashMap<>();
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -84,11 +84,11 @@ public class CalendarExtension implements TclExtension {
         calendars.clear();
     }
 
-    public Map<String,Era>       getEras()      { return eras; }
-    public Map<String,Weekday>   getWeekdays()  { return weekdays; }
-    public Map<String,MonthInfo> getMonths()    { return months; }
-    public Map<String,Week>      getWeeks()     { return weeks; }
-    public Map<String,Calendar>  getCalendars() { return calendars; }
+    public Map<String,Era>                 getEras()      { return eras; }
+    public LinkedHashMap<String,Weekday>   getWeekdays()  { return weekdays; }
+    public LinkedHashMap<String,MonthInfo> getMonths()    { return months; }
+    public Map<String,Week>                getWeeks()     { return weeks; }
+    public LinkedHashMap<String,Calendar>  getCalendars() { return calendars; }
 
     //-------------------------------------------------------------------------
     // Individual Commands
@@ -145,13 +145,13 @@ public class CalendarExtension implements TclExtension {
                     basic.epochOffset(tcl.toInteger(opt, argq));
                     break;
                 case "-era":
-                    basic.era(toMapEntry("era", eras, opt, argq));
+                    basic.era(tcl.toMapEntry("era", eras, opt, argq));
                     break;
                 case "-prior":
-                    basic.priorEra(toMapEntry("era", eras, opt, argq));
+                    basic.priorEra(tcl.toMapEntry("era", eras, opt, argq));
                     break;
                 case "-week":
-                    basic.week(toMapEntry("week", weeks, opt, argq));
+                    basic.week(tcl.toMapEntry("week", weeks, opt, argq));
                     break;
                 case "-months":
                     monq = tcl.toArgq(opt, argq);
@@ -168,7 +168,7 @@ public class CalendarExtension implements TclExtension {
         }
 
         while (monq.hasNext()) {
-            var info = toMapEntry("month", months, monq.next());
+            var info = tcl.toMapEntry("month", months, monq.next());
             basic.month(info.month(), info.length);
         }
 
@@ -406,7 +406,7 @@ public class CalendarExtension implements TclExtension {
 
         List<Weekday> days = new ArrayList<>();
         while (dayq.hasNext()) {
-            days.add(toMapEntry("weekday", weekdays, dayq.next()));
+            days.add(tcl.toMapEntry("weekday", weekdays, dayq.next()));
         }
 
         var week = new Week(days, offset);
@@ -444,28 +444,6 @@ public class CalendarExtension implements TclExtension {
         throws TclException
     {
         return toMonthLength(tcl.toOptArg(opt, argq));
-    }
-
-    private <V> V toMapEntry(String what, Map<String,V> map, TclObject arg)
-        throws TclException
-    {
-        var key = arg.toString();
-
-        var value = map.get(key);
-        if (value == null) {
-            throw tcl.expected(what, key);
-        }
-
-        return value;
-    }
-
-    private <V> V toMapEntry(
-        String what,
-        Map<String,V> map,
-        String opt,
-        Argq argq
-    ) throws TclException {
-        return toMapEntry(what, map, tcl.toOptArg(opt, argq));
     }
 
     private int tclIntegerFunc(String prefix, int input) {

@@ -70,12 +70,18 @@ public interface Calendar {
         return new YearDay(this, year, dayOfYear);
     }
 
+    default int epochOffset() {
+        return 0;
+    }
+
     /**
      * Converts an epoch day to a YearDay
-     * @param day The epoch day
+     * @param epochDay The epoch day
      * @return The year/day-of-year
      */
-     default YearDay day2yearDay(int day) {
+    default YearDay day2yearDay(int epochDay) {
+        var day = epochDay - epochOffset();
+
         if (day >= 0) {
             int year = 1;
             var daysInYear = daysInYear(year);
@@ -124,7 +130,7 @@ public interface Calendar {
                 year--;
             }
 
-            return day;
+            return day + epochOffset();
         } else {
             var day = daysInYear(yearDay.year()) - yearDay.dayOfYear() + 1;
             var year = yearDay.year() + 1;
@@ -134,7 +140,7 @@ public interface Calendar {
                 year++;
             }
 
-            return -day;
+            return -day + epochOffset();
         }
     }
 

@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import pen.calendars.*;
+import pen.calendars.formatter.DateFormatter;
 import pen.diagram.calendar.MonthSpread;
 import pen.diagram.calendar.YearSpread;
 import pen.fx.FX;
@@ -27,6 +27,7 @@ import pen.tools.draw.DrawTool;
 import java.util.Deque;
 
 import static pen.stencil.Stencil.*;
+import static pen.calendars.Armorican.ME;
 
 /**
  * The application class for the "pen demo" tool.
@@ -241,12 +242,14 @@ Java API.
 
     private void testMonthSpread(Stencil sten) {
         sten.clear(Color.WHITE);
+        var date = ME.date(1011,11,1);
+        var title = new DateFormatter("MMMM y E").format(ME, date);
         var spread = new MonthSpread()
-            .at(40, 10)
+            .at(10, 10)
             .calendar(ME)
-            .title(ME.month(6).fullForm())
+            .title(title)
             .year(1011)
-            .monthOfYear(6)
+            .monthOfYear(11)
             ;
         sten.draw(spread);
     }
@@ -360,28 +363,6 @@ Java API.
             .textColor(Color.BLUE)
         );
     }
-
-    //------------------------------------------------------------------------
-    // Calendar values
-    private static final Week ME_WEEK = new Week(StandardWeek.DAYS, 1);
-    private static final BasicCalendar ME = new BasicCalendar.Builder()
-        .era(new Era("ME", "Modern Era"))
-        .priorEra(new Era("BME", "Before Modern Era"))
-        .epochOffset(-978 * 366)
-        .month(StandardMonth.JANUARY, 31)
-        .month(StandardMonth.FEBRUARY, 28)
-        .month(StandardMonth.MARCH, 31)
-        .month(StandardMonth.APRIL, 30)
-        .month(StandardMonth.MAY, 31)
-        .month(StandardMonth.JUNE, 30)
-        .month(StandardMonth.JULY, 31)
-        .month(StandardMonth.AUGUST, 31)
-        .month(StandardMonth.SEPTEMBER, 30)
-        .month(StandardMonth.OCTOBER, 31)
-        .month(StandardMonth.NOVEMBER, 31)
-        .month(StandardMonth.DECEMBER, 31)
-        .week(ME_WEEK)
-        .build();
 
     //------------------------------------------------------------------------
     // Main

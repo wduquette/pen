@@ -3,7 +3,19 @@
 - Next Steps
     - [x] Calendar definition Tcl extension
     - [x] Armorican Calendar
+    - [x] Fix bug in `day2yearDay`/`yearDay2day`.
+        - These are implemented as default methods in `Calendar`.
+        - They do not take the `BasicCalendar::epochOffset` into account.
+        - Default methods cannot be called with "super".
+        - Options
+            - ~~Option A: Copy methods to `BasicCalendar`, and modify.~~
+            - **Option B: Make epochOffset part of the `Calendar` API**
+                - Either support in `TrivialCalendar` or **let it default to 0**
+            - Option C: Make `Calendar` an abstract base class.
+        - Add tests to `BasicCalendarTest` to ensure they are working correctly.
+    - [ ] Convert `Calendar` to an abstract base class.
     - [ ] Calendar Tool prototype
+    - [ ] Move the `DateFormatter` formatting and parsing logic into `Calendar`; leave `DateFormatter` objects as immutable `DateFormat` objects with no significant public methods other than the capability predicates.
     - [ ] Consider replacing `Calendar.MonthRecord` with `CalendarMonth`, a month record that includes both the name data and the length.
     - [ ] ScrollingCanvasPane widget
     - [ ] Prototype timeline charts.
