@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A {@link Calendar} with a cycle of {@link Month} values and an optional
+ * A {@link Calendar} with a cycle of {@link SimpleMonth} values and an optional
  * {@link Week}.  Day-of-year 1 of any year is equivalent to
  * (year 1, month-of-year 1, day-of-month 1).
  *
@@ -19,49 +19,26 @@ import java.util.Objects;
  * </ul>
  */
 @SuppressWarnings("unused")
-public class BasicCalendar implements Calendar {
+public class BasicCalendar extends AbstractCalendar {
     //-------------------------------------------------------------------------
     // Instance Variables
 
-    // The epoch day corresponding to 1/1/1 in this calendar.  This can be set
-    // so that this calendar uses the same epoch days as other calendars in a
-    // setting.
-    private final int epochOffset;
-
-    // The era symbol for positive years.
-    private final Era era;
-
-    // The era symbol for negative years
-    private final Era priorEra;
-
     // The month definitions
-    private final List<MonthRecord> months;
-
-    // The weekly cycle; possibly null
-    private final Week week;
+    private final List<BoundedMonth> months;
 
     //-------------------------------------------------------------------------
     // Constructor
 
     // Creates the calendar given the builder parameters.
     private BasicCalendar(Builder builder) {
-        this.epochOffset   = builder.epochOffset;
-        this.era           = Objects.requireNonNull(builder.era);
-        this.priorEra      = Objects.requireNonNull(builder.priorEra);
-        this.months        = Collections.unmodifiableList(builder.months);
-        this.week          = builder.week;
-    }
+        super(
+            builder.epochOffset,
+            builder.era,
+            builder.priorEra,
+            builder.week
+        );
 
-    //-------------------------------------------------------------------------
-    // Methods specific to BasicCalendar
-
-    /**
-     * Gets the offset between the epoch day 0 and this calendar's
-     * (year 1, month 1, day 1).
-     * @return The offset
-     */
-    public int epochOffset() {
-        return epochOffset;
+        this.months = Collections.unmodifiableList(builder.months);
     }
 
     //-------------------------------------------------------------------------
@@ -80,16 +57,6 @@ public class BasicCalendar implements Calendar {
         } else {
             throw new CalendarException("Year cannot be 0.");
         }
-    }
-
-    @Override
-    public Era era() {
-        return era;
-    }
-
-    @Override
-    public Era priorEra() {
-        return priorEra;
     }
 
     //-------------------------------------------------------------------------
@@ -128,12 +95,12 @@ public class BasicCalendar implements Calendar {
             }
         }
 
-        return day + epochOffset;
+        return day + epochOffset();
     }
 
     @Override
     public Date day2date(int epochDay) {
-        var day = epochDay - epochOffset;
+        var day = epochDay - epochOffset();
         int year;
         int dayOfYear;
 
@@ -182,7 +149,7 @@ public class BasicCalendar implements Calendar {
 
     @Override
     public List<Month> months() {
-        return months.stream().map(MonthRecord::month).toList();
+        return months.stream().map(m -> (Month)m).toList();
     }
 
     @Override
@@ -201,20 +168,6 @@ public class BasicCalendar implements Calendar {
             throw new CalendarException(
                 "Day is out of range (1,...," + daysInMonth + ")");
         }
-    }
-
-
-    //-------------------------------------------------------------------------
-    // Calendar API: Weeks
-
-    @Override
-    public boolean hasWeeks() {
-        return week != null;
-    }
-
-    @Override
-    public Week week() {
-        return week;
     }
 
     //-------------------------------------------------------------------------
@@ -241,61 +194,11 @@ public class BasicCalendar implements Calendar {
     }
 
     //-------------------------------------------------------------------------
-    // Object API
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BasicCalendar that = (BasicCalendar) o;
-
-        if (epochOffset != that.epochOffset) return false;
-        if (!era.equals(that.era)) return false;
-        if (!priorEra.equals(that.priorEra)) return false;
-        if (!months.equals(that.months)) return false;
-        return Objects.equals(week, that.week);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = epochOffset;
-        result = 31 * result + era.hashCode();
-        result = 31 * result + priorEra.hashCode();
-        result = 31 * result + months.hashCode();
-        result = 31 * result + (week != null ? week.hashCode() : 0);
-        return result;
-    }
-
-    //-------------------------------------------------------------------------
     // Helpers
 
-    private CalendarException badFormat(String dateString) {
-        throw new CalendarException(
-            "Invalid format, expected \"" +
-                "<year>-<monthOfYear>-<dayOfMonth>-" + era + "|" + priorEra +
-                "\", got \"" + dateString + "\".");
-    }
-
     public String toString() {
-        return "BasicCalendar[" + era + "," + priorEra + "," + months.size()
+        return "BasicCalendar[" + era() + "," + priorEra() + "," + months.size()
             + "]";
-    }
-
-    //-------------------------------------------------------------------------
-    // Helper Classes
-
-    /**
-     * Defines a month in terms of an external object (an enum or a string)
-     * and the length of the month given the calendar year.
-     * @param month The month
-     * @param daysInMonth The month length function
-     */
-    public record MonthRecord(
-        Month month,
-        YearDelta daysInMonth
-    ) {
-        // Nothing to do yet
     }
 
     //-------------------------------------------------------------------------
@@ -308,7 +211,7 @@ public class BasicCalendar implements Calendar {
         private int epochOffset = 0;
         private Era era = AFTER_EPOCH;
         private Era priorEra = BEFORE_EPOCH;
-        private final List<MonthRecord> months = new ArrayList<>();
+        private final List<BoundedMonth> months = new ArrayList<>();
         private Week week = null;
 
         //---------------------------------------------------------------------
@@ -360,6 +263,17 @@ public class BasicCalendar implements Calendar {
         }
 
         /**
+         * Adds a bounded month to the calendar
+         * @param month The month
+         * @return The builder
+         */
+        public Builder month(BoundedMonth month) {
+            Objects.requireNonNull(month, "month is  null!");
+            months.add(month);
+            return this;
+        }
+
+        /**
          * Adds a month of the given length to the calendar
          * @param month The month
          * @param length The length
@@ -367,20 +281,20 @@ public class BasicCalendar implements Calendar {
          */
         public Builder month(Month month, int length) {
             Objects.requireNonNull(month, "month is  null!");
-            months.add(new MonthRecord(month, y -> length));
+            months.add(BoundedMonth.of(month, y -> length));
             return this;
         }
 
         /**
          * Adds a month with the given length function to the calendar
          * @param month The month
-         * @param length The length function
+         * @param daysInMonth The length function
          * @return The builder
          */
-        public Builder month(Month month, YearDelta length) {
+        public Builder month(Month month, YearDelta daysInMonth) {
             Objects.requireNonNull(month, "month is  null!");
-            Objects.requireNonNull(length, "month length function is  null!");
-            months.add(new MonthRecord(month, length));
+            Objects.requireNonNull(daysInMonth, "month length function is  null!");
+            months.add(BoundedMonth.of(month, daysInMonth));
             return this;
         }
 

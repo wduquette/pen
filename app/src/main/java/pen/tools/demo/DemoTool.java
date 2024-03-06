@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import pen.calendars.formatter.DateFormatter;
+import pen.calendars.formatter.DateFormat;
 import pen.diagram.calendar.MonthSpread;
 import pen.diagram.calendar.YearSpread;
 import pen.fx.FX;
@@ -243,7 +243,7 @@ Java API.
     private void testMonthSpread(Stencil sten) {
         sten.clear(Color.WHITE);
         var date = ME.date(1011,11,1);
-        var title = new DateFormatter("MMMM y E").format(ME, date);
+        var title = ME.format(new DateFormat("MMMM y E"), date);
         var spread = new MonthSpread()
             .at(10, 10)
             .calendar(ME)

@@ -288,7 +288,7 @@ public class CalendarExtension implements TclExtension {
             throw tcl.error("Missing -days function");
         }
 
-        var month = new Month(
+        var month = new SimpleMonth(
             fullName, shortName, unambiguousName, tinyName);
         var monthInfo = new MonthInfo(month, lengthFunc);
         months.put(symbol, monthInfo);

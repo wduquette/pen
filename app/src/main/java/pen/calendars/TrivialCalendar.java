@@ -29,32 +29,26 @@ import java.util.Objects;
  * no year 0.</p>
  */
 @SuppressWarnings("unused")
-public class TrivialCalendar implements Calendar {
+public class TrivialCalendar extends AbstractCalendar {
     //-------------------------------------------------------------------------
     // Instance Variables
-
-    // The era symbol for positive years
-    private final Era era;
-
-    // The era symbol for negative years
-    private final Era priorEra;
 
     // A function for computing the length of the year in days given the
     // year number
     private final YearDelta yearLength;
-
-    // The weekly cycle; possibly null
-    private final Week week;
 
     //-------------------------------------------------------------------------
     // Constructor
 
     // Creates the calendar given the builder parameters.
     private TrivialCalendar(Builder builder) {
-        this.era             = Objects.requireNonNull(builder.era);
-        this.priorEra        = Objects.requireNonNull(builder.priorEra);
-        this.yearLength      = Objects.requireNonNull(builder.yearLength);
-        this.week            = builder.week;
+        super(
+            builder.epochOffset,
+            builder.era,
+            builder.priorEra,
+            builder.week
+        );
+        this.yearLength = Objects.requireNonNull(builder.yearLength);
     }
 
     //-------------------------------------------------------------------------
@@ -85,56 +79,6 @@ public class TrivialCalendar implements Calendar {
         }
     }
 
-
-    @Override
-    public Era era() {
-        return era;
-    }
-
-    @Override
-    public Era priorEra() {
-        return priorEra;
-    }
-
-    //-------------------------------------------------------------------------
-    // Weeks API
-
-    @Override
-    public boolean hasWeeks() {
-        return week != null;
-    }
-
-    @Override
-    public Week week() {
-        return week;
-    }
-
-    //-------------------------------------------------------------------------
-    // Object API
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TrivialCalendar that = (TrivialCalendar) o;
-
-        if (!era.equals(that.era)) return false;
-        if (!priorEra.equals(that.priorEra)) return false;
-        if (!yearLength.equals(that.yearLength)) return false;
-        return Objects.equals(week, that.week);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = era.hashCode();
-        result = 31 * result + priorEra.hashCode();
-        result = 31 * result + yearLength.hashCode();
-        result = 31 * result + (week != null ? week.hashCode() : 0);
-        return result;
-    }
-
-
     //-------------------------------------------------------------------------
     // Builder
 
@@ -142,6 +86,7 @@ public class TrivialCalendar implements Calendar {
         //---------------------------------------------------------------------
         // Instance Data
 
+        private int epochOffset = 0;
         private Era era = AFTER_EPOCH;
         private Era priorEra = BEFORE_EPOCH;
         private YearDelta yearLength = (y -> 365);
@@ -161,6 +106,16 @@ public class TrivialCalendar implements Calendar {
          */
         public TrivialCalendar build() {
             return new TrivialCalendar(this);
+        }
+
+        /**
+         * Sets the epoch day corresponding to day 1 of year 1.
+         * @param day The epoch day
+         * @return The builder
+         */
+        public TrivialCalendar.Builder epochOffset(int day) {
+            this.epochOffset = day;
+            return this;
         }
 
         /**
@@ -234,6 +189,6 @@ public class TrivialCalendar implements Calendar {
     // Helpers
 
     public String toString() {
-        return "TrivialCalendar[" + era + "," + priorEra + "]";
+        return "TrivialCalendar[" + era() + "," + priorEra() + "]";
     }
 }

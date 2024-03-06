@@ -4,20 +4,15 @@
     - [x] Calendar definition Tcl extension
     - [x] Armorican Calendar
     - [x] Fix bug in `day2yearDay`/`yearDay2day`.
-        - These are implemented as default methods in `Calendar`.
-        - They do not take the `BasicCalendar::epochOffset` into account.
-        - Default methods cannot be called with "super".
-        - Options
-            - ~~Option A: Copy methods to `BasicCalendar`, and modify.~~
-            - **Option B: Make epochOffset part of the `Calendar` API**
-                - Either support in `TrivialCalendar` or **let it default to 0**
-            - Option C: Make `Calendar` an abstract base class.
-        - Add tests to `BasicCalendarTest` to ensure they are working correctly.
-    - [ ] Convert `Calendar` to an abstract base class.
-    - [ ] Calendar Tool prototype
-    - [ ] Move the `DateFormatter` formatting and parsing logic into `Calendar`; leave `DateFormatter` objects as immutable `DateFormat` objects with no significant public methods other than the capability predicates.
-    - [ ] Consider replacing `Calendar.MonthRecord` with `CalendarMonth`, a month record that includes both the name data and the length.
+    - [x] Convert `Calendar` to an abstract base class.
+    - [x] Split `Month` in to `Month` interface and `SimpleMonth` class.
+    - [x] Replace `Calendar.MonthRecord` with `BoundedMonth` class.
+    - [x] Rename `DateFormatter` to `DateFormat`
+    - [x] Make `DateFormat`'s `parse` and `format` methods static, taking a format as an argument.
+    - [x] Add default formats to `AbstractCalendar` for calendars with and without months.
+    - [x] Add format and parse methods to `Calendar`/`AbstractCalendar` for formatting and parsing using the calendar's default format and a desired format.
     - [ ] ScrollingCanvasPane widget
+    - [ ] Calendar Tool prototype
     - [ ] Prototype timeline charts.
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams

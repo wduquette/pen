@@ -139,4 +139,12 @@ public class BasicCalendarTest {
         check(ME.day2yearDay(meDay)).eq(meDate);
         check(AF.day2yearDay(afDay)).eq(afDate);
     }
+
+    @Test
+    public void testFormatParse() {
+        var date = ME.date(1018, 2, 4);
+
+        check(ME.format(date)).eq("ME-1018-2-4");
+        check(ME.parse("ME-1018-2-4")).eq(ME.date2day(date));
+    }
 }
