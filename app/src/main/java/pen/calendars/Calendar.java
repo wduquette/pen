@@ -19,7 +19,7 @@ import java.util.List;
  *
  * <h2>Months</h2>
  *
- * <p>Optionally, the calendar may have a cycle of {@link Month} objects;
+ * <p>Optionally, the calendar may have a cycle of {@link SimpleMonth} objects;
  * use {@code hasMonths()} to test for a monthly cycle.</p>
  *
  * <p>If the calendar has months, then epoch days can be converted to and from
@@ -180,7 +180,7 @@ public interface Calendar {
     }
 
     /**
-     * Returns the list of {@link Month} objects.
+     * Returns the list of {@link SimpleMonth} objects.
      * @return The list
      * @throws CalendarException if !hasMonths()
      */

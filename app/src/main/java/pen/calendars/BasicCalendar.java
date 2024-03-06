@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A {@link Calendar} with a cycle of {@link Month} values and an optional
+ * A {@link Calendar} with a cycle of {@link SimpleMonth} values and an optional
  * {@link Week}.  Day-of-year 1 of any year is equivalent to
  * (year 1, month-of-year 1, day-of-month 1).
  *
@@ -211,7 +211,7 @@ public class BasicCalendar extends AbstractCalendar {
      * @param daysInMonth The month length function
      */
     public record MonthRecord(
-        Month month,
+        SimpleMonth month,
         YearDelta daysInMonth
     ) {
         // Nothing to do yet

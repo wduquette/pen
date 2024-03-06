@@ -7,29 +7,29 @@ public class StandardMonth {
     private StandardMonth() {} // Not instantiable
 
     public static final Month JANUARY =
-        new Month("January", "Jan", "Jan", "J");
+        new SimpleMonth("January", "Jan", "Jan", "J");
     public static final Month FEBRUARY =
-        new Month("February", "Feb", "Feb", "F");
+        new SimpleMonth("February", "Feb", "Feb", "F");
     public static final Month MARCH =
-        new Month("March", "Mar", "Mar", "M");
+        new SimpleMonth("March", "Mar", "Mar", "M");
     public static final Month APRIL =
-        new Month("April", "Apr", "Apr", "A");
+        new SimpleMonth("April", "Apr", "Apr", "A");
     public static final Month MAY =
-        new Month("May", "May", "May", "M");
+        new SimpleMonth("May", "May", "May", "M");
     public static final Month JUNE =
-        new Month("June", "Jun", "Jun", "J");
+        new SimpleMonth("June", "Jun", "Jun", "J");
     public static final Month JULY =
-        new Month("July", "Jul", "Jul", "J");
+        new SimpleMonth("July", "Jul", "Jul", "J");
     public static final Month AUGUST =
-        new Month("August", "Aug", "Aug", "A");
+        new SimpleMonth("August", "Aug", "Aug", "A");
     public static final Month SEPTEMBER =
-        new Month("September", "Sep", "Sep", "S");
+        new SimpleMonth("September", "Sep", "Sep", "S");
     public static final Month OCTOBER =
-        new Month("October", "Oct", "Oct", "O");
+        new SimpleMonth("October", "Oct", "Oct", "O");
     public static final Month NOVEMBER =
-        new Month("November", "Nov", "Nov", "N");
+        new SimpleMonth("November", "Nov", "Nov", "N");
     public static final Month DECEMBER =
-        new Month("December", "Dec", "Dec", "D");
+        new SimpleMonth("December", "Dec", "Dec", "D");
 
     /**
      * An unmodifiable list of the standard months.

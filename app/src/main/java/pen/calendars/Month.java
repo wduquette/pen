@@ -1,16 +1,14 @@
 package pen.calendars;
 
-/**
- * A month in a {@link Calendar}.
- */
-public record Month(
-    String fullForm,
-    String shortForm,
-    String unambiguousForm,
-    String tinyForm
-) implements CalendarName {
+public interface Month extends CalendarName {
     @Override
-    public String toString() {
-        return "Month(" + fullForm + ")";
-    }
+    String toString();
+
+    String fullForm();
+
+    String shortForm();
+
+    String unambiguousForm();
+
+    String tinyForm();
 }
