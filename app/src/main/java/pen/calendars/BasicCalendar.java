@@ -23,11 +23,6 @@ public class BasicCalendar extends AbstractCalendar {
     //-------------------------------------------------------------------------
     // Instance Variables
 
-    // The epoch day corresponding to 1/1/1 in this calendar.  This can be set
-    // so that this calendar uses the same epoch days as other calendars in a
-    // setting.
-    private final int epochOffset;
-
     // The month definitions
     private final List<MonthRecord> months;
 
@@ -39,22 +34,14 @@ public class BasicCalendar extends AbstractCalendar {
 
     // Creates the calendar given the builder parameters.
     private BasicCalendar(Builder builder) {
-        super(builder.era, builder.priorEra);
-        this.epochOffset   = builder.epochOffset;
+        super(
+            builder.epochOffset,
+            builder.era,
+            builder.priorEra
+        );
+
         this.months        = Collections.unmodifiableList(builder.months);
         this.week          = builder.week;
-    }
-
-    //-------------------------------------------------------------------------
-    // Methods specific to BasicCalendar
-
-    /**
-     * Gets the offset between the epoch day 0 and this calendar's
-     * (year 1, month 1, day 1).
-     * @return The offset
-     */
-    public int epochOffset() {
-        return epochOffset;
     }
 
     //-------------------------------------------------------------------------
@@ -111,12 +98,12 @@ public class BasicCalendar extends AbstractCalendar {
             }
         }
 
-        return day + epochOffset;
+        return day + epochOffset();
     }
 
     @Override
     public Date day2date(int epochDay) {
-        var day = epochDay - epochOffset;
+        var day = epochDay - epochOffset();
         int year;
         int dayOfYear;
 

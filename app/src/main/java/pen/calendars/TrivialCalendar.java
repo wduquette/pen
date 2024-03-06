@@ -45,7 +45,11 @@ public class TrivialCalendar extends AbstractCalendar {
 
     // Creates the calendar given the builder parameters.
     private TrivialCalendar(Builder builder) {
-        super(builder.era, builder.priorEra);
+        super(
+            builder.epochOffset,
+            builder.era,
+            builder.priorEra
+        );
         this.yearLength      = Objects.requireNonNull(builder.yearLength);
         this.week            = builder.week;
     }
@@ -99,6 +103,7 @@ public class TrivialCalendar extends AbstractCalendar {
         //---------------------------------------------------------------------
         // Instance Data
 
+        private int epochOffset = 0;
         private Era era = AFTER_EPOCH;
         private Era priorEra = BEFORE_EPOCH;
         private YearDelta yearLength = (y -> 365);
@@ -118,6 +123,16 @@ public class TrivialCalendar extends AbstractCalendar {
          */
         public TrivialCalendar build() {
             return new TrivialCalendar(this);
+        }
+
+        /**
+         * Sets the epoch day corresponding to day 1 of year 1.
+         * @param day The epoch day
+         * @return The builder
+         */
+        public TrivialCalendar.Builder epochOffset(int day) {
+            this.epochOffset = day;
+            return this;
         }
 
         /**

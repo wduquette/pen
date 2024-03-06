@@ -39,12 +39,11 @@ public interface Calendar {
     // Features common to all implementations
 
     /**
-     * The number of days in the given year, per the calendar
-     * @param year The year
-     * @return The number of days
-     * @throws CalendarException for year 0
+     * The epoch day corresponding to day 1 of year 1 in this calendar.  This
+     * is used to synchronize calendars in a setting.
+     * @return The epoch offset
      */
-    int daysInYear(int year);
+    int epochOffset();
 
     /**
      * Gets the era for positive years.
@@ -59,6 +58,15 @@ public interface Calendar {
     Era priorEra();
 
     /**
+     * The number of days in the given year, per the calendar
+     * @param year The year
+     * @return The number of days
+     * @throws CalendarException for year 0
+     */
+    int daysInYear(int year);
+
+
+    /**
      * Creates a new YearDay value for this calendar.  Assumes that the
      * year and day-of-year are valid for the calendar.  Use
      * {@code validate(YearDay)} as needed.
@@ -68,10 +76,6 @@ public interface Calendar {
      */
     default YearDay yearDay(int year, int dayOfYear) {
         return new YearDay(this, year, dayOfYear);
-    }
-
-    default int epochOffset() {
-        return 0;
     }
 
     /**
