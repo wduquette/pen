@@ -19,7 +19,7 @@ import java.util.Objects;
  * </ul>
  */
 @SuppressWarnings("unused")
-public class BasicCalendar implements Calendar {
+public class BasicCalendar extends AbstractCalendar {
     //-------------------------------------------------------------------------
     // Instance Variables
 

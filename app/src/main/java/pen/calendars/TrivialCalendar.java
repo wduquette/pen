@@ -29,7 +29,7 @@ import java.util.Objects;
  * no year 0.</p>
  */
 @SuppressWarnings("unused")
-public class TrivialCalendar implements Calendar {
+public class TrivialCalendar extends AbstractCalendar {
     //-------------------------------------------------------------------------
     // Instance Variables
 
