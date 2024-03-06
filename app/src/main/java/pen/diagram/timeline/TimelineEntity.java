@@ -5,12 +5,13 @@ import java.util.Objects;
 /**
  * An entity with a timeline on the {@link TimelineDiagram}.
  */
+@SuppressWarnings("unused")
 public class TimelineEntity {
     //-------------------------------------------------------------------------
     // Instance Variables
 
     private final String id;
-    private String name = null;
+    private String name;
     private Limit start = Limit.eventBased();
     private Limit end = Limit.eventBased();
 

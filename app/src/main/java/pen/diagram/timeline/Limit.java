@@ -1,5 +1,6 @@
 package pen.diagram.timeline;
 
+@SuppressWarnings("unused")
 public sealed interface Limit
     permits Limit.Fixed, Limit.EventBased, Limit.External, Limit.Fuzzy
 {

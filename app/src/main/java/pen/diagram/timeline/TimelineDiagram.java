@@ -9,6 +9,7 @@ import pen.stencil.Stencil;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class TimelineDiagram extends ContentShape<TimelineDiagram> {
     // TO DO:
     //
@@ -69,13 +70,13 @@ public class TimelineDiagram extends ContentShape<TimelineDiagram> {
 
     public TimelineEvent event(int time) {
         var event = new TimelineEvent();
+        events.add(event);
         return event.time(time);
     }
 
     public TimelineEvent event(String dateString) {
-        var event = new TimelineEvent();
         var day = calendar.parse(dateString);
-        return event.time(day);
+        return event(day);
     }
 
     //-------------------------------------------------------------------------

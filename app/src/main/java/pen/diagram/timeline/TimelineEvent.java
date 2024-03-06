@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public class TimelineEvent {
     //-------------------------------------------------------------------------
     // Instance Variables
@@ -46,7 +47,7 @@ public class TimelineEvent {
     // DSL
 
     public TimelineEvent time(int value) {
-        this.time = time;
+        this.time = value;
         return this;
     }
 
