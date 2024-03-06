@@ -3,6 +3,7 @@ package pen.calendars.formatter;
 import pen.calendars.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static pen.calendars.formatter.DateField.*;
@@ -58,7 +59,7 @@ import static pen.calendars.formatter.DateField.*;
  * e.g., "'Year:' yyyy 'Day of year:' DDD"</p>.  Space characters, hyphens, and
  * slashes (" ", "-", and "/") are retained as is.
  */
-public class DateFormatter {
+public class DateFormat {
     //-------------------------------------------------------------------------
     // Instance Variables
 
@@ -88,7 +89,7 @@ public class DateFormatter {
      * Creates a date formatter for the given format string.
      * @param formatString The format string
      */
-    public DateFormatter(String formatString) {
+    public DateFormat(String formatString) {
         var scanner = new FormatScanner(formatString);
         var hasMonths = false;
         var hasWeeks = false;
@@ -172,18 +173,28 @@ public class DateFormatter {
     }
 
     /**
+     * Gets the date field definitions for this format.
+     * @return The fields
+     */
+    public List<DateField> fields() {
+        return Collections.unmodifiableList(fields);
+    }
+
+
+    /**
      * Formats an epoch day as a date string for the given calendar.
+     * @param format The format
      * @param cal The calendar
      * @param day The epoch day
      * @return The string
      */
-    public String format(Calendar cal, int day) {
+    public static String format(DateFormat format, Calendar cal, int day) {
         var buff = new StringBuilder();
         var yearDay = cal.day2yearDay(day);
         var date = cal.hasMonths() ? cal.day2date(day) : null;
         var weekday = cal.hasWeeks() ? cal.day2weekday(day) : null;
 
-        for (var field : fields) {
+        for (var field : format.fields()) {
             switch (field) {
                 case DayOfMonth fld -> {
                     assert date != null;
@@ -228,36 +239,6 @@ public class DateFormatter {
             : padChar.repeat(width - text.length()) + text;
     }
 
-    /**
-     * Formats a date for the given calendar as a date string.
-     * @param cal The calendar
-     * @param date The date
-     * @return The date string.
-     */
-    public String format(Calendar cal, Date date) {
-        if (!date.calendar().equals(cal)) {
-            throw new CalendarException("Mismatch between Date and Calendar.");
-        }
-        return format(cal, cal.date2day(date));
-    }
-
-    /**
-     * Formats a YearDay for the given calendar as a date string.
-     * @param cal The calendar
-     * @param yearDay The date
-     * @return The date string.
-     */
-    public String format(Calendar cal, YearDay yearDay) {
-        if (!yearDay.calendar().equals(cal)) {
-            throw new CalendarException("Mismatch between YearDay and Calendar.");
-        }
-        return format(cal, cal.yearDay2day(yearDay));
-    }
-
-    @SuppressWarnings("unused")
-    public void dump() {
-        fields.forEach(System.out::println);
-    }
 
     /**
      * Parses the given dateString with respect to the given calendar,
@@ -266,26 +247,28 @@ public class DateFormatter {
      * format string.  Numeric fields are expected to have the exact
      * number of digits given in the format string, unless that number is
      * 1; in that case, the field will consume available digits.
+     * @param format The format
      * @param cal The calendar
      * @param dateString The date string
      * @return The epoch day
      * @throws CalendarException on parse failure
      */
-    public int parse(Calendar cal, String dateString) {
-        if (!isCompatibleWith(cal)) {
+    public static int parse(DateFormat format, Calendar cal, String dateString) {
+        if (!format.isCompatibleWith(cal)) {
             throw new IllegalArgumentException(
                 "Calendar is not compatible with this DateFormatter.");
         }
 
-        return new DateParser(cal, dateString).parse();
+        return new DateParser(format, cal, dateString).parse();
     }
 
     //-------------------------------------------------------------------------
     // DateParser
 
     // We have a separate class for parsing to hold the transient state.
-    private class DateParser {
+    private static class DateParser {
         // Input data
+        private final DateFormat format;
         private final Calendar cal;
         private final String dateString;
 
@@ -300,7 +283,8 @@ public class DateFormatter {
         private final int n;
         private int i = 0;
 
-        DateParser(Calendar cal, String dateString) {
+        DateParser(DateFormat format, Calendar cal, String dateString) {
+            this.format = format;
             this.cal = cal;
             this.dateString = dateString.toUpperCase();
             this.n = dateString.length();
@@ -310,7 +294,7 @@ public class DateFormatter {
         // day if possible.
         int parse() {
             // FIRST, parse available fields
-            for (var field : fields) {
+            for (var field : format.fields()) {
                 parseField(field);
             }
 

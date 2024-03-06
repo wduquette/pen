@@ -11,7 +11,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pen.App;
 import pen.apis.CalendarExtension;
-import pen.calendars.formatter.DateFormatter;
+import pen.calendars.formatter.DateFormat;
 import pen.diagram.calendar.YearSpread;
 import pen.fx.FX;
 import pen.stencil.Stencil;
@@ -43,8 +43,8 @@ public class CalendarTool extends FXTool {
             """,
         CalendarTool::main
     );
-    public static final DateFormatter YEAR_ERA =
-        new DateFormatter("y E");
+    public static final DateFormat YEAR_ERA =
+        new DateFormat("y E");
 
     //------------------------------------------------------------------------
     // Instance Variables
@@ -259,7 +259,7 @@ public class CalendarTool extends FXTool {
             .calendar(calendar)
             .year(currentYear)
             .columns(4)
-            .title(YEAR_ERA.format(calendar, date))
+            .title(calendar.format(YEAR_ERA, date))
         );
     }
 

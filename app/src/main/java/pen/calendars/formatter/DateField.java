@@ -5,7 +5,7 @@ import pen.calendars.Form;
 /**
  * Date field types.  Used by DateFormatter.
  */
-sealed interface DateField permits
+public sealed interface DateField permits
     DateField.DayOfMonth,
     DateField.DayOfYear,
     DateField.EraName,

@@ -1,5 +1,7 @@
 package pen.calendars;
 
+import pen.calendars.formatter.DateFormat;
+
 /**
  * An abstract base class for concrete {@link Calendar} classes.  Concrete
  * classes must:
@@ -209,5 +211,52 @@ public abstract class AbstractCalendar implements Calendar {
         } else {
             throw Calendar.noWeeklyCycle();
         }
+    }
+
+    //-------------------------------------------------------------------------
+    // Date Formatting and Parsing
+
+    @Override
+    public final String format(int day) {
+        return hasMonths()
+            ? DateFormat.format(ERA_YMD, this, day)
+            : DateFormat.format(ERA_YD, this, day);
+    }
+
+    @Override
+    public final String format(DateFormat format, int day) {
+        return DateFormat.format(format, this, day);
+    }
+
+    @Override
+    public final String format(Date date) {
+        return format(date2day(date));
+    }
+
+    @Override
+    public final String format(DateFormat format, Date date) {
+        return format(format, date2day(date));
+    }
+
+    @Override
+    public final String format(YearDay yearDay) {
+        return format(yearDay2day(yearDay));
+    }
+
+    @Override
+    public final String format(DateFormat format, YearDay yearDay) {
+        return format(format, yearDay2day(yearDay));
+    }
+
+    @Override
+    public final int parse(String dateString) {
+        return hasMonths()
+            ? DateFormat.parse(ERA_YMD, this, dateString)
+            : DateFormat.parse(ERA_YD, this, dateString);
+    }
+
+    @Override
+    public final int parse(DateFormat format, String dateString) {
+        return DateFormat.parse(format, this, dateString);
     }
 }

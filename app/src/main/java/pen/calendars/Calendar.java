@@ -1,5 +1,7 @@
 package pen.calendars;
 
+import pen.calendars.formatter.DateFormat;
+
 import java.util.List;
 
 /**
@@ -32,11 +34,20 @@ import java.util.List;
  * the same epoch (day 0).</p>
  */
 public interface Calendar {
+    /** Default Calendar {@code era()}. */
     Era AFTER_EPOCH = new Era("AE", "After Epoch");
+
+    /** Default Calendar {@code priorEra()} */
     Era BEFORE_EPOCH = new Era("BE", "Before Epoch");
 
+    /** Default format for calendars with months. */
+    DateFormat ERA_YMD = new DateFormat("E-y-m-d");
+
+    /** Default format for calendars without months. */
+    DateFormat ERA_YD = new DateFormat("E-y-D");
+
     //-------------------------------------------------------------------------
-    // Features common to all implementations
+    // Calendar Metadata
 
     /**
      * The epoch day corresponding to day 1 of year 1 in this calendar.  This
@@ -99,6 +110,19 @@ public interface Calendar {
      * @throws CalendarException if the data is invalid.
      */
     void validate(YearDay yearDay);
+
+    //-------------------------------------------------------------------------
+    // Date Formatting and Parsing
+
+    String format(int day);
+    String format(DateFormat format, int day);
+    String format(Date date);
+    String format(DateFormat format, Date date);
+    String format(YearDay yearDay);
+    String format(DateFormat format, YearDay yearDay);
+
+    int parse(String dateString);
+    int parse(DateFormat format, String dateString);
 
     //-------------------------------------------------------------------------
     // Month API, available if hasMonths().

@@ -5,9 +5,10 @@
     - [x] Armorican Calendar
     - [x] Fix bug in `day2yearDay`/`yearDay2day`.
     - [x] Convert `Calendar` to an abstract base class.
-    - [ ] Consider replacing `Calendar.MonthRecord` with `CalendarMonth`, a month record that includes both the name data and the length.
+    - [x] Split `Month` in to `Month` interface and `SimpleMonth` class.
+    - [x] Replace `Calendar.MonthRecord` with `BoundedMonth` class.
     - [ ] Calendar Tool prototype
-    - [ ] Move the `DateFormatter` formatting and parsing logic into `Calendar`; leave `DateFormatter` objects as immutable `DateFormat` objects with no significant public methods other than the capability predicates.
+    - [ ] Move the `DateFormatter` formatting and parsing logic into `AbstractCalendar`; leave `DateFormatter` objects as immutable `DateFormat` objects with no significant public methods other than the capability predicates.
     - [ ] ScrollingCanvasPane widget
     - [ ] Prototype timeline charts.
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
