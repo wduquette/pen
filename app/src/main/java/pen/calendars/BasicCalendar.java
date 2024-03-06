@@ -24,7 +24,7 @@ public class BasicCalendar extends AbstractCalendar {
     // Instance Variables
 
     // The month definitions
-    private final List<MonthRecord> months;
+    private final List<BoundedMonth> months;
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -38,7 +38,7 @@ public class BasicCalendar extends AbstractCalendar {
             builder.week
         );
 
-        this.months        = Collections.unmodifiableList(builder.months);
+        this.months = Collections.unmodifiableList(builder.months);
     }
 
     //-------------------------------------------------------------------------
@@ -149,7 +149,7 @@ public class BasicCalendar extends AbstractCalendar {
 
     @Override
     public List<Month> months() {
-        return months.stream().map(MonthRecord::month).toList();
+        return months.stream().map(m -> (Month)m).toList();
     }
 
     @Override
@@ -202,22 +202,6 @@ public class BasicCalendar extends AbstractCalendar {
     }
 
     //-------------------------------------------------------------------------
-    // Helper Classes
-
-    /**
-     * Defines a month in terms of an external object (an enum or a string)
-     * and the length of the month given the calendar year.
-     * @param month The month
-     * @param daysInMonth The month length function
-     */
-    public record MonthRecord(
-        SimpleMonth month,
-        YearDelta daysInMonth
-    ) {
-        // Nothing to do yet
-    }
-
-    //-------------------------------------------------------------------------
     // Builder
 
     public static class Builder {
@@ -227,7 +211,7 @@ public class BasicCalendar extends AbstractCalendar {
         private int epochOffset = 0;
         private Era era = AFTER_EPOCH;
         private Era priorEra = BEFORE_EPOCH;
-        private final List<MonthRecord> months = new ArrayList<>();
+        private final List<BoundedMonth> months = new ArrayList<>();
         private Week week = null;
 
         //---------------------------------------------------------------------
@@ -279,6 +263,17 @@ public class BasicCalendar extends AbstractCalendar {
         }
 
         /**
+         * Adds a bounded month to the calendar
+         * @param month The month
+         * @return The builder
+         */
+        public Builder month(BoundedMonth month) {
+            Objects.requireNonNull(month, "month is  null!");
+            months.add(month);
+            return this;
+        }
+
+        /**
          * Adds a month of the given length to the calendar
          * @param month The month
          * @param length The length
@@ -286,20 +281,20 @@ public class BasicCalendar extends AbstractCalendar {
          */
         public Builder month(Month month, int length) {
             Objects.requireNonNull(month, "month is  null!");
-            months.add(new MonthRecord(month, y -> length));
+            months.add(BoundedMonth.of(month, y -> length));
             return this;
         }
 
         /**
          * Adds a month with the given length function to the calendar
          * @param month The month
-         * @param length The length function
+         * @param daysInMonth The length function
          * @return The builder
          */
-        public Builder month(Month month, YearDelta length) {
+        public Builder month(Month month, YearDelta daysInMonth) {
             Objects.requireNonNull(month, "month is  null!");
-            Objects.requireNonNull(length, "month length function is  null!");
-            months.add(new MonthRecord(month, length));
+            Objects.requireNonNull(daysInMonth, "month length function is  null!");
+            months.add(BoundedMonth.of(month, daysInMonth));
             return this;
         }
 
