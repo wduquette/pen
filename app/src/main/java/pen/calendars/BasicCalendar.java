@@ -28,12 +28,6 @@ public class BasicCalendar extends AbstractCalendar {
     // setting.
     private final int epochOffset;
 
-    // The era symbol for positive years.
-    private final Era era;
-
-    // The era symbol for negative years
-    private final Era priorEra;
-
     // The month definitions
     private final List<MonthRecord> months;
 
@@ -45,9 +39,8 @@ public class BasicCalendar extends AbstractCalendar {
 
     // Creates the calendar given the builder parameters.
     private BasicCalendar(Builder builder) {
+        super(builder.era, builder.priorEra);
         this.epochOffset   = builder.epochOffset;
-        this.era           = Objects.requireNonNull(builder.era);
-        this.priorEra      = Objects.requireNonNull(builder.priorEra);
         this.months        = Collections.unmodifiableList(builder.months);
         this.week          = builder.week;
     }
@@ -80,16 +73,6 @@ public class BasicCalendar extends AbstractCalendar {
         } else {
             throw new CalendarException("Year cannot be 0.");
         }
-    }
-
-    @Override
-    public Era era() {
-        return era;
-    }
-
-    @Override
-    public Era priorEra() {
-        return priorEra;
     }
 
     //-------------------------------------------------------------------------
@@ -241,44 +224,10 @@ public class BasicCalendar extends AbstractCalendar {
     }
 
     //-------------------------------------------------------------------------
-    // Object API
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BasicCalendar that = (BasicCalendar) o;
-
-        if (epochOffset != that.epochOffset) return false;
-        if (!era.equals(that.era)) return false;
-        if (!priorEra.equals(that.priorEra)) return false;
-        if (!months.equals(that.months)) return false;
-        return Objects.equals(week, that.week);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = epochOffset;
-        result = 31 * result + era.hashCode();
-        result = 31 * result + priorEra.hashCode();
-        result = 31 * result + months.hashCode();
-        result = 31 * result + (week != null ? week.hashCode() : 0);
-        return result;
-    }
-
-    //-------------------------------------------------------------------------
     // Helpers
 
-    private CalendarException badFormat(String dateString) {
-        throw new CalendarException(
-            "Invalid format, expected \"" +
-                "<year>-<monthOfYear>-<dayOfMonth>-" + era + "|" + priorEra +
-                "\", got \"" + dateString + "\".");
-    }
-
     public String toString() {
-        return "BasicCalendar[" + era + "," + priorEra + "," + months.size()
+        return "BasicCalendar[" + era() + "," + priorEra() + "," + months.size()
             + "]";
     }
 

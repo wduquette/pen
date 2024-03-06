@@ -33,12 +33,6 @@ public class TrivialCalendar extends AbstractCalendar {
     //-------------------------------------------------------------------------
     // Instance Variables
 
-    // The era symbol for positive years
-    private final Era era;
-
-    // The era symbol for negative years
-    private final Era priorEra;
-
     // A function for computing the length of the year in days given the
     // year number
     private final YearDelta yearLength;
@@ -51,8 +45,7 @@ public class TrivialCalendar extends AbstractCalendar {
 
     // Creates the calendar given the builder parameters.
     private TrivialCalendar(Builder builder) {
-        this.era             = Objects.requireNonNull(builder.era);
-        this.priorEra        = Objects.requireNonNull(builder.priorEra);
+        super(builder.era, builder.priorEra);
         this.yearLength      = Objects.requireNonNull(builder.yearLength);
         this.week            = builder.week;
     }
@@ -85,17 +78,6 @@ public class TrivialCalendar extends AbstractCalendar {
         }
     }
 
-
-    @Override
-    public Era era() {
-        return era;
-    }
-
-    @Override
-    public Era priorEra() {
-        return priorEra;
-    }
-
     //-------------------------------------------------------------------------
     // Weeks API
 
@@ -107,31 +89,6 @@ public class TrivialCalendar extends AbstractCalendar {
     @Override
     public Week week() {
         return week;
-    }
-
-    //-------------------------------------------------------------------------
-    // Object API
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TrivialCalendar that = (TrivialCalendar) o;
-
-        if (!era.equals(that.era)) return false;
-        if (!priorEra.equals(that.priorEra)) return false;
-        if (!yearLength.equals(that.yearLength)) return false;
-        return Objects.equals(week, that.week);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = era.hashCode();
-        result = 31 * result + priorEra.hashCode();
-        result = 31 * result + yearLength.hashCode();
-        result = 31 * result + (week != null ? week.hashCode() : 0);
-        return result;
     }
 
 
@@ -234,6 +191,6 @@ public class TrivialCalendar extends AbstractCalendar {
     // Helpers
 
     public String toString() {
-        return "TrivialCalendar[" + era + "," + priorEra + "]";
+        return "TrivialCalendar[" + era() + "," + priorEra() + "]";
     }
 }
