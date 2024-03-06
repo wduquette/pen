@@ -7,9 +7,12 @@
     - [x] Convert `Calendar` to an abstract base class.
     - [x] Split `Month` in to `Month` interface and `SimpleMonth` class.
     - [x] Replace `Calendar.MonthRecord` with `BoundedMonth` class.
-    - [ ] Calendar Tool prototype
-    - [ ] Move the `DateFormatter` formatting and parsing logic into `AbstractCalendar`; leave `DateFormatter` objects as immutable `DateFormat` objects with no significant public methods other than the capability predicates.
+    - [x] Rename `DateFormatter` to `DateFormat`
+    - [x] Make `DateFormat`'s `parse` and `format` methods static, taking a format as an argument.
+    - [x] Add default formats to `AbstractCalendar` for calendars with and without months.
+    - [x] Add format and parse methods to `Calendar`/`AbstractCalendar` for formatting and parsing using the calendar's default format and a desired format.
     - [ ] ScrollingCanvasPane widget
+    - [ ] Calendar Tool prototype
     - [ ] Prototype timeline charts.
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams
