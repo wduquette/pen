@@ -206,30 +206,20 @@ public interface Calendar {
      * See the Week API below, if true.
      * @return true or false
      */
-    default boolean hasWeeks() {
-        return week() != null;
-    }
+    boolean hasWeeks();
 
     /**
      * Gets the calendar's weekly cycle, if it has one.
      * @return The Week, or null.
      */
-    default Week week() {
-        return null;
-    }
+    Week week();
 
     /**
      * Gets the number of days in a week.
      * @return The number
      * @throws CalendarException if this calendar lacks a weekly cycle.
      */
-    default int daysInWeek() {
-        if (hasWeeks()) {
-            return week().weekdays().size();
-        } else {
-            throw noWeeklyCycle();
-        }
-    }
+    int daysInWeek();
 
     /**
      * Produces the day-of-week (1 through daysInWeek()) for the given
@@ -238,14 +228,8 @@ public interface Calendar {
      * @return The day-of-week
      * @throws CalendarException if this calendar lacks a weekly cycle.
      */
-    default int day2dayOfWeek(int day) {
-        if (hasWeeks()) {
-            var weekday = week().day2weekday(day);
-            return week().indexOf(weekday) + 1;
-        } else {
-            throw noWeeklyCycle();
-        }
-    }
+    int day2dayOfWeek(int day);
+
     /**
      * Produces the weekday for the given epoch day.
      * @param day The epoch day
@@ -253,13 +237,7 @@ public interface Calendar {
      * @throws CalendarException if this calendar lacks a
      * weekly cycle.
      */
-    default Weekday day2weekday(int day) {
-        if (hasWeeks()) {
-            return week().day2weekday(day);
-        } else {
-            throw noWeeklyCycle();
-        }
-    }
+    Weekday day2weekday(int day);
 
     //-------------------------------------------------------------------------
     // Standard Exception Factories

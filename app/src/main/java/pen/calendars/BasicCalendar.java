@@ -26,9 +26,6 @@ public class BasicCalendar extends AbstractCalendar {
     // The month definitions
     private final List<MonthRecord> months;
 
-    // The weekly cycle; possibly null
-    private final Week week;
-
     //-------------------------------------------------------------------------
     // Constructor
 
@@ -37,11 +34,11 @@ public class BasicCalendar extends AbstractCalendar {
         super(
             builder.epochOffset,
             builder.era,
-            builder.priorEra
+            builder.priorEra,
+            builder.week
         );
 
         this.months        = Collections.unmodifiableList(builder.months);
-        this.week          = builder.week;
     }
 
     //-------------------------------------------------------------------------
@@ -171,20 +168,6 @@ public class BasicCalendar extends AbstractCalendar {
             throw new CalendarException(
                 "Day is out of range (1,...," + daysInMonth + ")");
         }
-    }
-
-
-    //-------------------------------------------------------------------------
-    // Calendar API: Weeks
-
-    @Override
-    public boolean hasWeeks() {
-        return week != null;
-    }
-
-    @Override
-    public Week week() {
-        return week;
     }
 
     //-------------------------------------------------------------------------

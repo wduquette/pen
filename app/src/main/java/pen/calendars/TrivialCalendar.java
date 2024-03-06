@@ -37,9 +37,6 @@ public class TrivialCalendar extends AbstractCalendar {
     // year number
     private final YearDelta yearLength;
 
-    // The weekly cycle; possibly null
-    private final Week week;
-
     //-------------------------------------------------------------------------
     // Constructor
 
@@ -48,10 +45,10 @@ public class TrivialCalendar extends AbstractCalendar {
         super(
             builder.epochOffset,
             builder.era,
-            builder.priorEra
+            builder.priorEra,
+            builder.week
         );
-        this.yearLength      = Objects.requireNonNull(builder.yearLength);
-        this.week            = builder.week;
+        this.yearLength = Objects.requireNonNull(builder.yearLength);
     }
 
     //-------------------------------------------------------------------------
@@ -81,20 +78,6 @@ public class TrivialCalendar extends AbstractCalendar {
             throw new CalendarException("Year 0 is undefined.");
         }
     }
-
-    //-------------------------------------------------------------------------
-    // Weeks API
-
-    @Override
-    public boolean hasWeeks() {
-        return week != null;
-    }
-
-    @Override
-    public Week week() {
-        return week;
-    }
-
 
     //-------------------------------------------------------------------------
     // Builder

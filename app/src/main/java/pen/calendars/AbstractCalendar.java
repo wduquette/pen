@@ -23,17 +23,22 @@ public abstract class AbstractCalendar implements Calendar {
     // The era symbol for negative years
     private final Era priorEra;
 
+    // The weekly cycle; possibly null
+    private final Week week;
+
     //-------------------------------------------------------------------------
     // Constructor
 
     public AbstractCalendar(
         int epochOffset,
         Era era,
-        Era priorEra
+        Era priorEra,
+        Week week
     ) {
         this.epochOffset = epochOffset;
         this.era = era;
         this.priorEra = priorEra;
+        this.week = week;
     }
 
     //-------------------------------------------------------------------------
@@ -140,6 +145,69 @@ public abstract class AbstractCalendar implements Calendar {
         {
             throw new CalendarException("dayOfYear out of range for year " +
                 yearDay.year() + " in date: \"" + yearDay + "\"");
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    // Week API
+
+    /**
+     * Does calendar define a cycle of weekdays?
+     * See the Week API below, if true.
+     * @return true or false
+     */
+    public final boolean hasWeeks() {
+        return week != null;
+    }
+
+    /**
+     * Gets the calendar's weekly cycle, if it has one.
+     * @return The Week, or null.
+     */
+    public final Week week() {
+        return week;
+    }
+
+    /**
+     * Gets the number of days in a week.
+     * @return The number
+     * @throws CalendarException if this calendar lacks a weekly cycle.
+     */
+    public final int daysInWeek() {
+        if (hasWeeks()) {
+            return week.weekdays().size();
+        } else {
+            throw Calendar.noWeeklyCycle();
+        }
+    }
+
+    /**
+     * Produces the day-of-week (1 through daysInWeek()) for the given
+     * epoch day.
+     * @param day The epoch day
+     * @return The day-of-week
+     * @throws CalendarException if this calendar lacks a weekly cycle.
+     */
+    public final int day2dayOfWeek(int day) {
+        if (hasWeeks()) {
+            var weekday = week.day2weekday(day);
+            return week.indexOf(weekday) + 1;
+        } else {
+            throw Calendar.noWeeklyCycle();
+        }
+    }
+    /**
+     * Produces the weekday for the given epoch day.
+     * @param day The epoch day
+     * @return The weekday
+     * @throws CalendarException if this calendar lacks a
+     * weekly cycle.
+     */
+    public final Weekday day2weekday(int day) {
+        if (hasWeeks()) {
+            return week.day2weekday(day);
+        } else {
+            throw Calendar.noWeeklyCycle();
         }
     }
 }
