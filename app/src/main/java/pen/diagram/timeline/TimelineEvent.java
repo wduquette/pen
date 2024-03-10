@@ -9,7 +9,7 @@ public class TimelineEvent {
     //-------------------------------------------------------------------------
     // Instance Variables
 
-    private int time = 0;
+    private int day = 0;
     private String text = "???";
     private final Set<String> entityIds = new HashSet<>();
 
@@ -23,8 +23,8 @@ public class TimelineEvent {
     //-------------------------------------------------------------------------
     // Getters
 
-    public int getTime() {
-        return time;
+    public int getDay() {
+        return day;
     }
 
     public String getText() {
@@ -46,8 +46,8 @@ public class TimelineEvent {
     //-------------------------------------------------------------------------
     // DSL
 
-    public TimelineEvent time(int value) {
-        this.time = value;
+    public TimelineEvent day(int value) {
+        this.day = value;
         return this;
     }
 

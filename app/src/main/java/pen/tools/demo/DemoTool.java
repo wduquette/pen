@@ -166,7 +166,9 @@ Java API.
 
     private void testDrawing(Stencil sten) {
         sten.clear(Color.WHITE);
-        var diag = new TimelineDiagram().calendar(Armorican.ME);
+        var diag = new TimelineDiagram()
+            .calendar(Armorican.ME)
+            .dateFormat("yyyy-mm-dd");
         diag.entity("armand").name("Armand Tuppenny");
         diag.entity("mum").name("Jane Massey");
         diag.entity("truc").name("Madame Truc");
@@ -183,6 +185,7 @@ Java API.
             .entity("armand").entity("mum").entity("truc");
         diag.event("ME-1011-5-30").text("Madame Truc's Table")
             .entity("armand").entity("jack").entity("truc");
+        diag.draw(sten);
     }
 
     private void testMonthSpreadStencil(Stencil sten) {
