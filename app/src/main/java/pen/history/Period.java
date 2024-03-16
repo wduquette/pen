@@ -1,4 +1,4 @@
-package pen.diagram.timeline;
+package pen.history;
 
 /**
  * A Period is an interval of time associated with an Entity.

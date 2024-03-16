@@ -1,4 +1,4 @@
-package pen.diagram.timeline;
+package pen.history;
 
 /**
  * An entity in a history.

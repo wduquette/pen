@@ -1,4 +1,4 @@
-package pen.diagram.timeline;
+package pen.history;
 
 import java.util.*;
 import java.util.function.Predicate;

@@ -1,4 +1,4 @@
-package pen.diagram.timeline;
+package pen.history;
 
 public enum Cap {
     /**

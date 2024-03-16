@@ -1,5 +1,7 @@
 package pen.diagram.timeline;
 
+import pen.history.Cap;
+
 @SuppressWarnings("unused")
 public sealed interface Limit
     permits Limit.Fixed, Limit.EventBased, Limit.External

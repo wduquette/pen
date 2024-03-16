@@ -1,7 +1,5 @@
-package pen.diagram.timeline;
+package pen.history;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 @SuppressWarnings("unused")
