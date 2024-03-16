@@ -16,11 +16,11 @@
     - [ ] Prototype timeline charts.
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams
-    - [[Time Line Diagrams]]
+    - [[Timeline Diagram Initial Concept]]
         - [x] Flesh out `FundamentalCalendar`
         - [x] Add `SimpleCalendar`
-        - [ ] Define a `TimeLineDiagram` class
-        - [ ] Prototype a simple Time Line Diagram using Stencil
+        - [x] Define a preliminary `TimeLineDiagram` class
+        - [x] Prototype a simple Time Line Diagram using Stencil
             - Add capabilities to Stencil as needed.
         - [ ] Add calendar definition and conversion Tcl extension
         - [ ] Add tool to define and output month and year calendars

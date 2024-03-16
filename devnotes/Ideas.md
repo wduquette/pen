@@ -2,8 +2,10 @@ A collection of things I want to consider
 
 ## New Ideas
 
+- [[Relational Tables]]
 - [[Tree Diagrams]]
-- [[Time Line Diagrams]]
+- [[Timeline Diagram]]
+    - [[Timeline Diagram Initial Concept]]
 - [[Calendars]]
     - [[Calendar Tool]]
     - [[Regnal Calendars]]
