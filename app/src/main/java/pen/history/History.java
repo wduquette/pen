@@ -23,7 +23,11 @@ public class History {
     }
 
     //-------------------------------------------------------------------------
-    // Getters
+    // Accessors
+
+    public Map<String,Entity> getEntityMap() {
+        return entityMap;
+    }
 
     public void addEntity(Entity entity) {
         entityMap.put(entity.id(), entity);
@@ -50,12 +54,14 @@ public class History {
     }
 
     public TimeFrame getTimeFrame(Predicate<Incident> filter) {
-        var start = incidents.stream()
+        var filtered = incidents.stream()
             .filter(filter::test)
+            .toList();
+
+        var start = filtered.stream()
             .mapToInt(Incident::moment)
             .min().orElse(0);
-        var end = incidents.stream()
-            .filter(filter::test)
+        var end = filtered.stream()
             .mapToInt(Incident::moment)
             .max().orElse(0);
 
