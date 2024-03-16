@@ -40,7 +40,7 @@ public sealed interface Incident permits
         }
 
         public Cap cap() {
-            return Cap.FUZZY;
+            return Cap.SOFT;
         }
     }
 

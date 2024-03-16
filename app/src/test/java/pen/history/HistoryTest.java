@@ -65,7 +65,35 @@ public class HistoryTest {
 
         var bob = history.getEntity("bob").orElseThrow();
         var bobPeriod = history.getPeriod("bob").orElse(null);
-        check(bobPeriod).eq(new Period(bob, 15, 85, Cap.FUZZY, Cap.FUZZY));
+        check(bobPeriod).eq(new Period(bob, 15, 85, Cap.SOFT, Cap.SOFT));
+    }
+
+    @Test
+    public void testGetPeriod_mid() {
+        populateHistory();
+        var frame = new TimeFrame(15, 85);
+
+        var joe = history.getEntity("joe").orElseThrow();
+        var joePeriod = history.getPeriod("joe", frame).orElse(null);
+        check(joePeriod).eq(new Period(joe, 15, 85, Cap.SOFT, Cap.SOFT));
+
+        var bob = history.getEntity("bob").orElseThrow();
+        var bobPeriod = history.getPeriod("bob", frame).orElse(null);
+        check(bobPeriod).eq(new Period(bob, 15, 85, Cap.SOFT, Cap.SOFT));
+    }
+
+    @Test
+    public void testGetPeriod_little() {
+        populateHistory();
+        var frame = new TimeFrame(20, 80);
+
+        var joe = history.getEntity("joe").orElseThrow();
+        var joePeriod = history.getPeriod("joe", frame).orElse(null);
+        check(joePeriod).eq(new Period(joe, 20, 80, Cap.SOFT, Cap.SOFT));
+
+        var bob = history.getEntity("bob").orElseThrow();
+        var bobPeriod = history.getPeriod("bob", frame).orElse(null);
+        check(bobPeriod).eq(new Period(bob, 20, 80, Cap.SOFT, Cap.SOFT));
     }
 
     private void populateHistory() {
@@ -74,11 +102,11 @@ public class HistoryTest {
         history.getIncidents()
             .add(new Incident.EntityStart(10, "Joe is born", "joe", Cap.HARD));
         history.getIncidents()
-            .add(new Incident.EntityStart(15, "Bob enters", "bob", Cap.FUZZY));
+            .add(new Incident.EntityStart(15, "Bob enters", "bob", Cap.SOFT));
         history.getIncidents()
             .add(new Incident.Normal(50, "Joe and Bob talk", Set.of("joe", "bob")));
         history.getIncidents()
-            .add(new Incident.EntityStart(85, "Bob leaves", "bob", Cap.FUZZY));
+            .add(new Incident.EntityStart(85, "Bob leaves", "bob", Cap.SOFT));
         history.getIncidents()
             .add(new Incident.EntityEnd(90, "Joe dies", "joe", Cap.HARD));
     }

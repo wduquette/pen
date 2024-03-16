@@ -90,40 +90,29 @@ public class History {
         var first = all.getFirst();
         var last = all.getLast();
 
-        var start = all.stream()
-            .filter(i -> i.moment() >= frame.start())
-            .findFirst().orElse(null);
-        var end = all.reversed().stream()
-            .filter(i -> i.moment() <= frame.end())
-            .findFirst().orElse(null);
+        int startMoment;
+        int endMoment;
+        Cap startCap;
+        Cap endCap;
 
-        int startMoment = 0;
-        int endMoment = 0;
-        Cap startCap = Cap.SOFT;
-        Cap endCap = Cap.SOFT;
-
-        if (start == null) {
+        if (first.moment() >= frame.end()) {
+            return Optional.empty();
+        } else if (first.moment() < frame.start()) {
             startMoment = frame.start();
             startCap = Cap.SOFT;
-        } else if (start.moment() >= frame.end()) {
-            return Optional.empty();
         } else {
-            startMoment = start.moment();
-            startCap = start.moment() == frame.start() && start.cap() == Cap.FUZZY
-                ? Cap.SOFT
-                : start.cap();
+            startMoment = first.moment();
+            startCap = first.cap();
         }
 
-        if (end == null) {
+        if (last.moment() <= frame.start()) {
+            return Optional.empty();
+        } else if (last.moment() > frame.end()) {
             endMoment = frame.end();
             endCap = Cap.SOFT;
-        } else if (end.moment() <= frame.start()) {
-            return Optional.empty();
         } else {
-            endMoment = end.moment();
-            endCap = end.moment() == frame.end() && end.cap() == Cap.FUZZY
-                ? Cap.SOFT
-                : end.cap();
+            endMoment = last.moment();
+            endCap = last.cap();
         }
 
         return Optional.of(new Period(
