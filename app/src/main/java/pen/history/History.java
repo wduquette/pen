@@ -47,7 +47,7 @@ public class History {
 
     /**
      * Returns the time frame given all events.
-     * @returns the time frame.
+     * @return the time frame.
      */
     public TimeFrame getTimeFrame() {
         return getTimeFrame(incident -> true);
@@ -55,7 +55,7 @@ public class History {
 
     public TimeFrame getTimeFrame(Predicate<Incident> filter) {
         var filtered = incidents.stream()
-            .filter(filter::test)
+            .filter(filter)
             .toList();
 
         var start = filtered.stream()
@@ -92,26 +92,44 @@ public class History {
 
         var start = all.stream()
             .filter(i -> i.moment() >= frame.start())
-            .findFirst();
-        var end = all.stream()
+            .findFirst().orElse(null);
+        var end = all.reversed().stream()
             .filter(i -> i.moment() <= frame.end())
-            .findFirst();
+            .findFirst().orElse(null);
 
-        if (!start.isPresent() || !end.isPresent()) {
+        int startMoment = 0;
+        int endMoment = 0;
+        Cap startCap = Cap.SOFT;
+        Cap endCap = Cap.SOFT;
+
+        if (start == null) {
+            startMoment = frame.start();
+            startCap = Cap.SOFT;
+        } else if (start.moment() >= frame.end()) {
             return Optional.empty();
+        } else {
+            startMoment = start.moment();
+            startCap = start.moment() == frame.start() && start.cap() == Cap.FUZZY
+                ? Cap.SOFT
+                : start.cap();
         }
 
-        var startCap = (start.get().moment() > first.moment())
-            ? start.get().cap()
-            : Cap.SOFT;  // The period begins before the frame
-        var endCap = (end.get().moment() < last.moment())
-            ? end.get().cap()
-            : Cap.SOFT;  // The period ends after the frame
+        if (end == null) {
+            endMoment = frame.end();
+            endCap = Cap.SOFT;
+        } else if (end.moment() <= frame.start()) {
+            return Optional.empty();
+        } else {
+            endMoment = end.moment();
+            endCap = end.moment() == frame.end() && end.cap() == Cap.FUZZY
+                ? Cap.SOFT
+                : end.cap();
+        }
 
         return Optional.of(new Period(
             entity,
-            start.get().moment(),
-            end.get().moment(),
+            startMoment,
+            endMoment,
             startCap,
             endCap
         ));

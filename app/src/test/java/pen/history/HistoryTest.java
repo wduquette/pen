@@ -51,10 +51,21 @@ public class HistoryTest {
 
     @Test
     public void testGetTimeFrame_filtered() {
-        System.out.println("testGetTimeFrame_filtered");
         populateHistory();
         var frame = history.getTimeFrame(i -> i.concerns("bob"));
         check(frame).eq(new TimeFrame(15, 85));
+    }
+
+    @Test
+    public void testGetPeriod_full() {
+        populateHistory();
+        var joe = history.getEntity("joe").orElseThrow();
+        var joePeriod = history.getPeriod("joe").orElse(null);
+        check(joePeriod).eq(new Period(joe, 10, 90, Cap.HARD, Cap.HARD));
+
+        var bob = history.getEntity("bob").orElseThrow();
+        var bobPeriod = history.getPeriod("bob").orElse(null);
+        check(bobPeriod).eq(new Period(bob, 15, 85, Cap.FUZZY, Cap.FUZZY));
     }
 
     private void populateHistory() {
