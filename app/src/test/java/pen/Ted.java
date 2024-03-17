@@ -15,6 +15,10 @@ public class Ted {
         print("\n");
     }
 
+    public void println() {
+        print("\n");
+    }
+
     public void printf(String format, Object... args) {
         print(String.format(format, args));
     }

@@ -1,5 +1,7 @@
 package pen.history;
 
+import pen.util.TextCanvas;
+
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -229,6 +231,82 @@ public class History {
         }
 
         return buff.toString();
+    }
+
+    public String toTimelineChart2() {
+        // FIRST, get the data
+        var entities = new ArrayList<>(getEntityMap().values());
+        var sortedIncidents = incidents.stream()
+            .sorted(Comparator.comparing(Incident::moment))
+            .toList();
+        var frame = getTimeFrame();
+        var periods = getPeriods(frame);
+        assert entities.size() == periods.size();
+
+        // NEXT, get the width of the incident labels.
+        var labelWidth = incidents.stream()
+            .mapToInt(i -> i.label().length())
+            .max().orElse(0);
+        labelWidth = Math.max(labelWidth, INCIDENTS.length());
+
+        // NEXT, compute coordinates
+        var c0 = labelWidth + 2;      // C coordinate of the body
+        var r0 = entities.size() + 2; // R coordinate of the body
+
+        // NEXT, plot the header
+        var canvas = new TextCanvas();
+
+        for (var i = 0; i < entities.size(); i++) {
+            var c = c0 + i*3;
+            var r = i;
+            canvas.puts(c, r, getEntityLabel(entities.get(i)));
+            for (var rLine = r + 1; rLine < r0 - 1; rLine++) {
+                canvas.puts(c + 1, rLine, TextCanvas.LIGHT_VERTICAL);
+            }
+        }
+
+        canvas.puts(0, r0 - 2, padLeft(INCIDENTS, labelWidth));
+
+        // NEXT, add the separator, now that we know what the full width is.
+        canvas.puts(0, r0 - 1, H_LINE.repeat(canvas.getWidth()));
+
+        // NEXT, add the incidents and periods
+        for (var i = 0; i < sortedIncidents.size(); i++) {
+            var r = r0 + i;
+            var incident = sortedIncidents.get(i);
+            var t = incident.moment();
+
+                // FIRST, add the incident
+            canvas.puts(0, r, padLeft(incident.label(), labelWidth));
+
+            // NEXT, add the periods.
+            for (var j = 0; j < entities.size(); j++) {
+                var entity = entities.get(j);
+                var period = periods.get(entity.id());
+                var concerned = incident.concerns(entity.id());
+                var c = c0 + 3*j;
+
+                if (concerned) {
+                    canvas.puts(c - 1, r, H_LINE);
+                }
+
+                if (t < period.start() || t > period.end()) {
+                    // Do nothing
+                } else if (period.start() == t) {
+                    canvas.puts(c, r, period.startCap() == Cap.HARD
+                        ? HARD_START : SOFT_START);
+                } else if (period.end() == t) {
+                    canvas.puts(c, r, period.endCap() == Cap.HARD
+                        ? HARD_END : SOFT_END);
+                } else if (concerned) {
+                    canvas.puts(c, r, CONCERNED);
+                } else {
+                    canvas.puts(c, r, V_LINE);
+                }
+            }
+        }
+
+        return canvas.toString();
     }
 
     private String getEntityLabel(Entity entity) {

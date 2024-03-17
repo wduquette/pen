@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class TextCanvas {
     // From Unicode Box Drawing, Block Elements, Geometric Figures, 2500-25FF
-    private static final char LIGHT_HORIZONTAL = '\u2500';
-    private static final char LIGHT_VERTICAL = '\u2502';
-    private static final char LIGHT_DOWN_AND_HORIZONTAL = '\u252C';
-    private static final char LIGHT_UP_AND_HORIZONTAL = '\u2534';
-    private static final char LIGHT_VERTICAL_AND_LEFT = '\u2524';
-    private static final char WHITE_UP_POINTING_TRIANGLE = '\u25B3';
-    private static final char WHITE_DOWN_POINTING_TRIANGLE = '\u25BD';
+    public static final String LIGHT_HORIZONTAL = "\u2500";
+    public static final String LIGHT_VERTICAL = "\u2502";
+    public static final String LIGHT_DOWN_AND_HORIZONTAL = "\u252C";
+    public static final String LIGHT_UP_AND_HORIZONTAL = "\u2534";
+    public static final String LIGHT_VERTICAL_AND_LEFT = "\u2524";
+    public static final String WHITE_UP_POINTING_TRIANGLE = "\u25B3";
+    public static final String WHITE_DOWN_POINTING_TRIANGLE = "\u25BD";
 
     //-------------------------------------------------------------------------
     // Instance Variables
@@ -82,7 +82,7 @@ public class TextCanvas {
     }
 
     private void extendRows(int r) {
-        while (rows.size() < r - 1) {
+        while (rows.size() < r + 1) {
             rows.add(new Row());
         }
     }
@@ -98,14 +98,13 @@ public class TextCanvas {
     }
 
     /**
-     * Returns the content of the canvas as a string.  Excess whitespace is
-     * removed from the end of the rows.
+     * Returns the content of the canvas as a string.
      * @return The string
      */
     public String toString() {
         return rows.stream()
             .map(Row::toString)
-            .collect(Collectors.joining());
+            .collect(Collectors.joining("\n"));
     }
 
     //-------------------------------------------------------------------------
@@ -132,7 +131,7 @@ public class TextCanvas {
         public String toString() {
             return data.stream()
                 .map(ch -> Character.toString(ch))
-                .collect(Collectors.joining("")).trim();
+                .collect(Collectors.joining());
         }
     }
 }
