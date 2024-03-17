@@ -112,8 +112,6 @@ public class HistoryTest extends Ted {
         populateHistory();
 
         println(history.toTimelineChart());
-        println("");
-        println(history.toTimelineChart2());
     }
 
     private void populateHistory() {

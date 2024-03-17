@@ -168,87 +168,6 @@ public class History {
             .max().orElse(0);
         labelWidth = Math.max(labelWidth, INCIDENTS.length());
 
-        // NEXT, get the width of the entity labels.
-        var entityWidth = 0;
-        for (var i = 0; i < entities.size(); i++) {
-            var width = 3*i + getEntityLabel(entities.get(i)).length();
-            entityWidth = Math.max(entityWidth, width);
-        }
-
-        // NEXT, get the width of the chart
-        var chartWidth = labelWidth + entityWidth;
-
-        // NEXT, output the header
-        var buff = new StringBuilder();
-        for (var i = 0; i < entities.size(); i++) {
-            buff.append(padLeft("", labelWidth));
-
-            for (var j = i; j > 0; j--) {
-                buff.append("  ").append(V_LINE);
-            }
-
-            buff.append(" ")
-                .append(getEntityLabel(entities.get(i)))
-                .append("\n");
-        }
-
-        buff.append(padLeft("Incidents", labelWidth));
-        for (var i = 0; i < entities.size(); i++) {
-            buff.append("  ").append(V_LINE);
-        }
-        buff.append("\n");
-        buff.append(H_LINE.repeat(chartWidth)).append("\n");
-
-        // NEXT, output each row
-        for (var incident : sortedIncidents) {
-            var t = incident.moment();
-
-            buff.append(padLeft(incident.label(), labelWidth));
-
-            for (var entity : entities) {
-                var period = periods.get(entity.id());
-                var concerned = incident.concerns(entity.id());
-
-                buff.append(" ");
-                buff.append(concerned ? H_LINE : " ");
-
-                if (t < period.start() || t > period.end()) {
-                    buff.append(" ");
-                } else if (period.start() == t) {
-                    buff.append(period.startCap() == Cap.HARD
-                        ? HARD_START : SOFT_START);
-                } else if (period.end() == t) {
-                    buff.append(period.endCap() == Cap.HARD
-                        ? HARD_END : SOFT_END);
-                } else if (concerned) {
-                    buff.append(CONCERNED);
-                } else {
-                    buff.append(V_LINE);
-                }
-            }
-
-            buff.append("\n");
-        }
-
-        return buff.toString();
-    }
-
-    public String toTimelineChart2() {
-        // FIRST, get the data
-        var entities = new ArrayList<>(getEntityMap().values());
-        var sortedIncidents = incidents.stream()
-            .sorted(Comparator.comparing(Incident::moment))
-            .toList();
-        var frame = getTimeFrame();
-        var periods = getPeriods(frame);
-        assert entities.size() == periods.size();
-
-        // NEXT, get the width of the incident labels.
-        var labelWidth = incidents.stream()
-            .mapToInt(i -> i.label().length())
-            .max().orElse(0);
-        labelWidth = Math.max(labelWidth, INCIDENTS.length());
-
         // NEXT, compute coordinates
         var c0 = labelWidth + 2;      // C coordinate of the body
         var r0 = entities.size() + 2; // R coordinate of the body
@@ -284,7 +203,7 @@ public class History {
                 var entity = entities.get(j);
                 var period = periods.get(entity.id());
                 var concerned = incident.concerns(entity.id());
-                var c = c0 + 3*j;
+                var c = c0 + 1 + 3*j; // Fix
 
                 if (concerned) {
                     canvas.puts(c - 1, r, H_LINE);
