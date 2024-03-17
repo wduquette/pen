@@ -1,16 +1,6 @@
 - Any time
     - Review Javadoc
 - Next Steps
-    - [x] Calendar definition Tcl extension
-    - [x] Armorican Calendar
-    - [x] Fix bug in `day2yearDay`/`yearDay2day`.
-    - [x] Convert `Calendar` to an abstract base class.
-    - [x] Split `Month` in to `Month` interface and `SimpleMonth` class.
-    - [x] Replace `Calendar.MonthRecord` with `BoundedMonth` class.
-    - [x] Rename `DateFormatter` to `DateFormat`
-    - [x] Make `DateFormat`'s `parse` and `format` methods static, taking a format as an argument.
-    - [x] Add default formats to `AbstractCalendar` for calendars with and without months.
-    - [x] Add format and parse methods to `Calendar`/`AbstractCalendar` for formatting and parsing using the calendar's default format and a desired format.
     - [ ] ScrollingCanvasPane widget
     - [ ] Calendar Tool prototype
     - [ ] Prototype timeline charts.
@@ -22,6 +12,12 @@
         - [x] Define a preliminary `TimeLineDiagram` class
         - [x] Prototype a simple Time Line Diagram using Stencil
             - Add capabilities to Stencil as needed.
+        - [x] Design `HistoryBase` data class
+        - [x] Prototype text timeline diagram output using Unicode drawing characters.
+        - [ ] Add querying and filtering to `HistoryBase`, per [[HistoryBase and HistoryQuery]]
+        - [ ] Implement `HistoryExtension` for defining histories in Tcl.
+        - [ ] Add `pen history` tool for querying histories and converting them to text timeline diagrams.
+    - Calendar Charts
         - [ ] Add calendar definition and conversion Tcl extension
         - [ ] Add tool to define and output month and year calendars
         - [ ] Implement [[Regnal Calendars]]

@@ -1,5 +1,6 @@
 package pen;
 
+@SuppressWarnings("unused")
 public class Ted {
     public void test(String testName) {
         println("---- " + getClass().getSimpleName() + " " + testName);

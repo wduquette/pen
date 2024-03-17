@@ -2,7 +2,7 @@
 
 - [[Timeline Diagram Initial Concept]]
 - [[Timeline Diagram Brainstorming 2024-03-16]]
-- [[Timeline Diagram Brainstorming 2024-03-17]]
+- [[HistoryBase and HistoryQuery]]
 
 ## Requirements
 

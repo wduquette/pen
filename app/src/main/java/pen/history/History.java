@@ -148,6 +148,7 @@ public class History {
     private static final String HARD_END = "\u2534";
     private static final String SOFT_START = "\u25B3";
     private static final String SOFT_END = "\u25BD";
+    private static final String CONCERNED = "\u2524";
 
     public String toTimelineChart() {
         // FIRST, get the data
@@ -204,16 +205,23 @@ public class History {
 
             for (var entity : entities) {
                 var period = periods.get(entity.id());
+                var concerned = incident.concerns(entity.id());
+
+                buff.append(" ");
+                buff.append(concerned ? H_LINE : " ");
+
                 if (t < period.start() || t > period.end()) {
-                    buff.append("   ");
+                    buff.append(" ");
                 } else if (period.start() == t) {
-                    buff.append("  ").append(period.startCap() == Cap.HARD
+                    buff.append(period.startCap() == Cap.HARD
                         ? HARD_START : SOFT_START);
                 } else if (period.end() == t) {
-                    buff.append("  ").append(period.endCap() == Cap.HARD
+                    buff.append(period.endCap() == Cap.HARD
                         ? HARD_END : SOFT_END);
+                } else if (concerned) {
+                    buff.append(CONCERNED);
                 } else {
-                    buff.append("  ").append(V_LINE);
+                    buff.append(V_LINE);
                 }
             }
 
