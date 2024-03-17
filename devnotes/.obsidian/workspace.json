@@ -25,14 +25,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Timeline Diagram Brainstorming 2024-03-16.md",
+                "file": "Timeline Diagram.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "6431ca0953e2a30a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Timeline Diagram Brainstorming 2024-03-17.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -98,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Timeline Diagram Brainstorming 2024-03-16.md",
+                "file": "Timeline Diagram Brainstorming 2024-03-17.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Timeline Diagram Brainstorming 2024-03-16.md",
+                "file": "Timeline Diagram Brainstorming 2024-03-17.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Timeline Diagram Brainstorming 2024-03-16.md"
+                "file": "Timeline Diagram Brainstorming 2024-03-17.md"
               }
             }
           }
@@ -159,9 +171,10 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "a3199517997c97d4",
+  "active": "6431ca0953e2a30a",
   "lastOpenFiles": [
     "Timeline Diagram.md",
+    "Timeline Diagram Brainstorming 2024-03-17.md",
     "Timeline Diagram Brainstorming 2024-03-16.md",
     "Relational Tables.md",
     "Ideas.md",
@@ -196,7 +209,6 @@
     "Excalidraw/Tree Diagrams 2024-01-21 10.58.53.excalidraw.md",
     "Excalidraw/Tree Diagrams 2024-01-21 10.54.56.excalidraw.md",
     "Tree Diagrams.md",
-    "Excalidraw/Tree Diagrams 2024-01-21 10.49.22.excalidraw.md",
     "Testing Canvas.canvas"
   ]
 }

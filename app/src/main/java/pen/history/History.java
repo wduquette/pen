@@ -124,11 +124,116 @@ public class History {
         ));
     }
 
+    public Map<String,Period> getPeriods(TimeFrame frame) {
+        var map = new HashMap<String,Period>();
+
+        for (var id : entityMap.keySet()) {
+            getPeriod(id, frame).ifPresent(period -> map.put(id, period));
+        }
+
+        return map;
+    }
+
     public List<Incident> getIncidents(String entityId) {
         return incidents.stream()
             .filter(i -> i.concerns(entityId))
             .sorted(Comparator.comparing(Incident::moment))
             .toList();
+    }
+
+    private static final String INCIDENTS = "Incidents";
+    private static final String H_LINE = "\u2500";
+    private static final String V_LINE = "\u2502";
+    private static final String HARD_START = "\u252C";
+    private static final String HARD_END = "\u2534";
+    private static final String SOFT_START = "\u25B3";
+    private static final String SOFT_END = "\u25BD";
+
+    public String toTimelineChart() {
+        // FIRST, get the data
+        var entities = new ArrayList<>(getEntityMap().values());
+        var sortedIncidents = incidents.stream()
+            .sorted(Comparator.comparing(Incident::moment))
+            .toList();
+        var frame = getTimeFrame();
+        var periods = getPeriods(frame);
+        assert entities.size() == periods.size();
+
+        // NEXT, get the width of the incident labels.
+        var labelWidth = incidents.stream()
+            .mapToInt(i -> i.label().length())
+            .max().orElse(0);
+        labelWidth = Math.max(labelWidth, INCIDENTS.length());
+
+        // NEXT, get the width of the entity labels.
+        var entityWidth = 0;
+        for (var i = 0; i < entities.size(); i++) {
+            var width = 3*i + getEntityLabel(entities.get(i)).length();
+            entityWidth = Math.max(entityWidth, width);
+        }
+
+        // NEXT, get the width of the chart
+        var chartWidth = labelWidth + entityWidth;
+
+        // NEXT, output the header
+        var buff = new StringBuilder();
+        for (var i = 0; i < entities.size(); i++) {
+            buff.append(padLeft("", labelWidth));
+
+            for (var j = i; j > 0; j--) {
+                buff.append("  ").append(V_LINE);
+            }
+
+            buff.append(" ")
+                .append(getEntityLabel(entities.get(i)))
+                .append("\n");
+        }
+
+        buff.append(padLeft("Incidents", labelWidth));
+        for (var i = 0; i < entities.size(); i++) {
+            buff.append("  ").append(V_LINE);
+        }
+        buff.append("\n");
+        buff.append(H_LINE.repeat(chartWidth)).append("\n");
+
+        // NEXT, output each row
+        for (var incident : sortedIncidents) {
+            var t = incident.moment();
+
+            buff.append(padLeft(incident.label(), labelWidth));
+
+            for (var entity : entities) {
+                var period = periods.get(entity.id());
+                if (t < period.start() || t > period.end()) {
+                    buff.append("   ");
+                } else if (period.start() == t) {
+                    buff.append("  ").append(period.startCap() == Cap.HARD
+                        ? HARD_START : SOFT_START);
+                } else if (period.end() == t) {
+                    buff.append("  ").append(period.endCap() == Cap.HARD
+                        ? HARD_END : SOFT_END);
+                } else {
+                    buff.append("  ").append(V_LINE);
+                }
+            }
+
+            buff.append("\n");
+        }
+
+        return buff.toString();
+    }
+
+    private String getEntityLabel(Entity entity) {
+        return entity.name() + " (" + entity.type() + ")";
+    }
+
+    private String padLeft(String text, int width) {
+        if (text.length() < width) {
+            var pad = width - text.length();
+            return " ".repeat(pad) + text;
+        } else {
+            return text;
+        }
     }
 }
 

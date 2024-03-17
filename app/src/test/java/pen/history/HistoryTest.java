@@ -2,12 +2,13 @@ package pen.history;
 
 import org.junit.Before;
 import org.junit.Test;
+import pen.Ted;
 
 import java.util.Set;
 
 import static pen.checker.Checker.check;
 
-public class HistoryTest {
+public class HistoryTest extends Ted {
     private History history;
 
     @Before
@@ -17,12 +18,14 @@ public class HistoryTest {
 
     @Test
     public void testCreation() {
+        test("testCreation");
         check(history.getIncidents().isEmpty()).eq(true);
         check(history.getEntityMap().isEmpty()).eq(true);
     }
 
     @Test
     public void testAddGetEntity() {
+        test("testAddGetEntity");
         var joe = new Entity("joe", "Joe", "person");
         history.addEntity(joe);
         check(history.getEntityMap().size()).eq(1);
@@ -32,6 +35,7 @@ public class HistoryTest {
 
     @Test
     public void testRemoveEntity() {
+        test("testRemoveEntity");
         var joe = new Entity("joe", "Joe", "person");
         history.addEntity(joe);
         check(history.getEntityMap().isEmpty()).eq(false);
@@ -44,6 +48,7 @@ public class HistoryTest {
 
     @Test
     public void testGetTimeFrame_all() {
+        test("testGetTimeFrame_all");
         populateHistory();
         var frame = history.getTimeFrame();
         check(frame).eq(new TimeFrame(10, 90));
@@ -51,6 +56,7 @@ public class HistoryTest {
 
     @Test
     public void testGetTimeFrame_filtered() {
+        test("testGetTimeFrame_filtered");
         populateHistory();
         var frame = history.getTimeFrame(i -> i.concerns("bob"));
         check(frame).eq(new TimeFrame(15, 85));
@@ -58,6 +64,7 @@ public class HistoryTest {
 
     @Test
     public void testGetPeriod_full() {
+        test("testGetPeriod_full");
         populateHistory();
         var joe = history.getEntity("joe").orElseThrow();
         var joePeriod = history.getPeriod("joe").orElse(null);
@@ -70,6 +77,7 @@ public class HistoryTest {
 
     @Test
     public void testGetPeriod_mid() {
+        test("testGetPeriod_mid");
         populateHistory();
         var frame = new TimeFrame(15, 85);
 
@@ -84,6 +92,7 @@ public class HistoryTest {
 
     @Test
     public void testGetPeriod_little() {
+        test("testGetPeriod_little");
         populateHistory();
         var frame = new TimeFrame(20, 80);
 
@@ -96,9 +105,18 @@ public class HistoryTest {
         check(bobPeriod).eq(new Period(bob, 20, 80, Cap.SOFT, Cap.SOFT));
     }
 
+    @Test
+    public void testToTimelineChart() {
+        test("testToTimelineChart");
+
+        populateHistory();
+
+        println(history.toTimelineChart());
+    }
+
     private void populateHistory() {
-        history.addEntity(new Entity("joe", "Joe", "person"));
-        history.addEntity(new Entity("bob", "Bob", "person"));
+        history.addEntity(new Entity("joe", "JoeP", "person"));
+        history.addEntity(new Entity("bob", "BobC", "person"));
         history.getIncidents()
             .add(new Incident.EntityStart(10, "Joe is born", "joe", Cap.HARD));
         history.getIncidents()
