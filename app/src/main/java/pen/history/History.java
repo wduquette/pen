@@ -36,6 +36,9 @@ public interface History {
      */
     List<Incident> getIncidents();
 
+    TimeFrame getTimeFrame();
+    Map<String,Period> getPeriods(TimeFrame frame);
+
     /**
      * A text timeline chart for the incidents and entities in the history.
      * @return The chart.

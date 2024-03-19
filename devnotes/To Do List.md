@@ -5,6 +5,7 @@
     - [x] Calendar Tool prototype
     - [x] Prototype timeline charts.
     - [ ] Flesh out `HistoryBank`/`HistoryQuery`, and add `HistoryExtension`
+        - [ ] Consider what queries I want to do, and how to make them composable.
     - [ ] Add `pen history` for querying histories and producing Unicode timeline charts.
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams
