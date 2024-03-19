@@ -10,10 +10,10 @@ public class HistoryQuery implements History {
     //-------------------------------------------------------------------------
     // Instance Variables
 
-    private Calendar calendar;
-    private DateFormat dateFormat;
-    private Set<Incident> incidents;
-    private Set<Entity> entities;
+    private final Calendar calendar;
+    private final DateFormat dateFormat;
+    private final Set<Incident> incidents;
+    private final Set<Entity> entities;
     private Stream<Incident> incidentStream;
     private Stream<Entity> entityStream;
 
