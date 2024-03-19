@@ -8,12 +8,12 @@ import java.util.Set;
 
 import static pen.checker.Checker.check;
 
-public class HistoryTest extends Ted {
-    private History history;
+public class HistoryBankTest extends Ted {
+    private HistoryBank history;
 
     @Before
     public void setup() {
-        history = new History();
+        history = new HistoryBank();
     }
 
     @Test

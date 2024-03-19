@@ -7,7 +7,7 @@ import pen.calendars.formatter.DateFormat;
 import java.util.*;
 
 /**
- * Provides a DSL for building {@link History} objects.
+ * Provides a DSL for building {@link HistoryBank} objects.
  */
 @SuppressWarnings("unused")
 public class HistoryBuilder {
@@ -25,7 +25,7 @@ public class HistoryBuilder {
     private DateFormat dateFormat = BasicCalendar.ERA_YMD;
 
     // The History being build.
-    private final History history = new History();
+    private final HistoryBank history = new HistoryBank();
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -45,7 +45,7 @@ public class HistoryBuilder {
         return dateFormat;
     }
 
-    public History getHistory() {
+    public HistoryBank getHistory() {
         return history;
     }
 

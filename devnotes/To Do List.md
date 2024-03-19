@@ -4,7 +4,7 @@
     - [x] ScrollingCanvasPane widget
     - [x] Calendar Tool prototype
     - [x] Prototype timeline charts.
-    - [ ] Flesh out `HistoryBase`/`HistoryQuery`, and add `HistoryExtension`
+    - [ ] Flesh out `HistoryBank`/`HistoryQuery`, and add `HistoryExtension`
     - [ ] Add `pen history` for querying histories and producing Unicode timeline charts.
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams
