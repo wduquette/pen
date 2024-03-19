@@ -1,5 +1,8 @@
 package pen.history;
 
+import pen.calendars.Calendar;
+import pen.calendars.formatter.DateFormat;
+
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -7,8 +10,8 @@ public class HistoryQuery implements History {
     //-------------------------------------------------------------------------
     // Instance Variables
 
-    // TODO: Add calendar, date format
-    private final History history;
+    private Calendar calendar;
+    private DateFormat dateFormat;
     private Set<Incident> incidents;
     private Set<Entity> entities;
     private Stream<Incident> incidentStream;
@@ -18,7 +21,8 @@ public class HistoryQuery implements History {
     // Constructor
 
     public HistoryQuery(History history) {
-        this.history = history;
+        this.calendar = history.getCalendar().orElse(null);
+        this.dateFormat = history.getDateFormat();
         this.incidents = new HashSet<>(history.getIncidents());
         this.entities = new HashSet<>(history.getEntityMap().values());
         this.incidentStream = incidents.stream();
@@ -50,6 +54,16 @@ public class HistoryQuery implements History {
 
     //-------------------------------------------------------------------------
     // History API
+
+    @Override
+    public Optional<Calendar> getCalendar() {
+        return Optional.ofNullable(calendar);
+    }
+
+    @Override
+    public DateFormat getDateFormat() {
+        return dateFormat;
+    }
 
     @Override
     public Map<String, Entity> getEntityMap() {

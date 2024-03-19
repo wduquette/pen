@@ -1,5 +1,6 @@
 package pen.history;
 
+import pen.calendars.Calendar;
 import pen.calendars.BasicCalendar;
 import pen.calendars.formatter.DateFormat;
 import pen.util.TextCanvas;
@@ -34,8 +35,8 @@ public class HistoryBank implements History {
     // Accessors
 
 
-    public Calendar getCalendar() {
-        return calendar;
+    public Optional<Calendar> getCalendar() {
+        return Optional.ofNullable(calendar);
     }
 
     public void setCalendar(Calendar calendar) {
