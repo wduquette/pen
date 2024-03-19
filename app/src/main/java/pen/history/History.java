@@ -144,13 +144,13 @@ public class History {
     }
 
     private static final String INCIDENTS = "Incidents";
-    private static final String H_LINE = "\u2500";
-    private static final String V_LINE = "\u2502";
-    private static final String HARD_START = "\u252C";
-    private static final String HARD_END = "\u2534";
-    private static final String SOFT_START = "\u25B3";
-    private static final String SOFT_END = "\u25BD";
-    private static final String CONCERNED = "\u2524";
+    private static final String H_LINE = TextCanvas.LIGHT_HORIZONTAL;
+    private static final String V_LINE = TextCanvas.LIGHT_VERTICAL;
+    private static final String HARD_START = TextCanvas.LIGHT_DOWN_AND_HORIZONTAL;
+    private static final String HARD_END = TextCanvas.LIGHT_UP_AND_HORIZONTAL;
+    private static final String SOFT_START = TextCanvas.WHITE_UP_POINTING_TRIANGLE;
+    private static final String SOFT_END = TextCanvas.WHITE_DOWN_POINTING_TRIANGLE;
+    private static final String CONCERNED = TextCanvas.LIGHT_VERTICAL_AND_LEFT;
 
     public String toTimelineChart() {
         // FIRST, get the data

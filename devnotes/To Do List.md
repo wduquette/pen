@@ -1,9 +1,11 @@
 - Any time
     - Review Javadoc
 - Next Steps
-    - [ ] ScrollingCanvasPane widget
-    - [ ] Calendar Tool prototype
-    - [ ] Prototype timeline charts.
+    - [x] ScrollingCanvasPane widget
+    - [x] Calendar Tool prototype
+    - [x] Prototype timeline charts.
+    - [ ] Flesh out `HistoryBase`/`HistoryQuery`, and add `HistoryExtension`
+    - [ ] Add `pen history` for querying histories and producing Unicode timeline charts.
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams
     - [[Timeline Diagram Initial Concept]]
@@ -14,9 +16,9 @@
             - Add capabilities to Stencil as needed.
         - [x] Design `HistoryBase` data class
         - [x] Prototype text timeline diagram output using Unicode drawing characters.
-        - [ ] Draw text timeline charts with "fuzzy" SOFT caps
+        - [x] Draw text timeline charts with "fuzzy" SOFT caps
             - Draw SOFT caps one row up from top or down from bottom.
-            - If there are SOFT caps in the top or bottom row, live room.
+            - If there are SOFT caps in the top or bottom row, leave room.
             - Also, fix c0 setting; it's one too small when we're drawing the periods.
         - [ ] Add querying and filtering to `HistoryBase`, per [[HistoryBase and HistoryQuery]]
         - [ ] Implement `HistoryExtension` for defining histories in Tcl.
