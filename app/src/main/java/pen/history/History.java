@@ -178,9 +178,9 @@ public class History {
         for (var i = 0; i < entities.size(); i++) {
             var c = c0 + i*3;
             var r = i;
-            canvas.puts(c, r, getEntityLabel(entities.get(i)));
+            canvas.puts(c - 1, r, getEntityLabel(entities.get(i)));
             for (var rLine = r + 1; rLine < r0 - 1; rLine++) {
-                canvas.puts(c + 1, rLine, TextCanvas.LIGHT_VERTICAL);
+                canvas.puts(c, rLine, TextCanvas.LIGHT_VERTICAL);
             }
         }
 
@@ -203,7 +203,7 @@ public class History {
                 var entity = entities.get(j);
                 var period = periods.get(entity.id());
                 var concerned = incident.concerns(entity.id());
-                var c = c0 + 1 + 3*j; // Fix
+                var c = c0 + 3*j;
 
                 if (concerned) {
                     canvas.puts(c - 1, r, H_LINE);
