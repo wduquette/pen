@@ -189,6 +189,15 @@ public class History {
         // NEXT, add the separator, now that we know what the full width is.
         canvas.puts(0, r0 - 1, H_LINE.repeat(canvas.getWidth()));
 
+        // NEXT, add a row for soft caps at the beginning, if needed.
+        var t0 = sortedIncidents.getFirst().moment();
+        if (periods.values().stream()
+            .filter(p -> p.start() == t0)
+            .anyMatch(p -> p.startCap() == Cap.SOFT)
+        ) {
+            ++r0;
+        }
+
         // NEXT, add the incidents and periods
         for (var i = 0; i < sortedIncidents.size(); i++) {
             var r = r0 + i;
@@ -212,11 +221,19 @@ public class History {
                 if (t < period.start() || t > period.end()) {
                     // Do nothing
                 } else if (period.start() == t) {
-                    canvas.puts(c, r, period.startCap() == Cap.HARD
-                        ? HARD_START : SOFT_START);
+                    if (period.startCap() == Cap.HARD) {
+                        canvas.puts(c, r, HARD_START);
+                    } else {
+                        canvas.puts(c, r - 1, SOFT_START);
+                        canvas.puts(c, r, concerned ? CONCERNED : V_LINE);
+                    }
                 } else if (period.end() == t) {
-                    canvas.puts(c, r, period.endCap() == Cap.HARD
-                        ? HARD_END : SOFT_END);
+                    if (period.endCap() == Cap.HARD) {
+                        canvas.puts(c, r, HARD_END);
+                    } else {
+                        canvas.puts(c, r, concerned ? CONCERNED : V_LINE);
+                        canvas.puts(c, r + 1, SOFT_END);
+                    }
                 } else if (concerned) {
                     canvas.puts(c, r, CONCERNED);
                 } else {

@@ -14,6 +14,10 @@
             - Add capabilities to Stencil as needed.
         - [x] Design `HistoryBase` data class
         - [x] Prototype text timeline diagram output using Unicode drawing characters.
+        - [ ] Draw text timeline charts with "fuzzy" SOFT caps
+            - Draw SOFT caps one row up from top or down from bottom.
+            - If there are SOFT caps in the top or bottom row, live room.
+            - Also, fix c0 setting; it's one too small when we're drawing the periods.
         - [ ] Add querying and filtering to `HistoryBase`, per [[HistoryBase and HistoryQuery]]
         - [ ] Implement `HistoryExtension` for defining histories in Tcl.
         - [ ] Add `pen history` tool for querying histories and converting them to text timeline diagrams.
