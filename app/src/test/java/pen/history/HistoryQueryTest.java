@@ -120,6 +120,7 @@ public class HistoryQueryTest extends Ted {
             .add(new Incident.EntityEnd(90, "Joe dies", "joe", Cap.HARD));
     }
 
+    @SuppressWarnings("unused")
     private void dump(History data) {
         println("History Dump");
         data.getEntityMap().values().forEach(e -> println("  " + e));

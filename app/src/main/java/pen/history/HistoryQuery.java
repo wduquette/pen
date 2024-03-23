@@ -108,9 +108,8 @@ public class HistoryQuery {
 
         for (var term : terms) {
             switch (term) {
-                case Term.IncidentFilter t -> {
+                case Term.IncidentFilter t ->
                     incidents = incidents.stream().filter(t.filter).toList();
-                }
                 case Term.Includes t -> {
                     if (!modified) {
                         entities.clear();
@@ -171,7 +170,7 @@ public class HistoryQuery {
         }
 
         // NEXT, produce the resulting view
-        var map = new LinkedHashMap<String,Entity>();
+        Map<String,Entity> map = new LinkedHashMap<>();
         entities.forEach(id -> map.put(id, periods.get(id).entity()));
 
         var result = new HistoryView(map, incidents);
