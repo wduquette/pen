@@ -3,7 +3,6 @@ package pen.history;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 public class HistoryView
     extends AbstractHistory implements History
@@ -42,19 +41,8 @@ public class HistoryView
         return Collections.unmodifiableList(incidents());
     }
 
-
-
-    @Override
-    public TimeFrame getTimeFrame() {
-        // TODO: Move implementation to AbstractHistory
-        return null;
-    }
-
-    @Override
-    public Map<String, Period> getPeriods(TimeFrame frame) {
-        // TODO: Move implementation to AbstractHistory
-        return null;
-    }
+    //-------------------------------------------------------------------------
+    // These should be defined in AbstractHistory
 
     @Override
     public String toTimelineChart() {
