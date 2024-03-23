@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public abstract class AbstractHistory {
+public abstract class AbstractHistory implements History {
     //-------------------------------------------------------------------------
     // Instance Variables
 
@@ -163,5 +163,9 @@ public abstract class AbstractHistory {
             .filter(i -> i.concerns(entityId))
             .sorted(Comparator.comparing(Incident::moment))
             .toList();
+    }
+
+    public String toTimelineChart() {
+        return new TextTimelineChart(this).toString();
     }
 }
