@@ -11,21 +11,15 @@ import java.util.Optional;
  * A {@link HistoryBank} or {@link HistoryQuery}.
  */
 public interface History {
-    /**
-     * The calendar used to format dates in printed output.
-     * @return the calendar
-     */
-    Optional<Calendar> getCalendar();
+    //-------------------------------------------------------------------------
+    // Public Methods
 
-    /**
-     * The format for printed dates.
-     * @return The format
-     */
+    Optional<Calendar> getCalendar();
     DateFormat getDateFormat();
+
 
     /**
      * The entities in the history, by name.
-     * TODO: Consider exposing a list rather than the map.
      * @return The entities.
      */
     Map<String, Entity> getEntityMap();
@@ -37,6 +31,7 @@ public interface History {
     List<Incident> getIncidents();
 
     TimeFrame getTimeFrame();
+
     Map<String,Period> getPeriods(TimeFrame frame);
 
     /**
