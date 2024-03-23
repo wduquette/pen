@@ -4,10 +4,19 @@
     - [x] ScrollingCanvasPane widget
     - [x] Calendar Tool prototype
     - [x] Prototype timeline charts.
-    - [ ] Flesh out `HistoryBank`/`HistoryQuery`, and add `HistoryExtension`
-        - [ ] Consider what queries I want to do, and how to make them composable.
-        - [ ] Consider replacing the history's `Calendar` with a lambda to format moments.
+    - [x] Flesh out `HistoryBank`/`HistoryQuery`/`HistoryView`
+    - [ ] Test `HistoryQuery`
+    - [ ] Implement save/restore format for `History`
+        - Could use Tcl, but not necessarily.
     - [ ] Add `pen history` for querying histories and producing Unicode timeline charts.
+    - [ ] TextTimelineChart improvements
+        - [ ] Complete box around periods.
+        - [ ] Use "heavy" lines for when drawing periods, light lines for everything else.
+        - [ ] Grouping of entities by type.
+    - [ ] Revise TimelineDiagram to display `History` data
+        - [ ] Will require `HistoryExtension`
+            - [ ] Build histories in Tcl
+            - [ ] Load history file
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams
     - [[Timeline Diagram Initial Concept]]

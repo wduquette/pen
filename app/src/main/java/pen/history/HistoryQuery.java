@@ -30,6 +30,11 @@ public class HistoryQuery {
     //-------------------------------------------------------------------------
     // Terms
 
+    public HistoryQuery clear() {
+        terms.clear();
+        return this;
+    }
+
     public HistoryQuery after(int moment) {
         terms.add(new Term.IncidentFilter(in -> in.moment() >= moment));
         return this;
@@ -37,6 +42,11 @@ public class HistoryQuery {
 
     public HistoryQuery before(int moment) {
         terms.add(new Term.IncidentFilter(in -> in.moment() <= moment));
+        return this;
+    }
+
+    public HistoryQuery filter(Predicate<Incident> predicate) {
+        terms.add(new Term.IncidentFilter(predicate));
         return this;
     }
 
@@ -88,7 +98,7 @@ public class HistoryQuery {
     //------------------------------------------------------------------------
     // Query
 
-    public History query(History source) {
+    public History execute(History source) {
         var incidents = source.getIncidents().stream()
             .sorted(Comparator.comparing(Incident::moment))
             .toList();
@@ -98,8 +108,9 @@ public class HistoryQuery {
 
         for (var term : terms) {
             switch (term) {
-                case Term.IncidentFilter t ->
+                case Term.IncidentFilter t -> {
                     incidents = incidents.stream().filter(t.filter).toList();
+                }
                 case Term.Includes t -> {
                     if (!modified) {
                         entities.clear();
@@ -115,7 +126,7 @@ public class HistoryQuery {
                     var toInclude = periods.values().stream()
                         .map(Period::entity)
                         .filter(e -> t.types().contains(e.type()))
-                        .map(Entity::name)
+                        .map(Entity::id)
                         .toList();
                     entities.addAll(toInclude);
                 }
@@ -134,13 +145,13 @@ public class HistoryQuery {
                 }
                 case Term.BoundBy t -> {
                     var list = new ArrayList<Period>();
-                    t.entityIds().forEach(id -> {
+
+                    var ids = !t.entityIds.isEmpty() ? t.entityIds : entities;
+
+                    for (var id : ids) {
                         if (periods.containsKey(id)) {
                             list.add(periods.get(id));
                         }
-                    });
-                    if (list.isEmpty()) {
-                        list.addAll(periods.values());
                     }
 
                     var start = list.stream()
