@@ -5,9 +5,11 @@
     - [x] Calendar Tool prototype
     - [x] Prototype timeline charts.
     - [x] Flesh out `HistoryBank`/`HistoryQuery`/`HistoryView`
-    - [ ] Test `HistoryQuery`
+    - [x] Test `HistoryQuery`
     - [ ] Implement save/restore format for `History`
-        - Could use Tcl, but not necessarily.
+        - Use Tcl for now, but eventually we will want some XML processing.
+        - Or, multi-table CSV? I think I have some CSV code in the Destiny project.
+    - [ ] Define API for loading history files, calendars, etc. without requiring all the APIs to be in the same shell.
     - [ ] Add `pen history` for querying histories and producing Unicode timeline charts.
     - [ ] TextTimelineChart improvements
         - [ ] Complete box around periods.

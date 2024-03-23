@@ -16,6 +16,11 @@ public class HistoryBank
     //-------------------------------------------------------------------------
     // Accessors
 
+    public void clear() {
+        entityMap().clear();
+        incidents().clear();
+        setMomentFormatter(null);
+    }
 
     public Map<String,Entity> getEntityMap() {
         return entityMap();
