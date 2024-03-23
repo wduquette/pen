@@ -10,20 +10,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
-public class HistoryBank implements History {
-    //-------------------------------------------------------------------------
-    // Instance Variables
-
-    // The calendar information
-    private Function<Integer,String> momentFormatter;
-
-    // The entities in this diagram.  Use a LinkedHashMap to preserve
-    private final SequencedMap<String,Entity> entityMap =
-        new LinkedHashMap<>();
-
-    // The incidents
-    private final List<Incident> incidents = new ArrayList<>();
-
+public class HistoryBank
+    extends AbstractHistory implements History
+{
     //-------------------------------------------------------------------------
     // Constructor
 
@@ -35,34 +24,34 @@ public class HistoryBank implements History {
     // Accessors
 
 
+    @Override
     public void setMomentFormatter(Function<Integer,String> formatter) {
-        this.momentFormatter = formatter;
+        super.setMomentFormatter(formatter);
     }
 
     public Function<Integer,String> getMomentFormatter() {
-        return momentFormatter;
+        return super.momentFormatter();
     }
 
-    @Override
     public Map<String,Entity> getEntityMap() {
-        return entityMap;
+        return entityMap();
     }
 
     public void addEntity(Entity entity) {
-        entityMap.put(entity.id(), entity);
+        entityMap().put(entity.id(), entity);
     }
 
     public Optional<Entity> removeEntity(String id) {
-        return Optional.ofNullable(entityMap.remove(id));
+        return Optional.ofNullable(entityMap().remove(id));
     }
 
     public Optional<Entity> getEntity(String id) {
-        return Optional.ofNullable(entityMap.get(id));
+        return Optional.ofNullable(entityMap().get(id));
     }
 
     @Override
     public List<Incident> getIncidents() {
-        return incidents;
+        return incidents();
     }
 
     /**
@@ -74,7 +63,7 @@ public class HistoryBank implements History {
     }
 
     public TimeFrame getTimeFrame(Predicate<Incident> filter) {
-        var filtered = incidents.stream()
+        var filtered = incidents().stream()
             .filter(filter)
             .toList();
 
@@ -94,7 +83,7 @@ public class HistoryBank implements History {
 
     public Optional<Period> getPeriod(String entityId, TimeFrame frame) {
         // FIRST, get the entity
-        var entity = entityMap.get(entityId);
+        var entity = entityMap().get(entityId);
         if (entity == null) {
             throw new IllegalArgumentException("No such entity: \"" + entityId + "\"");
         }
@@ -147,7 +136,7 @@ public class HistoryBank implements History {
     public Map<String,Period> getPeriods(TimeFrame frame) {
         var map = new HashMap<String,Period>();
 
-        for (var id : entityMap.keySet()) {
+        for (var id : entityMap().keySet()) {
             getPeriod(id, frame).ifPresent(period -> map.put(id, period));
         }
 
@@ -155,7 +144,7 @@ public class HistoryBank implements History {
     }
 
     public List<Incident> getIncidents(String entityId) {
-        return incidents.stream()
+        return incidents().stream()
             .filter(i -> i.concerns(entityId))
             .sorted(Comparator.comparing(Incident::moment))
             .toList();
@@ -174,7 +163,7 @@ public class HistoryBank implements History {
     public String toTimelineChart() {
         // FIRST, get the data
         var entities = new ArrayList<>(getEntityMap().values());
-        var sortedIncidents = incidents.stream()
+        var sortedIncidents = incidents().stream()
             .sorted(Comparator.comparing(Incident::moment))
             .toList();
         var frame = getTimeFrame();
@@ -182,7 +171,7 @@ public class HistoryBank implements History {
         assert entities.size() == periods.size();
 
         // NEXT, get the width of the incident labels.
-        var labelWidth = incidents.stream()
+        var labelWidth = incidents().stream()
             .mapToInt(i -> i.label().length())
             .max().orElse(0);
         labelWidth = Math.max(labelWidth, INCIDENTS.length());
