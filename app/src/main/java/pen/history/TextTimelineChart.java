@@ -15,7 +15,7 @@ public class TextTimelineChart {
     // Instance Variables
 
     private final History history;
-    private Function<Integer,String> momentFormatter = null;
+    private Function<Integer,String> momentFormatter;
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -28,6 +28,7 @@ public class TextTimelineChart {
     //-------------------------------------------------------------------------
     // Public Methods
 
+    @SuppressWarnings("unused")
     public final Function<Integer, String> getMomentFormatter() {
         return momentFormatter;
     }

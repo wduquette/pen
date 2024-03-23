@@ -1,13 +1,6 @@
 package pen.history;
 
-import pen.calendars.Calendar;
-import pen.calendars.BasicCalendar;
-import pen.calendars.formatter.DateFormat;
-import pen.util.TextCanvas;
-
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
 public class HistoryBank
