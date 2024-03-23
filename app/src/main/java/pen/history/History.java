@@ -3,7 +3,6 @@ package pen.history;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * A History consists of incidents, each of which may concern some number
