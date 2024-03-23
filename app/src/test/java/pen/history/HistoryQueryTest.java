@@ -31,7 +31,7 @@ public class HistoryQueryTest extends Ted {
     public void testClear() {
         test("testClear");
         populateHistory();
-        var view = query.before(0).execute(history); // No incidents.
+        var view = query.noLaterThan(0).execute(history); // No incidents.
         check(view.getIncidents().isEmpty()).eq(true);
 
         query.clear();
@@ -44,14 +44,14 @@ public class HistoryQueryTest extends Ted {
     @Test
     public void testAfter() {
         populateHistory();
-        var view = query.after(50).execute(history);
+        var view = query.noEarlierThan(50).execute(history);
         check(view.getTimeFrame()).eq(TimeFrame.of(50, 90));
     }
 
     @Test
     public void testBefore() {
         populateHistory();
-        var view = query.before(50).execute(history);
+        var view = query.noLaterThan(50).execute(history);
         check(view.getTimeFrame()).eq(TimeFrame.of(10, 50));
     }
 
