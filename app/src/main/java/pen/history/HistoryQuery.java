@@ -159,10 +159,12 @@ public class HistoryQuery {
             }
         }
 
-        var result = new HistoryBank();
+        // NEXT, produce the resulting view
+        var map = new LinkedHashMap<String,Entity>();
+        entities.forEach(id -> map.put(id, periods.get(id).entity()));
+
+        var result = new HistoryView(map, incidents);
         result.setMomentFormatter(source.getMomentFormatter());
-        result.getIncidents().addAll(incidents);
-        entities.forEach(e -> result.addEntity(periods.get(e).entity()));
 
         return result;
     }

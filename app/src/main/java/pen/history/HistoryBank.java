@@ -24,15 +24,6 @@ public class HistoryBank
     // Accessors
 
 
-    @Override
-    public void setMomentFormatter(Function<Integer,String> formatter) {
-        super.setMomentFormatter(formatter);
-    }
-
-    public Function<Integer,String> getMomentFormatter() {
-        return super.momentFormatter();
-    }
-
     public Map<String,Entity> getEntityMap() {
         return entityMap();
     }

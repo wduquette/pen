@@ -25,17 +25,20 @@ public class AbstractHistory {
     }
 
     //-------------------------------------------------------------------------
-    // Protected Members, for use by subclasses.
-    //
-    // Subclasses are free to edit and view the history as they like.
+    // Configuration
 
-    protected final Function<Integer, String> momentFormatter() {
+    public final Function<Integer, String> getMomentFormatter() {
         return momentFormatter;
     }
 
-    protected void setMomentFormatter(Function<Integer, String> formatter) {
+    public void setMomentFormatter(Function<Integer, String> formatter) {
         this.momentFormatter = formatter;
     }
+
+    //-------------------------------------------------------------------------
+    // Protected Members, for use by subclasses.
+    //
+    // Subclasses are free to edit and view the history as they like.
 
     protected final SequencedMap<String, Entity> entityMap() {
         return entityMap;
