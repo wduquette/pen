@@ -40,13 +40,4 @@ public class HistoryView
     public List<Incident> getIncidents() {
         return Collections.unmodifiableList(incidents());
     }
-
-    //-------------------------------------------------------------------------
-    // These should be defined in AbstractHistory
-
-    @Override
-    public String toTimelineChart() {
-        // TODO: Move implementation to AbstractHistory
-        return null;
-    }
 }

@@ -208,7 +208,7 @@ public class HistoryQuery {
             .sorted(Comparator.comparing(Incident::moment))
             .toList();
         var entities = new HashSet<>(source.getEntityMap().keySet());
-        var periods = source.getPeriods(source.getTimeFrame());
+        var periods = source.getPeriods();
         var modified = false;
 
         for (var term : terms) {

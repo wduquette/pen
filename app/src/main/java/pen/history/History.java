@@ -6,12 +6,18 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * A {@link HistoryBank} or {@link HistoryQuery}.
+ * A History consists of incidents, each of which may concern some number
+ * of entities (persons, places, subplots).  This class provides a simple
+ * read-only view of any such set.
  */
 public interface History {
     //-------------------------------------------------------------------------
     // Public Methods
 
+    /**
+     * Gets the function used to format moments for display.
+     * @return The function
+     */
     Function<Integer,String> getMomentFormatter();
 
     /**
@@ -26,10 +32,17 @@ public interface History {
      */
     List<Incident> getIncidents();
 
+    /**
+     * Gets the TimeFrame that spans all incidents in the history.
+     * @return The time frame
+     */
     TimeFrame getTimeFrame();
-    TimeFrame getTimeFrame(Predicate<Incident> filter);
 
-    Map<String,Period> getPeriods(TimeFrame frame);
+    /**
+     * Gets a map of Periods by entity ID.
+     * @return The map
+     */
+    Map<String,Period> getPeriods();
 
     /**
      * A text timeline chart for the incidents and entities in the history.

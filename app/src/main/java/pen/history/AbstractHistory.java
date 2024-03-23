@@ -158,6 +158,10 @@ public abstract class AbstractHistory implements History {
         return map;
     }
 
+    public Map<String,Period> getPeriods() {
+        return getPeriods(getTimeFrame());
+    }
+
     public List<Incident> getIncidents(String entityId) {
         return incidents().stream()
             .filter(i -> i.concerns(entityId))

@@ -56,8 +56,7 @@ public class TextTimelineChart {
         var incidents = history.getIncidents().stream()
             .sorted(Comparator.comparing(Incident::moment))
             .toList();
-        var frame = history.getTimeFrame();
-        var periods = history.getPeriods(frame);
+        var periods = history.getPeriods();
         assert entities.size() == periods.size();
 
         // NEXT, get the width of the incident labels.
