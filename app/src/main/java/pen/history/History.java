@@ -6,6 +6,7 @@ import pen.calendars.formatter.DateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * A {@link HistoryBank} or {@link HistoryQuery}.
@@ -14,9 +15,7 @@ public interface History {
     //-------------------------------------------------------------------------
     // Public Methods
 
-    Optional<Calendar> getCalendar();
-    DateFormat getDateFormat();
-
+    Function<Integer,String> getMomentFormatter();
 
     /**
      * The entities in the history, by name.

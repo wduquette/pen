@@ -160,8 +160,7 @@ public class HistoryQuery {
         }
 
         var result = new HistoryBank();
-        result.setCalendar(source.getCalendar().orElse(null));
-        result.setDateFormat(source.getDateFormat());
+        result.setMomentFormatter(source.getMomentFormatter());
         result.getIncidents().addAll(incidents);
         entities.forEach(e -> result.addEntity(periods.get(e).entity()));
 

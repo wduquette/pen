@@ -6,6 +6,7 @@ import pen.calendars.formatter.DateFormat;
 import pen.util.TextCanvas;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
@@ -14,8 +15,7 @@ public class HistoryBank implements History {
     // Instance Variables
 
     // The calendar information
-    private Calendar calendar = null;
-    private DateFormat dateFormat = BasicCalendar.ERA_YMD;
+    private Function<Integer,String> momentFormatter;
 
     // The entities in this diagram.  Use a LinkedHashMap to preserve
     private final SequencedMap<String,Entity> entityMap =
@@ -35,20 +35,12 @@ public class HistoryBank implements History {
     // Accessors
 
 
-    public Optional<Calendar> getCalendar() {
-        return Optional.ofNullable(calendar);
+    public void setMomentFormatter(Function<Integer,String> formatter) {
+        this.momentFormatter = formatter;
     }
 
-    public void setCalendar(Calendar calendar) {
-        this.calendar = calendar;
-    }
-
-    public DateFormat getDateFormat() {
-        return dateFormat;
-    }
-
-    public void setDateFormat(DateFormat dateFormat) {
-        this.dateFormat = dateFormat;
+    public Function<Integer,String> getMomentFormatter() {
+        return momentFormatter;
     }
 
     @Override

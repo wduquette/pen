@@ -6,6 +6,7 @@
     - [x] Prototype timeline charts.
     - [ ] Flesh out `HistoryBank`/`HistoryQuery`, and add `HistoryExtension`
         - [ ] Consider what queries I want to do, and how to make them composable.
+        - [ ] Consider replacing the history's `Calendar` with a lambda to format moments.
     - [ ] Add `pen history` for querying histories and producing Unicode timeline charts.
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams
@@ -21,7 +22,7 @@
             - Draw SOFT caps one row up from top or down from bottom.
             - If there are SOFT caps in the top or bottom row, leave room.
             - Also, fix c0 setting; it's one too small when we're drawing the periods.
-        - [ ] Add querying and filtering to `HistoryBase`, per [[HistoryBase and HistoryQuery]]
+        - [ ] Add querying and filtering to `HistoryBase`, per [[HistoryBank and HistoryQuery]]
         - [ ] Implement `HistoryExtension` for defining histories in Tcl.
         - [ ] Add `pen history` tool for querying histories and converting them to text timeline diagrams.
     - Calendar Charts
