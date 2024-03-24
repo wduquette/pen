@@ -4,9 +4,9 @@ import java.util.Set;
 
 @SuppressWarnings("unused")
 public sealed interface Incident permits
-    Incident.EntityStart,
+    Incident.Enters,
     Incident.Normal,
-    Incident.EntityEnd
+    Incident.Exits
 {
     //-------------------------------------------------------------------------
     // Standard Methods
@@ -19,7 +19,14 @@ public sealed interface Incident permits
     //-------------------------------------------------------------------------
     // Incident Types
 
-    record EntityStart (
+    /**
+     * An entity enters the history.
+     * @param moment The moment of entry
+     * @param label The label
+     * @param entityId The entity ID
+     * @param cap The cap, soft or hard
+     */
+    record Enters(
         int moment,
         String label,
         String entityId,
@@ -30,6 +37,12 @@ public sealed interface Incident permits
         }
     }
 
+    /**
+     * A normal event, possibly concerning multiple entities.
+     * @param moment The moment
+     * @param label The label
+     * @param entityIds The IDs of the concerned entities.
+     */
     record Normal(
         int moment,
         String label,
@@ -44,7 +57,14 @@ public sealed interface Incident permits
         }
     }
 
-    record EntityEnd(
+    /**
+     * An entity exits the history.
+     * @param moment The moment of exit
+     * @param label The label
+     * @param entityId The entity ID
+     * @param cap The cap, soft or hard
+     */
+    record Exits(
         int moment,
         String label,
         String entityId,
@@ -54,6 +74,4 @@ public sealed interface Incident permits
             return this.entityId.equals(entityId);
         }
     }
-
-
 }
