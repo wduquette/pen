@@ -11,9 +11,29 @@ public sealed interface Incident permits
     //-------------------------------------------------------------------------
     // Standard Methods
 
+    /**
+     * The moment at which the incident occurred.
+     * @return The moment.
+     */
     int moment();
+
+    /**
+     * What happened at that moment.
+     * @return The label
+     */
     String label();
+
+    /**
+     * Whether this incident concerns the given entity.
+     * @param entityId The entity's ID
+     * @return true or false
+     */
     boolean concerns(String entityId);
+
+    /**
+     * The cap to be used if this is the first/last incident for some entity.
+     * @return The cap
+     */
     Cap cap();
 
     //-------------------------------------------------------------------------
