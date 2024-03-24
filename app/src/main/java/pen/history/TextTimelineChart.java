@@ -61,7 +61,7 @@ public class TextTimelineChart {
 
         // NEXT, get the width of the incident labels.
         var labelWidth = incidents.stream()
-            .mapToInt(i -> i.label().length())
+            .mapToInt(i -> getIncidentLabel(i).length())
             .max().orElse(0);
         labelWidth = Math.max(labelWidth, INCIDENTS.length());
 
@@ -102,7 +102,7 @@ public class TextTimelineChart {
             var t = incident.moment();
 
             // FIRST, add the incident
-            canvas.puts(0, r, padLeft(incident.label(), labelWidth));
+            canvas.puts(0, r, padLeft(getIncidentLabel(incident), labelWidth));
 
             // NEXT, add the periods.
             for (var j = 0; j < entities.size(); j++) {
@@ -144,6 +144,15 @@ public class TextTimelineChart {
 
     private String getEntityLabel(Entity entity) {
         return entity.name() + " (" + entity.type() + ")";
+    }
+
+    private String getIncidentLabel(Incident incident) {
+        if (history.getMomentFormatter() != null) {
+            return incident.label() + " " +
+                history.getMomentFormatter().apply(incident.moment());
+        } else {
+            return incident.label();
+        }
     }
 
     private String padLeft(String text, int width) {
