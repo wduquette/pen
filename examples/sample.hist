@@ -1,8 +1,10 @@
+# Need to get CWD story straight
+history calendar examples/gregorian.cal gregorian "yyyy-mm-dd"
 history entity joe "JoeP" person
 history entity bob "BobC" person
 
-history begins 10 joe "Joe is born"
-history enters 15 bob
-history event  50 "Joe and Bob talk" bob joe
-history exits  85 bob
-history ends   90 joe "Joe dies"
+history begins AD-2010-02-15 joe "Joe is born"
+history enters AD-2015-07-23 bob
+history event  AD-2050-12-25 "Joe and Bob talk" bob joe
+history exits  AD-2085-10-31 bob
+history ends   AD-2090-04-01 joe "Joe dies"

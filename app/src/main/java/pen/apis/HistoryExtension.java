@@ -1,5 +1,10 @@
 package pen.apis;
 
+import pen.DataFileException;
+import pen.DataFiles;
+import pen.calendars.Calendar;
+import pen.calendars.CalendarException;
+import pen.calendars.formatter.DateFormat;
 import pen.history.Cap;
 import pen.history.Entity;
 import pen.history.HistoryBank;
@@ -8,8 +13,11 @@ import pen.tcl.Argq;
 import pen.tcl.TclEngine;
 import pen.tcl.TclExtension;
 import tcl.lang.TclException;
+import tcl.lang.TclObject;
 
-import java.util.*;
+import java.io.File;
+import java.util.Map;
+import java.util.TreeSet;
 
 /**
  * A TclEngine extension for defining histories.
@@ -24,6 +32,8 @@ public class HistoryExtension implements TclExtension {
     // Data stores
     private final HistoryBank bank = new HistoryBank();
 
+    private Calendar calendar;
+
     //-------------------------------------------------------------------------
     // Constructor
 
@@ -37,19 +47,14 @@ public class HistoryExtension implements TclExtension {
     public void initialize(TclEngine tcl) {
         this.tcl = tcl;
 
-        // history entity id name type
-        // history enters id moment label cap
-        // history event moment label entityIds
-        // history exits id moment label cap
-        // history calendar calendarFile -format formatString
-
         var hist = tcl.ensemble("history");
-        hist.add("entity", this::cmd_historyEntity);
-        hist.add("begins", this::cmd_historyBegins);
-        hist.add("ends",   this::cmd_historyEnds);
-        hist.add("enters", this::cmd_historyEnters);
-        hist.add("exits",  this::cmd_historyExits);
-        hist.add("event",  this::cmd_historyEvent);
+        hist.add("calendar", this::cmd_historyCalendar);
+        hist.add("entity",   this::cmd_historyEntity);
+        hist.add("begins",   this::cmd_historyBegins);
+        hist.add("ends",     this::cmd_historyEnds);
+        hist.add("enters",   this::cmd_historyEnters);
+        hist.add("exits",    this::cmd_historyExits);
+        hist.add("event",    this::cmd_historyEvent);
     }
 
     @SuppressWarnings("unused")
@@ -61,6 +66,47 @@ public class HistoryExtension implements TclExtension {
 
     //-------------------------------------------------------------------------
     // Ensemble: history *
+
+    // history calendar calendarFile name ?outputFormat?
+    //
+    // Adds a calendar for processing input dates and formatting output dates.
+    private void cmd_historyCalendar(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkArgs(argq, 2, 3, "calendarFile name ?outputFormat?");
+
+        var calendarFile = argq.next().toString();
+        Map<String, Calendar> map;
+
+        try {
+            map = DataFiles.loadCalendar(new File(calendarFile).toPath());
+        } catch (DataFileException ex) {
+            throw tcl.error("Could not load calendar file " + calendarFile, ex);
+        }
+
+        var name = argq.next().toString();
+        if (!map.containsKey(name)) {
+            throw tcl.expected("calendar name", name);
+        }
+
+        calendar = map.get(name);
+        bank.setMomentFormatter(m -> calendar.format(m));
+
+        DateFormat outputFormat = null;
+
+        if (argq.hasNext()) {
+            var formatString = argq.next().toString();
+            try {
+                outputFormat = new DateFormat(formatString);
+            } catch (Exception ex) {
+                throw tcl.badValue("date format", formatString);
+            }
+
+            DateFormat theFormat = outputFormat; // Effectively final
+            bank.setMomentFormatter(m -> calendar.format(theFormat, m));
+        }
+    }
+
 
     // history entity id name type
     //
@@ -103,7 +149,7 @@ public class HistoryExtension implements TclExtension {
     {
         tcl.checkArgs(argq, 2, 3, "moment id ?label?");
 
-        var moment = tcl.toInteger(argq.next());
+        var moment = toMoment(argq.next());
 
         var id = argq.next().toString().trim();
 
@@ -126,7 +172,7 @@ public class HistoryExtension implements TclExtension {
     {
         tcl.checkArgs(argq, 2, 3, "moment id ?label?");
 
-        var moment = tcl.toInteger(argq.next());
+        var moment = toMoment(argq.next());
 
         var id = argq.next().toString().trim();
 
@@ -149,7 +195,7 @@ public class HistoryExtension implements TclExtension {
     {
         tcl.checkArgs(argq, 2, 3, "moment id ?label?");
 
-        var moment = tcl.toInteger(argq.next());
+        var moment = toMoment(argq.next());
 
         var id = argq.next().toString().trim();
 
@@ -172,7 +218,7 @@ public class HistoryExtension implements TclExtension {
     {
         tcl.checkArgs(argq, 2, 3, "moment id ?label?");
 
-        var moment = tcl.toInteger(argq.next());
+        var moment = toMoment(argq.next());
 
         var id = argq.next().toString().trim();
 
@@ -197,7 +243,7 @@ public class HistoryExtension implements TclExtension {
 
         var set = new TreeSet<String>();
 
-        var moment = tcl.toInteger(argq.next());
+        var moment = toMoment(argq.next());
         var label = argq.next().toString().trim();
         while (argq.hasNext()) {
             var id = argq.next().toString().trim();
@@ -208,12 +254,24 @@ public class HistoryExtension implements TclExtension {
             set.add(argq.next().toString());
         }
 
+        // TODO: Check integrity of events.
         var incident = new Incident.Normal(moment, label, set);
-
-        // TODO: Check integrity across events concerning this entity.
-        // TODO: Add history::entityExits(...), which does the necessary checks.
-        // TODO: Do not expose getIncidents as modifiable.
-
         bank.getIncidents().add(incident);
+    }
+
+    // NEED: tcl.toIdentifier().
+    // NEED: toEntity()
+    // NEED: toDateFormat()
+
+    private int toMoment(TclObject arg) throws TclException {
+        if (calendar == null) {
+            return tcl.toInteger(arg);
+        }
+
+        try {
+            return calendar.parse(arg.toString());
+        } catch (CalendarException ex) {
+            throw tcl.expected("calendar date", arg);
+        }
     }
 }
