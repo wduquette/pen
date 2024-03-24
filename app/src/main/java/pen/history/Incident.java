@@ -4,9 +4,9 @@ import java.util.Set;
 
 @SuppressWarnings("unused")
 public sealed interface Incident permits
-    Incident.Enters,
+    Incident.Beginning,
     Incident.Normal,
-    Incident.Exits
+    Incident.Ending
 {
     //-------------------------------------------------------------------------
     // Standard Methods
@@ -46,7 +46,7 @@ public sealed interface Incident permits
      * @param entityId The entity ID
      * @param cap The cap, soft or hard
      */
-    record Enters(
+    record Beginning(
         int moment,
         String label,
         String entityId,
@@ -84,7 +84,7 @@ public sealed interface Incident permits
      * @param entityId The entity ID
      * @param cap The cap, soft or hard
      */
-    record Exits(
+    record Ending(
         int moment,
         String label,
         String entityId,

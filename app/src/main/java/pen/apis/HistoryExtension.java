@@ -8,7 +8,6 @@ import pen.tcl.Argq;
 import pen.tcl.TclEngine;
 import pen.tcl.TclExtension;
 import tcl.lang.TclException;
-import tcl.lang.TclObject;
 
 import java.util.*;
 
@@ -38,14 +37,19 @@ public class HistoryExtension implements TclExtension {
     public void initialize(TclEngine tcl) {
         this.tcl = tcl;
 
-        var ent = tcl.ensemble("entity");
-        ent.add("add", this::cmd_entityAdd);
+        // history entity id name type
+        // history enters id moment label cap
+        // history event moment label entityIds
+        // history exits id moment label cap
+        // history calendar calendarFile -format formatString
 
-        var inc = tcl.ensemble("incident");
-
-        inc.add("start", this::cmd_incidentStart);
-        inc.add("add", this::cmd_incidentAdd);
-        inc.add("end", this::cmd_incidentEnd);
+        var hist = tcl.ensemble("history");
+        hist.add("entity", this::cmd_historyEntity);
+        hist.add("begins", this::cmd_historyBegins);
+        hist.add("ends",   this::cmd_historyEnds);
+        hist.add("enters", this::cmd_historyEnters);
+        hist.add("exits",  this::cmd_historyExits);
+        hist.add("event",  this::cmd_historyEvent);
     }
 
     @SuppressWarnings("unused")
@@ -56,43 +60,137 @@ public class HistoryExtension implements TclExtension {
     public HistoryBank getHistory()      { return bank; }
 
     //-------------------------------------------------------------------------
-    // Ensemble: entity *
+    // Ensemble: history *
 
-    // entity add id name type
-    private void cmd_entityAdd(TclEngine tcl, Argq argq)
+    // history entity id name type
+    //
+    // Adds a new entity to the history, assigning it a unique ID, a
+    // name for display, and a type.
+    private void cmd_historyEntity(TclEngine tcl, Argq argq)
         throws TclException
     {
         tcl.checkArgs(argq, 3, 3, "id name type");
 
         var entity = new Entity(
-            argq.next().toString(),
-            argq.next().toString(),
-            argq.next().toString()
+            argq.next().toString().trim(),
+            argq.next().toString().trim(),
+            argq.next().toString().trim()
         );
+
+        if (entity.id().isEmpty()) {
+            throw tcl.expected("entity ID", entity.id());
+        }
+
+        // TODO: Need tcl.toIdentifier()!
+        if (bank.getEntity(entity.id()).isPresent()) {
+            throw tcl.error("Duplicate entity: \"" + entity.id());
+        }
+
+        if (entity.name().isEmpty()) {
+            throw tcl.expected("entity name", entity.name());
+        }
+
+        if (entity.type().isEmpty()) {
+            throw tcl.expected("entity type", entity.type());
+        }
 
         bank.addEntity(entity);
     }
 
-    //-------------------------------------------------------------------------
-    // Ensemble: incident *
-
-    // incident start moment label entityId cap
-    private void cmd_incidentStart(TclEngine tcl, Argq argq)
+    // history begins id moment label
+    private void cmd_historyBegins(TclEngine tcl, Argq argq)
         throws TclException
     {
-        tcl.checkMinArgs(argq, 4, "moment label entityId cap");
+        tcl.checkArgs(argq, 2, 3, "moment id ?label?");
 
         var moment = tcl.toInteger(argq.next());
-        var label = argq.next().toString();
-        var entityId = argq.next().toString();
-        var cap = tcl.toEnum(Cap.class, argq.next());
-        var incident = new Incident.EntityStart(moment, label, entityId, cap);
 
+        var id = argq.next().toString().trim();
+
+        var entity = bank.getEntity(id).orElseThrow(() ->
+            tcl.expected("known entity ID", id));
+
+        var label = argq.hasNext()
+            ? argq.next().toString().trim()
+            : entity.name() + " begins";
+
+        var incident = new Incident.Beginning(moment, label, id, Cap.HARD);
+
+        // TODO: Add integrity checks.
         bank.getIncidents().add(incident);
     }
 
-    // incident add moment label entityId cap
-    private void cmd_incidentAdd(TclEngine tcl, Argq argq)
+    // history ends id moment ?label?
+    private void cmd_historyEnds(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkArgs(argq, 2, 3, "moment id ?label?");
+
+        var moment = tcl.toInteger(argq.next());
+
+        var id = argq.next().toString().trim();
+
+        var entity = bank.getEntity(id).orElseThrow(() ->
+            tcl.expected("known entity ID", id));
+
+        var label = argq.hasNext()
+            ? argq.next().toString().trim()
+            : entity.name() + " ends";
+
+        var incident = new Incident.Ending(moment, label, id, Cap.HARD);
+
+        // TODO: Add integrity checks.
+        bank.getIncidents().add(incident);
+    }
+
+    // history enters id moment ?label?
+    private void cmd_historyEnters(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkArgs(argq, 2, 3, "moment id ?label?");
+
+        var moment = tcl.toInteger(argq.next());
+
+        var id = argq.next().toString().trim();
+
+        var entity = bank.getEntity(id).orElseThrow(() ->
+            tcl.expected("known entity ID", id));
+
+        var label = argq.hasNext()
+            ? argq.next().toString().trim()
+            : entity.name() + " enters";
+
+        var incident = new Incident.Beginning(moment, label, id, Cap.SOFT);
+
+        // TODO: Add integrity checks.
+        bank.getIncidents().add(incident);
+    }
+
+    // history exits id moment ?label?
+    private void cmd_historyExits(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkArgs(argq, 2, 3, "moment id ?label?");
+
+        var moment = tcl.toInteger(argq.next());
+
+        var id = argq.next().toString().trim();
+
+        var entity = bank.getEntity(id).orElseThrow(() ->
+            tcl.expected("known entity ID", id));
+
+        var label = argq.hasNext()
+            ? argq.next().toString().trim()
+            : entity.name() + " exits";
+
+        var incident = new Incident.Ending(moment, label, id, Cap.SOFT);
+
+        // TODO: Add integrity checks.
+        bank.getIncidents().add(incident);
+    }
+
+    // history event moment label ?entity...?
+    private void cmd_historyEvent(TclEngine tcl, Argq argq)
         throws TclException
     {
         tcl.checkMinArgs(argq, 4, "moment label ?entityId...?");
@@ -100,25 +198,21 @@ public class HistoryExtension implements TclExtension {
         var set = new TreeSet<String>();
 
         var moment = tcl.toInteger(argq.next());
-        var label = argq.next().toString();
-        while (argq.hasNext()) { set.add(argq.next().toString()); }
+        var label = argq.next().toString().trim();
+        while (argq.hasNext()) {
+            var id = argq.next().toString().trim();
+
+            if (bank.getEntity(id).isEmpty()) {
+                throw tcl.expected("known entity ID", id);
+            }
+            set.add(argq.next().toString());
+        }
 
         var incident = new Incident.Normal(moment, label, set);
 
-        bank.getIncidents().add(incident);
-    }
-
-    // incident end moment label entityId cap
-    private void cmd_incidentEnd(TclEngine tcl, Argq argq)
-        throws TclException
-    {
-        tcl.checkMinArgs(argq, 4, "moment label entityId cap");
-
-        var moment = tcl.toInteger(argq.next());
-        var label = argq.next().toString();
-        var entityId = argq.next().toString();
-        var cap = tcl.toEnum(Cap.class, argq.next());
-        var incident = new Incident.EntityStart(moment, label, entityId, cap);
+        // TODO: Check integrity across events concerning this entity.
+        // TODO: Add history::entityExits(...), which does the necessary checks.
+        // TODO: Do not expose getIncidents as modifiable.
 
         bank.getIncidents().add(incident);
     }

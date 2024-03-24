@@ -1,8 +1,8 @@
-entity add joe "JoeP" person
-entity add bob "BobC" person
+history entity joe "JoeP" person
+history entity bob "BobC" person
 
-incident start 10 "Joe is born"      joe hard
-incident start 15 "Bob enters"       bob soft
-incident add   50 "Joe and Bob talk" bob joe
-incident end   85 "Bob leaves"       bob soft
-incident start 90 "Joe dies"         joe hard
+history begins 10 joe "Joe is born"
+history enters 15 bob
+history event  50 "Joe and Bob talk" bob joe
+history exits  85 bob
+history ends   90 joe "Joe dies"
