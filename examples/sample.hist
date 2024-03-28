@@ -1,5 +1,4 @@
-# Need to get CWD story straight
-history calendar examples/gregorian.cal gregorian "yyyy-mm-dd"
+history calendar gregorian.cal gregorian "yyyy-mm-dd"
 history entity joe "JoeP" person
 history entity bob "BobC" person
 

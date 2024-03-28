@@ -30,6 +30,9 @@ public class DataFiles {
         throws DataFileException
     {
         var engine = new TclEngine();
+        // Set the working directory so that all paths in the engine are
+        // relative to the file being loaded.
+        engine.setWorkingDirectory(path.toAbsolutePath().getParent());
         var calendarExtension = new CalendarExtension();
         engine.install(calendarExtension);
 
@@ -53,6 +56,9 @@ public class DataFiles {
         throws DataFileException
     {
         var engine = new TclEngine();
+        // Set the working directory so that all paths in the engine are
+        // relative to the file being loaded.
+        engine.setWorkingDirectory(path.toAbsolutePath().getParent());
         var historyExtension = new HistoryExtension();
         engine.install(historyExtension);
 

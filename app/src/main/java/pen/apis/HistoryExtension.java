@@ -76,10 +76,12 @@ public class HistoryExtension implements TclExtension {
         tcl.checkArgs(argq, 2, 3, "calendarFile name ?outputFormat?");
 
         var calendarFile = argq.next().toString();
+        var calendarPath = tcl.getWorkingDirectory()
+            .resolve(new File(calendarFile).toPath());
         Map<String, Calendar> map;
 
         try {
-            map = DataFiles.loadCalendar(new File(calendarFile).toPath());
+            map = DataFiles.loadCalendar(calendarPath);
         } catch (DataFileException ex) {
             throw tcl.error("Could not load calendar file " + calendarFile, ex);
         }
