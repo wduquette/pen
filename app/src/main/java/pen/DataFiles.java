@@ -10,7 +10,6 @@ import pen.tcl.TclEngineException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -74,9 +73,9 @@ public class DataFiles {
 
     private static DataFileException error(String what, Exception ex) {
         return switch (ex) {
-            case IOException e ->
+            case IOException ignored ->
                 new DataFileException("Error reading " + what, ex);
-            case TclEngineException e ->
+            case TclEngineException ignored ->
                 new DataFileException("Error in " + what, ex);
             default ->
                 new DataFileException(

@@ -94,7 +94,7 @@ public class HistoryExtension implements TclExtension {
         calendar = map.get(name);
         bank.setMomentFormatter(m -> calendar.format(m));
 
-        DateFormat outputFormat = null;
+        DateFormat outputFormat;
 
         if (argq.hasNext()) {
             var formatString = argq.next().toString();
