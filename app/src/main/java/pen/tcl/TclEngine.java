@@ -33,6 +33,11 @@ public class TclEngine {
     //-------------------------------------------------------------------------
     // Environment
 
+    /**
+     * Gets the interpreter's working directory as a Path.  This is the same
+     * directory returned by the Tcl "pwd" command.
+     * @return The working directory
+     */
     public Path getWorkingDirectory() {
         String workingDirectory = System.getProperty("user.dir");
 
@@ -47,6 +52,11 @@ public class TclEngine {
         return new File(workingDirectory).toPath();
     }
 
+    /**
+     * Sets the interpreter's working directory given a Path.  This is the same
+     * directory returned by the Tcl "pwd" command.
+     * @param path The working directory
+     */
     public void setWorkingDirectory(Path path) {
         var oldPath = getWorkingDirectory();
         var newPath = oldPath.relativize(path.toAbsolutePath());
