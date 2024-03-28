@@ -94,18 +94,9 @@ public class HistoryExtension implements TclExtension {
         calendar = map.get(name);
         bank.setMomentFormatter(m -> calendar.format(m));
 
-        DateFormat outputFormat;
-
         if (argq.hasNext()) {
-            var formatString = argq.next().toString();
-            try {
-                outputFormat = new DateFormat(formatString);
-            } catch (Exception ex) {
-                throw tcl.badValue("date format", formatString);
-            }
-
-            DateFormat theFormat = outputFormat; // Effectively final
-            bank.setMomentFormatter(m -> calendar.format(theFormat, m));
+            var dateFormat = toDateFormat(argq.next());
+            bank.setMomentFormatter(m -> calendar.format(dateFormat, m));
         }
     }
 
@@ -147,17 +138,13 @@ public class HistoryExtension implements TclExtension {
         tcl.checkArgs(argq, 2, 3, "moment id ?label?");
 
         var moment = toMoment(argq.next());
-
-        var id = argq.next().toString().trim();
-
-        var entity = bank.getEntity(id).orElseThrow(() ->
-            tcl.expected("known entity ID", id));
-
+        var entity = toEntity(argq.next());
         var label = argq.hasNext()
             ? argq.next().toString().trim()
             : entity.name() + " begins";
 
-        var incident = new Incident.Beginning(moment, label, id, Cap.HARD);
+        var incident = new Incident.Beginning(
+            moment, label, entity.id(), Cap.HARD);
 
         // TODO: Add integrity checks.
         bank.getIncidents().add(incident);
@@ -170,17 +157,13 @@ public class HistoryExtension implements TclExtension {
         tcl.checkArgs(argq, 2, 3, "moment id ?label?");
 
         var moment = toMoment(argq.next());
-
-        var id = argq.next().toString().trim();
-
-        var entity = bank.getEntity(id).orElseThrow(() ->
-            tcl.expected("known entity ID", id));
-
+        var entity = toEntity(argq.next());
         var label = argq.hasNext()
             ? argq.next().toString().trim()
             : entity.name() + " ends";
 
-        var incident = new Incident.Ending(moment, label, id, Cap.HARD);
+        var incident = new Incident.Ending(
+            moment, label, entity.id(), Cap.HARD);
 
         // TODO: Add integrity checks.
         bank.getIncidents().add(incident);
@@ -193,17 +176,13 @@ public class HistoryExtension implements TclExtension {
         tcl.checkArgs(argq, 2, 3, "moment id ?label?");
 
         var moment = toMoment(argq.next());
-
-        var id = argq.next().toString().trim();
-
-        var entity = bank.getEntity(id).orElseThrow(() ->
-            tcl.expected("known entity ID", id));
-
+        var entity = toEntity(argq.next());
         var label = argq.hasNext()
             ? argq.next().toString().trim()
             : entity.name() + " enters";
 
-        var incident = new Incident.Beginning(moment, label, id, Cap.SOFT);
+        var incident = new Incident.Beginning(
+            moment, label, entity.id(), Cap.SOFT);
 
         // TODO: Add integrity checks.
         bank.getIncidents().add(incident);
@@ -216,17 +195,13 @@ public class HistoryExtension implements TclExtension {
         tcl.checkArgs(argq, 2, 3, "moment id ?label?");
 
         var moment = toMoment(argq.next());
-
-        var id = argq.next().toString().trim();
-
-        var entity = bank.getEntity(id).orElseThrow(() ->
-            tcl.expected("known entity ID", id));
-
+        var entity = toEntity(argq.next());
         var label = argq.hasNext()
             ? argq.next().toString().trim()
             : entity.name() + " exits";
 
-        var incident = new Incident.Ending(moment, label, id, Cap.SOFT);
+        var incident = new Incident.Ending(
+            moment, label, entity.id(), Cap.SOFT);
 
         // TODO: Add integrity checks.
         bank.getIncidents().add(incident);
@@ -256,9 +231,27 @@ public class HistoryExtension implements TclExtension {
         bank.getIncidents().add(incident);
     }
 
-    // NEED: toEntity()
-    // NEED: toDateFormat()
+    //-------------------------------------------------------------------------
+    // Conversion Helpers
 
+    // Converts a DateFormat string to a DateFormat.
+    private DateFormat toDateFormat(TclObject arg) throws TclException {
+        try {
+            return new DateFormat(arg.toString());
+        } catch (CalendarException ex) {
+            throw tcl.expected("date format", arg);
+        }
+    }
+
+    // Converts an entity ID into an entity.
+    private Entity toEntity(TclObject arg) throws TclException {
+        return bank.getEntity(arg.toString())
+            .orElseThrow(() -> tcl.expected("known entity ID", arg));
+    }
+
+    // Converts an argument to a moment integer.  If there's a calendar,
+    // we assume we've got a date to be parsed; otherwise, we assume we
+    // have an integer moment.
     private int toMoment(TclObject arg) throws TclException {
         if (calendar == null) {
             return tcl.toInteger(arg);
