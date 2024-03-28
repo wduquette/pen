@@ -120,16 +120,11 @@ public class HistoryExtension implements TclExtension {
         tcl.checkArgs(argq, 3, 3, "id name type");
 
         var entity = new Entity(
+            tcl.toIdentifier(argq.next()),
             argq.next().toString().trim(),
-            argq.next().toString().trim(),
-            argq.next().toString().trim()
+            tcl.toIdentifier(argq.next())
         );
 
-        if (entity.id().isEmpty()) {
-            throw tcl.expected("entity ID", entity.id());
-        }
-
-        // TODO: Need tcl.toIdentifier()!
         if (bank.getEntity(entity.id()).isPresent()) {
             throw tcl.error("Duplicate entity: \"" + entity.id());
         }
@@ -261,7 +256,6 @@ public class HistoryExtension implements TclExtension {
         bank.getIncidents().add(incident);
     }
 
-    // NEED: tcl.toIdentifier().
     // NEED: toEntity()
     // NEED: toDateFormat()
 
