@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import tcl.lang.*;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +28,35 @@ public class TclEngine {
 
     public TclEngine() {
         // Nothing to do yet
+    }
+
+    //-------------------------------------------------------------------------
+    // Environment
+
+    public Path getWorkingDirectory() {
+        String workingDirectory = System.getProperty("user.dir");
+
+        try {
+            interp.eval("pwd");
+            workingDirectory = interp.getResult().toString();
+        } catch (TclException ex) {
+            // Couldn't get working directory from Tcl.
+            System.out.println("Error getting working directory: " + interp.getResult());
+        }
+
+        return new File(workingDirectory).toPath();
+    }
+
+    public void setWorkingDirectory(Path path) {
+        var oldPath = getWorkingDirectory();
+        var newPath = oldPath.relativize(path.toAbsolutePath());
+
+        try {
+            interp.eval("cd {" + newPath + "}");
+        } catch (TclException ex) {
+            // Couldn't get working directory from Tcl.
+            System.out.println("Error setting working directory: " + interp.getResult());
+        }
     }
 
     //-------------------------------------------------------------------------
