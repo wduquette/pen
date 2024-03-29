@@ -11,6 +11,8 @@
         - Or, multi-table CSV? I think I have some CSV code in the Destiny project.
     - [x] Define API for loading history files, calendars, etc. without requiring all the APIs to be in the same shell.
     - [x] Add `pen history` for querying histories and producing Unicode timeline charts.
+    - HistoryExtension Improvements
+        - [ ] Allow the entities associated with an event to be a single list argument.
     - [ ] TextTimelineChart improvements
         - [ ] Complete box around periods.
         - [ ] Use "heavy" lines for when drawing periods, light lines for everything else.
