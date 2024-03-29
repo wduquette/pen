@@ -20,6 +20,7 @@ public class TextCanvas {
     public static final String LIGHT_VERTICAL_AND_LEFT = "\u2524";
     public static final String WHITE_UP_POINTING_TRIANGLE = "\u25B3";
     public static final String WHITE_DOWN_POINTING_TRIANGLE = "\u25BD";
+    public static final String BLACK_LEFT_POINTING_TRIANGLE = "\u25C0";
 
     //-------------------------------------------------------------------------
     // Instance Variables

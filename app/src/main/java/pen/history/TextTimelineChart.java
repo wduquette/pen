@@ -82,6 +82,7 @@ public class TextTimelineChart {
     private static final String HARD_END = TextCanvas.LIGHT_UP_AND_HORIZONTAL;
     private static final String SOFT_START = TextCanvas.WHITE_UP_POINTING_TRIANGLE;
     private static final String SOFT_END = TextCanvas.WHITE_DOWN_POINTING_TRIANGLE;
+    private static final String SINGLE = TextCanvas.BLACK_LEFT_POINTING_TRIANGLE;
     private static final String CONCERNED = TextCanvas.LIGHT_VERTICAL_AND_LEFT;
 
     @Override
@@ -125,37 +126,65 @@ public class TextTimelineChart {
                 var concerned = incident.concerns(entity.id());
                 var c = c0 + 3*j;
 
-                if (concerned) {
-                    canvas.puts(c - 1, r, H_LINE);
-                }
-
                 // Get the incident indices for the period's range.
                 var iStart = startIndices.get(period.start());
                 var iEnd = endIndices.get(period.end());
 
-                if (i == iStart) {
-                    if (period.startCap() == Cap.HARD) {
-                        canvas.puts(c, r, HARD_START);
-                    } else {
-                        canvas.puts(c, r - 1, SOFT_START);
-                        canvas.puts(c, r, concerned ? CONCERNED : V_LINE);
-                    }
-                } else if (i == iEnd) {
-                    if (period.endCap() == Cap.HARD) {
-                        canvas.puts(c, r, HARD_END);
-                    } else {
-                        canvas.puts(c, r, concerned ? CONCERNED : V_LINE);
-                        canvas.puts(c, r + 1, SOFT_END);
-                    }
-                } else if (concerned) {
-                    canvas.puts(c, r, CONCERNED);
-                } else if (iStart < i && i < iEnd) {
-                    canvas.puts(c, r, V_LINE);
+                // NEXT, draw the starting soft cap, if any.
+                if (i == iStart && period.startCap() == Cap.SOFT) {
+                    canvas.puts(c, r - 1, SOFT_START);
+                }
+
+                // NEXT, draw the horizontal flag if the entity is concerned.
+                if (concerned) {
+                    canvas.puts(c - 1, r, H_LINE);
+                }
+
+                // NEXT, draw the symbol for the period
+                canvas.puts(c, r, getSymbol(period, i, concerned));
+
+                // NEXT, draw the ending soft cap, if any.
+                if (i == iEnd && period.endCap() == Cap.SOFT) {
+                    canvas.puts(c, r + 1, SOFT_END);
                 }
             }
         }
 
         return canvas.toString();
+    }
+
+    public String getSymbol(Period period, int index, boolean concerned) {
+        var iStart = startIndices.get(period.start());
+        var iEnd = endIndices.get(period.end());
+
+        // FIRST, if this is the only incident for this period, it's a
+        // special case.
+        if (index == iStart && iStart == iEnd) {
+            if (period.startCap() == Cap.HARD && period.endCap() == Cap.HARD) {
+                return SINGLE;
+            }
+
+            if (period.startCap() == Cap.HARD && period.endCap() == Cap.SOFT) {
+                return HARD_START;
+            }
+
+            if (period.startCap() == Cap.SOFT && period.endCap() == Cap.HARD) {
+                return HARD_END;
+            }
+        }
+
+        // NEXT, return the normal mark;
+        if (index == iStart && period.startCap() == Cap.HARD) {
+            return HARD_START;
+        } else if (index == iEnd && period.endCap() == Cap.HARD) {
+            return HARD_END;
+        } else if (concerned) {
+            return CONCERNED;
+        } else if (iStart <= index && index <= iEnd){
+            return V_LINE;
+        } else {
+            return "";
+        }
     }
 
     private void plotEntities(int c0, int r0) {
