@@ -2,8 +2,7 @@ package pen.history;
 
 import pen.util.TextCanvas;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -16,6 +15,13 @@ public class TextTimelineChart {
 
     private final History history;
     private Function<Integer,String> momentFormatter;
+    private TextCanvas canvas = new TextCanvas();
+
+    private final List<Incident> incidents;
+    private final Map<String,Period> periods;
+    private final List<Entity> entities;
+    private final Map<Integer,Integer> startIndices = new HashMap<>();
+    private final Map<Integer,Integer> endIndices = new HashMap<>();
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -23,6 +29,34 @@ public class TextTimelineChart {
     public TextTimelineChart(History history) {
         this.history = history;
         this.momentFormatter = history.getMomentFormatter();
+
+        // FIRST, get the history.
+        incidents = history.getIncidents().stream()
+            .sorted(Comparator.comparing(Incident::moment))
+            .toList();
+        periods = history.getPeriods();
+        entities = new ArrayList<>(periods.values().stream()
+            .map(Period::entity)
+            .toList());
+        entities.forEach(e -> System.out.println(e));
+        periods.values().forEach(p -> System.out.println(p));
+
+        // NEXT, compute the start and end incident indices for each moment.
+        computeMomentIndices();
+    }
+
+    private void computeMomentIndices() {
+        for (var i = 0; i < incidents.size(); i++) {
+            var moment = incidents.get(i).moment();
+            // Set the start index for this moment, only if we haven't seen it
+            // before.
+            if (!startIndices.containsKey(moment)) {
+                startIndices.put(moment, i);
+            }
+
+            // Set the last index for this moment
+            endIndices.put(moment, i);
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -51,16 +85,7 @@ public class TextTimelineChart {
 
     @Override
     public String toString() {
-        // FIRST, get the data
-        var incidents = history.getIncidents().stream()
-            .sorted(Comparator.comparing(Incident::moment))
-            .toList();
-        var periods = history.getPeriods();
-        var entities = new ArrayList<>(periods.values().stream()
-            .map(Period::entity)
-            .toList());
-
-        // NEXT, get the width of the incident labels.
+        // FIRST get the width of the incident labels.
         var labelWidth = incidents.stream()
             .mapToInt(i -> getIncidentLabel(i).length())
             .max().orElse(0);
@@ -70,21 +95,9 @@ public class TextTimelineChart {
         var c0 = labelWidth + 2;      // C coordinate of the body
         var r0 = entities.size() + 2; // R coordinate of the body
 
-        // NEXT, plot the header
-        var canvas = new TextCanvas();
-
-        for (var i = 0; i < entities.size(); i++) {
-            var c = c0 + i*3;
-            var r = i;
-            canvas.puts(c - 1, r, getEntityLabel(entities.get(i)));
-            for (var rLine = r + 1; rLine < r0 - 1; rLine++) {
-                canvas.puts(c, rLine, TextCanvas.LIGHT_VERTICAL);
-            }
-        }
-
+        // NEXT, plot the header: entities, "Incidents", and separator
+        plotEntities(c0, r0);
         canvas.puts(0, r0 - 2, padLeft(INCIDENTS, labelWidth));
-
-        // NEXT, add the separator, now that we know what the full width is.
         canvas.puts(0, r0 - 1, H_LINE.repeat(canvas.getWidth()));
 
         // NEXT, add a row for soft caps at the beginning, if needed.
@@ -116,16 +129,20 @@ public class TextTimelineChart {
                     canvas.puts(c - 1, r, H_LINE);
                 }
 
-                if (t < period.start() || t > period.end()) {
+                // Get the incident indices for the period's range.
+                var iStart = startIndices.get(period.start());
+                var iEnd = endIndices.get(period.end());
+
+                if (i < iStart || i > iEnd) {
                     // Do nothing
-                } else if (period.start() == t) {
+                } else if (i == iStart) {
                     if (period.startCap() == Cap.HARD) {
                         canvas.puts(c, r, HARD_START);
                     } else {
                         canvas.puts(c, r - 1, SOFT_START);
                         canvas.puts(c, r, concerned ? CONCERNED : V_LINE);
                     }
-                } else if (period.end() == t) {
+                } else if (i == iEnd) {
                     if (period.endCap() == Cap.HARD) {
                         canvas.puts(c, r, HARD_END);
                     } else {
@@ -141,6 +158,17 @@ public class TextTimelineChart {
         }
 
         return canvas.toString();
+    }
+
+    private void plotEntities(int c0, int r0) {
+        for (var i = 0; i < entities.size(); i++) {
+            var c = c0 + i*3;
+            var r = i;
+            canvas.puts(c - 1, r, getEntityLabel(entities.get(i)));
+            for (var rLine = r + 1; rLine < r0 - 1; rLine++) {
+                canvas.puts(c, rLine, TextCanvas.LIGHT_VERTICAL);
+            }
+        }
     }
 
     private String getEntityLabel(Entity entity) {
