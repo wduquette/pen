@@ -52,12 +52,13 @@ public class TextTimelineChart {
     @Override
     public String toString() {
         // FIRST, get the data
-        var entities = new ArrayList<>(history.getEntityMap().values());
         var incidents = history.getIncidents().stream()
             .sorted(Comparator.comparing(Incident::moment))
             .toList();
         var periods = history.getPeriods();
-        assert entities.size() == periods.size();
+        var entities = new ArrayList<>(periods.values().stream()
+            .map(Period::entity)
+            .toList());
 
         // NEXT, get the width of the incident labels.
         var labelWidth = incidents.stream()
