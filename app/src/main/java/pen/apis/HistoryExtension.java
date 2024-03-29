@@ -63,8 +63,6 @@ public class HistoryExtension implements TclExtension {
         hist.add("entity",   this::cmd_historyEntity);
         hist.add("begins",   this::cmd_historyBegins);
         hist.add("ends",     this::cmd_historyEnds);
-        hist.add("enters",   this::cmd_historyEnters);
-        hist.add("exits",    this::cmd_historyExits);
         hist.add("event",    this::cmd_historyEvent);
     }
 
@@ -164,26 +162,6 @@ public class HistoryExtension implements TclExtension {
         saveBeginning("begins", limits, momentArg.toString(), incident);
     }
 
-    // history enters id moment ?label?
-    private void cmd_historyEnters(TclEngine tcl, Argq argq)
-        throws TclException
-    {
-        tcl.checkArgs(argq, 2, 3, "moment id ?label?");
-
-        var momentArg = argq.next();
-        var moment = toMoment(momentArg);
-        var limits = toLimits(argq.next());
-        var entity = limits.entity;
-        var label = argq.hasNext()
-            ? argq.next().toString().trim()
-            : entity.name() + " enters";
-
-        var incident = new Incident.Beginning(
-            moment, label, entity.id(), Cap.SOFT);
-
-        saveBeginning("enters", limits, momentArg.toString(), incident);
-    }
-
     private void saveBeginning(
         String type,
         Limits limits,
@@ -235,27 +213,6 @@ public class HistoryExtension implements TclExtension {
             moment, label, entity.id(), Cap.HARD);
 
         saveEnding("ends", limits, momentArg.toString(), incident);
-    }
-
-
-    // history exits id moment ?label?
-    private void cmd_historyExits(TclEngine tcl, Argq argq)
-        throws TclException
-    {
-        tcl.checkArgs(argq, 2, 3, "moment id ?label?");
-
-        var momentArg = argq.next();
-        var moment = toMoment(momentArg);
-        var limits = toLimits(argq.next());
-        var entity = limits.entity;
-        var label = argq.hasNext()
-            ? argq.next().toString().trim()
-            : entity.name() + " exits";
-
-        var incident = new Incident.Ending(
-            moment, label, entity.id(), Cap.SOFT);
-
-        saveEnding("exits", limits, momentArg.toString(), incident);
     }
 
     private void saveEnding(
