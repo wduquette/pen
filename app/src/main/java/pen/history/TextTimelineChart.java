@@ -15,7 +15,7 @@ public class TextTimelineChart {
 
     private final History history;
     private Function<Integer,String> momentFormatter;
-    private TextCanvas canvas = new TextCanvas();
+    private final TextCanvas canvas = new TextCanvas();
 
     private final List<Incident> incidents;
     private final Map<String,Period> periods;
@@ -38,8 +38,8 @@ public class TextTimelineChart {
         entities = new ArrayList<>(periods.values().stream()
             .map(Period::entity)
             .toList());
-        entities.forEach(e -> System.out.println(e));
-        periods.values().forEach(p -> System.out.println(p));
+        entities.forEach(System.out::println);
+        periods.values().forEach(System.out::println);
 
         // NEXT, compute the start and end incident indices for each moment.
         computeMomentIndices();
@@ -67,6 +67,7 @@ public class TextTimelineChart {
         return momentFormatter;
     }
 
+    @SuppressWarnings("unused")
     public void setMomentFormatter(Function<Integer, String> formatter) {
         this.momentFormatter = formatter;
     }
@@ -113,7 +114,6 @@ public class TextTimelineChart {
         for (var i = 0; i < incidents.size(); i++) {
             var r = r0 + i;
             var incident = incidents.get(i);
-            var t = incident.moment();
 
             // FIRST, add the incident
             canvas.puts(0, r, padLeft(getIncidentLabel(incident), labelWidth));
@@ -133,9 +133,7 @@ public class TextTimelineChart {
                 var iStart = startIndices.get(period.start());
                 var iEnd = endIndices.get(period.end());
 
-                if (i < iStart || i > iEnd) {
-                    // Do nothing
-                } else if (i == iStart) {
+                if (i == iStart) {
                     if (period.startCap() == Cap.HARD) {
                         canvas.puts(c, r, HARD_START);
                     } else {
@@ -151,7 +149,7 @@ public class TextTimelineChart {
                     }
                 } else if (concerned) {
                     canvas.puts(c, r, CONCERNED);
-                } else {
+                } else if (iStart < i && i < iEnd) {
                     canvas.puts(c, r, V_LINE);
                 }
             }
@@ -161,10 +159,9 @@ public class TextTimelineChart {
     }
 
     private void plotEntities(int c0, int r0) {
-        for (var i = 0; i < entities.size(); i++) {
-            var c = c0 + i*3;
-            var r = i;
-            canvas.puts(c - 1, r, getEntityLabel(entities.get(i)));
+        for (var r = 0; r < entities.size(); r++) {
+            var c = c0 + r*3;
+            canvas.puts(c - 1, r, getEntityLabel(entities.get(r)));
             for (var rLine = r + 1; rLine < r0 - 1; rLine++) {
                 canvas.puts(c, rLine, TextCanvas.LIGHT_VERTICAL);
             }
