@@ -54,8 +54,8 @@ Given a .hist History file, outputs the file as a text timeline chart.
         try {
             history = DataFiles.loadHistory(historyFile);
         } catch (DataFileException ex) {
-            println(ex.getMessage());
-            println(ex.getDetails());
+//            println(ex.getMessage());
+//            println(ex.getDetails());
             throw error("Failed to read history file", ex);
         }
 
