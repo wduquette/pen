@@ -5,6 +5,7 @@ package pen;
 
 import pen.tools.ToolException;
 import pen.tools.ToolInfo;
+import pen.tools.calendar.CalendarTool;
 import pen.tools.demo.DemoTool;
 import pen.tools.draw.DrawTool;
 import pen.tools.history.HistoryTool;
@@ -28,6 +29,7 @@ public class App {
 
     static {
         TOOLS.putAll(Map.of(
+            CalendarTool.INFO.name(), CalendarTool.INFO,
             DemoTool.INFO.name(), DemoTool.INFO,
             DrawTool.INFO.name(), DrawTool.INFO,
             HistoryTool.INFO.name(), HistoryTool.INFO,
