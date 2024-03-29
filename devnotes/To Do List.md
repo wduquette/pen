@@ -17,7 +17,7 @@
             - [x] We have two incidents with the same moment; the start cap is being drawn for both.
         - [x] Entities that appear in a single incident do not appear in the text timeline diagram.
             - Periods have to span more than one moment.
-        - [ ] The "enters" and "exits" incidents are derpy: the entity will get a soft cap for the incident even if it's a normal event.  Remove them.
+        - [x] The "enters" and "exits" incidents are derpy: the entity will get a soft cap for the incident even if it's a normal event.  Remove them.
         - [ ] It does not make sense to have a period with two hard caps and the same start/end index.  You need two incidents to get two hard caps.
             - [ ] But define and add an assertion.
         - [ ] Fix CalendarTool to let you select from the calendars available.

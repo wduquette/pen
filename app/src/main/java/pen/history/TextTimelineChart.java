@@ -82,7 +82,6 @@ public class TextTimelineChart {
     private static final String HARD_END = TextCanvas.LIGHT_UP_AND_HORIZONTAL;
     private static final String SOFT_START = TextCanvas.WHITE_UP_POINTING_TRIANGLE;
     private static final String SOFT_END = TextCanvas.WHITE_DOWN_POINTING_TRIANGLE;
-    private static final String SINGLE = TextCanvas.BLACK_LEFT_POINTING_TRIANGLE;
     private static final String CONCERNED = TextCanvas.LIGHT_VERTICAL_AND_LEFT;
 
     @Override
@@ -159,9 +158,10 @@ public class TextTimelineChart {
 
         // FIRST, if this is the only incident for this period, it's a
         // special case.
-        if (index == iStart && iStart == iEnd) {
+        if (iStart == iEnd && index == iStart) {
             if (period.startCap() == Cap.HARD && period.endCap() == Cap.HARD) {
-                return SINGLE;
+                throw new IllegalStateException(
+                    "Period with one moment but two hard caps");
             }
 
             if (period.startCap() == Cap.HARD && period.endCap() == Cap.SOFT) {
