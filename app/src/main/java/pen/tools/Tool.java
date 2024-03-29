@@ -71,6 +71,7 @@ public interface Tool {
         } else {
             System.err.println(toolInfo().name() + ": Unexpected exception,");
             ex.printStackTrace(System.err);
+            System.exit(1);
         }
     }
 }
