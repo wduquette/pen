@@ -154,8 +154,8 @@ public class TextTimelineChart {
     }
 
     public String getSymbol(Period period, int index, boolean concerned) {
-        var iStart = startIndices.get(period.start());
-        var iEnd = endIndices.get(period.end());
+        var iStart = (int)startIndices.get(period.start());
+        var iEnd = (int)endIndices.get(period.end());
 
         // FIRST, if this is the only incident for this period, it's a
         // special case.
