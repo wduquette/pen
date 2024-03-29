@@ -39,7 +39,7 @@ public class DataFiles {
             var script = Files.readString(path);
             engine.eval(script);
         } catch (Exception ex) {
-            throw error("history", ex);
+            throw error("calendar", ex);
         }
 
         return calendarExtension.getCalendars();
@@ -74,12 +74,15 @@ public class DataFiles {
     private static DataFileException error(String what, Exception ex) {
         return switch (ex) {
             case IOException ignored ->
-                new DataFileException("Error reading " + what, ex);
+                new DataFileException(
+                    "Error reading " + what + ", " +ex. getMessage(), ex);
             case TclEngineException ignored ->
-                new DataFileException("Error in " + what, ex);
+                new DataFileException(
+                    "Error in " + what + ", " + ex.getMessage(), ex);
             default ->
                 new DataFileException(
-                    "Unexpected error while loading " + what, ex);
+                    "Unexpected error while loading " + what + ", " +
+                    ex.getMessage(), ex);
         };
     }
 }

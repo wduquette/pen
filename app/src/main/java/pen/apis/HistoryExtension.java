@@ -94,7 +94,8 @@ public class HistoryExtension implements TclExtension {
         try {
             map = DataFiles.loadCalendar(calendarPath);
         } catch (DataFileException ex) {
-            throw tcl.error("Could not load calendar file " + calendarFile, ex);
+            throw tcl.error("Could not load calendar file " + calendarFile +
+                ", " + ex.getMessage(), ex);
         }
 
         var name = argq.next().toString();
