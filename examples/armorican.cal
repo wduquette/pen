@@ -75,6 +75,3 @@ calendar basic cumbrian \
     -week   cumbrian            \
     -months {january february march april may june july august september october november december}
 
-# Technically, this is a CalendarTool-specific command.
-show cumbrian -year 1018
-
