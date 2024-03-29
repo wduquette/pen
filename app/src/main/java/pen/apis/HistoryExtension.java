@@ -27,7 +27,7 @@ public class HistoryExtension implements TclExtension {
     //-------------------------------------------------------------------------
     // Instance Variables
 
-    private boolean debug = false;
+    private final boolean debug = false;
 
     // The TclEngine in use.  Set by initialize().
     private TclEngine tcl;
