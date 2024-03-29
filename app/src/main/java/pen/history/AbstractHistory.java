@@ -119,7 +119,7 @@ public abstract class AbstractHistory implements History {
         Cap startCap;
         Cap endCap;
 
-        if (first.moment() >= frame.end()) {
+        if (first.moment() > frame.end()) {
             return Optional.empty();
         } else if (first.moment() < frame.start()) {
             startMoment = frame.start();
@@ -129,7 +129,7 @@ public abstract class AbstractHistory implements History {
             startCap = first.cap();
         }
 
-        if (last.moment() <= frame.start()) {
+        if (last.moment() < frame.start()) {
             return Optional.empty();
         } else if (last.moment() > frame.end()) {
             endMoment = frame.end();
