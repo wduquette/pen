@@ -27,6 +27,8 @@ public class HistoryExtension implements TclExtension {
     //-------------------------------------------------------------------------
     // Instance Variables
 
+    private boolean debug = false;
+
     // The TclEngine in use.  Set by initialize().
     private TclEngine tcl;
 
@@ -187,7 +189,9 @@ public class HistoryExtension implements TclExtension {
         String momentText,
         Incident incident
     ) throws TclException {
-        System.out.println("Before " + type + ": " + limits);
+        if (debug) {
+            System.out.println("Before " + type + ": " + limits);
+        }
         var id = limits.entity.id();
 
         if (limits.gotStart) {
@@ -205,7 +209,9 @@ public class HistoryExtension implements TclExtension {
             limits.earliest = incident.moment();
         }
 
-        System.out.println("After " + type + ": " + limits);
+        if (debug) {
+            System.out.println("After " + type + ": " + limits);
+        }
 
         bank.getIncidents().add(incident);
     }
@@ -259,7 +265,9 @@ public class HistoryExtension implements TclExtension {
     ) throws TclException {
         var id = limits.entity.id();
 
-        System.out.println("Before " + type + ": " + limits);
+        if (debug) {
+            System.out.println("Before " + type + ": " + limits);
+        }
 
         if (limits.gotEnd) {
             throw tcl.error(
@@ -276,7 +284,9 @@ public class HistoryExtension implements TclExtension {
             limits.latest = incident.moment();
         }
 
-        System.out.println("After " + type + ": " + limits);
+        if (debug) {
+            System.out.println("After " + type + ": " + limits);
+        }
 
         bank.getIncidents().add(incident);
     }
@@ -295,7 +305,9 @@ public class HistoryExtension implements TclExtension {
         while (argq.hasNext()) {
             var limits = toLimits(argq.next());
             var id = limits.entity.id();
-            System.out.println("Before event at " + moment + ": " + limits);
+            if (debug) {
+                System.out.println("Before event at " + moment + ": " + limits);
+            }
 
             if (moment < limits.earliest) {
                 if (limits.gotStart) {
@@ -315,7 +327,9 @@ public class HistoryExtension implements TclExtension {
                 }
             }
 
-            System.out.println("After event at " + moment + ": " + limits);
+            if (debug) {
+                System.out.println("After event at " + moment + ": " + limits);
+            }
 
             set.add(limits.entity.id());
         }
@@ -334,12 +348,6 @@ public class HistoryExtension implements TclExtension {
         } catch (CalendarException ex) {
             throw tcl.expected("date format", arg);
         }
-    }
-
-    // Converts an entity ID into an entity.
-    private Entity toEntity(TclObject arg) throws TclException {
-        return bank.getEntity(arg.toString())
-            .orElseThrow(() -> tcl.expected("known entity ID", arg));
     }
 
     // Converts an entity ID into a Limits object.
