@@ -59,7 +59,7 @@ public class TclEngine {
      */
     public void setWorkingDirectory(Path path) {
         var oldPath = getWorkingDirectory();
-        var newPath = oldPath.relativize(path.toAbsolutePath());
+        var newPath = oldPath.resolve(path.toAbsolutePath());
 
         try {
             interp.eval("cd {" + newPath + "}");

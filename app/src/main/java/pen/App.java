@@ -7,6 +7,7 @@ import pen.tools.ToolException;
 import pen.tools.ToolInfo;
 import pen.tools.demo.DemoTool;
 import pen.tools.draw.DrawTool;
+import pen.tools.history.HistoryTool;
 import pen.tools.view.ViewTool;
 
 import java.util.*;
@@ -29,6 +30,7 @@ public class App {
         TOOLS.putAll(Map.of(
             DemoTool.INFO.name(), DemoTool.INFO,
             DrawTool.INFO.name(), DrawTool.INFO,
+            HistoryTool.INFO.name(), HistoryTool.INFO,
             ViewTool.INFO.name(), ViewTool.INFO
         ));
     }
