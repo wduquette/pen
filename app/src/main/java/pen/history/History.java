@@ -54,6 +54,14 @@ public interface History {
      */
     LinkedHashMap<String,List<Period>> getPeriodGroups();
 
+    default String formatMoment(int moment) {
+        if (getMomentFormatter() != null) {
+            return getMomentFormatter().apply(moment);
+        } else {
+            return Integer.toString(moment);
+        }
+    }
+
     /**
      * A text timeline chart for the incidents and entities in the history.
      * @return The chart.

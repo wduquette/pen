@@ -5,11 +5,17 @@ import pen.App;
 import pen.DataFileException;
 import pen.DataFiles;
 import pen.HistoryFile;
+import pen.history.History;
+import pen.history.Incident;
 import pen.tools.FXTool;
 import pen.tools.ToolInfo;
+import pen.util.TextAlign;
+import pen.util.TextColumn;
+import pen.util.TextTable;
 
 import java.io.File;
 import java.util.Deque;
+import java.util.List;
 
 /**
  * Application class for the "pen draw" tool.
@@ -27,6 +33,11 @@ Given a .hist History file, outputs the file as a text timeline chart.
 """,
         HistoryTool::main
     );
+
+    //------------------------------------------------------------------------
+    // Instance Variables
+
+    private History view;
 
     //------------------------------------------------------------------------
     // Main-line code
@@ -62,11 +73,25 @@ Given a .hist History file, outputs the file as a text timeline chart.
 
         var history = historyFile.history();
         var query = historyFile.query();
-        var result = query.execute(history);
-        println(result.toTimelineChart());
+        view = query.execute(history);
+        println(INCIDENTS.toMarkdown(view.getIncidents()));
+        println(INCIDENTS.toTerminal(view.getIncidents()));
+        println(view.toTimelineChart());
 
         exit(); // Because JavaFX.
     }
+
+    private History view() {
+        return view;
+    }
+
+    public final TextTable<Incident> INCIDENTS = new TextTable<>(List.of(
+        new TextColumn<>("Moment", TextAlign.RIGHT,
+            row -> view().formatMoment(row.moment())),
+        new TextColumn<>("Incident", TextAlign.LEFT, Incident::label),
+        new TextColumn<>("Concerns", TextAlign.LEFT,
+            row -> String.join(", ", row.entityIds()))
+    ));
 
     //------------------------------------------------------------------------
     // Main

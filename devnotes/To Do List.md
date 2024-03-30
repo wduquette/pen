@@ -9,11 +9,15 @@
         - FIle `Path`
     - [x] Make `DataFiles.loadHistory()` return a  `HistoryFile`
     - [ ] Add commands so that a history script can set up the default query, particularly the entity sorting.
-    - Add entity sorting to `HistoryQuery`
-        - `prime`: those entities that always go first (a pseudo-type)
-        - `typeOrder`: the order for display of types: e.g., `{person place period}`
-            - Sort other types alphabetically after these.
-        - Within a type, sort by starting moment then by ending moment
+    - Add entity grouping in `HistoryQuery` and `HistoryView`
+        - See BJ 8:41.
+        - Ponder how to best specify grouping queries in the HistoryQuery API.
+            - Prime entities + prime types is my first thought; but don't rule out other possibilities.
+            - Perhaps multiple ordering methods, one per query type
+            - `primes(entityIDs, types)` does my initial notion.
+            - A different grouping query replaces its predecessor.
+        - Should entities have a "prime" attribute?
+            - I'm thinking  not.
     - Add query options to `pen history`'s command-line syntax. 
         - Add a copy constructor to `HistoryQuery` so that the tool can copy and modify the history's default query.
     - [ ] TextTimelineChart improvements

@@ -30,6 +30,8 @@ public sealed interface Incident permits
      */
     boolean concerns(String entityId);
 
+    Set<String> entityIds();
+
     /**
      * The cap to be used if this is the first/last incident for some entity.
      * @return The cap
@@ -52,6 +54,10 @@ public sealed interface Incident permits
     ) implements Incident {
         public boolean concerns(String entityId) {
             return this.entityId.equals(entityId);
+        }
+
+        public Set<String> entityIds() {
+            return Set.of(entityId);
         }
 
         public Cap cap() {
@@ -92,6 +98,10 @@ public sealed interface Incident permits
     ) implements Incident {
         public boolean concerns(String entityId) {
             return this.entityId.equals(entityId);
+        }
+
+        public Set<String> entityIds() {
+            return Set.of(entityId);
         }
 
         public Cap cap() {

@@ -4,52 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "46efd7ebd03e50f3",
+        "id": "c6ae211627a7925c",
         "type": "tabs",
         "children": [
           {
-            "id": "6fcc8c73a058f340",
+            "id": "5ace9d488499783e",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "To Do List.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "a3199517997c97d4",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Timeline Diagram.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "6431ca0953e2a30a",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Ideas.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "bd704c3cbf151729",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Namespaced TCL APIs.md",
                 "mode": "source",
                 "source": false
               }
@@ -184,7 +148,7 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "6fcc8c73a058f340",
+  "active": "5ace9d488499783e",
   "lastOpenFiles": [
     "Home.md",
     "Namespaced TCL APIs.md",
