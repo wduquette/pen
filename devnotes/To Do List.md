@@ -1,33 +1,22 @@
 - Any time
     - Review Javadoc
 - Next Steps
-    - [x] ScrollingCanvasPane widget
-    - [x] Calendar Tool prototype
-    - [x] Prototype timeline charts.
-    - [x] Flesh out `HistoryBank`/`HistoryQuery`/`HistoryView`
-    - [x] Test `HistoryQuery`
-    - [x] Implement save/restore format for `History`
-        - Use Tcl for now, but eventually we will want some XML processing.
-        - Or, multi-table CSV? I think I have some CSV code in the Destiny project.
-    - [x] Define API for loading history files, calendars, etc. without requiring all the APIs to be in the same shell.
-    - [x] Add `pen history` for querying histories and producing Unicode timeline charts.
-    - Bugs
-        - [ ] Standard java "asserts" are not flagged as errors at runtime; add `Assert`.
-        - [x] Armorican test history is drawn with weird caps.
-            - [x] We have two incidents with the same moment; the start cap is being drawn for both.
-        - [x] Entities that appear in a single incident do not appear in the text timeline diagram.
-            - Periods have to span more than one moment.
-        - [x] The "enters" and "exits" incidents are derpy: the entity will get a soft cap for the incident even if it's a normal event.  Remove them.
-        - [x] It does not make sense to have a period with two hard caps and the same start/end index.  You need two incidents to get two hard caps.
-            - [x] But define and add an assertion.
-        - [ ] Fix CalendarTool to let you select from the calendars available.
-    - HistoryExtension Improvements
-        - [ ] Allow the entities associated with an event to be a single list argument.
-        - [x] Allow IDs to have hyphens in them.
+    - Add entity sorting to `HistoryQuery`
+        - `prime`: those entities that always go first (a pseudo-type)
+        - `typeOrder`: the order for display of types: e.g., `{person place period}`
+            - Sort other types alphabetically after these.
+        - Within a type, sort by starting moment then by ending moment
+    - Add a query to `HistoryExtension`
+        - A history script can set up the default query, particularly the entity sorting.
+    - Add query options to `pen history`'s command-line syntax. 
+        - Add a copy constructor to `HistoryQuery` so that the tool can copy and modify the history's default query.
     - [ ] TextTimelineChart improvements
         - [ ] Complete box around periods.
-        - [ ] Use "heavy" lines for when drawing periods, light lines for everything else.
-        - [ ] Grouping of entities by type.
+        - [ ] (?) Use "heavy" lines for when drawing periods, light lines for everything else.
+        - [ ] Grouping of entities by type; possibly a box around each type
+    - [ ] Standard java "asserts" are not flagged as errors at runtime; add `Assert`.
+    - [ ] Fix CalendarTool to load calendars using `DataFiles.loadCalendar`.
+    - [ ] Fix CalendarTool to let you select from the calendars available.
     - [ ] Revise TimelineDiagram to display `History` data
         - [ ] Will require `HistoryExtension`
             - [ ] Build histories in Tcl
@@ -46,9 +35,6 @@
             - Draw SOFT caps one row up from top or down from bottom.
             - If there are SOFT caps in the top or bottom row, leave room.
             - Also, fix c0 setting; it's one too small when we're drawing the periods.
-        - [ ] Add querying and filtering to `HistoryBase`, per [[HistoryBank and HistoryQuery]]
-        - [ ] Implement `HistoryExtension` for defining histories in Tcl.
-        - [ ] Add `pen history` tool for querying histories and converting them to text timeline diagrams.
     - Calendar Charts
         - [ ] Add calendar definition and conversion Tcl extension
         - [ ] Add tool to define and output month and year calendars

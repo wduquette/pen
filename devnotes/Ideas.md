@@ -2,6 +2,7 @@ A collection of things I want to consider
 
 ## New Ideas
 
+- [[Namespaced TCL APIs]]
 - [[Relational Tables]]
 - [[Tree Diagrams]]
 - [[Timeline Diagram]]
