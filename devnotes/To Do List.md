@@ -1,13 +1,19 @@
 - Any time
     - Review Javadoc
 - Next Steps
+    - [x] Add a `HistoryQuery` to `HistoryExtension`
+    - [x] Add `HistoryFile`, a record including
+        - `HistoryBank`
+        - `HistoryQuery`
+        - Optional `Calendar`
+        - FIle `Path`
+    - [x] Make `DataFiles.loadHistory()` return a  `HistoryFile`
+    - [ ] Allow a history script can set up the default query, particularly the entity sorting.
     - Add entity sorting to `HistoryQuery`
         - `prime`: those entities that always go first (a pseudo-type)
         - `typeOrder`: the order for display of types: e.g., `{person place period}`
             - Sort other types alphabetically after these.
         - Within a type, sort by starting moment then by ending moment
-    - Add a query to `HistoryExtension`
-        - A history script can set up the default query, particularly the entity sorting.
     - Add query options to `pen history`'s command-line syntax. 
         - Add a copy constructor to `HistoryQuery` so that the tool can copy and modify the history's default query.
     - [ ] TextTimelineChart improvements

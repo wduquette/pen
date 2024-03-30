@@ -288,5 +288,4 @@ public class HistoryQuery {
 
         return result;
     }
-
 }

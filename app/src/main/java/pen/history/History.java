@@ -1,5 +1,6 @@
 package pen.history;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -42,6 +43,16 @@ public interface History {
      * @return The map
      */
     Map<String,Period> getPeriods();
+
+    /**
+     * Gets an ordered map of periods by group. The group names and the ordering
+     * within the groups will depend on the specific History object in use.
+     * For {@link HistoryBank}, the groups will be the entity types in
+     * alphabetical order, and the periods will be sorted by start moment.
+     *
+     * @return The map.
+     */
+    LinkedHashMap<String,List<Period>> getPeriodGroups();
 
     /**
      * A text timeline chart for the incidents and entities in the history.

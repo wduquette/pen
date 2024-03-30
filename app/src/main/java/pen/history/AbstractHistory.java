@@ -162,6 +162,41 @@ public abstract class AbstractHistory implements History {
         return getPeriods(getTimeFrame());
     }
 
+    // Computes a list of entities by group name.  For now, groups
+    // will be defined by type, in alphabetical order; within each
+    // group, entities will be sorted by period, earliest start time
+    // first.
+    @Override
+    public LinkedHashMap<String,List<Period>> getPeriodGroups() {
+        // FIRST, get the periods
+        var periods = getPeriods();
+
+        // NEXT, initialize the result map to contain a list for each
+        // entity type, in alphabetical order
+        var map = new LinkedHashMap<String,List<Period>>();
+        periods.values().stream()
+            .map(p -> p.entity().type())
+            .sorted()
+            .forEach(type -> map.put(type, new ArrayList<>()));
+
+        // NEXT, add the periods for each type.
+        for (var id : periods.keySet()) {
+            var period = periods.get(id);
+            var type = period.entity().type();
+            map.get(type).add(period);
+        }
+
+        // NEXT, sort each group list
+        for (var group : map.keySet()) {
+            var sorted = map.get(group).stream()
+                .sorted(Comparator.comparing(Period::start))
+                .toList();
+            map.put(group, sorted);
+        }
+
+        return map;
+    }
+
     public List<Incident> getIncidents(String entityId) {
         return incidents().stream()
             .filter(i -> i.concerns(entityId))
