@@ -5,7 +5,6 @@ import pen.DataFiles;
 import pen.calendars.Calendar;
 import pen.calendars.CalendarException;
 import pen.calendars.formatter.DateFormat;
-import pen.history.Cap;
 import pen.history.Entity;
 import pen.history.HistoryBank;
 import pen.history.Incident;
