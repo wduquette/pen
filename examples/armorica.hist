@@ -1,12 +1,4 @@
 history calendar armorican.cal cumbrian "yyyy-mm-dd"
-# history entity joe "JoeP" person
-# history entity bob "BobC" person
-
-# history begins AD-2010-02-15 joe "Joe is born"
-# history enters AD-2015-07-23 bob
-# history event  AD-2050-12-25 "Joe and Bob talk" bob joe
-# history exits  AD-2085-10-31 bob
-# history ends   AD-2090-04-01 joe "Joe dies"
 
 history entity armand            "Armand"             person
 history entity elise             "Elise Frontenac"    person

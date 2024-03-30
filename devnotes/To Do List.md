@@ -8,7 +8,7 @@
         - Optional `Calendar`
         - FIle `Path`
     - [x] Make `DataFiles.loadHistory()` return a  `HistoryFile`
-    - [ ] Allow a history script can set up the default query, particularly the entity sorting.
+    - [ ] Add commands so that a history script can set up the default query, particularly the entity sorting.
     - Add entity sorting to `HistoryQuery`
         - `prime`: those entities that always go first (a pseudo-type)
         - `typeOrder`: the order for display of types: e.g., `{person place period}`
@@ -26,6 +26,7 @@
         - The `CalendarExtension` should explicitly define a `CalendarSet`, not an individual calendar.
         - The `HistoryExtension` should load a calendar set, and then specify the calendar to use when creating events.
         - The `HistoryTool` (and any other clients) should be able to specify the calendar and date format to use for output.
+    - [ ] `DataFiles.loadCalendar` should return a `CalendarFile` that contains the map of calendar names and calendars.
     - [ ] Fix CalendarTool to load calendars using `DataFiles.loadCalendar`.
     - [ ] Fix CalendarTool to let you select from the calendars available.
     - [ ] Revise TimelineDiagram to display `History` data
