@@ -18,7 +18,7 @@
         - [x] Entities that appear in a single incident do not appear in the text timeline diagram.
             - Periods have to span more than one moment.
         - [x] The "enters" and "exits" incidents are derpy: the entity will get a soft cap for the incident even if it's a normal event.  Remove them.
-        - [ ] It does not make sense to have a period with two hard caps and the same start/end index.  You need two incidents to get two hard caps.
+        - [x] It does not make sense to have a period with two hard caps and the same start/end index.  You need two incidents to get two hard caps.
             - [x] But define and add an assertion.
         - [ ] Fix CalendarTool to let you select from the calendars available.
     - HistoryExtension Improvements
