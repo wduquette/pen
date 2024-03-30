@@ -109,7 +109,7 @@ public class TextTimelineChart {
     public String toString() {
         // FIRST get the width of the incident labels.
         var labelWidth = incidents.stream()
-            .mapToInt(i -> getIncidentLabel(i).length())
+            .mapToInt(i -> getIncidentLabel(i, 0).length())
             .max().orElse(0);
         labelWidth = Math.max(labelWidth, INCIDENTS.length());
 
@@ -136,8 +136,13 @@ public class TextTimelineChart {
             var r = r0 + i;
             var incident = incidents.get(i);
 
-            // FIRST, add the incident
-            canvas.puts(0, r, padLeft(getIncidentLabel(incident), labelWidth));
+            // FIRST, add the incident.  Only include the moment if it differs
+            // from the previous incident.
+            if (i > 0 && incident.moment() == incidents.get(i - 1).moment()) {
+                canvas.puts(0, r, padLeft(incident.label(), labelWidth));
+            } else {
+                canvas.puts(0, r, getIncidentLabel(incident, labelWidth));
+            }
 
             // NEXT, add the periods.
             for (var j = 0; j < entities.size(); j++) {
@@ -222,12 +227,19 @@ public class TextTimelineChart {
         return entity.name() + " (" + entity.type() + ")";
     }
 
-    private String getIncidentLabel(Incident incident) {
-        if (history.getMomentFormatter() != null) {
-            return incident.label() + " " + formatMoment(incident.moment());
-        } else {
-            return incident.label();
-        }
+    private String getIncidentLabel(Incident incident, int width) {
+        // No moment label if we don't have a special format.
+        var moment = momentFormatter != null
+            ? formatMoment(incident.moment()) + " "
+            : "";
+        var label = incident.label();
+
+        var minLength = moment.length() + label.length();
+        var delta = width - minLength;
+
+        var gap = (delta > 0) ? " ".repeat(delta) : "";
+
+        return moment + gap + label;
     }
 
     private String formatMoment(int moment) {
