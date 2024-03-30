@@ -48,10 +48,10 @@ public class DataFiles {
     /**
      * Loads a history file, and returns the loaded history.
      * @param path The path to the file
-     * @return The history
+     * @return The history file's content
      * @throws DataFileException on error
      */
-    public static HistoryBank loadHistory(Path path)
+    public static HistoryFile loadHistory(Path path)
         throws DataFileException
     {
         var engine = new TclEngine();
@@ -68,7 +68,14 @@ public class DataFiles {
             throw error("history", ex);
         }
 
-        return historyExtension.getHistory();
+        var historyFile = new HistoryFile(
+            path,
+            historyExtension.getHistory(),
+            historyExtension.getQuery(),
+            historyExtension.getCalendar().orElse(null)
+        );
+
+        return historyFile;
     }
 
     private static DataFileException error(String what, Exception ex) {

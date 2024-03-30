@@ -4,6 +4,7 @@ import javafx.stage.Stage;
 import pen.App;
 import pen.DataFileException;
 import pen.DataFiles;
+import pen.HistoryFile;
 import pen.history.History;
 import pen.tools.FXTool;
 import pen.tools.ToolInfo;
@@ -47,19 +48,23 @@ Given a .hist History file, outputs the file as a text timeline chart.
         }
         assert !argq.isEmpty();
 
-        var historyFile = new File(argq.poll()).toPath();
+        var historyFilePath = new File(argq.poll()).toPath();
 
         // NEXT, try to open the file
-        History history;
+        HistoryFile historyFile;
+
         try {
-            history = DataFiles.loadHistory(historyFile);
+            historyFile = DataFiles.loadHistory(historyFilePath);
         } catch (DataFileException ex) {
 //            println(ex.getMessage());
 //            println(ex.getDetails());
             throw error("Failed to read history file", ex);
         }
 
-        println(history.toTimelineChart());
+        var history = historyFile.history();
+        var query = historyFile.query();
+        var result = query.execute(history);
+        println(result.toTimelineChart());
 
         exit(); // Because JavaFX.
     }

@@ -7,6 +7,7 @@ import pen.calendars.CalendarException;
 import pen.calendars.formatter.DateFormat;
 import pen.history.Entity;
 import pen.history.HistoryBank;
+import pen.history.HistoryQuery;
 import pen.history.Incident;
 import pen.tcl.Argq;
 import pen.tcl.TclEngine;
@@ -16,6 +17,7 @@ import tcl.lang.TclObject;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -31,8 +33,15 @@ public class HistoryExtension implements TclExtension {
     // The TclEngine in use.  Set by initialize().
     private TclEngine tcl;
 
+    //
     // Data stores
+    //
+
+    // The history
     private final HistoryBank bank = new HistoryBank();
+
+    // The default query
+    private final HistoryQuery query = new HistoryQuery();
 
     // The calendar in use for dates, if any.
     private Calendar calendar;
@@ -70,7 +79,32 @@ public class HistoryExtension implements TclExtension {
         bank.clear();
     }
 
-    public HistoryBank getHistory()      { return bank; }
+    //-------------------------------------------------------------------------
+    // History Getters
+
+    /**
+     * Gets the entire loaded history.
+     * @return The history
+     */
+    public HistoryBank getHistory() {
+        return bank;
+    }
+
+    /**
+     * Gets the default query, as defined by the history script.
+     * @return The query
+     */
+    public HistoryQuery getQuery() {
+        return query;
+    }
+
+    /**
+     * Gets the calendar chosen for use with this history, if any.
+     * @return The calendar
+     */
+    public Optional<Calendar> getCalendar() {
+        return Optional.ofNullable(calendar);
+    }
 
     //-------------------------------------------------------------------------
     // Ensemble: history *

@@ -32,14 +32,3 @@ history event  ME-1011-05-30 "Madame Truc's Table" {armand jack monthavre truc s
 history event  ME-1011-06-06 "Festival"            {armand mum monthavre leon fournier }
 history event  ME-1011-06-13 "Suprenant-et-Fils"   {armand mum monthavre suprenant-et-fils leon jean-baptiste}
 
-set this "*THIS*"
-namespace eval ::foo {
-    puts $this
-    proc bar {value} {
-        variable thing
-        set thing $value
-    }
-}
-foo::bar howdy
-puts $foo::thing
-

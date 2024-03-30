@@ -15,6 +15,11 @@
         - [ ] (?) Use "heavy" lines for when drawing periods, light lines for everything else.
         - [ ] Grouping of entities by type; possibly a box around each type
     - [ ] Standard java "asserts" are not flagged as errors at runtime; add `Assert`.
+    - Define `CalendarSet`
+        - A set of related calendars, e.g., `armorican + cumbrian`.
+        - The `CalendarExtension` should explicitly define a `CalendarSet`, not an individual calendar.
+        - The `HistoryExtension` should load a calendar set, and then specify the calendar to use when creating events.
+        - The `HistoryTool` (and any other clients) should be able to specify the calendar and date format to use for output.
     - [ ] Fix CalendarTool to load calendars using `DataFiles.loadCalendar`.
     - [ ] Fix CalendarTool to let you select from the calendars available.
     - [ ] Revise TimelineDiagram to display `History` data

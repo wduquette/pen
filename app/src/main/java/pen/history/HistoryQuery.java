@@ -276,7 +276,12 @@ public class HistoryQuery {
 
         // NEXT, produce the resulting view
         Map<String,Entity> map = new LinkedHashMap<>();
-        entities.forEach(id -> map.put(id, periods.get(id).entity()));
+        for (var id : entities) {
+            var period = periods.get(id);
+            if (period != null) {
+                map.put(id, period.entity());
+            }
+        }
 
         var result = new HistoryView(map, incidents);
         result.setMomentFormatter(source.getMomentFormatter());
