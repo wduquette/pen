@@ -19,6 +19,7 @@ public class TextTimelineChart {
 
     private final List<Incident> incidents;
     private final Map<String,Period> periods;
+    private final LinkedHashMap<String,List<Period>> groups;
     private final List<Entity> entities;
     private final Map<Integer,Integer> startIndices = new HashMap<>();
     private final Map<Integer,Integer> endIndices = new HashMap<>();
@@ -31,15 +32,24 @@ public class TextTimelineChart {
         this.momentFormatter = history.getMomentFormatter();
 
         // FIRST, get the history.
+        //
+        // NOTE: For now I'm using groups just to get the order of the periods
+        // and hence the order of the entities.  Later, I might want to do
+        // away with the period map altogether.
         incidents = history.getIncidents().stream()
             .sorted(Comparator.comparing(Incident::moment))
             .toList();
+        groups = history.getPeriodGroups();
         periods = history.getPeriods();
-        entities = new ArrayList<>(periods.values().stream()
+        entities = new ArrayList<>(groups.values().stream()
+            .flatMap(List::stream)
             .map(Period::entity)
             .toList());
-        entities.forEach(System.out::println);
-        periods.values().forEach(System.out::println);
+
+        // Dump the entities and periods
+        groups.values().stream()
+            .flatMap(List::stream)
+            .forEach(this::dumpPeriod);
 
         // NEXT, compute the start and end incident indices for each moment.
         computeMomentIndices();
@@ -57,6 +67,17 @@ public class TextTimelineChart {
             // Set the last index for this moment
             endIndices.put(moment, i);
         }
+    }
+
+    @SuppressWarnings("unused")
+    private void dumpPeriod(Period period) {
+        System.out.println(
+            formatMoment(period.start()) + " to " +
+            formatMoment(period.end()) + ": " +
+            period.entity().id() + ":" + period.entity().type() + " " +
+            period.entity().name() + " " +
+            "(" + period.startCap() + "," + period.endCap() + ")"
+        );
     }
 
     //-------------------------------------------------------------------------
@@ -203,11 +224,16 @@ public class TextTimelineChart {
 
     private String getIncidentLabel(Incident incident) {
         if (history.getMomentFormatter() != null) {
-            return incident.label() + " " +
-                history.getMomentFormatter().apply(incident.moment());
+            return incident.label() + " " + formatMoment(incident.moment());
         } else {
             return incident.label();
         }
+    }
+
+    private String formatMoment(int moment) {
+        return (momentFormatter != null)
+            ? momentFormatter.apply(moment)
+            : Integer.toString(moment);
     }
 
     private String padLeft(String text, int width) {
