@@ -273,7 +273,7 @@ public class TclEngine {
 
     /**
      * Converts the argument to a string, verifying that the string conforms
-     * to the rules for an identifier: letters, numbers, and underscores,
+     * to the rules for an identifier: letters, numbers, and hyphens.
      * starting with an underscore.
      * @param arg The argument
      * @return The identifier
@@ -281,7 +281,7 @@ public class TclEngine {
      */
     public String toIdentifier(TclObject arg) throws TclException {
         var value = arg.toString();
-        if (value.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
+        if (value.matches("[a-zA-Z][-a-zA-Z0-9]*")) {
             return value;
         } else {
             throw expected("identifier", value);

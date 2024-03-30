@@ -8,19 +8,30 @@ history calendar armorican.cal cumbrian "yyyy-mm-dd"
 # history exits  AD-2085-10-31 bob
 # history ends   AD-2090-04-01 joe "Joe dies"
 
-history entity armand    "Armand"          person
-history entity elise     "Elise Frontenac" person
-history entity jack      "Jack Montjoy"    person
-history entity marc      "Marc Frontenac"  person
-history entity mum       "Jane Massey"     person
-history entity truc      "Madame Truc"     person
+history entity armand            "Armand"             person
+history entity elise             "Elise Frontenac"    person
+history entity fournier          "M. Fournier"        person
+history entity jack              "Jack Montjoy"       person
+history entity jean-baptiste     "Jean Baptiste"      person 
+history entity leon              "Leon Suprenant"     person
+history entity marc              "Marc Frontenac"     person
+history entity mum               "Jane Massey"        person
+history entity souris            "Jacque-le-Souris"   person
+history entity truc              "Madame Truc"        person
+history entity suprenant-et-fils "Suprenant-et-Fils"  firm
 
-history entity monthavre "Mont-Havre"   place
-history entity yorke     "Yorke"        place
+history entity monthavre         "Mont-Havre"         place
+history entity yorke             "Yorke"              place
 
-history event  ME-1011-05-09 "Arrival"       armand mum monthavre
-history event  ME-1011-05-09 "The First Day" armand mum monthavre truc marc elise
-history event  ME-1011-05-10 "Dock Work"     armand jack monthavre truc
+history event  ME-1011-05-09 "Arrival"             armand mum monthavre
+history event  ME-1011-05-09 "The First Day"       armand mum monthavre truc marc elise
+history event  ME-1011-05-13 "Dock Work"           armand jack monthavre truc
+history event  ME-1011-05-16 "Madame Truc"         armand mum monthavre truc
+history event  ME-1011-05-23 "Clerk"               armand mum monthavre truc suprenant-et-fils
+history event  ME-1011-05-30 "Madame Truc's Table" armand jack monthavre truc souris
+history event  ME-1011-06-06 "Festival"            armand mum monthavre leon fournier 
+history event  ME-1011-06-13 "Suprenant-et-Fils"   armand mum monthavre suprenant-et-fils leon jean-baptiste
+
 
 
 
