@@ -118,15 +118,15 @@ public class HistoryBankTest extends Ted {
         history.addEntity(new Entity("joe", "JoeP", "person"));
         history.addEntity(new Entity("bob", "BobC", "person"));
         history.getIncidents()
-            .add(new Incident.Beginning(10, "Joe is born", "joe", Cap.HARD));
+            .add(new Incident.Beginning(10, "Joe is born", "joe"));
         history.getIncidents()
-            .add(new Incident.Beginning(15, "Bob enters", "bob", Cap.SOFT));
+            .add(new Incident.Normal(15, "Bob enters", Set.of("bob")));
         history.getIncidents()
             .add(new Incident.Normal(50, "Joe and Bob talk", Set.of("joe", "bob")));
         history.getIncidents()
-            .add(new Incident.Beginning(85, "Bob leaves", "bob", Cap.SOFT));
+            .add(new Incident.Normal(85, "Bob leaves", Set.of("bob")));
         history.getIncidents()
-            .add(new Incident.Ending(90, "Joe dies", "joe", Cap.HARD));
+            .add(new Incident.Ending(90, "Joe dies", "joe"));
     }
 
 }

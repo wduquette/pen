@@ -19,10 +19,11 @@
             - Periods have to span more than one moment.
         - [x] The "enters" and "exits" incidents are derpy: the entity will get a soft cap for the incident even if it's a normal event.  Remove them.
         - [ ] It does not make sense to have a period with two hard caps and the same start/end index.  You need two incidents to get two hard caps.
-            - [ ] But define and add an assertion.
+            - [x] But define and add an assertion.
         - [ ] Fix CalendarTool to let you select from the calendars available.
     - HistoryExtension Improvements
         - [ ] Allow the entities associated with an event to be a single list argument.
+        - [x] Allow IDs to have hyphens in them.
     - [ ] TextTimelineChart improvements
         - [ ] Complete box around periods.
         - [ ] Use "heavy" lines for when drawing periods, light lines for everything else.

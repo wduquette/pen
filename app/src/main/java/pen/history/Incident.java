@@ -44,16 +44,18 @@ public sealed interface Incident permits
      * @param moment The moment of entry
      * @param label The label
      * @param entityId The entity ID
-     * @param cap The cap, soft or hard
      */
     record Beginning(
         int moment,
         String label,
-        String entityId,
-        Cap cap
+        String entityId
     ) implements Incident {
         public boolean concerns(String entityId) {
             return this.entityId.equals(entityId);
+        }
+
+        public Cap cap() {
+            return Cap.HARD;
         }
     }
 
@@ -82,16 +84,18 @@ public sealed interface Incident permits
      * @param moment The moment of exit
      * @param label The label
      * @param entityId The entity ID
-     * @param cap The cap, soft or hard
      */
     record Ending(
         int moment,
         String label,
-        String entityId,
-        Cap cap
+        String entityId
     ) implements Incident {
         public boolean concerns(String entityId) {
             return this.entityId.equals(entityId);
+        }
+
+        public Cap cap() {
+            return Cap.HARD;
         }
     }
 }

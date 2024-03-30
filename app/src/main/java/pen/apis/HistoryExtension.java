@@ -156,8 +156,7 @@ public class HistoryExtension implements TclExtension {
             ? argq.next().toString().trim()
             : entity.name() + " begins";
 
-        var incident = new Incident.Beginning(
-            moment, label, entity.id(), Cap.HARD);
+        var incident = new Incident.Beginning(moment, label, entity.id());
 
         saveBeginning("begins", limits, momentArg.toString(), incident);
     }
@@ -209,8 +208,7 @@ public class HistoryExtension implements TclExtension {
             ? argq.next().toString().trim()
             : entity.name() + " ends";
 
-        var incident = new Incident.Ending(
-            moment, label, entity.id(), Cap.HARD);
+        var incident = new Incident.Ending(moment, label, entity.id());
 
         saveEnding("ends", limits, momentArg.toString(), incident);
     }
