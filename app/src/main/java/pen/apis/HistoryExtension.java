@@ -257,6 +257,12 @@ public class HistoryExtension implements TclExtension {
         var momentArg = argq.next();
         var moment = toMoment(momentArg);
         var label = argq.next().toString().trim();
+
+        // Expand the last argument if it's a list.
+        if (argq.argsLeft() == 1) {
+            argq = tcl.toArgq(argq.next());
+        }
+
         while (argq.hasNext()) {
             var limits = toLimits(argq.next());
             var id = limits.entity.id();
