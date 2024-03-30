@@ -5,7 +5,6 @@ import pen.App;
 import pen.DataFileException;
 import pen.DataFiles;
 import pen.HistoryFile;
-import pen.history.History;
 import pen.tools.FXTool;
 import pen.tools.ToolInfo;
 

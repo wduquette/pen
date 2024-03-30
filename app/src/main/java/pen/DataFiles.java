@@ -3,7 +3,6 @@ package pen;
 import pen.apis.CalendarExtension;
 import pen.apis.HistoryExtension;
 import pen.calendars.Calendar;
-import pen.history.HistoryBank;
 import pen.tcl.TclEngine;
 import pen.tcl.TclEngineException;
 
@@ -68,14 +67,12 @@ public class DataFiles {
             throw error("history", ex);
         }
 
-        var historyFile = new HistoryFile(
+        return new HistoryFile(
             path,
             historyExtension.getHistory(),
             historyExtension.getQuery(),
             historyExtension.getCalendar().orElse(null)
         );
-
-        return historyFile;
     }
 
     private static DataFileException error(String what, Exception ex) {
