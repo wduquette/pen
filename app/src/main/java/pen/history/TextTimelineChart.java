@@ -46,11 +46,6 @@ public class TextTimelineChart {
             .map(Period::entity)
             .toList());
 
-        // Dump the entities and periods
-        groups.values().stream()
-            .flatMap(List::stream)
-            .forEach(this::dumpPeriod);
-
         // NEXT, compute the start and end incident indices for each moment.
         computeMomentIndices();
     }
