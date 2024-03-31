@@ -12,18 +12,16 @@
         - [x] Incident table
         - [x] Entity table
         - [x] Timeline chart
-    - [ ] Add commands so that a history script can set up the default query, particularly the entity sorting.
-    - Add entity grouping in `HistoryQuery` and `HistoryView`
+    - [x] Add entity grouping in `HistoryQuery` and `HistoryView`
         - See BJ 8:41.
-        - Ponder how to best specify grouping queries in the HistoryQuery API.
-            - Prime entities + prime types is my first thought; but don't rule out other possibilities.
-            - Perhaps multiple ordering methods, one per query type
-            - `primes(entityIDs, types)` does my initial notion.
-            - A different grouping query replaces its predecessor.
-        - Should entities have a "prime" attribute?
-            - I'm thinking  not.
-    - Add query options to `pen history`'s command-line syntax. 
-        - Add a copy constructor to `HistoryQuery` so that the tool can copy and modify the history's default query.
+        - Can now group-by-source (default)
+        - Or group-by-primes (not yet tested)
+    - [ ] Update `HistoryQueryTest` per current changes.
+    - [ ] Add commands so that a history script can set up the default query, particularly the entity sorting.
+    - [ ] Add query options to `pen history`'s command-line syntax. 
+    - Filter options
+        - [ ] By concerned entities
+        - [ ] Minimum incident limit (exclude entities who appear N or fewer times)
     - [ ] TextTimelineChart improvements
         - [ ] Complete box around periods.
         - [ ] (?) Use "heavy" lines for when drawing periods, light lines for everything else.

@@ -2,6 +2,8 @@ A collection of things I want to consider
 
 ## New Ideas
 
+- [[Entity Ontology]]
+- [[Incident Details]]
 - [[Namespaced TCL APIs]]
 - [[Relational Tables]]
 - [[Tree Diagrams]]
