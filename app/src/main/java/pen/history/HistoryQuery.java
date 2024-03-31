@@ -265,6 +265,8 @@ public class HistoryQuery {
         List<Incident> incidents;
         boolean entitySetModified = false;
         Term groupingTerm = null;
+        LinkedHashMap<String, List<Period>> periodGroups =
+            new LinkedHashMap<>();
 
         //---------------------------------------------------------------------
         // Constructor
@@ -285,61 +287,12 @@ public class HistoryQuery {
             // FIRST, do the filtering
             for (var term : terms) {
                 switch (term) {
-                    case Term.IncidentFilter t ->
-                        incidents = incidents.stream().filter(t.filter).toList();
-                    case Term.Includes t -> {
-                        if (!entitySetModified) {
-                            entities.clear();
-                        }
-                        entitySetModified = true;
-                        entities.addAll(t.entityIds);
-                    }
-                    case Term.IncludesTypes t -> {
-                        if (!entitySetModified) {
-                            entities.clear();
-                        }
-                        entitySetModified = true;
-                        var toInclude = periods.values().stream()
-                            .map(Period::entity)
-                            .filter(e -> t.types().contains(e.type()))
-                            .map(Entity::id)
-                            .toList();
-                        entities.addAll(toInclude);
-                    }
-                    case Term.Excludes t -> {
-                        entitySetModified = true;
-                        t.entityIds().forEach(entities::remove);
-                    }
-                    case Term.ExcludesTypes t -> {
-                        entitySetModified = true;
-                        var toRetain = periods.values().stream()
-                            .map(Period::entity)
-                            .filter(e -> !t.types().contains(e.type()))
-                            .map(Entity::name)
-                            .toList();
-                        entities = new HashSet<>(toRetain);
-                    }
-                    case Term.BoundBy t -> {
-                        var list = new ArrayList<Period>();
-
-                        var ids = !t.entityIds.isEmpty() ? t.entityIds : entities;
-
-                        for (var id : ids) {
-                            if (periods.containsKey(id)) {
-                                list.add(periods.get(id));
-                            }
-                        }
-
-                        var start = list.stream()
-                            .mapToInt(Period::start)
-                            .min().orElse(Integer.MIN_VALUE);
-                        var end = list.stream()
-                            .mapToInt(Period::end)
-                            .min().orElse(Integer.MAX_VALUE);
-                        incidents = incidents.stream()
-                            .filter(in -> in.moment() >= start && in.moment() <= end)
-                            .toList();
-                    }
+                    case Term.IncidentFilter t -> filterIncidents(t);
+                    case Term.Includes t -> includeEntities(t);
+                    case Term.IncludesTypes t -> includeTypes(t);
+                    case Term.Excludes t -> excludeEntities(t);
+                    case Term.ExcludesTypes t -> excludeTypes(t);
+                    case Term.BoundBy t -> boundByEntities(t);
                     case Term.GroupByPrimes t -> groupingTerm = t;
                     default ->
                         throw new IllegalStateException(
@@ -348,28 +301,16 @@ public class HistoryQuery {
             }
 
             // NEXT, compute the period groups
-            var periodGroups = new LinkedHashMap<String,List<Period>>();
 
             if (groupingTerm != null) {
                 if (groupingTerm instanceof Term.GroupByPrimes t) {
-                    // FIRST, get the prime group
-                    var primes = new ArrayList<Period>();
-                    for (var id : t.entities) {
-                        var period = periods.get(id);
-                        if (period != null) {
-                            primes.add(period);
-                        }
-                    }
-
-                    if (!primes.isEmpty()) {
-                        periodGroups.put("prime", primes);
-                    }
-
-                    // TODO
+                    groupByPrimes(t);
                 } else {
                     throw new IllegalStateException(
                         "Unknown term:" + groupingTerm);
                 }
+            } else {
+                groupBySource();
             }
 
             // NEXT, compute the entity map
@@ -385,6 +326,144 @@ public class HistoryQuery {
             result.setMomentFormatter(source.getMomentFormatter());
 
             return result;
+        }
+
+        void filterIncidents(Term.IncidentFilter t) {
+            incidents = incidents.stream().filter(t.filter).toList();
+        }
+
+        void includeEntities(Term.Includes t) {
+            if (!entitySetModified) {
+                entities.clear();
+            }
+            entitySetModified = true;
+            entities.addAll(t.entityIds);
+        }
+
+        void excludeEntities(Term.Excludes t) {
+            entitySetModified = true;
+            t.entityIds().forEach(entities::remove);
+        }
+
+        void includeTypes(Term.IncludesTypes t) {
+            if (!entitySetModified) {
+                entities.clear();
+            }
+            entitySetModified = true;
+            var toInclude = periods.values().stream()
+                .map(Period::entity)
+                .filter(e -> t.types().contains(e.type()))
+                .map(Entity::id)
+                .toList();
+            entities.addAll(toInclude);
+        }
+
+        void excludeTypes(Term.ExcludesTypes t) {
+            entitySetModified = true;
+            var toRetain = periods.values().stream()
+                .map(Period::entity)
+                .filter(e -> !t.types().contains(e.type()))
+                .map(Entity::name)
+                .toList();
+            entities = new HashSet<>(toRetain);
+        }
+
+        void boundByEntities(Term.BoundBy t) {
+            var list = new ArrayList<Period>();
+
+            var ids = !t.entityIds.isEmpty() ? t.entityIds : entities;
+
+            for (var id : ids) {
+                if (periods.containsKey(id)) {
+                    list.add(periods.get(id));
+                }
+            }
+
+            var start = list.stream()
+                .mapToInt(Period::start)
+                .min().orElse(Integer.MIN_VALUE);
+            var end = list.stream()
+                .mapToInt(Period::end)
+                .min().orElse(Integer.MAX_VALUE);
+            incidents = incidents.stream()
+                .filter(in -> in.moment() >= start && in.moment() <= end)
+                .toList();
+        }
+
+        // Get the source's period groups, but filter out the excluded
+        // entities.
+        void groupBySource() {
+            for (var grp : source.getPeriodGroups().entrySet()) {
+                var list = new ArrayList<Period>();
+
+                for (var period : grp.getValue()) {
+                    if (entities.contains(period.entity().id())) {
+                        list.add(period);
+                    }
+                }
+
+                if (!list.isEmpty()) {
+                    periodGroups.put(grp.getKey(), list);
+                }
+            }
+        }
+
+        // Create period groups by primes entities and types.
+        void groupByPrimes(Term.GroupByPrimes t) {
+            // FIRST, get the prime group
+            var primes = new ArrayList<Period>();
+            for (var id : t.entities) {
+                var period = periods.get(id);
+                if (period != null) {
+                    primes.add(period);
+                }
+            }
+
+            if (!primes.isEmpty()) {
+                addPeriodGroup("prime", primes);
+            }
+
+            // NEXT, add each prime type
+            for (var type : t.types) {
+                var group = periods.values().stream()
+                    .filter(p -> p.entity().type().equals(type))
+                    .filter(p -> !entities.contains(p.entity().id()))
+                    .toList();
+
+                if (!group.isEmpty()) {
+                    addPeriodGroup(type, group);
+                }
+            }
+
+            // NEXT, add each other type
+            var others = periods.values().stream()
+                .map(Period::entity)
+                .map(Entity::type)
+                .filter(type -> !t.types.contains(type))
+                .sorted()
+                .toList();
+
+            for (var type : others) {
+                var group = periods.values().stream()
+                    .filter(p -> p.entity().type().equals(type))
+                    .filter(p -> !entities.contains(p.entity().id()))
+                    .toList();
+
+                if (!group.isEmpty()) {
+                    addPeriodGroup(type, group);
+                }
+            }
+        }
+
+        void addPeriodGroup(String name, List<Period> group) {
+            group.sort(Comparator.comparing(Period::start));
+            periodGroups.put(name, group);
+        }
+
+        List<Period> getPeriodsByType(String type) {
+            return periods.values().stream()
+                .filter(p -> p.entity().type().equals(type))
+                .toList();
         }
     }
 }
