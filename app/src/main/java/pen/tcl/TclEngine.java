@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import tcl.lang.*;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +28,45 @@ public class TclEngine {
 
     public TclEngine() {
         // Nothing to do yet
+    }
+
+    //-------------------------------------------------------------------------
+    // Environment
+
+    /**
+     * Gets the interpreter's working directory as a Path.  This is the same
+     * directory returned by the Tcl "pwd" command.
+     * @return The working directory
+     */
+    public Path getWorkingDirectory() {
+        String workingDirectory = System.getProperty("user.dir");
+
+        try {
+            interp.eval("pwd");
+            workingDirectory = interp.getResult().toString();
+        } catch (TclException ex) {
+            // Couldn't get working directory from Tcl.
+            System.out.println("Error getting working directory: " + interp.getResult());
+        }
+
+        return new File(workingDirectory).toPath();
+    }
+
+    /**
+     * Sets the interpreter's working directory given a Path.  This is the same
+     * directory returned by the Tcl "pwd" command.
+     * @param path The working directory
+     */
+    public void setWorkingDirectory(Path path) {
+        var oldPath = getWorkingDirectory();
+        var newPath = oldPath.resolve(path.toAbsolutePath());
+
+        try {
+            interp.eval("cd {" + newPath + "}");
+        } catch (TclException ex) {
+            // Couldn't get working directory from Tcl.
+            System.out.println("Error setting working directory: " + interp.getResult());
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -230,6 +270,28 @@ public class TclEngine {
     {
         return toEnum(cls, toOptArg(opt, argq));
     }
+
+    /**
+     * Converts the argument to a string, verifying that the string conforms
+     * to the rules for an identifier: letters, numbers, and hyphens.
+     * starting with an underscore.
+     * @param arg The argument
+     * @return The identifier
+     * @throws TclException if not an identifier.
+     */
+    public String toIdentifier(TclObject arg) throws TclException {
+        var value = arg.toString();
+        if (value.matches("[a-zA-Z][-a-zA-Z0-9]*")) {
+            return value;
+        } else {
+            throw expected("identifier", value);
+        }
+    }
+
+    public String toIdentifier(String opt, Argq argq) throws TclException {
+        return toIdentifier(toOptArg(opt, argq));
+    }
+
 
     public int toInteger(TclObject arg) throws TclException {
         return TclInteger.getInt(interp, arg);

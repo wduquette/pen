@@ -1,27 +1,59 @@
 - Any time
     - Review Javadoc
 - Next Steps
-    - [x] Calendar definition Tcl extension
-    - [x] Armorican Calendar
-    - [x] Fix bug in `day2yearDay`/`yearDay2day`.
-    - [x] Convert `Calendar` to an abstract base class.
-    - [x] Split `Month` in to `Month` interface and `SimpleMonth` class.
-    - [x] Replace `Calendar.MonthRecord` with `BoundedMonth` class.
-    - [x] Rename `DateFormatter` to `DateFormat`
-    - [x] Make `DateFormat`'s `parse` and `format` methods static, taking a format as an argument.
-    - [x] Add default formats to `AbstractCalendar` for calendars with and without months.
-    - [x] Add format and parse methods to `Calendar`/`AbstractCalendar` for formatting and parsing using the calendar's default format and a desired format.
-    - [ ] ScrollingCanvasPane widget
-    - [ ] Calendar Tool prototype
-    - [ ] Prototype timeline charts.
+    - [x] Add a `HistoryQuery` to `HistoryExtension`
+    - [x] Add `HistoryFile`, a record including
+        - `HistoryBank`
+        - `HistoryQuery`
+        - Optional `Calendar`
+        - File `Path`
+    - [x] Make `DataFiles.loadHistory()` return a  `HistoryFile`
+    - [x] Add `pen history` options for output various things
+        - [x] Incident table
+        - [x] Entity table
+        - [x] Timeline chart
+    - [x] Add entity grouping in `HistoryQuery` and `HistoryView`
+        - See BJ 8:41.
+        - Can now group-by-source (default)
+        - Or group-by-primes (not yet tested)
+    - [ ] Update `HistoryQueryTest` per current changes.
+    - [ ] Add commands so that a history script can set up the default query, particularly the entity sorting.
+    - [ ] Add query options to `pen history`'s command-line syntax. 
+    - Filter options
+        - [ ] By concerned entities
+        - [ ] Minimum incident limit (exclude entities who appear N or fewer times)
+    - [ ] TextTimelineChart improvements
+        - [ ] Complete box around periods.
+        - [ ] (?) Use "heavy" lines for when drawing periods, light lines for everything else.
+        - [ ] Grouping of entities by type; possibly a box around each type
+    - [ ] Standard java "asserts" are not flagged as errors at runtime; add `Assert`.
+    - Define `CalendarSet`
+        - A set of related calendars, e.g., `armorican + cumbrian`.
+        - The `CalendarExtension` should explicitly define a `CalendarSet`, not an individual calendar.
+        - The `HistoryExtension` should load a calendar set, and then specify the calendar to use when creating events.
+        - The `HistoryTool` (and any other clients) should be able to specify the calendar and date format to use for output.
+    - [ ] `DataFiles.loadCalendar` should return a `CalendarFile` that contains the map of calendar names and calendars.
+    - [ ] Fix CalendarTool to load calendars using `DataFiles.loadCalendar`.
+    - [ ] Fix CalendarTool to let you select from the calendars available.
+    - [ ] Revise TimelineDiagram to display `History` data
+        - [ ] Will require `HistoryExtension`
+            - [ ] Build histories in Tcl
+            - [ ] Load history file
     - [ ] Review and cleanup `MonthSpread` and `YearSpread`
 - Diagrams
-    - [[Time Line Diagrams]]
+    - [[Timeline Diagram Initial Concept]]
         - [x] Flesh out `FundamentalCalendar`
         - [x] Add `SimpleCalendar`
-        - [ ] Define a `TimeLineDiagram` class
-        - [ ] Prototype a simple Time Line Diagram using Stencil
+        - [x] Define a preliminary `TimeLineDiagram` class
+        - [x] Prototype a simple Time Line Diagram using Stencil
             - Add capabilities to Stencil as needed.
+        - [x] Design `HistoryBase` data class
+        - [x] Prototype text timeline diagram output using Unicode drawing characters.
+        - [x] Draw text timeline charts with "fuzzy" SOFT caps
+            - Draw SOFT caps one row up from top or down from bottom.
+            - If there are SOFT caps in the top or bottom row, leave room.
+            - Also, fix c0 setting; it's one too small when we're drawing the periods.
+    - Calendar Charts
         - [ ] Add calendar definition and conversion Tcl extension
         - [ ] Add tool to define and output month and year calendars
         - [ ] Implement [[Regnal Calendars]]

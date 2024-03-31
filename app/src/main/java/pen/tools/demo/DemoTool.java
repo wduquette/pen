@@ -15,9 +15,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import pen.calendars.Armorican;
 import pen.calendars.formatter.DateFormat;
 import pen.diagram.calendar.MonthSpread;
 import pen.diagram.calendar.YearSpread;
+import pen.diagram.timeline.TimelineDiagram;
 import pen.fx.FX;
 import pen.stencil.*;
 import pen.tools.FXTool;
@@ -164,12 +166,26 @@ Java API.
 
     private void testDrawing(Stencil sten) {
         sten.clear(Color.WHITE);
-        sten.draw(boxedText()
-            .at(250,250)
-            .minSize(200,200)
-            .tack(Tack.SOUTHEAST)
-            .text("ABC")
-        );
+        var diag = new TimelineDiagram()
+            .calendar(Armorican.ME)
+            .dateFormat("yyyy-mm-dd");
+        diag.entity("armand").name("Armand Tuppenny");
+        diag.entity("mum").name("Jane Massey");
+        diag.entity("truc").name("Madame Truc");
+        diag.entity("jack").name("Jack Montjoy");
+
+        diag.event("ME-1011-5-9").text("Arrival").entity("armand").entity("mum");
+        diag.event("ME-1011-5-9").text("The First Day")
+            .entity("armand").entity("mum").entity("truc");
+        diag.event("ME-1011-5-10").text("Dock Work")
+            .entity("armand").entity("jack").entity("truc");
+        diag.event("ME-1011-5-16").text("Madame Truc")
+            .entity("armand").entity("mum").entity("truc");
+        diag.event("ME-1011-5-23").text("Clerk")
+            .entity("armand").entity("mum").entity("truc");
+        diag.event("ME-1011-5-30").text("Madame Truc's Table")
+            .entity("armand").entity("jack").entity("truc");
+        diag.draw(sten);
     }
 
     private void testMonthSpreadStencil(Stencil sten) {

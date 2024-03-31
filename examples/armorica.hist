@@ -1,0 +1,47 @@
+history calendar armorican.cal cumbrian "yyyy-mm-dd"
+
+history entity armand            "Armand Tuppeny"     person
+history entity aunt-maggie       "Margaret Montjoy"   person
+history entity bardot            "M. Bardot"          person
+history entity dad               "Burlington Massey"  person
+history entity elise             "Elise Frontenac"    person
+history entity fournier          "M. Fournier"        person
+history entity harte             "M. Harte"           person
+history entity jack              "Jack Montjoy"       person
+history entity jacque-le-souris  "Jacque-le-Souris"   person
+history entity jean-baptiste     "Jean Baptiste"      person 
+history entity journal           "Armand's Journal"   person ;# by courtesy
+history entity leon              "Leon Suprenant"     person
+history entity madame-truc       "Madame Truc"        person
+history entity marc              "Marc Frontenac"     person
+history entity morel             "Morel"              person
+history entity mum               "Jane Massey"        person
+history entity sabot             "M. Sabot"           person
+history entity uncle-george      "George Montjoy"     person
+
+history entity bois-de-bas       "Bois-de-Bas"        place
+history entity mont-havre        "Mont-Havre"         place
+history entity petit-monde       "Petit Monde"        place
+history entity suprenant-et-fils "Suprenant-et-Fils"  place
+history entity yorke             "Yorke"              place
+
+history event  ME-1011-05-09 "Arrival"             {armand mum mont-havre}
+history event  ME-1011-05-09 "The First Day"       {armand mum mont-havre madame-truc marc elise}
+history event  ME-1011-05-13 "Dock Work"           {armand jack mont-havre madame-truc}
+history event  ME-1011-05-16 "Madame Truc"         {armand mum mont-havre madame-truc}
+history event  ME-1011-05-23 "Clerk"               {armand mum mont-havre madame-truc suprenant-et-fils}
+history event  ME-1011-05-30 "Madame Truc's Table" {armand jack mont-havre madame-truc jacque-le-souris}
+history event  ME-1011-06-06 "Festival"            {armand mum mont-havre leon fournier }
+history event  ME-1011-06-13 "Suprenant-et-Fils"   {armand mum mont-havre suprenant-et-fils leon jean-baptiste}
+history event  ME-1011-06-20 "Far Horizons"        {armand marc mont-havre suprenant-et-fils bois-de-bas}
+history event  ME-1011-06-27 "Jean Baptiste's Bad Day" {armand jack mont-havre jean-baptiste jacque-le-souris madame-truc morel bardot}
+history event  ME-1011-07-04 "Dear Old Dad"        {armand aunt-maggie mont-havre mum dad uncle-george jack}
+history event  ME-1011-07-11 "Fournier the Bookseller" {armand aunt-maggie mont-havre fournier harte}
+history event  ME-1011-07-18 "M. Sabot"            {armand jack mont-havre madame-truc sabot}
+history event  ME-1011-07-25 "Cumbrian Classics"   {armand aunt-maggie mont-havre fournier}
+history event  ME-1011-07-31 "Sky Pirates"         {armand jack mont-havre}
+history event  ME-1011-08-13 "Forebodings"         {armand aunt-maggie mont-havre fournier leon}
+history event  ME-1011-08-14 "Bad Times in Mont-Havre" {armand marc mont-havre madame-truc}
+history event  ME-1011-08-26 "Rumors of War"       {armand journal petit-monde jack madame-truc leon}
+
+

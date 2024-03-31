@@ -1,4 +1,4 @@
-[[Home]] > [[Ideas]] #idea 
+   [[Home]] > [[Ideas]] > [[Timeline Diagram]] #idea 
 
 I've spent a lot of time thinking about time lines over the years.  It always ends up in a morass, because real world events are fuzzy, their endpoints are often imprecisely specified if they are known at all, and calendars change over time.  A general database of events and periods is really difficult to come up with.
 

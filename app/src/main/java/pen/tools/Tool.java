@@ -29,6 +29,10 @@ public interface Tool {
         toolInfo().printUsage(appName);
     }
 
+    default ToolException unknownOption(String opt) {
+        return new ToolException("Unknown option: \"" + opt + "\".");
+    }
+
     default ToolException error(String message) {
         return new ToolException(message);
     }
@@ -71,6 +75,7 @@ public interface Tool {
         } else {
             System.err.println(toolInfo().name() + ": Unexpected exception,");
             ex.printStackTrace(System.err);
+            System.exit(1);
         }
     }
 }
