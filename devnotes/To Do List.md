@@ -6,8 +6,12 @@
         - `HistoryBank`
         - `HistoryQuery`
         - Optional `Calendar`
-        - FIle `Path`
+        - File `Path`
     - [x] Make `DataFiles.loadHistory()` return a  `HistoryFile`
+    - [x] Add `pen history` options for output various things
+        - [x] Incident table
+        - [x] Entity table
+        - [x] Timeline chart
     - [ ] Add commands so that a history script can set up the default query, particularly the entity sorting.
     - Add entity grouping in `HistoryQuery` and `HistoryView`
         - See BJ 8:41.
