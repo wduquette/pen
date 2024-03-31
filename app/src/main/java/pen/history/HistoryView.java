@@ -1,21 +1,25 @@
 package pen.history;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HistoryView
     extends AbstractHistory implements History
 {
     //-------------------------------------------------------------------------
+    // Instance Variables
+
+    private final LinkedHashMap<String, List<Period>> periodGroups;
+
+    //-------------------------------------------------------------------------
     // Constructor
 
     public HistoryView(
         Map<String,Entity> entityMap,
-        List<Incident> incidents
+        List<Incident> incidents, LinkedHashMap<String, List<Period>> periodGroups
     ) {
-        setEntityMap(entityMap);
+        this.periodGroups = periodGroups;
         setIncidents(incidents);
+        setEntityMap(entityMap);
     }
 
     /**
@@ -26,6 +30,8 @@ public class HistoryView
         setMomentFormatter(history.getMomentFormatter());
         setEntityMap(history.getEntityMap());
         setIncidents(history.getIncidents());
+
+        this.periodGroups = history.getPeriodGroups();
     }
 
     //-------------------------------------------------------------------------
@@ -39,5 +45,10 @@ public class HistoryView
     @Override
     public List<Incident> getIncidents() {
         return Collections.unmodifiableList(incidents());
+    }
+
+    @Override
+    public LinkedHashMap<String,List<Period>> getPeriodGroups() {
+        return periodGroups;
     }
 }
