@@ -16,10 +16,7 @@ import pen.util.TextColumn;
 import pen.util.TextTable;
 
 import java.io.File;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -38,7 +35,8 @@ Given a .hist History file, queries and outputs data from the file.  By
 default it outputs a brief summary of the history.  The options are
 as follows:
 
---result timeline|entity|incident|type|summary
+--output timeline|entity|incident|type|summary
+-o timeline|entity|incident|type|summary
 
   timeline    Output a timeline chart
   entity      Output a table of entities
@@ -47,6 +45,7 @@ as follows:
   summary     Output a summary of the history content
   
 --format terminal|markdown
+-f terminal|markdown
 
   terminal    Output a table in an attractive form for the terminal
   markdown    Output a markdown table
@@ -107,7 +106,9 @@ as follows:
         while (!argq.isEmpty()) {
             var opt = argq.poll();
             switch (opt) {
-                case "--result", "-r" ->
+                case "--entity", "-e" ->
+                    options.includedEntities.add(toOptArg(opt, argq));
+                case "--output", "-o" ->
                     options.results.add(toEnum(Result.class, opt, argq));
                 case "--format", "-f" ->
                     options.mode = toEnum(TextTable.Mode.class, opt, argq);
@@ -131,6 +132,12 @@ as follows:
 
         var history = historyFile.history();
         var query = historyFile.query();
+
+        if (!options.includedEntities.isEmpty()) {
+            println("including entities: " + options.includedEntities);
+            query.includes(options.includedEntities);
+        }
+
         view = query.execute(history);
 
         if (options.results.isEmpty()) {
@@ -225,6 +232,7 @@ as follows:
     private static class Options {
         TextTable.Mode mode = TextTable.Mode.TERMINAL;
         LinkedHashSet<Result> results = new LinkedHashSet<>();
+        List<String> includedEntities = new ArrayList<>();
         boolean debug = false;
     }
 

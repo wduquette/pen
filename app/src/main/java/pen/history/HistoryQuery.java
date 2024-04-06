@@ -32,8 +32,8 @@ public class HistoryQuery {
         record IncidentFilter(Predicate<Incident> filter) implements Term {}
 
         /**
-         * Includes the given entities from the output.  Resets*
-         the included entities list on first inclusion of entities or types.
+         * Includes the given entities from the output.  Resets
+         * the included entities list on first inclusion of entities or types.
          * @param entityIds The entity IDs to include.
          */
         record Includes(List<String> entityIds) implements Term {}
@@ -59,7 +59,7 @@ public class HistoryQuery {
 
         /**
          * Limits the displayed time frame to that of the listed entities.
-         * If the list is null, limits it to the set of included entitites.
+         * If the list is null, limits it to the set of included entities.
          * @param entityIds
          */
         record BoundBy(List<String> entityIds) implements Term {}
@@ -294,10 +294,10 @@ public class HistoryQuery {
 
         Query(History source) {
             this.source = source;
+            this.entities = new HashSet<>(source.getEntityMap().keySet());
             this.incidents = source.getIncidents().stream()
                 .sorted(Comparator.comparing(Incident::moment))
                 .toList();
-            this.entities = new HashSet<>(source.getEntityMap().keySet());
             this.periods = source.getPeriods();
         }
 
@@ -321,8 +321,12 @@ public class HistoryQuery {
                 }
             }
 
-            // NEXT, compute the period groups
+            // NEXT, apply the entity filter to the incidents table.
+            incidents = incidents.stream()
+                .filter(this::includesQueriedEntity)
+                .toList();
 
+            // NEXT, compute the period groups
             if (groupingTerm != null) {
                 if (groupingTerm instanceof Term.GroupByPrimes t) {
                     groupByPrimes(t);
@@ -387,6 +391,12 @@ public class HistoryQuery {
                 .map(Entity::name)
                 .toList();
             entities = new HashSet<>(toRetain);
+        }
+
+        boolean includesQueriedEntity(Incident incident) {
+            var concerns = new HashSet<>(incident.entityIds());
+            concerns.retainAll(entities);
+            return !concerns.isEmpty();
         }
 
         void boundByEntities(Term.BoundBy t) {
