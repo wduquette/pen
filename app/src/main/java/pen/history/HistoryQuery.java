@@ -451,7 +451,7 @@ public class HistoryQuery {
             var primes = new ArrayList<Period>();
             for (var id : t.entities) {
                 var period = periods.get(id);
-                if (period != null) {
+                if (remainingEntities.contains(id) && period != null) {
                     primes.add(period);
                     remainingEntities.remove(id);
                 }

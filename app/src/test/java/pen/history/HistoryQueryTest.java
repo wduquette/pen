@@ -67,12 +67,18 @@ public class HistoryQueryTest extends Ted {
 
     @Test
     public void testIncludes() {
+        test("testIncludes");
         populateHistory();
         var view = query.includes("bob").execute(history);
         check(view.getEntityMap().keySet()).eq(Set.of("bob"));
 
         for (var evt : view.getIncidents()) {
             check(evt.concerns("bob")).eq(true);
+        }
+
+        dump("View", view);
+        for (var e : view.getPeriods().entrySet()) {
+            println("  " + e.getKey() + ": " + e.getValue());
         }
     }
 

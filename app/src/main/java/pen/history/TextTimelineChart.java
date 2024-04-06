@@ -46,6 +46,10 @@ public class TextTimelineChart {
             .map(Period::entity)
             .toList());
 
+        entities.forEach(e -> System.out.println("entity: " + e));
+        groups.forEach((k,v) -> System.out.println("group: " + v));
+        periods.forEach((k,v) -> System.out.println("period: " + k + " " + v));
+
         // NEXT, compute the start and end incident indices for each moment.
         computeMomentIndices();
     }
