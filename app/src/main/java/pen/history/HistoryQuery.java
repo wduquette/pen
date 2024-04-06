@@ -2,6 +2,7 @@ package pen.history;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class HistoryQuery {
     //-------------------------------------------------------------------------
@@ -430,28 +431,37 @@ public class HistoryQuery {
 
         // Create period groups by primes entities and types.
         void groupByPrimes(Term.GroupByPrimes t) {
+            // FIRST, get the entities and types remaining to be grouped.
+            var remainingEntities = new HashSet<>(entities);
+            var remainingTypes = entities.stream()
+                .map(id -> source.getEntityMap().get(id).type())
+                .collect(Collectors.toSet());
+
             // FIRST, get the prime group
             var primes = new ArrayList<Period>();
             for (var id : t.entities) {
                 var period = periods.get(id);
                 if (period != null) {
                     primes.add(period);
+                    remainingEntities.remove(id);
                 }
             }
 
             if (!primes.isEmpty()) {
-                addPeriodGroup("prime", primes);
+                periodGroups.put("prime", primes);
             }
 
             // NEXT, add each prime type
             for (var type : t.types) {
                 var group = periods.values().stream()
                     .filter(p -> p.entity().type().equals(type))
-                    .filter(p -> !entities.contains(p.entity().id()))
+                    .filter(p -> remainingEntities.contains(p.entity().id()))
+                    .sorted(Comparator.comparing(Period::start))
                     .toList();
 
                 if (!group.isEmpty()) {
-                    addPeriodGroup(type, group);
+                    periodGroups.put(type, group);
+                    remainingTypes.remove(type);
                 }
             }
 
@@ -459,25 +469,21 @@ public class HistoryQuery {
             var others = periods.values().stream()
                 .map(Period::entity)
                 .map(Entity::type)
-                .filter(type -> !t.types.contains(type))
+                .filter(type -> remainingTypes.contains(type))
                 .sorted()
                 .toList();
 
             for (var type : others) {
                 var group = periods.values().stream()
                     .filter(p -> p.entity().type().equals(type))
-                    .filter(p -> !entities.contains(p.entity().id()))
+                    .filter(p -> remainingEntities.contains(p.entity().id()))
+                    .sorted(Comparator.comparing(Period::start))
                     .toList();
 
                 if (!group.isEmpty()) {
-                    addPeriodGroup(type, group);
+                    periodGroups.put(type, group);
                 }
             }
-        }
-
-        void addPeriodGroup(String name, List<Period> group) {
-            group.sort(Comparator.comparing(Period::start));
-            periodGroups.put(name, group);
         }
 
         List<Period> getPeriodsByType(String type) {
