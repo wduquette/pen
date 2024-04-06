@@ -1,9 +1,5 @@
 package pen.tools;
 
-import pen.tcl.Argq;
-import tcl.lang.TclException;
-import tcl.lang.TclObject;
-
 import java.util.Deque;
 
 /**
@@ -47,7 +43,7 @@ public interface Tool {
 
     default <E extends Enum<E>> E toEnum(Class<E> cls, String arg) {
         try {
-            return Enum.valueOf(cls, arg.toString().toUpperCase());
+            return Enum.valueOf(cls, arg.toUpperCase());
         } catch (Exception ex) {
             throw expected(cls.getSimpleName(), arg);
         }
