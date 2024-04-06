@@ -469,7 +469,7 @@ public class HistoryQuery {
             var others = periods.values().stream()
                 .map(Period::entity)
                 .map(Entity::type)
-                .filter(type -> remainingTypes.contains(type))
+                .filter(remainingTypes::contains)
                 .sorted()
                 .toList();
 
@@ -484,12 +484,6 @@ public class HistoryQuery {
                     periodGroups.put(type, group);
                 }
             }
-        }
-
-        List<Period> getPeriodsByType(String type) {
-            return periods.values().stream()
-                .filter(p -> p.entity().type().equals(type))
-                .toList();
         }
     }
 }
