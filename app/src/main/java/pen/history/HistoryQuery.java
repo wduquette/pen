@@ -231,6 +231,26 @@ public class HistoryQuery {
         return this;
     }
 
+    /**
+     * Groups entities by prime entities and types.  If entities is non-empty,
+     * any listed entities will go in the Prime group, before any other
+     * entities.  This will be followed by a group for each prime type (if any)
+     * followed by any remaining types in alphabetical order. Entities will
+     * appear in only one group; groups that are empty will be discarded.
+     * @param entityIds List of entity IDs, or null.
+     * @param types List of types, or null.
+     * @return The query
+     */
+    public HistoryQuery groupByPrimes(
+        List<String> entityIds,
+        List<String> types
+    ) {
+        terms.add(new Term.GroupByPrimes(
+            entityIds != null ? entityIds : List.of(),
+            types != null ? types : List.of()));
+        return this;
+    }
+
     //------------------------------------------------------------------------
     // Query
 
