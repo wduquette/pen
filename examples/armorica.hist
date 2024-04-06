@@ -44,4 +44,6 @@ event  ME-1011-08-13 "Forebodings"         {armand aunt-maggie mont-havre fourni
 event  ME-1011-08-14 "Bad Times in Mont-Havre" {armand marc mont-havre madame-truc}
 event  ME-1011-08-26 "Rumors of War"       {armand journal petit-monde jack madame-truc leon}
 
+# Default query
+query groupByPrimes -entity armand -entity jack -type person
 
