@@ -16,10 +16,7 @@ import tcl.lang.TclException;
 import tcl.lang.TclObject;
 
 import java.io.File;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * A TclEngine extension for defining histories.
@@ -66,12 +63,14 @@ public class HistoryExtension implements TclExtension {
     public void initialize(TclEngine tcl) {
         this.tcl = tcl;
 
-        var hist = tcl.ensemble("history");
-        hist.add("calendar", this::cmd_historyCalendar);
-        hist.add("entity",   this::cmd_historyEntity);
-        hist.add("begins",   this::cmd_historyBegins);
-        hist.add("ends",     this::cmd_historyEnds);
-        hist.add("event",    this::cmd_historyEvent);
+        tcl.add("calendar", this::cmd_calendar);
+        tcl.add("entity",   this::cmd_entity);
+        tcl.add("begins",   this::cmd_begins);
+        tcl.add("ends",     this::cmd_ends);
+        tcl.add("event",    this::cmd_event);
+
+        var queryEnsemble = tcl.ensemble("query");
+        queryEnsemble.add("groupByPrimes", this::cmd_queryGroupByPrimes);
     }
 
     @SuppressWarnings("unused")
@@ -112,7 +111,7 @@ public class HistoryExtension implements TclExtension {
     // history calendar calendarFile name ?outputFormat?
     //
     // Adds a calendar for processing input dates and formatting output dates.
-    private void cmd_historyCalendar(TclEngine tcl, Argq argq)
+    private void cmd_calendar(TclEngine tcl, Argq argq)
         throws TclException
     {
         tcl.checkArgs(argq, 2, 3, "calendarFile name ?outputFormat?");
@@ -148,7 +147,7 @@ public class HistoryExtension implements TclExtension {
     //
     // Adds a new entity to the history, assigning it a unique ID, a
     // name for display, and a type.
-    private void cmd_historyEntity(TclEngine tcl, Argq argq)
+    private void cmd_entity(TclEngine tcl, Argq argq)
         throws TclException
     {
         tcl.checkArgs(argq, 3, 3, "id name type");
@@ -176,7 +175,7 @@ public class HistoryExtension implements TclExtension {
     }
 
     // history begins id moment label
-    private void cmd_historyBegins(TclEngine tcl, Argq argq)
+    private void cmd_begins(TclEngine tcl, Argq argq)
         throws TclException
     {
         tcl.checkArgs(argq, 2, 3, "moment id ?label?");
@@ -228,7 +227,7 @@ public class HistoryExtension implements TclExtension {
     }
 
     // history ends id moment ?label?
-    private void cmd_historyEnds(TclEngine tcl, Argq argq)
+    private void cmd_ends(TclEngine tcl, Argq argq)
         throws TclException
     {
         tcl.checkArgs(argq, 2, 3, "moment id ?label?");
@@ -281,7 +280,7 @@ public class HistoryExtension implements TclExtension {
     }
 
     // history event moment label ?entity...?
-    private void cmd_historyEvent(TclEngine tcl, Argq argq)
+    private void cmd_event(TclEngine tcl, Argq argq)
         throws TclException
     {
         tcl.checkMinArgs(argq, 2, "moment label ?entityId...?");
@@ -331,6 +330,27 @@ public class HistoryExtension implements TclExtension {
 
         var incident = new Incident.Normal(moment, label, set);
         bank.getIncidents().add(incident);
+    }
+
+    private void cmd_queryGroupByPrimes(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkMinArgs(argq, 0, "?option value...?");
+        var primeEntities = new ArrayList<String>();
+        var primeTypes = new ArrayList<String>();
+
+        while (argq.hasNext()) {
+            var opt = argq.next().toString();
+
+            switch (opt) {
+                case "-entity" ->
+                    primeEntities.add(tcl.toOptArg(opt, argq).toString());
+                case "-type" ->
+                    primeTypes.add(tcl.toOptArg(opt, argq).toString());
+            }
+        }
+
+        query.groupByPrimes(primeEntities, primeTypes);
     }
 
     //-------------------------------------------------------------------------

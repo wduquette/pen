@@ -1,9 +1,9 @@
-history calendar gregorian.cal gregorian "yyyy-mm-dd"
-history entity joe "JoeP" person
-history entity bob "BobC" person
+calendar gregorian.cal gregorian "yyyy-mm-dd"
+entity joe "JoeP" person
+entity bob "BobC" person
 
-history begins AD-2010-02-15 joe "Joe is born"
-history event  AD-2015-07-23 "Bob enters" bob
-history event  AD-2050-12-25 "Joe and Bob talk" bob joe
-history event  AD-2085-10-31 "Bob exits" bob
-history ends   AD-2090-04-01 joe "Joe dies"
+begins AD-2010-02-15 joe "Joe is born"
+event  AD-2015-07-23 "Bob enters" bob
+event  AD-2050-12-25 "Joe and Bob talk" bob joe
+event  AD-2085-10-31 "Bob exits" bob
+ends   AD-2090-04-01 joe "Joe dies"
