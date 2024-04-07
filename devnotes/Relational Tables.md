@@ -2,6 +2,19 @@
 
 It would be interesting to represent incidents and entities in a history using relational tables.
 
+## To Do
+
+- [x] Define `Quell`, with static helpers:
+    - [x] `getColumns(Class<R>)`
+    - [x] `getColumnType(Class<R>, String)`
+    - [x] `getColumnValue(R, String)`
+- [x] Define `QuellRow`
+    - [x] `QuellRow()` -- empty row
+    - [x] `QuellRow(R)` -- row for a record
+    - [x] `QuellRow::toRecord(Class<R>)` -- Produce a record from a row.
+    - [ ] `QuellRow::{set,get}`, taking column types into account.
+        - Not yet tested.
+- [ ] Define joining operators.  If possible, avoid adding a "keys" annotation.
 ## Basic notion
 
 - Every table has a key and one or more data values.
