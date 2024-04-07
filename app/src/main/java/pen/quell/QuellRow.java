@@ -10,9 +10,8 @@ public class QuellRow {
     //-------------------------------------------------------------------------
     // Instance Variables
 
-    // TODO: it isn't yet clear what metadata I want to retain.
     private String source = UNKNOWN;
-    private final TreeMap<String,Object> data = new TreeMap<>();
+    private final TreeMap<String, QuellField> data = new TreeMap<>();
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -25,7 +24,10 @@ public class QuellRow {
         source = record.getClass().getSimpleName();
 
         for (var name : Quell.getColumns(record.getClass())) {
-            data.put(name, Quell.getColumnValue(record, name));
+            var type  = Quell.getColumnType(record, name);
+            var value = Quell.getColumnValue(record, name);
+            data.put(name,
+                new QuellField(type, value));
         }
     }
 
@@ -47,19 +49,43 @@ public class QuellRow {
 
     @SuppressWarnings("unchecked")
     public <T> T get(String column) {
-        return (T)data.get(column);
+        return (T)data.get(column).value();
     }
 
     public void put(String column, Object value) {
-        data.put(column, value);
+        if (!data.containsKey(column)) {
+            throw new IllegalStateException("Column type is unknown: \"" +
+                column + "\".");
+        }
+
+        data.get(column).setValue(value);
     }
 
     @SuppressWarnings("unused")
-    public Set<Map.Entry<String,Object>> entrySet() {
+    public Set<Map.Entry<String, QuellField>> entrySet() {
         return data.entrySet();
     }
 
     public Set<String> keySet() {
         return data.keySet();
     }
+
+    //-------------------------------------------------------------------------
+    // Conversion, Row to Record
+
+    /**
+     * Converts a row to a record of the given class.  All data must exist
+     * and have the appropriate type.
+     * @param cls
+     * @return
+     * @param <R>
+     */
+    public <R> R toRecord(Class<R> cls) {
+        // TODO
+        return null;
+    }
+
+    //-------------------------------------------------------------------------
+    // Field Class
+
 }

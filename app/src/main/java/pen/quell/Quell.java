@@ -19,6 +19,29 @@ public class Quell {
     }
 
     /**
+     * Returns the type of a record field.  Throws an exception if the field
+     * type is not a simple class.
+     * @param record The record
+     * @param name The field name
+     * @return The class
+     * @param <R> The record type
+     * @throws IllegalArgumentException if the value could not be retrieved.
+     */
+    @SuppressWarnings("unchecked")
+    public static <R extends Record> Class<?> getColumnType(
+        R record,
+        String name
+    ) {
+        try {
+            var method = record.getClass().getMethod(name);
+            return method.getReturnType();
+        } catch (NoSuchMethodException ex) {
+            throw new IllegalArgumentException(
+                "Record has no such field: \"" + name + "\".", ex);
+        }
+    }
+
+    /**
      * Returns the value of a record field.  Provided that the given name
      * was received via Quell.getColumns(), this method should not throw
      * any exceptions.
