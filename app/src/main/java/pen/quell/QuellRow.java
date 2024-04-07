@@ -40,6 +40,7 @@ public class QuellRow {
         return source;
     }
 
+    @SuppressWarnings("unused")
     public void setSource(String source) {
         this.source = source;
     }
@@ -53,6 +54,7 @@ public class QuellRow {
         data.put(column, value);
     }
 
+    @SuppressWarnings("unused")
     public Set<Map.Entry<String,Object>> entrySet() {
         return data.entrySet();
     }

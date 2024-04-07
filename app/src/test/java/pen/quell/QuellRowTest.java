@@ -4,11 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import pen.Ted;
 
-import java.util.List;
 import java.util.Set;
 
 import static pen.checker.Checker.check;
-import static pen.checker.Checker.checkThrows;
 
 public class QuellRowTest extends Ted {
     QuellRow row;
@@ -30,8 +28,8 @@ public class QuellRowTest extends Ted {
     @Test
     public void testCreate_person() {
         test("testGetColumnValue_person");
-        var person = new Person(1, "a1", 23);
-        var row = new QuellRow(person);
+        person = new Person(1, "a1", 23);
+        row = new QuellRow(person);
 
         check(row.isEmpty()).eq(false);
         check(row.getSource()).eq("Person");

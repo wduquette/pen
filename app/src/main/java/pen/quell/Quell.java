@@ -1,9 +1,9 @@
 package pen.quell;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 import java.lang.reflect.Field;
+import java.util.stream.Stream;
 
 public class Quell {
     public static <R extends Record> List<String> getColumns(Class<R> cls) {
@@ -12,7 +12,8 @@ public class Quell {
         for (var field : cls.getDeclaredFields()) {
             System.out.println("Field: " + field.getName() + " isa " + field.getType());
         }
-        return List.of(cls.getDeclaredFields()).stream()
+
+        return Stream.of(cls.getDeclaredFields())
             .map(Field::getName)
             .toList();
     }
