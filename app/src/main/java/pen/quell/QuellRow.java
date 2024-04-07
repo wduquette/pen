@@ -24,7 +24,7 @@ public class QuellRow {
         source = record.getClass().getSimpleName();
 
         for (var name : Quell.getColumns(record.getClass())) {
-            var type  = Quell.getColumnType(record, name);
+            var type  = Quell.getColumnType(record.getClass(), name);
             var value = Quell.getColumnValue(record, name);
             data.put(name,
                 new QuellField(type, value));
@@ -47,9 +47,8 @@ public class QuellRow {
         this.source = source;
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T get(String column) {
-        return (T)data.get(column).value();
+        return data.get(column).value();
     }
 
     public void put(String column, Object value) {
@@ -76,13 +75,45 @@ public class QuellRow {
     /**
      * Converts a row to a record of the given class.  All data must exist
      * and have the appropriate type.
-     * @param cls
-     * @return
-     * @param <R>
+     * @param cls The requested class
+     * @return The new record
+     * @param <R> The record type
+     * @throws IllegalArgumentException if the requested class is incompatible
+     * with the record value.
      */
-    public <R> R toRecord(Class<R> cls) {
-        // TODO
-        return null;
+    @SuppressWarnings("unchecked")
+    public <R extends Record> R toRecord(Class<R> cls) {
+        var columns = Quell.getColumns(cls);
+        var values = new Object[columns.size()];
+
+        for (var i = 0; i < columns.size(); i++) {
+            var name = columns.get(i);
+            var type = Quell.getColumnType(cls, name);
+            var field = data.get(name);
+
+            if (field == null) {
+                throw new IllegalArgumentException(
+                    "Expected column \"" + name + "\"; no such column.");
+            }
+
+            if (!field.type().equals(type)) {
+                throw new IllegalArgumentException(
+                    "Type mismatch for column \"" + name +
+                    "\"; expected type " + type.getCanonicalName() +
+                    ", but got type " + field.type().getCanonicalName() + ".");
+            }
+
+            values[i] = field.value();
+        }
+
+        try {
+            var ctor = cls.getConstructors()[0];
+            return (R)ctor.newInstance(values);
+        } catch (Exception ex) {
+            throw new IllegalArgumentException(
+                "Failed to create an instance of " + cls.getCanonicalName() +
+                " from this row.");
+        }
     }
 
     //-------------------------------------------------------------------------

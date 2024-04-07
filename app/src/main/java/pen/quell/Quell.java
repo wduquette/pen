@@ -21,7 +21,7 @@ public class Quell {
     /**
      * Returns the type of a record field.  Throws an exception if the field
      * type is not a simple class.
-     * @param record The record
+     * @param cls The record class
      * @param name The field name
      * @return The class
      * @param <R> The record type

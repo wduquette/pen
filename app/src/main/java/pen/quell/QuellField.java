@@ -4,7 +4,7 @@ package pen.quell;
  * A column's value and type in this row.
  */
 public class QuellField {
-    private Class<?> type;
+    private final Class<?> type;
     private Object value;
 
     QuellField(Class<?> type, Object value) {
