@@ -3,12 +3,11 @@ package pen.quell;
 import org.junit.Before;
 import org.junit.Test;
 import pen.Ted;
-import pen.history.*;
 
 import java.util.List;
-import java.util.Set;
 
 import static pen.checker.Checker.check;
+import static pen.checker.Checker.checkThrows;
 
 public class QuellTest extends Ted {
     @Before
@@ -16,15 +15,29 @@ public class QuellTest extends Ted {
     }
 
     @Test
-    public void testGetColumns_record() {
-        test("testGetColumns_record");
+    public void testGetColumns() {
+        test("testGetColumns");
         var columns = Quell.getColumns(Person.class);
 
         check(columns).eq(List.of("id", "name", "age"));
     }
 
-    //-------------------------------------------------------------------------
-    // Helper Types
+    @Test
+    public void testGetColumnValue_good() {
+        test("testGetColumnValue_good");
+        var person = new Person(1, "a1", 23);
 
-    record Person(int id, String name, int age) {}
+        check(Quell.getColumnValue(person, "id").toString()).eq("1");
+        check(Quell.getColumnValue(person, "name").toString()).eq("a1");
+        check(Quell.getColumnValue(person, "age").toString()).eq("23");
+    }
+
+    @Test
+    public void testGetColumnValue_bad() {
+        test("testGetColumnValue_bad");
+        var person = new Person(1, "a1", 23);
+
+        checkThrows(() -> Quell.getColumnValue(person, "nonesuch"))
+            .containsString("Record has no such field: \"nonesuch\"");
+    }
 }
