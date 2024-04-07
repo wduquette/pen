@@ -51,7 +51,7 @@ public class QuellRow {
         return data.get(column).value();
     }
 
-    public void put(String column, Object value) {
+    public void set(String column, Object value) {
         if (!data.containsKey(column)) {
             throw new IllegalStateException("Column type is unknown: \"" +
                 column + "\".");
