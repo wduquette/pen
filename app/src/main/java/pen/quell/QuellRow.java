@@ -107,12 +107,12 @@ public class QuellRow {
         }
 
         try {
-            var ctor = cls.getConstructors()[0];
+            var ctor = cls.getDeclaredConstructors()[0];
             return (R)ctor.newInstance(values);
         } catch (Exception ex) {
             throw new IllegalArgumentException(
                 "Failed to create an instance of " + cls.getCanonicalName() +
-                " from this row.");
+                " from this row.", ex);
         }
     }
 

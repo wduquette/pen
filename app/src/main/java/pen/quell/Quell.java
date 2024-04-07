@@ -9,10 +9,6 @@ public class Quell {
     public static <R extends Record> List<String> getColumns(Class<R> cls) {
         // Note: needs to be "getDeclaredFields()", as "getFields()" only
         // returns *public* member variables.
-        for (var field : cls.getDeclaredFields()) {
-            System.out.println("Field: " + field.getName() + " isa " + field.getType());
-        }
-
         return Stream.of(cls.getDeclaredFields())
             .map(Field::getName)
             .toList();

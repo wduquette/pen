@@ -18,7 +18,7 @@ public class QuellRowTest extends Ted {
 
     @Test
     public void testCreate_empty() {
-        test("testGetColumns");
+        test("testCreate_empty");
         row = new QuellRow();
 
         check(row.isEmpty()).eq(true);
@@ -27,7 +27,7 @@ public class QuellRowTest extends Ted {
 
     @Test
     public void testCreate_person() {
-        test("testGetColumnValue_person");
+        test("testCreate_person");
         person = new Person(1, "a1", 23);
         row = new QuellRow(person);
 
@@ -37,5 +37,17 @@ public class QuellRowTest extends Ted {
         check(row.get("id")).eq(1);
         check(row.get("name")).eq("a1");
         check(row.get("age")).eq(23);
+    }
+
+    @Test
+    public void testToRecord_good() {
+        test("testToRecord_good");
+        person = new Person(1, "a1", 23);
+        row = new QuellRow(person);
+        var copy = row.toRecord(Person.class);
+
+        check(copy.id()).eq(1);
+        check(copy.name()).eq("a1");
+        check(copy.age()).eq(23);
     }
 }
