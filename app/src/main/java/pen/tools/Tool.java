@@ -1,5 +1,7 @@
 package pen.tools;
 
+import java.util.Deque;
+
 /**
  * Base type for tools.  Provides default methods for standard helpers.
  */
@@ -29,8 +31,39 @@ public interface Tool {
         toolInfo().printUsage(appName);
     }
 
+    default String toOptArg(String opt, Deque<String> argq) {
+        if (!argq.isEmpty()) {
+            return argq.poll();
+        } else if (opt.startsWith("-")) {
+            throw error("missing value for option " + opt);
+        } else {
+            throw expected("option",  opt);
+        }
+    }
+
+    default <E extends Enum<E>> E toEnum(Class<E> cls, String arg) {
+        try {
+            return Enum.valueOf(cls, arg.toUpperCase());
+        } catch (Exception ex) {
+            throw expected(cls.getSimpleName(), arg);
+        }
+    }
+
+    default <E extends Enum<E>> E toEnum(
+        Class<E> cls,
+        String opt,
+        Deque<String> argq
+    ) {
+        return toEnum(cls, toOptArg(opt, argq));
+    }
+
     default ToolException unknownOption(String opt) {
         return new ToolException("Unknown option: \"" + opt + "\".");
+    }
+
+    default ToolException expected(String expected, String got) {
+        return new ToolException(
+            "Expected " + expected + ", got: \"" + got + "\".");
     }
 
     default ToolException error(String message) {

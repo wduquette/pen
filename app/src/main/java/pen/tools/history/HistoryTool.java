@@ -16,9 +16,7 @@ import pen.util.TextColumn;
 import pen.util.TextTable;
 
 import java.io.File;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -37,12 +35,39 @@ Given a .hist History file, queries and outputs data from the file.  By
 default it outputs a brief summary of the history.  The options are
 as follows:
 
---timeline, -t      Output a timeline chart
---entities, -e      Output a table of the entities
---incidents, -i     Output a table of the incidents
---types             Output a table of the entity types.
---markdown          Tables will be formatted as markdown.
---debug             Enable verbose debugging output.
+--output timeline|entity|incident|type|summary
+-o timeline|entity|incident|type|summary
+
+  timeline    Output a timeline chart
+  entity      Output a table of entities
+  incident    Output a table of incidents
+  type        Output a table of entity types
+  summary     Output a summary of the history content
+  
+--format terminal|markdown
+-f terminal|markdown
+
+  terminal    Output a table in an attractive form for the terminal
+  markdown    Output a markdown table
+
+--entity entityId, -e entityId
+
+  Include the given entity in the output.
+
+--type type, -t type
+
+  Include the given entity type in the output.
+  
+--start moment
+--end moment
+   
+   Include only incidents whose moments are between the start and the end,
+   inclusive.  If the history specifies a calendar, the moments are specified
+   in the calendar date format.
+   
+--debug
+
+   Enable verbose debugging output.
 """,
         HistoryTool::main
     );
@@ -81,12 +106,13 @@ as follows:
         while (!argq.isEmpty()) {
             var opt = argq.poll();
             switch (opt) {
+                case "--entity", "-e" ->
+                    options.includedEntities.add(toOptArg(opt, argq));
+                case "--output", "-o" ->
+                    options.results.add(toEnum(Result.class, opt, argq));
+                case "--format", "-f" ->
+                    options.mode = toEnum(TextTable.Mode.class, opt, argq);
                 case "--debug" -> options.debug = true;
-                case "--timeline", "-t" -> options.showTimeline = true;
-                case "--entities", "-e" -> options.showEntities = true;
-                case "--incidents", "-i" -> options.showIncidents = true;
-                case "--types", "-y" -> options.showEntityTypes = true;
-                case "--markdown" -> options.mode = TextTable.Mode.MARKDOWN;
                 default -> throw unknownOption(opt);
             }
         }
@@ -106,10 +132,23 @@ as follows:
 
         var history = historyFile.history();
         var query = historyFile.query();
+
+        if (!options.includedEntities.isEmpty()) {
+            query.includes(options.includedEntities);
+        }
+
         view = query.execute(history);
 
-        if (options.showEntityTypes) {
-            options.showSummary = false;
+        if (view.getIncidents().isEmpty()) {
+            println("No incidents found.");
+            exit();
+        }
+
+        if (options.results.isEmpty()) {
+            options.results.add(Result.TIMELINE);
+        }
+
+        if (options.results.contains(Result.TYPE)) {
             var types = view.getEntityMap().values().stream()
                 .map(Entity::type)
                 .distinct()
@@ -119,22 +158,19 @@ as follows:
             println("Types: " + (types.isEmpty() ? "None defined." : types));
         }
 
-        if (options.showEntities)    {
-            options.showSummary = false;
+        if (options.results.contains(Result.ENTITY)) {
             printTable(getSortedEntities(), ENTITIES);
         }
 
-        if (options.showIncidents)   {
-            options.showSummary = false;
+        if (options.results.contains(Result.INCIDENT)) {
             printTable(view.getIncidents(), INCIDENTS);
         }
 
-        if (options.showTimeline) {
-            options.showSummary = false;
+        if (options.results.contains(Result.TIMELINE)) {
             println(view.toTimelineChart());
         }
 
-        if (options.showSummary) {
+        if (options.results.contains(Result.SUMMARY)) {
             println("Entities:   " + view.getEntityMap().size());
             println("Incidents:  " + view.getIncidents().size());
 
@@ -199,14 +235,18 @@ as follows:
 
     private static class Options {
         TextTable.Mode mode = TextTable.Mode.TERMINAL;
-        boolean showSummary = true;
-        boolean showTimeline = false;
-        boolean showEntities = false;
-        boolean showIncidents = false;
-        boolean showEntityTypes = false;
+        LinkedHashSet<Result> results = new LinkedHashSet<>();
+        List<String> includedEntities = new ArrayList<>();
         boolean debug = false;
     }
 
+    private enum Result {
+        TIMELINE,
+        ENTITY,
+        INCIDENT,
+        TYPE,
+        SUMMARY
+    }
 
     //------------------------------------------------------------------------
     // Main

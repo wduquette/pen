@@ -16,11 +16,12 @@
         - See BJ 8:41.
         - Can now group-by-source (default)
         - Or group-by-primes (not yet tested)
-    - [ ] Update `HistoryQueryTest` per current changes.
-    - [ ] Add commands so that a history script can set up the default query, particularly the entity sorting.
-    - [ ] Add query options to `pen history`'s command-line syntax. 
+    - [x] Update `HistoryQueryTest` per current changes.
+    - [x] Add commands so that a history script can set up the default query, particularly the entity grouping.
+    - [x] Add query options to `pen history`'s command-line syntax. 
+        - [ ] --entity causes stack trace if the entity is unknown.  Fix.
     - Filter options
-        - [ ] By concerned entities
+        - [x] By concerned entities
         - [ ] Minimum incident limit (exclude entities who appear N or fewer times)
     - [ ] TextTimelineChart improvements
         - [ ] Complete box around periods.
