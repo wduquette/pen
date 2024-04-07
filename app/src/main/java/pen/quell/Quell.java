@@ -27,17 +27,17 @@ public class Quell {
      * @param <R> The record type
      * @throws IllegalArgumentException if the value could not be retrieved.
      */
-    @SuppressWarnings("unchecked")
     public static <R extends Record> Class<?> getColumnType(
-        R record,
+        Class<R> cls,
         String name
     ) {
         try {
-            var method = record.getClass().getMethod(name);
+            var method = cls.getMethod(name);
             return method.getReturnType();
         } catch (NoSuchMethodException ex) {
             throw new IllegalArgumentException(
-                "Record has no such field: \"" + name + "\".", ex);
+                cls.getSimpleName() +
+                " has no such field: \"" + name + "\".", ex);
         }
     }
 
@@ -62,10 +62,12 @@ public class Quell {
             return (T)method.invoke(record);
         } catch (NoSuchMethodException ex) {
             throw new IllegalArgumentException(
-                "Record has no such field: \"" + name + "\".", ex);
+                record.getClass().getSimpleName() +
+                    " has no such field: \"" + name + "\".", ex);
         } catch (IllegalAccessException | InvocationTargetException ex) {
             throw new IllegalArgumentException(
-                "Could not access record field: \"" + name + "\".", ex);
+                "Could not access " + record.getClass().getSimpleName() +
+                " field: \"" + name + "\".", ex);
         }
     }
 }

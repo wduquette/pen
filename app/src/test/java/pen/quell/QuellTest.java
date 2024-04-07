@@ -23,6 +23,24 @@ public class QuellTest extends Ted {
     }
 
     @Test
+    public void testGetColumnType_good() {
+        test("testGetColumnType_good");
+        check(Quell.getColumnType(Person.class, "id").getSimpleName())
+            .eq("int");
+        check(Quell.getColumnType(Person.class, "name").getSimpleName())
+            .eq("String");
+        check(Quell.getColumnType(Person.class, "age").getSimpleName())
+            .eq("int");
+    }
+
+    @Test
+    public void testGetColumnType_bad() {
+        test("testGetColumnType_bad");
+        checkThrows(() -> Quell.getColumnType(Person.class, "nonesuch"))
+            .containsString("Person has no such field: \"nonesuch\"");
+    }
+
+    @Test
     public void testGetColumnValue_good() {
         test("testGetColumnValue_good");
         var person = new Person(1, "a1", 23);
@@ -38,6 +56,6 @@ public class QuellTest extends Ted {
         var person = new Person(1, "a1", 23);
 
         checkThrows(() -> Quell.getColumnValue(person, "nonesuch"))
-            .containsString("Record has no such field: \"nonesuch\"");
+            .containsString("Person has no such field: \"nonesuch\"");
     }
 }
