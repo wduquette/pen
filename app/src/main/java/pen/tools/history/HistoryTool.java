@@ -134,11 +134,15 @@ as follows:
         var query = historyFile.query();
 
         if (!options.includedEntities.isEmpty()) {
-            println("including entities: " + options.includedEntities);
             query.includes(options.includedEntities);
         }
 
         view = query.execute(history);
+
+        if (view.getIncidents().isEmpty()) {
+            println("No incidents found.");
+            exit();
+        }
 
         if (options.results.isEmpty()) {
             options.results.add(Result.TIMELINE);

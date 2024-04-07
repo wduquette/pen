@@ -362,7 +362,15 @@ public class HistoryQuery {
                 entities.clear();
             }
             entitySetModified = true;
-            entities.addAll(t.entityIds);
+            t.entityIds.forEach(id -> {
+                // NOTE: the client might reasonably reference an entity that
+                // was filtered out by a previous query.  Such a reference is
+                // therefore not an error, but we cannot pass it along
+                // anyway.
+                if (source.getEntityMap().containsKey(id)) {
+                    entities.add(id);
+                }
+            });
         }
 
         void excludeEntities(Term.Excludes t) {
