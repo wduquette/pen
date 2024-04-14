@@ -41,7 +41,13 @@ public class HistoryExtension implements TclExtension {
     // The default query
     private final HistoryQuery query = new HistoryQuery();
 
-    // The calendar in use for dates, if any.
+    // The calendar file in use for dates, if any.
+    private CalendarFile calendarFile;
+
+    // The name of the calendar used when parsing input dates.
+    private String primaryCalendar;
+
+    // The calendar actively used for parsing moments.
     private Calendar calendar;
 
     //
@@ -99,11 +105,20 @@ public class HistoryExtension implements TclExtension {
     }
 
     /**
-     * Gets the calendar chosen for use with this history, if any.
-     * @return The calendar
+     * Gets the calendar file chosen for use with this history, if any.
+     * @return The calendar file
      */
-    public Optional<Calendar> getCalendar() {
-        return Optional.ofNullable(calendar);
+    public Optional<CalendarFile> getCalendarFile() {
+        return Optional.ofNullable(calendarFile);
+    }
+
+    /**
+     * Gets the name of the primary calendar chosen for use with this history,
+     * if any.
+     * @return The calendar name
+     */
+    public Optional<String> getPrimaryCalendar() {
+        return Optional.ofNullable(primaryCalendar);
     }
 
     //-------------------------------------------------------------------------
@@ -117,24 +132,24 @@ public class HistoryExtension implements TclExtension {
     {
         tcl.checkArgs(argq, 2, 3, "calendarFile name ?outputFormat?");
 
-        var calendarFile = argq.next().toString();
-        var calendarPath = tcl.getWorkingDirectory()
-            .resolve(new File(calendarFile).toPath());
-        CalendarFile calFile;
+        var calFile = argq.next().toString();
+        var calPath = tcl.getWorkingDirectory()
+            .resolve(new File(calFile).toPath());
+        CalendarFile calendarFile;
 
         try {
-            calFile = DataFiles.loadCalendar(calendarPath);
+            calendarFile = DataFiles.loadCalendar(calPath);
         } catch (DataFileException ex) {
-            throw tcl.error("Could not load calendar file " + calendarFile +
+            throw tcl.error("Could not load calendar file " + calFile +
                 ", " + ex.getMessage(), ex);
         }
 
-        var name = argq.next().toString();
-        if (!calFile.calendars().containsKey(name)) {
-            throw tcl.expected("calendar name", name);
+        primaryCalendar = argq.next().toString();
+        if (!calendarFile.calendars().containsKey(primaryCalendar)) {
+            throw tcl.expected("calendar name", primaryCalendar);
         }
 
-        calendar = calFile.calendars().get(name);
+        calendar = calendarFile.calendars().get(primaryCalendar);
         bank.setMomentFormatter(m -> calendar.format(m));
 
         if (argq.hasNext()) {

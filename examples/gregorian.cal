@@ -38,6 +38,6 @@ calendar basic gregorian \
     -week   standard      \
     -months {january february march april may june july august september october november december}
 
-date default AD-2024-04-01
+date today AD-2024-04-01
 
 

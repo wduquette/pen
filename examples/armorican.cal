@@ -75,4 +75,4 @@ calendar basic cumbrian \
     -week   cumbrian            \
     -months {january february march april may june july august september october november december}
 
-date default ME-1019-08-01
+date today ME-1019-08-01
