@@ -26,6 +26,7 @@ public class CalendarExtension implements TclExtension {
     private final LinkedHashMap<String, MonthInfo> months = new LinkedHashMap<>();
     private final Map<String, Week> weeks = new TreeMap<>();
     private final LinkedHashMap<String, Calendar> calendars = new LinkedHashMap<>();
+    private int today = 0;
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -73,6 +74,11 @@ public class CalendarExtension implements TclExtension {
 
         week.add("define",  this::cmd_weekDefine);
         week.add("names",   this::cmd_weekNames);
+
+        // date *
+        var date = tcl.ensemble("date");
+        date.add("today", this::cmd_dateToday);
+
     }
 
     @SuppressWarnings("unused")
@@ -84,11 +90,12 @@ public class CalendarExtension implements TclExtension {
         calendars.clear();
     }
 
-    public Map<String,Era>                 getEras()      { return eras; }
-    public LinkedHashMap<String,Weekday>   getWeekdays()  { return weekdays; }
-    public LinkedHashMap<String,MonthInfo> getMonths()    { return months; }
-    public Map<String,Week>                getWeeks()     { return weeks; }
-    public LinkedHashMap<String,Calendar>  getCalendars() { return calendars; }
+    public Map<String,Era>                 getEras()       { return eras; }
+    public LinkedHashMap<String,Weekday>   getWeekdays()   { return weekdays; }
+    public LinkedHashMap<String,MonthInfo> getMonths()     { return months; }
+    public Map<String,Week>                getWeeks()      { return weeks; }
+    public LinkedHashMap<String,Calendar>  getCalendars()  { return calendars; }
+    public int                             getToday()      { return today; }
 
     //-------------------------------------------------------------------------
     // Individual Commands
@@ -422,6 +429,31 @@ public class CalendarExtension implements TclExtension {
         tcl.checkArgs(argq, 0, 0, "");
         tcl.setResult(new ArrayList<>(weeks.keySet()));
     }
+
+    //-------------------------------------------------------------------------
+    // Ensemble: date *
+
+    // date default *dateString*
+    //
+    private void cmd_dateToday(TclEngine tcl, Argq argq)
+        throws TclException {
+        tcl.checkArgs(argq, 1, 1, "dateString");
+        var dateString = argq.next().toString();
+
+        for (var cal : calendars.values()) {
+            try {
+                today = cal.parse(dateString);
+                return;
+            } catch (CalendarException ex) {
+                // Wrong format for this calendar
+            }
+        }
+
+        throw tcl.expected("valid date string", dateString);
+    }
+
+    //-------------------------------------------------------------------------
+    // Helpers
 
     private YearDelta toMonthLength(TclObject arg)
         throws TclException

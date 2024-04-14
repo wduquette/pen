@@ -1,5 +1,6 @@
 package pen.apis;
 
+import pen.CalendarFile;
 import pen.DataFileException;
 import pen.DataFiles;
 import pen.calendars.Calendar;
@@ -119,21 +120,21 @@ public class HistoryExtension implements TclExtension {
         var calendarFile = argq.next().toString();
         var calendarPath = tcl.getWorkingDirectory()
             .resolve(new File(calendarFile).toPath());
-        Map<String, Calendar> map;
+        CalendarFile calFile;
 
         try {
-            map = DataFiles.loadCalendar(calendarPath);
+            calFile = DataFiles.loadCalendar(calendarPath);
         } catch (DataFileException ex) {
             throw tcl.error("Could not load calendar file " + calendarFile +
                 ", " + ex.getMessage(), ex);
         }
 
         var name = argq.next().toString();
-        if (!map.containsKey(name)) {
+        if (!calFile.calendars().containsKey(name)) {
             throw tcl.expected("calendar name", name);
         }
 
-        calendar = map.get(name);
+        calendar = calFile.calendars().get(name);
         bank.setMomentFormatter(m -> calendar.format(m));
 
         if (argq.hasNext()) {

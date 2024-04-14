@@ -2,14 +2,12 @@ package pen;
 
 import pen.apis.CalendarExtension;
 import pen.apis.HistoryExtension;
-import pen.calendars.Calendar;
 import pen.tcl.TclEngine;
 import pen.tcl.TclEngineException;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
 
 /**
  * Static class for loading data formats.
@@ -24,7 +22,7 @@ public class DataFiles {
      * @return The map
      * @throws DataFileException on error
      */
-    public static Map<String,Calendar> loadCalendar(Path path)
+    public static CalendarFile loadCalendar(Path path)
         throws DataFileException
     {
         var engine = new TclEngine();
@@ -41,7 +39,10 @@ public class DataFiles {
             throw error("calendar", ex);
         }
 
-        return calendarExtension.getCalendars();
+        return new CalendarFile(
+            path.toAbsolutePath(),
+            calendarExtension.getCalendars(),
+            calendarExtension.getToday());
     }
 
     /**
