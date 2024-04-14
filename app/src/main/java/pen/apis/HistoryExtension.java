@@ -135,7 +135,6 @@ public class HistoryExtension implements TclExtension {
         var calFile = argq.next().toString();
         var calPath = tcl.getWorkingDirectory()
             .resolve(new File(calFile).toPath());
-        CalendarFile calendarFile;
 
         try {
             calendarFile = DataFiles.loadCalendar(calPath);
