@@ -14,6 +14,7 @@ import pen.CalendarFile;
 import pen.DataFileException;
 import pen.DataFiles;
 import pen.HistoryFile;
+import pen.calendars.Calendar;
 import pen.calendars.formatter.DateFormat;
 import pen.diagram.calendar.YearSpread;
 import pen.fx.FX;
@@ -49,7 +50,7 @@ public class MainView extends VBox {
 
     private CalendarFile calFile;
     private HistoryFile histFile;
-    private String currentCalendar;
+    private String selectedCalendar;
     private int currentYear = 0;
 
     //-------------------------------------------------------------------------
@@ -116,18 +117,18 @@ public class MainView extends VBox {
     private void onReloadData() {
         calFile = null;
         histFile = null;
-        currentCalendar = null;
+        selectedCalendar = null;
         currentYear = 1; // For now
 
         try {
             if (getDataPath().toString().endsWith(".cal")) {
                 calFile = DataFiles.loadCalendar(getDataPath());
-                currentCalendar = calFile.getNames().getFirst();
+                selectedCalendar = calFile.getNames().getFirst();
                 computeInitialYear();
             } else if (getDataPath().endsWith(".hist")) {
                 histFile = DataFiles.loadHistory(getDataPath());
                 calFile = histFile.calendarFile();
-                currentCalendar = histFile.primaryCalendar();
+                selectedCalendar = histFile.primaryCalendar();
                 computeInitialYear();
             }
 
@@ -147,9 +148,12 @@ public class MainView extends VBox {
     }
 
     private void computeInitialYear() {
-        var calendar = calFile.calendars().get(currentCalendar);
         var today = calFile.today();
-        currentYear = calendar.day2date(today).year();
+        currentYear = selectedCalendar().day2date(today).year();
+    }
+
+    private Calendar selectedCalendar() {
+        return calFile.calendars().get(selectedCalendar);
     }
 
     private void showPreviousYear() {
@@ -181,7 +185,7 @@ public class MainView extends VBox {
             return;
         }
 
-        var calendar = calFile.calendars().get(currentCalendar);
+        var calendar = calFile.calendars().get(selectedCalendar);
         var date = calendar.date(currentYear, 1, 1);
 
         stencil.draw(new YearSpread()
