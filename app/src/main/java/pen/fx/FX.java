@@ -31,6 +31,23 @@ public class FX {
     // Molder Factories
 
     /**
+     * Creates a ButtonMolder containing a new Button.
+     * @return The molder
+     */
+    public static ButtonMolder button() {
+        return new ButtonMolder(new Button());
+    }
+
+    /**
+     * Creates a ButtonMolder containing the given Button.
+     * @param object The object to mold
+     * @return The molder
+     */
+    public static ButtonMolder button(Button object) {
+        return new ButtonMolder(object);
+    }
+
+    /**
      * Creates a LabelMolder containing a new Label.
      * @return The molder
      */
