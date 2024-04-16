@@ -59,7 +59,7 @@ public class CalendarTool extends FXTool {
         main = new MainView(this);
 
         // NEXT, pop up the window
-        Scene scene = new Scene(main, 800, 600);
+        Scene scene = new Scene(main, 800, 700);
 
         stage.setTitle("pen calendar - " +
             dataPath.getFileName());
