@@ -120,14 +120,15 @@ public class MainView extends VBox {
         currentYear = 1; // For now
 
         try {
-            System.out.println("dataPath = " + getDataPath());
             if (getDataPath().toString().endsWith(".cal")) {
                 calFile = DataFiles.loadCalendar(getDataPath());
                 currentCalendar = calFile.getNames().getFirst();
+                computeInitialYear();
             } else if (getDataPath().endsWith(".hist")) {
                 histFile = DataFiles.loadHistory(getDataPath());
                 calFile = histFile.calendarFile();
                 currentCalendar = histFile.primaryCalendar();
+                computeInitialYear();
             }
 
             if (calFile == null) {
@@ -140,10 +141,15 @@ public class MainView extends VBox {
                 "Could not read " + getDataPath() + "\n\n" + ex.getMessage());
         }
 
-        System.out.println("currentCalendar=" + currentCalendar);
 
         // NEXT, repaint
         repaint();
+    }
+
+    private void computeInitialYear() {
+        var calendar = calFile.calendars().get(currentCalendar);
+        var today = calFile.today();
+        currentYear = calendar.day2date(today).year();
     }
 
     private void showPreviousYear() {
