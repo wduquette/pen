@@ -31,6 +31,7 @@ public class MainView extends VBox {
     // GUI
     //
 
+    private final ToolBar toolBar = new ToolBar();
     private final Pane canvasPane = new Pane();
     private final Canvas canvas = new Canvas();
     private final ToolBar statusBar = new ToolBar();
@@ -72,6 +73,14 @@ public class MainView extends VBox {
                         .action(app::exit)
                     )
                 )
+            )
+            .child(FX.toolBar(toolBar)
+                .add(FX.button()
+                    .text("Previous Year")
+                    .action(this::showPreviousYear))
+                .add(FX.button()
+                    .text("Next Year")
+                    .action(this::showNextYear))
             )
             .child(FX.pane(canvasPane).vgrow()
                 .child(FX.node(canvas))
@@ -134,6 +143,23 @@ public class MainView extends VBox {
         System.out.println("currentCalendar=" + currentCalendar);
 
         // NEXT, repaint
+        repaint();
+    }
+
+    private void showPreviousYear() {
+        --currentYear;
+
+        if (currentYear == 0) {
+            --currentYear;
+        }
+        repaint();
+    }
+
+    private void showNextYear() {
+        ++currentYear;
+        if (currentYear == 0) {
+            ++currentYear;
+        }
         repaint();
     }
 
