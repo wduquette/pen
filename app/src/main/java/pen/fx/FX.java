@@ -48,6 +48,15 @@ public class FX {
     }
 
     /**
+     * Creates a ComboBoxMolder containing the given object.
+     * @param object The object to mold
+     * @return The molder
+     */
+    public static <T> ComboBoxMolder<T> comboBox(ComboBox<T> object) {
+        return new ComboBoxMolder<>(object);
+    }
+
+    /**
      * Creates a LabelMolder containing a new Label.
      * @return The molder
      */
