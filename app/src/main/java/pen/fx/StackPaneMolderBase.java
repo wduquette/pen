@@ -2,8 +2,6 @@ package pen.fx;
 
 
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 @SuppressWarnings({"unchecked", "unused"})
