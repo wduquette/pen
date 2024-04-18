@@ -3,10 +3,7 @@ package pen.fx;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 /**
  * Static JavaFX helper class.  Provides molder factories and listener help.
@@ -177,6 +174,23 @@ public class FX {
      */
     public static SplitPaneMolder splitPane(SplitPane object) {
         return new SplitPaneMolder(object);
+    }
+
+    /**
+     * Creates a StackPaneMolder containing a new StackPane.
+     * @return The molder
+     */
+    public static StackPaneMolder stackPane() {
+        return new StackPaneMolder(new StackPane());
+    }
+
+    /**
+     * Creates a StackPaneMolder containing the given StackPane
+     * @param object The object to mold
+     * @return The molder
+     */
+    public static StackPaneMolder stackPane(StackPane object) {
+        return new StackPaneMolder(object);
     }
 
     /**
