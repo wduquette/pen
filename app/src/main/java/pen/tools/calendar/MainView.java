@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Pane;
@@ -33,6 +34,7 @@ public class MainView extends VBox {
     //
 
     private final ToolBar toolBar = new ToolBar();
+    private final ComboBox<String> calendarChooser = new ComboBox<>();
     private final Pane canvasPane = new Pane();
     private final Canvas canvas = new Canvas();
     private final ToolBar statusBar = new ToolBar();
@@ -51,7 +53,7 @@ public class MainView extends VBox {
     private CalendarFile calFile;
     private HistoryFile histFile;
     private String selectedCalendar;
-    private int currentYear = 0;
+    private int currentDay = 0;
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -77,10 +79,15 @@ public class MainView extends VBox {
             )
             .child(FX.toolBar(toolBar)
                 .add(FX.button()
-                    .text("Previous Year")
+                    .text("<<")
                     .action(this::showPreviousYear))
+                .add(FX.comboBox(calendarChooser)
+                    .editable(false)
+                    .placeholderText("No calendars")
+                    .action(this::chooseCalendar)
+                )
                 .add(FX.button()
-                    .text("Next Year")
+                    .text(">>")
                     .action(this::showNextYear))
             )
             .child(FX.pane(canvasPane).vgrow()
@@ -118,18 +125,18 @@ public class MainView extends VBox {
         calFile = null;
         histFile = null;
         selectedCalendar = null;
-        currentYear = 1; // For now
+        currentDay = 0; // For now
 
         try {
             if (getDataPath().toString().endsWith(".cal")) {
                 calFile = DataFiles.loadCalendar(getDataPath());
                 selectedCalendar = calFile.getNames().getFirst();
-                computeInitialYear();
+                computeInitialDate();
             } else if (getDataPath().endsWith(".hist")) {
                 histFile = DataFiles.loadHistory(getDataPath());
                 calFile = histFile.calendarFile();
                 selectedCalendar = histFile.primaryCalendar();
-                computeInitialYear();
+                computeInitialDate();
             }
 
             if (calFile == null) {
@@ -142,14 +149,31 @@ public class MainView extends VBox {
                 "Could not read " + getDataPath() + "\n\n" + ex.getMessage());
         }
 
+        if (calFile != null) {
+            calendarChooser.getItems().clear();
+            calendarChooser.getItems().addAll(calFile.getNames());
+        }
+        calendarChooser.setValue(selectedCalendar);
 
         // NEXT, repaint
         repaint();
     }
 
-    private void computeInitialYear() {
+    private void computeInitialDate() {
+        var cal = selectedCalendar();
         var today = calFile.today();
-        currentYear = selectedCalendar().day2date(today).year();
+        var yearDay = cal.day2yearDay(today);
+        var newYears = cal.yearDay(yearDay.year(), 1);
+        currentDay = cal.yearDay2day(newYears);
+    }
+
+    // Updates the selected calendar and repaints.
+    private void chooseCalendar() {
+        if (calendarChooser.getValue() != null) {
+            selectedCalendar = calendarChooser.getValue();
+        }
+
+        repaint();
     }
 
     private Calendar selectedCalendar() {
@@ -157,19 +181,30 @@ public class MainView extends VBox {
     }
 
     private void showPreviousYear() {
+        var cal = selectedCalendar();
+        var currentYear = cal.day2yearDay(currentDay).year();
+
         --currentYear;
 
         if (currentYear == 0) {
             --currentYear;
         }
+
+        currentDay = cal.yearDay2day(cal.yearDay(currentYear, 1));
         repaint();
     }
 
     private void showNextYear() {
+        var cal = selectedCalendar();
+        var currentYear = cal.day2yearDay(currentDay).year();
+
         ++currentYear;
+
         if (currentYear == 0) {
             ++currentYear;
         }
+
+        currentDay = cal.yearDay2day(cal.yearDay(currentYear, 1));
         repaint();
     }
 
@@ -186,12 +221,12 @@ public class MainView extends VBox {
         }
 
         var calendar = calFile.calendars().get(selectedCalendar);
-        var date = calendar.date(currentYear, 1, 1);
+        var date = calendar.day2date(currentDay);
 
         stencil.draw(new YearSpread()
             .at(10,10)
             .calendar(calendar)
-            .year(currentYear)
+            .year(date.year())
             .columns(4)
             .title(calendar.format(YEAR_ERA, date))
         );
