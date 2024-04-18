@@ -8,5 +8,8 @@ import javafx.scene.layout.VBox;
 public interface VBoxMolderBase<V extends VBox, Self>
     extends PaneMolderBase<V, Self>
 {
-    // TODO
+    default Self spacing(double value) {
+        object().setSpacing(value);
+        return (Self)object();
+    }
 }
