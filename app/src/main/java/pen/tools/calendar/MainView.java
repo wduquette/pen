@@ -2,30 +2,22 @@ package pen.tools.calendar;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import pen.CalendarFile;
 import pen.DataFileException;
 import pen.DataFiles;
 import pen.HistoryFile;
 import pen.calendars.Calendar;
-import pen.calendars.formatter.DateFormat;
-import pen.diagram.calendar.YearSpread;
 import pen.fx.FX;
-import pen.stencil.Stencil;
 
 import java.nio.file.Path;
 
 public class MainView extends VBox {
-    public static final DateFormat YEAR_ERA = new DateFormat("y E");
-
     //-------------------------------------------------------------------------
     // Instance Variables
 
@@ -35,8 +27,6 @@ public class MainView extends VBox {
 
     private final ToolBar toolBar = new ToolBar();
     private final ComboBox<String> calendarChooser = new ComboBox<>();
-    private final Pane canvasPane = new Pane();
-    private final Canvas canvas = new Canvas();
     private final ToolBar statusBar = new ToolBar();
     private final Label statusLabel = new Label();
     private final YearView yearView = new YearView();
@@ -97,16 +87,6 @@ public class MainView extends VBox {
                 )
             )
             ;
-
-        // NEXT, listen for events
-
-        // Make the canvas the same size as its parent.
-        canvas.widthProperty().bind(canvasPane.widthProperty());
-        canvas.heightProperty().bind(canvasPane.heightProperty());
-
-        // NEXT, repaint on window size change.
-        canvas.widthProperty().addListener((p,o,n) -> repaint());
-        canvas.heightProperty().addListener((p,o,n) -> repaint());
 
         // NEXT, load data on data path change
         dataPath.addListener((p,o,n) -> onReloadData());
