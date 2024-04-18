@@ -9,6 +9,6 @@ public interface VBoxMolderBase<V extends VBox, Self>
 {
     default Self spacing(double value) {
         object().setSpacing(value);
-        return (Self)object();
+        return (Self)this;
     }
 }

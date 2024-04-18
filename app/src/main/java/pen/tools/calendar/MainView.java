@@ -39,8 +39,7 @@ public class MainView extends VBox {
     private final Canvas canvas = new Canvas();
     private final ToolBar statusBar = new ToolBar();
     private final Label statusLabel = new Label();
-
-    private final Stencil stencil;
+    private final YearView yearView = new YearView();
 
     //
     // Data
@@ -90,9 +89,7 @@ public class MainView extends VBox {
                     .text(">>")
                     .action(this::showNextYear))
             )
-            .child(FX.pane(canvasPane).vgrow()
-                .child(FX.node(canvas))
-            )
+            .child(FX.region(yearView))
             .child(FX.toolBar(statusBar)
                 .add(FX.label(statusLabel)
                     .text("(TODO)")
@@ -100,9 +97,6 @@ public class MainView extends VBox {
                 )
             )
             ;
-
-        // NEXT, create the stencil and initialize the TclEngine
-        stencil = new Stencil(canvas.getGraphicsContext2D());
 
         // NEXT, listen for events
 
@@ -209,27 +203,11 @@ public class MainView extends VBox {
     }
 
     private void repaint() {
-        stencil.background(Color.WHITE);
-        stencil.clear();
-
-        if (calFile == null) {
-            stencil.draw(Stencil.text()
-                .at(20, 20)
-                .text("No calendar data loaded")
-            );
-            return;
-        }
-
         var calendar = calFile.calendars().get(selectedCalendar);
         var date = calendar.day2date(currentDay);
 
-        stencil.draw(new YearSpread()
-            .at(10,10)
-            .calendar(calendar)
-            .year(date.year())
-            .columns(4)
-            .title(calendar.format(YEAR_ERA, date))
-        );
+        yearView.setCalendar(calendar);
+        yearView.setYear(date.year());
     }
 
     //-------------------------------------------------------------------------

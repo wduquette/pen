@@ -47,7 +47,8 @@ public class YearView extends StackPane {
 
     public YearView() {
         stackPane(this)
-            .child(FX.vbox().spacing(5)
+            .child(FX.vbox()
+                .spacing(5)
                 .child(FX.label(yearLabel)
                     .alignment(Pos.CENTER)
                 )
