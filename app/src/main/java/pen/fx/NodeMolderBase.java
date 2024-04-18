@@ -13,6 +13,11 @@ public interface NodeMolderBase<N extends Node, Self>
         return (Self)this;
     }
 
+    default Self visible(boolean value) {
+        object().setVisible(value);
+        return (Self)this;
+    }
+
     default Self onMouseMoved(EventHandler<MouseEvent> handler) {
         object().setOnMouseMoved(handler);
         return (Self)this;

@@ -2,6 +2,7 @@ package pen.fx;
 
 
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.GridPane;
@@ -13,6 +14,16 @@ import javafx.scene.layout.VBox;
 public interface RegionMolderBase<R extends Region, Self>
     extends NodeMolderBase<R, Self>
 {
+    default Self padding(double padding) {
+        object().setPadding(new Insets(padding));
+        return (Self)this;
+    }
+
+    default Self padding(double top, double right, double bottom, double left) {
+        object().setPadding(new Insets(top, right, bottom, left));
+        return (Self)this;
+    }
+
     default Self vgrow() {
         VBox.setVgrow(object(), Priority.ALWAYS);
         return (Self)this;
