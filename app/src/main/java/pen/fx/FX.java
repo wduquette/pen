@@ -3,6 +3,7 @@ package pen.fx;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -54,6 +55,23 @@ public class FX {
      */
     public static <T> ComboBoxMolder<T> comboBox(ComboBox<T> object) {
         return new ComboBoxMolder<>(object);
+    }
+
+    /**
+     * Creates a GridPaneMolder containing a new GridPane.
+     * @return The molder
+     */
+    public static GridPaneMolder gridPane() {
+        return new GridPaneMolder(new GridPane());
+    }
+
+    /**
+     * Creates a GridPaneMolder containing the given GridPane
+     * @param object The object to mold
+     * @return The molder
+     */
+    public static GridPaneMolder gridPane(GridPane object) {
+        return new GridPaneMolder(object);
     }
 
     /**
