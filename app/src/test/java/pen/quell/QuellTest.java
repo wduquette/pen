@@ -7,7 +7,7 @@ import pen.Ted;
 import java.util.List;
 
 import static pen.checker.Checker.check;
-import static pen.checker.Checker.checkThrows;
+import static pen.checker.Checker.checkThrow;
 
 public class QuellTest extends Ted {
     @Before
@@ -36,7 +36,7 @@ public class QuellTest extends Ted {
     @Test
     public void testGetColumnType_bad() {
         test("testGetColumnType_bad");
-        checkThrows(() -> Quell.getColumnType(Person.class, "nonesuch"))
+        checkThrow(() -> Quell.getColumnType(Person.class, "nonesuch"))
             .containsString("Person has no such field: \"nonesuch\"");
     }
 
@@ -55,7 +55,7 @@ public class QuellTest extends Ted {
         test("testGetColumnValue_bad");
         var person = new Person(1, "a1", 23);
 
-        checkThrows(() -> Quell.getColumnValue(person, "nonesuch"))
+        checkThrow(() -> Quell.getColumnValue(person, "nonesuch"))
             .containsString("Person has no such field: \"nonesuch\"");
     }
 }

@@ -10,7 +10,7 @@ public class Checker<Value> {
         return new Checker<>(value);
     }
 
-    public static Checker<Exception> checkThrows(Runnable runnable) {
+    public static Checker<Exception> checkThrow(Runnable runnable) {
         try {
             runnable.run();
             throw new AssertionError("checkThrows: Expected exception");

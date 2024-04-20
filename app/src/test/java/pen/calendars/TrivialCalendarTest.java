@@ -3,7 +3,7 @@ package pen.calendars;
 import org.junit.Test;
 
 import static pen.checker.Checker.check;
-import static pen.checker.Checker.checkThrows;
+import static pen.checker.Checker.checkThrow;
 
 public class TrivialCalendarTest {
     private static final YearDelta TEN_DAYS = dummy -> 10;
@@ -75,7 +75,7 @@ public class TrivialCalendarTest {
         }
 
         // Exception
-        checkThrows(() -> TEN.yearDay2day(ten(0, 0)));
+        checkThrow(() -> TEN.yearDay2day(ten(0, 0)));
     }
 
     @Test
@@ -86,15 +86,15 @@ public class TrivialCalendarTest {
         }
 
         // Exception
-        checkThrows(() -> TEN.validate(leap(1,1)))
+        checkThrow(() -> TEN.validate(leap(1,1)))
             .containsString("mismatch");
-        checkThrows(() -> TEN.validate(ten(0, 0)))
+        checkThrow(() -> TEN.validate(ten(0, 0)))
             .containsString("year is 0 in date");
-        checkThrows(() -> TEN.validate(ten(1, 0)))
+        checkThrow(() -> TEN.validate(ten(1, 0)))
             .containsString("dayOfYear out of range for year 1 in date:");
-        checkThrows(() -> TEN.validate(ten(1, -1)))
+        checkThrow(() -> TEN.validate(ten(1, -1)))
             .containsString("dayOfYear out of range for year 1 in date:");
-        checkThrows(() -> TEN.validate(ten(1, 11)))
+        checkThrow(() -> TEN.validate(ten(1, 11)))
             .containsString("dayOfYear out of range for year 1 in date:");
     }
 
@@ -109,7 +109,7 @@ public class TrivialCalendarTest {
         check(LEAP.daysInYear(3)).eq(10);
         check(LEAP.daysInYear(4)).eq(11);
 
-        checkThrows(() -> LEAP.daysInYear(0));
+        checkThrow(() -> LEAP.daysInYear(0));
     }
 
     @Test
@@ -146,7 +146,7 @@ public class TrivialCalendarTest {
         }
 
         // Exception
-        checkThrows(() -> LEAP.yearDay2day(leap(0, 0)));
+        checkThrow(() -> LEAP.yearDay2day(leap(0, 0)));
     }
 
     @Test
