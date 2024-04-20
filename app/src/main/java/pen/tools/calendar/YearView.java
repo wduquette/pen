@@ -7,16 +7,17 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import pen.calendars.Calendar;
+import pen.calendars.Date;
 import pen.calendars.formatter.DateFormat;
 import pen.fx.FX;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static pen.fx.FX.stackPane;
 
@@ -25,6 +26,8 @@ public class YearView extends StackPane {
     public static final DateFormat YEAR_ERA = new DateFormat("y E");
     public static final String DEFAULT_PLACEHOLDER =
         "No calendar data to display";
+    public static final String STYLE_CLASS_SELECTED_DATE =
+        "selected-date";
 
     //-------------------------------------------------------------------------
     // Instance Variables
@@ -33,6 +36,8 @@ public class YearView extends StackPane {
     private final GridPane monthGrid = new GridPane();
     private final List<MonthView> monthViews = new ArrayList<>();
     private final StackPane placeholderPane = new StackPane();
+    private final Map<Date,Button> dateButtons = new HashMap<>();
+    private Date selectedDate;
 
     private final ObjectProperty<Calendar> calendarProperty =
         new SimpleObjectProperty<>();
@@ -42,6 +47,7 @@ public class YearView extends StackPane {
         new SimpleIntegerProperty(4);
     private final SimpleObjectProperty<Node> placeholderProperty =
         new SimpleObjectProperty<>(new Label(DEFAULT_PLACEHOLDER));
+    private Runnable onSelectDate;
 
     //-------------------------------------------------------------------------
     // Constructor
@@ -83,8 +89,22 @@ public class YearView extends StackPane {
     // Logic
 
     public void refresh() {
+        Integer selectedDay = selectedDate != null
+            ? selectedDate.day()
+            : null;
+        selectedDate = null;
+
         computeYearLabel();
         computeMonths();
+
+        // Preserve the selected date, if possible.
+        if (selectedDay != null) {
+            var theDate = getCalendar().day2date(selectedDay);
+
+            if (theDate.year() == getYear()) {
+                selectDate(theDate);
+            }
+        }
     }
 
     private void computeYearLabel() {
@@ -94,6 +114,7 @@ public class YearView extends StackPane {
 
     private void computeMonths() {
         monthViews.clear();
+        dateButtons.clear();
         monthGrid.getChildren().clear();
 
         var n = getCalendar().monthsInYear();
@@ -118,6 +139,42 @@ public class YearView extends StackPane {
         placeholderPane.getChildren()
             .add(placeholder != null
                 ? placeholder : new Label(DEFAULT_PLACEHOLDER));
+    }
+
+    private void onDatePress(Date date) {
+        selectDate(date);
+    }
+
+    public void selectDate(Date date) {
+        // FIRST, ignore this if it's the same date.
+        if (Objects.equals(date, selectedDate)) {
+            return;
+        }
+
+        // FIRST, get the buttons
+        var oldBtn = dateButtons.get(selectedDate);
+        var newBtn = dateButtons.get(date);
+
+        if (oldBtn != null) {
+            oldBtn.getStyleClass().remove(STYLE_CLASS_SELECTED_DATE);
+        }
+
+        selectedDate = null;
+
+        if (newBtn != null) {
+            newBtn.getStyleClass().add(STYLE_CLASS_SELECTED_DATE);
+            selectedDate = date;
+        }
+
+        if (selectedDate != null) {
+            System.out.println("Selected: " + getCalendar().format(selectedDate));
+        } else {
+            System.out.println("Selection cleared.");
+        }
+
+        if (onSelectDate != null) {
+            onSelectDate.run();
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -159,6 +216,13 @@ public class YearView extends StackPane {
         this.placeholderProperty.set(placeholder);
     }
 
+    public Runnable getOnSelectDate() {
+        return onSelectDate;
+    }
+
+    public void setOnSelectDate(Runnable handler) {
+        this.onSelectDate = handler;
+    }
 
     //-------------------------------------------------------------------------
     // Helper Classes
@@ -219,10 +283,15 @@ public class YearView extends StackPane {
             for (var dayOfMonth = 1; dayOfMonth <= daysInMonth; dayOfMonth++) {
                 var date = cal.date(getYear(), monthOfYear, dayOfMonth);
                 var c = date.dayOfWeek() - 1;
+                var btn = new Button();
+                dateButtons.put(date, btn);
                 FX.gridPane(dateGrid)
-                    .at(c, r, FX.label()
+                    .at(c, r, FX.button(btn)
+                        .clearStyleClasses()
                         .gridHalignment(HPos.RIGHT)
                         .text(String.valueOf(dayOfMonth))
+                        .userData(date)
+                        .action(() -> onDatePress(date))
                     );
 
                 // Prepare for next week

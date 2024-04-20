@@ -2,6 +2,7 @@
     -fx-font-family: sans-serif;
     -fx-font-size: 13;
     -fx-background-color: white;
+    -fx-text-fill: black;
 }
 
 .year-title {
@@ -16,4 +17,8 @@
 
 .weekday-title {
     -fx-font-weight: bold;
+}
+
+.selected-date {
+    -fx-background-color: lightpink;
 }
