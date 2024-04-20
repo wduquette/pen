@@ -247,8 +247,8 @@ public class YearView extends StackPane {
                     .styleClass("month-title")
                 )
                 .child(FX.gridPane(dateGrid)
-                    .hgap(5)
-                    .vgap(5)
+                    .hgap(1)
+                    .vgap(1)
                 )
                 ;
         }
@@ -271,8 +271,9 @@ public class YearView extends StackPane {
                 FX.gridPane(dateGrid)
                     .at(i, 0, FX.label()
                         .styleClass("weekday-title")
-                        .text(weekday)
                         .gridHalignment(HPos.RIGHT)
+                        .padding(2)
+                        .text(weekday)
                     );
             }
 
@@ -286,6 +287,7 @@ public class YearView extends StackPane {
                     .at(c, r, FX.button(btn)
                         .clearStyleClasses()
                         .gridHalignment(HPos.RIGHT)
+                        .padding(2)
                         .text(String.valueOf(dayOfMonth))
                         .userData(date)
                         .action(() -> onDatePress(date))
