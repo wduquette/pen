@@ -187,12 +187,6 @@ public class YearView extends StackPane {
             selectedDate = date;
         }
 
-        if (selectedDate != null) {
-            System.out.println("Selected: " + getCalendar().format(selectedDate));
-        } else {
-            System.out.println("Selection cleared.");
-        }
-
         if (onSelectDate != null) {
             onSelectDate.run();
         }
