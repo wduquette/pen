@@ -32,25 +32,11 @@ public class HtmlBuilderTest extends Ted {
     }
 
     @Test
-    public void testUnbalanced() {
-        test("testUnbalanced");
+    public void testMismatch() {
+        test("testMismatch");
         checkThrow(() -> buff.ul().li().ulEnd())
-            .containsString("End tag imbalance, expected </li>, got </ul>.");
+            .containsString("Mismatched end tag, expected </li>, got </ul>.");
     }
-
-    @Test
-    public void testIndent() {
-        test("testIndent");
-        buff.startln("a")
-            .startln("b")
-            .startln("c")
-            .p("My Para")
-            .endln("c")
-            .endln("b")
-            .endln("a");
-        println("[" + buff.toString() + "]");
-    }
-
 
     @Test
     public void testH1() {
@@ -68,9 +54,54 @@ public class HtmlBuilderTest extends Ted {
     }
 
     @Test
-    public void testP_pEnd() {
-        test("testP_pEnd");
-        buff.p().text("My para").pEnd();
-        check(buff.toString()).eq("<p>My para</p>");
+    public void testParas() {
+        test("testParas");
+        buff.p("Para1");
+        buff.p("Para2");
+        check(buff.toString()).eq("<p>Para1</p>\n<p>Para2</p>");
+    }
+
+    @Test
+    public void testUL() {
+        test("testUL");
+
+        buff.ul()
+            .li("Item1")
+            .li("Item2")
+            .ulEnd();
+        check(buff.toString()).eq("""
+            <ul>
+              <li>Item1</li>
+              <li>Item2</li>
+            </ul>""");
+    }
+
+    @Test
+    public void testOL() {
+        test("testOL");
+
+        buff.ol()
+            .li("Item1")
+            .li("Item2")
+            .olEnd();
+        check(buff.toString()).eq("""
+            <ol>
+              <li>Item1</li>
+              <li>Item2</li>
+            </ol>""");
+    }
+
+    @Test
+    public void testB() {
+        test("testB");
+        buff.p().b("boldface").pEnd();
+        check(buff.toString()).eq("<p><b>boldface</b></p>");
+    }
+
+    @Test
+    public void testI() {
+        test("testI");
+        buff.p().i("italic").pEnd();
+        check(buff.toString()).eq("<p><i>italic</i></p>");
     }
 }

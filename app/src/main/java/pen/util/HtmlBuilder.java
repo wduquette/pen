@@ -1,6 +1,6 @@
 package pen.util;
 
-import java.util.ArrayDeque;
+import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -10,6 +10,22 @@ import java.util.Stack;
  */
 public class HtmlBuilder {
     //-------------------------------------------------------------------------
+    // Tables
+
+    // Tags not in one of the following sets are assumed to begin on a new
+    // line and end on the same line.
+
+    // Tags that do not affect the indent level or add newlines.
+    private final Set<String> spans = Set.of(
+        "b", "i"
+    );
+
+    // Tags that are always on a line by themselves
+    private final Set<String> solos = Set.of(
+        "ul", "ol", "dl", "div"
+    );
+
+    //-------------------------------------------------------------------------
     // Instance Variables
 
     // The buffer to receive the HTML
@@ -18,8 +34,11 @@ public class HtmlBuilder {
     // The indent leader
     private final String leader;
 
-    // Indented elements
+    // Open elements
     private final Stack<String> stack = new Stack<>();
+
+    // Indent depth
+    private int depth = 0;
 
     // Whether to wrap the output in "<html><body>...</body></html>"
     private boolean wrapOutput = true;
@@ -41,6 +60,7 @@ public class HtmlBuilder {
     public void clear() {
         buff = new StringBuilder();
         stack.clear();
+        depth = 0;
     }
 
     public HtmlBuilder wrapOutput(boolean flag) {
@@ -49,107 +69,155 @@ public class HtmlBuilder {
     }
 
     public HtmlBuilder h1(String header) {
-        return start("h1").text(header).end("h1").nl();
+        return push("h1").print(header).pop("h1");
     }
 
     public HtmlBuilder p() {
-        return startln("p");
+        return push("p");
     }
 
     public HtmlBuilder p(String text) {
-        return startln("p").text(text).end("p").nl();
+        return p().print(text).pEnd();
     }
 
     public HtmlBuilder pEnd() {
-        return end("p");
+        return pop("p");
     }
 
     public HtmlBuilder ul() {
-        return startln("ul");
+        return push("ul");
+    }
+
+    public HtmlBuilder ol() {
+        return push("ol");
     }
 
     public HtmlBuilder li() {
-        return startln("li");
+        return push("li");
     }
 
     public HtmlBuilder li(String text) {
-        return li().text(text).liEnd();
+        return li().print(text).liEnd();
     }
 
     public HtmlBuilder liEnd() {
-        return end("li").nl();
+        return pop("li");
     }
 
     public HtmlBuilder ulEnd() {
-        return endln("ul");
+        return pop("ul");
     }
 
-    public HtmlBuilder text(String text) {
+    public HtmlBuilder olEnd() {
+        return pop("ol");
+    }
+
+    public HtmlBuilder b() {
+        return push("b");
+    }
+
+    public HtmlBuilder b(String text) {
+        return b().print(text).bEnd();
+    }
+
+    public HtmlBuilder bEnd() {
+        return pop("b");
+    }
+
+    public HtmlBuilder i() {
+        return push("i");
+    }
+
+    public HtmlBuilder i(String text) {
+        return i().print(text).iEnd();
+    }
+
+    public HtmlBuilder iEnd() {
+        return pop("i");
+    }
+
+    public HtmlBuilder print(String text) {
         var sanitized = text
             .replaceAll("&", "&amp;")
             .replaceAll("<", "&lt;")
             .replaceAll(">", "&gt;");
-        buff.append(text);
+        buff.append(sanitized);
         return this;
     }
 
-    public HtmlBuilder b() {
-        return start("b");
+    public HtmlBuilder println(String text) {
+        newline();
+        return print(text);
     }
 
-    public HtmlBuilder bEnd() {
-        return end("b");
-    }
+    //-------------------------------------------------------------------------
+    // Internals
 
-    public HtmlBuilder i() {
-        return start("i");
-    }
+    private HtmlBuilder push(String tag) {
+        stack.push(tag);
 
-    public HtmlBuilder iEnd() {
-        return end("i");
-    }
+        if (spans.contains(tag)) {
+            // Spans do not start a new line.
+            buff.append(tag(tag));
+        } else if (solos.contains(tag)) {
+            // Solos start a new line and add an indent level.
+            newline();
+            buff.append(leader.repeat(depth)).append(tag(tag)).append("\n");
+            ++depth;
+        } else {
+            // Others start a new line but do not increase the stack level.
+            newline();
+            buff.append(leader.repeat(depth)).append(tag(tag));
+        }
 
-    public HtmlBuilder nl() {
-        buff.append("\n");
         return this;
     }
 
-    public HtmlBuilder startln(String tag) {
+    private HtmlBuilder pop(String tag) {
+        // FIRST, check for tag mismatch
+        if (!stack.peek().equals(tag)) {
+            throw tagMismatch(tag);
+        }
+
+        if (spans.contains(tag)) {
+            // Spans just close; they do not end the line or decrease the
+            // stack level.
+            buff.append(endTag(tag));
+        } else if (solos.contains(tag)) {
+            // Solos end the line and decrease the stack level.
+            newline();
+            --depth;
+            buff.append(leader.repeat(depth)).append(endTag(tag)).append("\n");
+        } else {
+            // Others end the line but do not decrease the stack level.
+            buff.append(endTag(tag)).append("\n");
+        }
+        stack.pop();
+        return this;
+    }
+
+    // Adds a newline if needed.
+    private void newline() {
         if (!buff.toString().endsWith("\n")) {
             buff.append("\n");
         }
-        buff.append(leader.repeat(stack.size()));
-        return start(tag);
     }
 
-    public HtmlBuilder start(String tag) {
-        stack.push(tag);
-        buff.append("<").append(tag).append(">");
-        return this;
+    private String tag(String tag) {
+        return "<" + tag + ">";
     }
 
-    public HtmlBuilder end(String tag) {
-        if (stack.peek().equals(tag)) {
-            buff.append("</").append(tag).append(">");
-            stack.pop();
-        } else {
-            throw tagImbalance(tag);
-        }
-        return this;
+    private String endTag(String tag) {
+        return "</" + tag + ">";
     }
 
-    public HtmlBuilder endln(String tag) {
-        buff.append("\n")
-            .append(leader.repeat(stack.size() - 1));
-        end(tag);
-        return this;
-    }
 
-    private IllegalStateException tagImbalance(String tag) {
+    private IllegalStateException tagMismatch(String tag) {
         return new IllegalStateException(
-            "End tag imbalance, expected </" + stack.peek() +
-            ">, got </" + tag + ">.");
+            "Mismatched end tag, expected </" + stack.peek() +
+                ">, got </" + tag + ">.");
     }
+
 
     //-------------------------------------------------------------------------
     // Access
