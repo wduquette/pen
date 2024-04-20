@@ -19,8 +19,6 @@ import pen.fx.FX;
 
 import java.util.*;
 
-import static pen.fx.FX.stackPane;
-
 @SuppressWarnings("unused")
 public class YearView extends StackPane {
     public static final DateFormat YEAR_ERA = new DateFormat("y E");
@@ -48,11 +46,14 @@ public class YearView extends StackPane {
         new SimpleObjectProperty<>(new Label(DEFAULT_PLACEHOLDER));
     private Runnable onSelectDate;
 
+    // Computed
+    private int rowsInMonth = 0;
+
     //-------------------------------------------------------------------------
     // Constructor
 
     public YearView() {
-        stackPane(this).vgrow()
+        FX.stackPane(this).vgrow()
             .stylesheet(getClass(), "YearView.css")
             .styleClass("yearView")
             .padding(15)
@@ -94,6 +95,7 @@ public class YearView extends StackPane {
         selectedDate = null;
 
         computeYearLabel();
+        computeRowsInMonth();
         computeMonths();
 
         // Preserve the selected date, if possible.
@@ -109,6 +111,28 @@ public class YearView extends StackPane {
     private void computeYearLabel() {
         var day = getCalendar().yearDay(getYear(), 1);
         yearLabel.setText(getCalendar().format(YEAR_ERA, day));
+    }
+
+    // Compute the number of grid rows it can take to display a month,
+    // given short weeks at the beginning and end, so that all months
+    // will be the same size.
+    private void computeRowsInMonth() {
+        var cal = getCalendar();
+        var maxDays = 0;
+
+        for (int i = 1; i <= cal.monthsInYear(); i++) {
+            var days = cal.daysInMonth(getYear(), i);
+            maxDays = Math.max(maxDays, days);
+        }
+
+        var weeks = maxDays / cal.daysInWeek();
+        var extra = maxDays % cal.daysInWeek();
+
+        // Allow one row for the weekday titles.
+        rowsInMonth = switch (extra) {
+            case 0, 1 -> weeks + 2;
+            default -> weeks + 3;
+        };
     }
 
     private void computeMonths() {
@@ -234,7 +258,6 @@ public class YearView extends StackPane {
         private final Label monthLabel = new Label();
         private final GridPane dateGrid = new GridPane();
 
-
         //---------------------------------------------------------------------
         // Constructor
 
@@ -278,6 +301,7 @@ public class YearView extends StackPane {
             }
 
             var r = 1;
+            var maxRow = 0;
             for (var dayOfMonth = 1; dayOfMonth <= daysInMonth; dayOfMonth++) {
                 var date = cal.date(getYear(), monthOfYear, dayOfMonth);
                 var c = date.dayOfWeek() - 1;
@@ -289,14 +313,24 @@ public class YearView extends StackPane {
                         .gridHalignment(HPos.RIGHT)
                         .padding(2)
                         .text(String.valueOf(dayOfMonth))
-                        .userData(date)
                         .action(() -> onDatePress(date))
                     );
+                maxRow = r;
 
                 // Prepare for next week
                 if (date.dayOfWeek() == daysInWeek) {
                     ++r;
                 }
+            }
+
+            r = maxRow + 1;
+            while (r < rowsInMonth) {
+                FX.gridPane(dateGrid)
+                    .at(0, r, FX.label()
+                        .styles("-fx-text-fill: white")
+                        .padding(2)
+                        .text("X"));
+                ++r;
             }
         }
     }
