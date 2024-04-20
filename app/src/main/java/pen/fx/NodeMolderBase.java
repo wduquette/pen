@@ -33,6 +33,11 @@ public interface NodeMolderBase<N extends Node, Self>
         return (Self)this;
     }
 
+    default Self clearStyleClasses() {
+        object().getStyleClass().clear();
+        return (Self)this;
+    }
+
     /**
      * Adds one or more styles to the view.
      * @param styles The styles
@@ -40,6 +45,11 @@ public interface NodeMolderBase<N extends Node, Self>
      */
     default Self styles(String... styles) {
         object().setStyle(String.join("\n", styles));
+        return (Self)this;
+    }
+
+    default Self userData(Object data) {
+        object().setUserData(data);
         return (Self)this;
     }
 }
