@@ -34,7 +34,6 @@ public class YearView extends StackPane {
 
     private final Label yearLabel = new Label();
     private final GridPane monthGrid = new GridPane();
-    private final List<MonthView> monthViews = new ArrayList<>();
     private final StackPane placeholderPane = new StackPane();
     private final Map<Date,Button> dateButtons = new HashMap<>();
     private Date selectedDate;
@@ -113,7 +112,6 @@ public class YearView extends StackPane {
     }
 
     private void computeMonths() {
-        monthViews.clear();
         dateButtons.clear();
         monthGrid.getChildren().clear();
 
@@ -125,7 +123,6 @@ public class YearView extends StackPane {
             var r = i / monthsPerRow;
 
             var month = new MonthView(i + 1);
-            monthViews.add(month);
             FX.gridPane(monthGrid)
                 .at(c, r, FX.region(month))
             ;
