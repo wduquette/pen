@@ -46,19 +46,25 @@ public class YearView extends StackPane {
     // Constructor
 
     public YearView() {
-        stackPane(this)
+        stackPane(this).vgrow()
+            .stylesheet(getClass(), "YearView.css")
+            .styleClass("yearView")
+            .padding(15)
             .child(FX.vbox()
+                .alignment(Pos.TOP_CENTER)
                 .spacing(5)
                 .child(FX.label(yearLabel)
-                    .alignment(Pos.CENTER)
+                    .styleClass("year-title")
                 )
                 .child(FX.gridPane(monthGrid)
+                    .alignment(Pos.TOP_CENTER)
                     .hgap(10)
                     .vgap(10)
                     .padding(10)
                 )
             )
             .child(FX.stackPane(placeholderPane)
+                .vgrow()
                 .alignment(Pos.CENTER)
                 .visible(false)
                 .bareChild(placeholderProperty.get())
@@ -174,7 +180,10 @@ public class YearView extends StackPane {
             this.monthOfYear = monthOfYear;
 
             FX.vbox(this).spacing(5)
-                .child(FX.label(monthLabel))
+                .alignment(Pos.TOP_CENTER)
+                .child(FX.label(monthLabel)
+                    .styleClass("month-title")
+                )
                 .child(FX.gridPane(dateGrid)
                     .hgap(5)
                     .vgap(5)
@@ -199,6 +208,7 @@ public class YearView extends StackPane {
                 var weekday = week.weekdays().get(i).tinyForm();
                 FX.gridPane(dateGrid)
                     .at(i, 0, FX.label()
+                        .styleClass("weekday-title")
                         .text(weekday)
                         .gridHalignment(HPos.RIGHT)
                     );
