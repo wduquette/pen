@@ -32,7 +32,14 @@ public interface RegionMolderBase<R extends Region, Self>
      * @return The molder
      */
     default Self stylesheet(Class<?> cls, String name) {
-        object().getStylesheets().add(cls.getResource(name).toExternalForm());
+        var resource = cls.getResource(name);
+        if (resource != null) {
+            object().getStylesheets().add(resource.toExternalForm());
+        } else {
+            throw new IllegalArgumentException(
+                "Unknown CSS file \"" + name + "\" for class " +
+                cls.getCanonicalName());
+        }
         return (Self)this;
     }
 

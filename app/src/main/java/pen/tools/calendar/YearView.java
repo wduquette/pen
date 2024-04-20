@@ -20,6 +20,7 @@ import java.util.List;
 
 import static pen.fx.FX.stackPane;
 
+@SuppressWarnings("unused")
 public class YearView extends StackPane {
     public static final DateFormat YEAR_ERA = new DateFormat("y E");
     public static final String DEFAULT_PLACEHOLDER =
