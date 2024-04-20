@@ -24,6 +24,21 @@ public interface RegionMolderBase<R extends Region, Self>
         return (Self)this;
     }
 
+    /**
+     * Adds a stylesheet to the object.  The stylesheet is found relative to
+     * the class.
+     * @param cls The class
+     * @param name The stylesheet's file name.
+     * @return The molder
+     */
+    default Self stylesheet(Class<?> cls, String name) {
+        object().getStylesheets().add(cls.getResource(name).toExternalForm());
+        return (Self)this;
+    }
+
+    //-------------------------------------------------------------------------
+    // Pane-specific constraints
+
     default Self vgrow() {
         VBox.setVgrow(object(), Priority.ALWAYS);
         return (Self)this;
