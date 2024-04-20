@@ -72,6 +72,23 @@ public class FX {
     }
 
     /**
+     * Creates an HBoxMolder containing a new HBox.
+     * @return The molder
+     */
+    public static HBoxMolder hbox() {
+        return new HBoxMolder(new HBox());
+    }
+
+    /**
+     * Creates a HBoxMolder containing the given HBox
+     * @param object The object to mold
+     * @return The molder
+     */
+    public static HBoxMolder hbox(HBox object) {
+        return new HBoxMolder(object);
+    }
+
+    /**
      * Creates a LabelMolder containing a new Label.
      * @return The molder
      */
