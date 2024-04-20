@@ -239,6 +239,14 @@ public class YearView extends StackPane {
         this.onSelectDate = handler;
     }
 
+    public Optional<Integer> getSelectedDay() {
+        if (selectedDate == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(getCalendar().date2day(selectedDate));
+        }
+    }
+
     //-------------------------------------------------------------------------
     // Helper Classes
 
@@ -287,6 +295,7 @@ public class YearView extends StackPane {
                 var weekday = week.weekdays().get(i).tinyForm();
                 FX.gridPane(dateGrid)
                     .at(i, 0, FX.label()
+                        .fixed()
                         .styleClass("weekday-title")
                         .gridHalignment(HPos.RIGHT)
                         .padding(2)
@@ -306,6 +315,7 @@ public class YearView extends StackPane {
                         .clearStyleClasses()
                         .gridHalignment(HPos.RIGHT)
                         .padding(2)
+                        .fixed()
                         .text(String.valueOf(dayOfMonth))
                         .action(() -> onDatePress(date))
                     );

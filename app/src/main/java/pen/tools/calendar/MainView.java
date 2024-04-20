@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import pen.CalendarFile;
@@ -30,6 +31,7 @@ public class MainView extends VBox {
     private final ToolBar statusBar = new ToolBar();
     private final Label statusLabel = new Label();
     private final YearView yearView = new YearView();
+    private final DayView dayView;
 
     //
     // Data
@@ -49,6 +51,7 @@ public class MainView extends VBox {
 
     public MainView(CalendarTool app) {
         this.app = app;
+        this.dayView = new DayView(this);
 
         // FIRST, build the GUI
         FX.vbox(this)
@@ -79,7 +82,10 @@ public class MainView extends VBox {
                     .text(">>")
                     .action(this::showNextYear))
             )
-            .child(FX.region(yearView))
+            .child(FX.hbox().spacing(10).vgrow()
+                .child(FX.region(yearView))
+                .child(FX.region(dayView).hgrow())
+            )
             .child(FX.toolBar(statusBar)
                 .add(FX.label(statusLabel)
                     .text("(TODO)")
@@ -90,6 +96,9 @@ public class MainView extends VBox {
 
         // NEXT, load data on data path change
         dataPath.addListener((p,o,n) -> onReloadData());
+
+        // NEXT, update the display on day selection.
+        yearView.setOnSelectDate(this::onSelectDate);
     }
 
     //-------------------------------------------------------------------------
@@ -188,6 +197,11 @@ public class MainView extends VBox {
 
         yearView.setCalendar(calendar);
         yearView.setYear(date.year());
+        dayView.setDay(currentDay);
+    }
+
+    private void onSelectDate() {
+        yearView.getSelectedDay().ifPresent(dayView::setDay);
     }
 
     //-------------------------------------------------------------------------
@@ -199,6 +213,13 @@ public class MainView extends VBox {
 
     public void setDataPath(Path path) {
         dataPath.set(path);
+    }
+
+    //-------------------------------------------------------------------------
+    // Queries
+
+    public CalendarFile getCalendarFile() {
+        return calFile;
     }
 
     //-------------------------------------------------------------------------

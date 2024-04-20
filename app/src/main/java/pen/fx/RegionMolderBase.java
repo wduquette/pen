@@ -5,10 +5,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 @SuppressWarnings({"unchecked", "unused"})
 public interface RegionMolderBase<R extends Region, Self>
@@ -45,6 +42,11 @@ public interface RegionMolderBase<R extends Region, Self>
 
     //-------------------------------------------------------------------------
     // Pane-specific constraints
+
+    default Self hgrow() {
+        HBox.setHgrow(object(), Priority.ALWAYS);
+        return (Self)this;
+    }
 
     default Self vgrow() {
         VBox.setVgrow(object(), Priority.ALWAYS);
