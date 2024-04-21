@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -20,7 +21,7 @@ import pen.fx.FX;
 import java.util.*;
 
 @SuppressWarnings("unused")
-public class YearView extends StackPane {
+public class YearView extends ScrollPane {
     public static final DateFormat YEAR_ERA = new DateFormat("y E");
     public static final String DEFAULT_PLACEHOLDER =
         "No calendar data to display";
@@ -53,28 +54,30 @@ public class YearView extends StackPane {
     // Constructor
 
     public YearView() {
-        FX.stackPane(this).vgrow()
+        FX.scrollPane(this).vgrow()
             .stylesheet(getClass(), "YearView.css")
-            .styleClass("yearView")
-            .padding(15)
-            .child(FX.vbox()
-                .alignment(Pos.TOP_CENTER)
-                .spacing(5)
-                .child(FX.label(yearLabel)
-                    .styleClass("year-title")
-                )
-                .child(FX.gridPane(monthGrid)
+            .content(FX.stackPane()
+                .styleClass("yearView")
+                .padding(15)
+                .child(FX.vbox()
                     .alignment(Pos.TOP_CENTER)
-                    .hgap(10)
-                    .vgap(10)
-                    .padding(10)
+                    .spacing(5)
+                    .child(FX.label(yearLabel)
+                        .styleClass("year-title")
+                    )
+                    .child(FX.gridPane(monthGrid)
+                        .alignment(Pos.TOP_CENTER)
+                        .hgap(10)
+                        .vgap(10)
+                        .padding(10)
+                    )
                 )
-            )
-            .child(FX.stackPane(placeholderPane)
-                .vgrow()
-                .alignment(Pos.CENTER)
-                .visible(false)
-                .bareChild(placeholderProperty.get())
+                .child(FX.stackPane(placeholderPane)
+                    .vgrow()
+                    .alignment(Pos.CENTER)
+                    .visible(false)
+                    .bareChild(placeholderProperty.get())
+                )
             )
             ;
 
