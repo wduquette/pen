@@ -105,15 +105,6 @@ public class HistoryBankTest extends Ted {
         check(bobPeriod).eq(new Period(bob, 20, 80, Cap.SOFT, Cap.SOFT));
     }
 
-    @Test
-    public void testToTimelineChart() {
-        test("testToTimelineChart");
-
-        populateHistory();
-
-        println(history.toTimelineChart());
-    }
-
     private void populateHistory() {
         history.addEntity(new Entity("joe", "JoeP", "person"));
         history.addEntity(new Entity("bob", "BobC", "person"));
