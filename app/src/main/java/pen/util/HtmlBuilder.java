@@ -72,6 +72,10 @@ public class HtmlBuilder {
         return push("h1").print(header).pop("h1");
     }
 
+    public HtmlBuilder h2(String header) {
+        return push("h2").print(header).pop("h2");
+    }
+
     public HtmlBuilder p() {
         return push("p");
     }
