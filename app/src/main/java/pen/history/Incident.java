@@ -1,10 +1,14 @@
 package pen.history;
 
+import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings("unused")
 public sealed interface Incident permits
     Incident.Beginning,
+    Incident.Birthday,
+    Incident.Anniversary,
+    Incident.Memorial,
     Incident.Normal,
     Incident.Ending
 {
@@ -28,8 +32,14 @@ public sealed interface Incident permits
      * @param entityId The entity's ID
      * @return true or false
      */
-    boolean concerns(String entityId);
+    default boolean concerns(String entityId) {
+        return entityIds().contains(entityId);
+    }
 
+    /**
+     * The entities associated with this incident
+     * @return The entities
+     */
     Set<String> entityIds();
 
     /**
@@ -37,6 +47,13 @@ public sealed interface Incident permits
      * @return The cap
      */
     Cap cap();
+
+    /**
+     * True if this is a recurring date that should be noted on the calendar
+     * in each following year, and false otherwise.
+     * @return true or false
+     */
+    boolean isRecurring();
 
     //-------------------------------------------------------------------------
     // Incident Types
@@ -52,17 +69,56 @@ public sealed interface Incident permits
         String label,
         String entityId
     ) implements Incident {
-        public boolean concerns(String entityId) {
-            return this.entityId.equals(entityId);
-        }
+        public Set<String> entityIds() { return Set.of(entityId); }
+        public Cap cap() { return Cap.HARD; }
+        public boolean isRecurring() { return false; }
+    }
 
-        public Set<String> entityIds() {
-            return Set.of(entityId);
-        }
+    /**
+     * A person (or persons, in cases of multiple birth) is born.
+     * @param moment The moment of death.
+     * @param label The label
+     * @param entityIds The entity IDs
+     */
+    record Birthday(
+        int moment,
+        String label,
+        Set<String> entityIds
+    ) implements Incident {
+        public Cap cap() { return Cap.HARD; }
+        public boolean isRecurring() { return true; }
+    }
 
-        public Cap cap() {
-            return Cap.HARD;
-        }
+    /**
+     * A personal anniversary other than a birthday, for one or more
+     * entities.
+     * @param moment The moment
+     * @param label The label
+     * @param entityIds The entity IDs
+     */
+    record Anniversary(
+        int moment,
+        String label,
+        Set<String> entityIds
+    ) implements Incident {
+        public Cap cap() { return Cap.SOFT; }
+        public boolean isRecurring() { return true; }
+    }
+
+    /**
+     * A memorial of some kind, e.g., 4th of July, D-Day.  A memorial is
+     * usually associated with a place rather than a person.
+     * @param moment The moment
+     * @param label The label
+     * @param entityIds The entity IDs
+     */
+    record Memorial(
+        int moment,
+        String label,
+        Set<String> entityIds
+    ) implements Incident {
+        public Cap cap() { return Cap.SOFT; }
+        public boolean isRecurring() { return true; }
     }
 
     /**
@@ -76,13 +132,8 @@ public sealed interface Incident permits
         String label,
         Set<String> entityIds
     ) implements Incident {
-        public boolean concerns(String entityId) {
-            return entityIds.contains(entityId);
-        }
-
-        public Cap cap() {
-            return Cap.SOFT;
-        }
+        public Cap cap() { return Cap.SOFT; }
+        public boolean isRecurring() { return false; }
     }
 
     /**
@@ -96,16 +147,8 @@ public sealed interface Incident permits
         String label,
         String entityId
     ) implements Incident {
-        public boolean concerns(String entityId) {
-            return this.entityId.equals(entityId);
-        }
-
-        public Set<String> entityIds() {
-            return Set.of(entityId);
-        }
-
-        public Cap cap() {
-            return Cap.HARD;
-        }
+        public Set<String> entityIds() { return Set.of(entityId); }
+        public Cap cap() { return Cap.HARD; }
+        public boolean isRecurring() { return false; }
     }
 }
