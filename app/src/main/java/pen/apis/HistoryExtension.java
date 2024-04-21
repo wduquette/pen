@@ -70,14 +70,13 @@ public class HistoryExtension implements TclExtension {
     public void initialize(TclEngine tcl) {
         this.tcl = tcl;
 
-        tcl.add("calendar",    this::cmd_calendar);
-        tcl.add("entity",      this::cmd_entity);
-        tcl.add("beginning",   this::cmd_beginning);
-        tcl.add("ending",      this::cmd_ending);
-        tcl.add("birthday",    this::cmd_birthday);
-        tcl.add("anniversary", this::cmd_anniversary);
-        tcl.add("memorial",    this::cmd_memorial);
-        tcl.add("event",       this::cmd_event);
+        tcl.add("calendar", this::cmd_calendar);
+        tcl.add("entity",   this::cmd_entity);
+        tcl.add("start",    this::cmd_start);
+        tcl.add("end",      this::cmd_end);
+        tcl.add("birthday", this::cmd_birthday);
+        tcl.add("memorial", this::cmd_memorial);
+        tcl.add("incident", this::cmd_incident);
 
         var queryEnsemble = tcl.ensemble("query");
         queryEnsemble.add("groupByPrimes", this::cmd_queryGroupByPrimes);
@@ -192,23 +191,21 @@ public class HistoryExtension implements TclExtension {
         bank.addEntity(entity);
     }
 
-    // beginning id moment label
-    private void cmd_beginning(TclEngine tcl, Argq argq)
+    // start id moment label
+    private void cmd_start(TclEngine tcl, Argq argq)
         throws TclException
     {
-        tcl.checkArgs(argq, 2, 3, "moment id ?label?");
+        tcl.checkArgs(argq, 2, 3, "moment label id");
 
         var momentArg = argq.next();
         var moment = toMoment(momentArg);
+        var label = argq.next().toString().trim();
         var limits = toLimits(argq.next());
         var entity = limits.entity;
-        var label = argq.hasNext()
-            ? argq.next().toString().trim()
-            : entity.name() + " begins";
 
-        var incident = new Incident.Beginning(moment, label, entity.id());
+        var incident = new Incident.Start(moment, label, entity.id());
 
-        saveBeginning("beginning", limits, momentArg.toString(), incident);
+        saveBeginning("start", limits, momentArg.toString(), incident);
     }
 
     private void saveBeginning(
@@ -244,23 +241,21 @@ public class HistoryExtension implements TclExtension {
         bank.getIncidents().add(incident);
     }
 
-    // ending id moment ?label?
-    private void cmd_ending(TclEngine tcl, Argq argq)
+    // end id moment ?label?
+    private void cmd_end(TclEngine tcl, Argq argq)
         throws TclException
     {
         tcl.checkArgs(argq, 2, 3, "moment id ?label?");
 
         var momentArg = argq.next();
         var moment = toMoment(momentArg);
+        var label = argq.next().toString().trim();
         var limits = toLimits(argq.next());
         var entity = limits.entity;
-        var label = argq.hasNext()
-            ? argq.next().toString().trim()
-            : entity.name() + " ends";
 
-        var incident = new Incident.Ending(moment, label, entity.id());
+        var incident = new Incident.End(moment, label, entity.id());
 
-        saveEnding("ends", limits, momentArg.toString(), incident);
+        saveEnding("end", limits, momentArg.toString(), incident);
     }
 
     private void saveEnding(
@@ -298,8 +293,8 @@ public class HistoryExtension implements TclExtension {
     }
 
 
-    // event moment label ?entity...?
-    private void cmd_event(TclEngine tcl, Argq argq)
+    // incident moment label ?entity...?
+    private void cmd_incident(TclEngine tcl, Argq argq)
         throws TclException
     {
         tcl.checkMinArgs(argq, 2, "moment label ?entityId...?");
@@ -374,31 +369,6 @@ public class HistoryExtension implements TclExtension {
         }
 
         var incident = new Incident.Birthday(moment, label, set);
-        bank.getIncidents().add(incident);
-    }
-
-    // anniversary moment label ?entity...?
-    private void cmd_anniversary(TclEngine tcl, Argq argq)
-        throws TclException
-    {
-        tcl.checkMinArgs(argq, 2, "moment label ?entityId...?");
-
-        var set = new TreeSet<String>();
-
-        var momentArg = argq.next();
-        var moment = toMoment(momentArg);
-        var label = argq.next().toString().trim();
-
-        // Expand the last argument if it's a list.
-        if (argq.argsLeft() == 1) {
-            argq = tcl.toArgq(argq.next());
-        }
-
-        while (argq.hasNext()) {
-            set.add(argq.next().toString());
-        }
-
-        var incident = new Incident.Anniversary(moment, label, set);
         bank.getIncidents().add(incident);
     }
 

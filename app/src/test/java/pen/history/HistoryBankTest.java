@@ -118,7 +118,7 @@ public class HistoryBankTest extends Ted {
         history.addEntity(new Entity("joe", "JoeP", "person"));
         history.addEntity(new Entity("bob", "BobC", "person"));
         history.getIncidents()
-            .add(new Incident.Beginning(10, "Joe is born", "joe"));
+            .add(new Incident.Start(10, "Joe is born", "joe"));
         history.getIncidents()
             .add(new Incident.Normal(15, "Bob enters", Set.of("bob")));
         history.getIncidents()
@@ -126,7 +126,7 @@ public class HistoryBankTest extends Ted {
         history.getIncidents()
             .add(new Incident.Normal(85, "Bob leaves", Set.of("bob")));
         history.getIncidents()
-            .add(new Incident.Ending(90, "Joe dies", "joe"));
+            .add(new Incident.End(90, "Joe dies", "joe"));
     }
 
 }

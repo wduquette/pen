@@ -191,15 +191,15 @@ public class HistoryQueryTest extends Ted {
         history.addEntity(new Entity("joe", "JoeP", "person"));
         history.addEntity(new Entity("bob", "BobC", "person"));
         history.getIncidents()
-            .add(new Incident.Beginning(10, "Joe is born", "joe"));
+            .add(new Incident.Start(10, "Joe is born", "joe"));
         history.getIncidents()
-            .add(new Incident.Beginning(15, "Bob enters", "bob"));
+            .add(new Incident.Start(15, "Bob enters", "bob"));
         history.getIncidents()
             .add(new Incident.Normal(50, "Joe and Bob talk", Set.of("joe", "bob")));
         history.getIncidents()
-            .add(new Incident.Ending(85, "Bob leaves", "bob"));
+            .add(new Incident.End(85, "Bob leaves", "bob"));
         history.getIncidents()
-            .add(new Incident.Ending(90, "Joe dies", "joe"));
+            .add(new Incident.End(90, "Joe dies", "joe"));
     }
 
     private void populateHistory2() {
@@ -217,9 +217,9 @@ public class HistoryQueryTest extends Ted {
     private void makeEntity(String id, String type, int start, int end) {
         history.addEntity(new Entity(id, id.toUpperCase(), type));
         history.getIncidents()
-            .add(new Incident.Beginning(start, null, id));
+            .add(new Incident.Start(start, null, id));
         history.getIncidents()
-            .add(new Incident.Ending(end, null, id));
+            .add(new Incident.End(end, null, id));
     }
 
     @SuppressWarnings("unused")

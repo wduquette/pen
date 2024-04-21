@@ -2,8 +2,8 @@ calendar gregorian.cal gregorian "yyyy-mm-dd"
 entity joe "JoeP" person
 entity bob "BobC" person
 
-beginning AD-2010-02-15 joe "Joe is born"
-event     AD-2015-07-23 "Bob enters" bob
-event     AD-2050-12-25 "Joe and Bob talk" bob joe
-event     AD-2085-10-31 "Bob exits" bob
-ending    AD-2090-04-01 joe "Joe dies"
+birthday AD-2010-02-15 "Joe is born" joe
+incident AD-2015-07-23 "Bob enters" bob
+incident AD-2050-12-25 "Joe and Bob talk" bob joe
+incident AD-2085-10-31 "Bob exits" bob
+end      AD-2090-04-01 "Joe dies" joe

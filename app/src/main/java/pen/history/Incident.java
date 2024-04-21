@@ -4,12 +4,11 @@ import java.util.Set;
 
 @SuppressWarnings("unused")
 public sealed interface Incident permits
-    Incident.Beginning,
+    Incident.Start,
     Incident.Birthday,
-    Incident.Anniversary,
     Incident.Memorial,
     Incident.Normal,
-    Incident.Ending
+    Incident.End
 {
     //-------------------------------------------------------------------------
     // Standard Methods
@@ -63,7 +62,7 @@ public sealed interface Incident permits
      * @param label The label
      * @param entityId The entity ID
      */
-    record Beginning(
+    record Start(
         int moment,
         String label,
         String entityId
@@ -89,24 +88,8 @@ public sealed interface Incident permits
     }
 
     /**
-     * A personal anniversary other than a birthday, for one or more
-     * entities.
-     * @param moment The moment
-     * @param label The label
-     * @param entityIds The entity IDs
-     */
-    record Anniversary(
-        int moment,
-        String label,
-        Set<String> entityIds
-    ) implements Incident {
-        public Cap cap() { return Cap.SOFT; }
-        public boolean isRecurring() { return true; }
-    }
-
-    /**
-     * A memorial of some kind, e.g., 4th of July, D-Day.  A memorial is
-     * usually associated with a place rather than a person.
+     * A memorial of some kind, e.g., some event other than a birthday
+     * which is remembered each following year.
      * @param moment The moment
      * @param label The label
      * @param entityIds The entity IDs
@@ -141,7 +124,7 @@ public sealed interface Incident permits
      * @param label The label
      * @param entityId The entity ID
      */
-    record Ending(
+    record End(
         int moment,
         String label,
         String entityId
