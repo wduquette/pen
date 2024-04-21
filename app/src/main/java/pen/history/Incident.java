@@ -1,6 +1,5 @@
 package pen.history;
 
-import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings("unused")
