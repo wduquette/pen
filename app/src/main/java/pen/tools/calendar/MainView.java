@@ -25,7 +25,6 @@ public class MainView extends VBox {
     // GUI
     //
 
-    private final ToolBar toolBar = new ToolBar();
     private final ComboBox<String> calendarChooser = new ComboBox<>();
     private final ToolBar statusBar = new ToolBar();
     private final Label statusLabel = new Label();
@@ -68,7 +67,7 @@ public class MainView extends VBox {
                     )
                 )
             )
-            .child(FX.toolBar(toolBar)
+            .child(FX.toolBar()
                 .add(FX.button()
                     .text("<<")
                     .action(this::showPreviousYear))
