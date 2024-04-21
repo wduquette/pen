@@ -177,6 +177,22 @@ public class FX {
     }
 
     /**
+     * Creates a ScrollPaneMolder containing a new ScrollPane.
+     * @return The molder
+     */
+    public static ScrollPaneMolder scrollPane() {
+        return new ScrollPaneMolder(new ScrollPane());
+    }
+
+    /**
+     * Creates a ScrollPaneMolder containing the given ScrollPane
+     * @param object The object to mold
+     * @return The molder
+     */
+    public static ScrollPaneMolder scrollPane(ScrollPane object) {
+        return new ScrollPaneMolder(object);
+    }
+    /**
      * Creates a SplitPaneMolder containing a new SplitPane.
      * @return The molder
      */
