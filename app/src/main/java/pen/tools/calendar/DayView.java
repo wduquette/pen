@@ -3,7 +3,6 @@ package pen.tools.calendar;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import pen.calendars.formatter.DateFormat;
 import pen.fx.FX;
 import pen.util.HtmlBuilder;
