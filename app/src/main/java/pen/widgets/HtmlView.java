@@ -15,7 +15,6 @@ public class HtmlView extends StackPane {
     public HtmlView() {
         var resource = getClass().getResource("HtmlView.css");
         assert resource != null;
-        System.out.println("CSS: " + resource.toExternalForm());
         webView.getEngine().setUserStyleSheetLocation(resource.toExternalForm());
 
         getChildren().add(webView);
