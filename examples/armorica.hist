@@ -1,7 +1,7 @@
 # History File: Letters from Armorica
 calendar armorican.cal cumbrian "yyyy-mm-dd"
 
-entity amelie            "Armand Fabré"       person
+entity amelie            "Amelia Fabré"       person
 entity armand            "Armand Tuppeny"     person
 entity aunt-maggie       "Margaret Montjoy"   person
 entity bardot            "M. Bardot"          person
