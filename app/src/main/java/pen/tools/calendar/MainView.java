@@ -116,11 +116,13 @@ public class MainView extends VBox {
                 calFile = DataFiles.loadCalendar(getDataPath());
                 selectedCalendar = calFile.getNames().getFirst();
                 computeInitialDate();
-            } else if (getDataPath().endsWith(".hist")) {
+            } else if (getDataPath().toString().endsWith(".hist")) {
                 histFile = DataFiles.loadHistory(getDataPath());
                 calFile = histFile.calendarFile();
                 selectedCalendar = histFile.primaryCalendar();
                 computeInitialDate();
+            } else {
+                showError("No Calendars", "Unknown file type: " + getDataPath());
             }
 
             if (calFile == null) {
@@ -160,7 +162,7 @@ public class MainView extends VBox {
         repaint();
     }
 
-    private Calendar selectedCalendar() {
+    public Calendar selectedCalendar() {
         return calFile.calendars().get(selectedCalendar);
     }
 
@@ -193,6 +195,9 @@ public class MainView extends VBox {
     }
 
     private void repaint() {
+        if (calFile == null) {
+            return;
+        }
         var calendar = calFile.calendars().get(selectedCalendar);
         var date = calendar.day2date(currentDay);
 
@@ -213,6 +218,7 @@ public class MainView extends VBox {
     }
 
     public void setDataPath(Path path) {
+        System.out.println("setDataPath: " + path);
         dataPath.set(path);
     }
 
@@ -221,6 +227,10 @@ public class MainView extends VBox {
 
     public CalendarFile getCalendarFile() {
         return calFile;
+    }
+
+    public HistoryFile getHistoryFile() {
+        return histFile;
     }
 
     //-------------------------------------------------------------------------
