@@ -1,5 +1,6 @@
 package pen;
 
+import pen.calendars.Calendar;
 import pen.history.HistoryBank;
 import pen.history.HistoryQuery;
 
@@ -20,4 +21,7 @@ public record HistoryFile(
     CalendarFile calendarFile,
     String primaryCalendar
 ) {
+    public Calendar getPrimaryCalendar() {
+        return calendarFile.calendars().get(primaryCalendar);
+    }
 }
