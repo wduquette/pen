@@ -3,12 +3,16 @@ package pen.history;
 import org.junit.Before;
 import org.junit.Test;
 import pen.Ted;
+import pen.calendars.Gregorian;
+import pen.calendars.TrivialCalendar;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
 import static pen.checker.Checker.check;
+import static pen.checker.Checker.fail;
 
 public class HistoryQueryTest extends Ted {
     private HistoryBank history;
@@ -63,6 +67,75 @@ public class HistoryQueryTest extends Ted {
         var view = query.filter(i -> i.label().equals("Bob leaves"))
             .execute(history);
         check(view.getTimeFrame()).eq(TimeFrame.of(85, 85));
+    }
+
+    @Test
+    public void testExpandRecurring_normal() {
+        var cal = Gregorian.CALENDAR;
+        var birth = cal.date(1997, 2, 11);
+        var finalDate = cal.date(2000, 3, 1);
+
+        history.addEntity(new Entity("david", "David", "person"));
+        history.getIncidents().add(new Incident.Birthday(
+            cal.date2day(birth), "David's birth", Set.of("david")));
+        history.getIncidents().add(new Incident.Normal(
+            cal.date2day(finalDate), "Final date", Set.of("david")));
+
+        var view = query.expandRecurring(cal).execute(history);
+        check(view.getIncidents().size()).eq(5);
+
+        var result = view.getIncidents().stream()
+            .sorted(Comparator.comparing(Incident::moment))
+            .toList();
+
+        // We kept the original two incidents.
+        check(result.get(0)).eq(history.getIncidents().get(0));
+        for (var i = 1; i <= 3; i++) {
+            if (result.get(i) instanceof Incident.Anniversary ann) {
+                check(ann.age()).eq(i);
+                check(ann.label()).containsString("David's birth");
+            } else {
+                fail("Not an Anniversary: " + result.get(i));
+            }
+        }
+        check(result.get(4)).eq(history.getIncidents().get(1));
+    }
+
+    @Test
+    public void testExpandRecurring_noMonths() {
+        var cal = new TrivialCalendar.Builder()
+            .yearLength(100)
+            .build();
+
+        history.addEntity(new Entity("joe", "JoeP", "person"));
+        history.getIncidents()
+            .add(new Incident.Birthday(10, "Joe is born", Set.of("joe")));
+        // Ensure we have a following year
+        history.getIncidents()
+            .add(new Incident.Normal(120, "Final event", Set.of("joe")));
+
+        // No calendar months implies no anniversaries
+        var view = query.expandRecurring(cal).execute(history);
+        check(view.getIncidents().size()).eq(2);
+    }
+
+    @Test
+    public void testExpandRecurring_noIncidents() {
+        var view = query.expandRecurring(Gregorian.CALENDAR).execute(history);
+
+        // No incidents implies no anniversaries
+        check(view.getIncidents().isEmpty()).eq(true);
+    }
+
+    @Test
+    public void testExpandRecurring_noRecurring() {
+        history.addEntity(new Entity("joe", "JoeP", "person"));
+        history.getIncidents()
+            .add(new Incident.Start(10, "Joe is born", "joe"));
+
+        // No recurring incidents implies no anniversaries
+        var view = query.expandRecurring(Gregorian.CALENDAR).execute(history);
+        check(view.getIncidents().size()).eq(1);
     }
 
     @Test

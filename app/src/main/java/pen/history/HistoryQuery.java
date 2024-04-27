@@ -1,5 +1,6 @@
 package pen.history;
 
+import pen.calendars.Calendar;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -30,6 +31,13 @@ public class HistoryQuery {
          * @param filter The predicate
          */
         record IncidentFilter(Predicate<Incident> filter) implements Term {}
+
+        /**
+         * Expands recurring incidents as anniversaries throughout the current
+         * range.
+         * @param calendar The calendar, which must have months.
+         */
+        record ExpandRecurring(Calendar calendar) implements Term {}
 
         /**
          * Includes the given entities from the output.  Resets
@@ -116,6 +124,17 @@ public class HistoryQuery {
      */
     public HistoryQuery filter(Predicate<Incident> predicate) {
         terms.add(new Term.IncidentFilter(predicate));
+        return this;
+    }
+
+    /**
+     * Recurring incidents will be expanded as anniversaries through the final
+     * year of the current range of incidents, IF the calendar has months.
+     * @param calendar the calendar
+     * @return The query
+     */
+    public HistoryQuery expandRecurring(Calendar calendar) {
+        terms.add(new Term.ExpandRecurring(calendar));
         return this;
     }
 
@@ -309,6 +328,7 @@ public class HistoryQuery {
             for (var term : terms) {
                 switch (term) {
                     case Term.IncidentFilter t -> filterIncidents(t);
+                    case Term.ExpandRecurring t -> expandRecurring(t);
                     case Term.Includes t -> includeEntities(t);
                     case Term.IncludesTypes t -> includeTypes(t);
                     case Term.Excludes t -> excludeEntities(t);
@@ -355,6 +375,40 @@ public class HistoryQuery {
 
         void filterIncidents(Term.IncidentFilter t) {
             incidents = incidents.stream().filter(t.filter).toList();
+        }
+
+        void expandRecurring(Term.ExpandRecurring t) {
+            var cal = t.calendar();
+            if (!cal.hasMonths()) {
+                return;
+            }
+
+            // FIRST, get the recurring incidents, and also the final year
+            var finalYear = incidents.stream()
+                .mapToInt(i -> cal.day2date(i.moment()).year())
+                .max();
+            var recurring = incidents.stream()
+                .filter(Incident::isRecurring)
+                .toList();
+
+            if (finalYear.isEmpty() || recurring.isEmpty()) {
+                return;
+            }
+
+            // NEXT, add the anniversary for each recurring incident.
+            var result = new ArrayList<>(incidents);
+            for (var incident : recurring) {
+                var date = cal.day2date(incident.moment());
+
+                for (var y = date.year() + 1; y <= finalYear.getAsInt(); y++) {
+                    var newDate = cal.date(y, date.monthOfYear(), date.dayOfMonth());
+                    var moment = cal.date2day(newDate);
+                    var age = y - date.year();
+                    result.add(new Incident.Anniversary(moment, age, incident));
+                }
+            }
+
+            incidents = result;
         }
 
         void includeEntities(Term.Includes t) {

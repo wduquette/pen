@@ -19,6 +19,10 @@ public class Checker<Value> {
         }
     }
 
+    public static void fail(String message) {
+        throw new AssertionError("failed: " + message);
+    }
+
     //-------------------------------------------------------------------------
     // Instance Variables
 

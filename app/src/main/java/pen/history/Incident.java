@@ -1,5 +1,6 @@
 package pen.history;
 
+import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings("unused")
@@ -7,6 +8,7 @@ public sealed interface Incident permits
     Incident.Start,
     Incident.Birthday,
     Incident.Memorial,
+    Incident.Anniversary,
     Incident.Normal,
     Incident.End
 {
@@ -101,6 +103,35 @@ public sealed interface Incident permits
     ) implements Incident {
         public Cap cap() { return Cap.SOFT; }
         public boolean isRecurring() { return true; }
+    }
+
+    /**
+     * An anniversary of a recurring incident.  Anniversaries are usually
+     * created by the expandRecurrent() query term.
+     * @param moment The moment of the anniversary
+     * @param age The age of the anniversary in years
+     * @param start The original incident, of which this is an anniversary
+     */
+    record Anniversary(
+        int moment,
+        int age,
+        Incident start
+    ) implements Incident {
+        public String label() {
+            return start.label() + " (" + ordinal(age()) + ")";
+        }
+        public Set<String> entityIds() { return start.entityIds(); }
+        public Cap cap() { return Cap.SOFT; }
+        public boolean isRecurring() { return false; }
+
+        private String ordinal(int number) {
+            return switch (number) {
+                case 1 -> "1st";
+                case 2 -> "2nd";
+                case 3 -> "3rd";
+                default -> number + "th";
+            };
+        }
     }
 
     /**
