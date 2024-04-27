@@ -131,7 +131,8 @@ as follows:
         }
 
         var history = historyFile.history();
-        var query = historyFile.query();
+        var query = historyFile.query()
+            .expandRecurring(historyFile.getPrimaryCalendar());
 
         if (!options.includedEntities.isEmpty()) {
             query.includes(options.includedEntities);
