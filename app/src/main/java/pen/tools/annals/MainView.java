@@ -1,4 +1,4 @@
-package pen.tools.calendar;
+package pen.tools.annals;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -49,7 +49,7 @@ public class MainView extends VBox {
     //-------------------------------------------------------------------------
     // Constructor
 
-    public MainView(CalendarTool app) {
+    public MainView(AnnalsTool app) {
         this.dayView = new DayView(this);
 
         // FIRST, build the GUI

@@ -1,4 +1,4 @@
-package pen.tools.calendar;
+package pen.tools.annals;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -10,17 +10,17 @@ import pen.tools.ToolInfo;
 import java.io.File;
 import java.util.*;
 
-public class CalendarTool extends FXTool {
+public class AnnalsTool extends FXTool {
     public static final ToolInfo INFO = new ToolInfo(
-        "calendar",
+        "annals",
         "datafile.cal | datafile.hist",
-        "Displays fictional calendars and events.",
+        "Displays fictional calendars and histories.",
         """
-            A calendar file or a history file, this tool will display the
+            Given a calendar file or a history file, this tool will display the
             defined calendars, populated with any relevant dates.  The user
             may choose which calendar to view, and do date conversions.
             """,
-        CalendarTool::main
+        AnnalsTool::main
     );
 
     //------------------------------------------------------------------------
@@ -31,7 +31,7 @@ public class CalendarTool extends FXTool {
     //------------------------------------------------------------------------
     // Constructor
 
-    public CalendarTool() {
+    public AnnalsTool() {
         super(INFO);
     }
 
