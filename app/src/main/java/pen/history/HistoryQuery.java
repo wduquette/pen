@@ -44,8 +44,10 @@ public class HistoryQuery {
          * Expands recurring incidents as anniversaries throughout the current
          * range.
          * @param calendar The calendar, which must have months.
+         * @param finalYear The final calendar year.  If null, defaults to
+         *                  last year in data.
          */
-        record ExpandRecurring(Calendar calendar) implements Term {}
+        record ExpandRecurring(Calendar calendar, Integer finalYear) implements Term {}
 
         /**
          * Includes the given entities from the output.  Resets
@@ -142,7 +144,19 @@ public class HistoryQuery {
      * @return The query
      */
     public HistoryQuery expandRecurring(Calendar calendar) {
-        terms.add(new Term.ExpandRecurring(calendar));
+        terms.add(new Term.ExpandRecurring(calendar, null));
+        return this;
+    }
+
+    /**
+     * Recurring incidents will be expanded as anniversaries through the given
+     * final year, IF the calendar has months.
+     * @param calendar the calendar
+     * @param finalYear The final year
+     * @return The query
+     */
+    public HistoryQuery expandRecurring(Calendar calendar, int finalYear) {
+        terms.add(new Term.ExpandRecurring(calendar, finalYear));
         return this;
     }
 
@@ -392,15 +406,24 @@ public class HistoryQuery {
             }
 
             // FIRST, get the recurring incidents, and also the final year
-            var finalYear = incidents.stream()
-                .mapToInt(i -> cal.day2date(i.moment()).year())
-                .max();
             var recurring = incidents.stream()
                 .filter(Incident::isRecurring)
                 .toList();
 
-            if (finalYear.isEmpty() || recurring.isEmpty()) {
+            if (recurring.isEmpty()) {
                 return;
+            }
+
+            int finalYear;
+
+            if (t.finalYear() != null) {
+                finalYear = t.finalYear();
+            } else {
+                // There are incidents; there will be a final year.
+                finalYear = incidents.stream()
+                    .mapToInt(i -> cal.day2date(i.moment()).year())
+                    .max()
+                    .orElseThrow();
             }
 
             // NEXT, add the anniversary for each recurring incident.
@@ -408,7 +431,7 @@ public class HistoryQuery {
             for (var incident : recurring) {
                 var date = cal.day2date(incident.moment());
 
-                for (var y = date.year() + 1; y <= finalYear.getAsInt(); y++) {
+                for (var y = date.year() + 1; y <= finalYear; y++) {
                     var newDate = cal.date(y, date.monthOfYear(), date.dayOfMonth());
                     var moment = cal.date2day(newDate);
                     var age = y - date.year();

@@ -207,7 +207,7 @@ public class MainView extends VBox {
         var date = calendar.day2date(currentDay);
 
         var query = new HistoryQuery(histFile.query());
-        view = query.expandRecurring(selectedCalendar())
+        view = query.expandRecurring(selectedCalendar(), date.year())
             .execute(histFile.history());
 
         yearView.setCalendar(calendar);
