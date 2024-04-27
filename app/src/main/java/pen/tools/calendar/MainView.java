@@ -14,6 +14,8 @@ import pen.DataFiles;
 import pen.HistoryFile;
 import pen.calendars.Calendar;
 import pen.fx.FX;
+import pen.history.History;
+import pen.history.HistoryQuery;
 
 import java.nio.file.Path;
 
@@ -42,6 +44,7 @@ public class MainView extends VBox {
     private CalendarFile calFile;
     private HistoryFile histFile;
     private String selectedCalendar;
+    private History view;
     private int currentDay = 0;
 
     //-------------------------------------------------------------------------
@@ -110,6 +113,7 @@ public class MainView extends VBox {
         histFile = null;
         selectedCalendar = null;
         currentDay = 0; // For now
+        view = null;
 
         try {
             if (getDataPath().toString().endsWith(".cal")) {
@@ -196,10 +200,15 @@ public class MainView extends VBox {
 
     private void repaint() {
         if (calFile == null) {
+            view = null;
             return;
         }
         var calendar = calFile.calendars().get(selectedCalendar);
         var date = calendar.day2date(currentDay);
+
+        var query = new HistoryQuery(histFile.query());
+        view = query.expandRecurring(selectedCalendar())
+            .execute(histFile.history());
 
         yearView.setCalendar(calendar);
         yearView.setYear(date.year());
@@ -231,6 +240,10 @@ public class MainView extends VBox {
 
     public HistoryFile getHistoryFile() {
         return histFile;
+    }
+
+    public History getView() {
+        return view;
     }
 
     //-------------------------------------------------------------------------
