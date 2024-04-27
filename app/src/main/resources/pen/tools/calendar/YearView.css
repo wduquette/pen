@@ -23,6 +23,18 @@
     -fx-font-weight: bold;
 }
 
+.normal-day {
+    -fx-text-fill: black;
+}
+
+.incident {
+    -fx-text-fill: red;
+}
+
+.anniversary {
+    -fx-text-fill: magenta;
+}
+
 .selected-date {
-    -fx-background-color: lightpink;
+    -fx-background-color: lightgray;
 }

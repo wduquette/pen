@@ -17,6 +17,7 @@ import pen.calendars.Calendar;
 import pen.calendars.Date;
 import pen.calendars.formatter.DateFormat;
 import pen.fx.FX;
+import pen.history.Incident;
 
 import java.util.*;
 
@@ -28,8 +29,26 @@ public class YearView extends ScrollPane {
     public static final String STYLE_CLASS_SELECTED_DATE =
         "selected-date";
 
+    private enum Kind {
+        NORMAL("normal-day"),
+        ANNIVERSARY("anniversary"),
+        INCIDENT("incident");
+
+        private final String styleClass;
+
+        Kind(String styleClass) {
+            this.styleClass = styleClass;
+        }
+
+        public String styleClass() {
+            return styleClass;
+        }
+    }
+
     //-------------------------------------------------------------------------
     // Instance Variables
+
+    private final MainView main;
 
     private final Label yearLabel = new Label();
     private final GridPane monthGrid = new GridPane();
@@ -47,13 +66,17 @@ public class YearView extends ScrollPane {
         new SimpleObjectProperty<>(new Label(DEFAULT_PLACEHOLDER));
     private Runnable onSelectDate;
 
+    private final Map<Date,Kind> dateKinds = new HashMap<>();
+
     // Computed
     private int rowsInMonth = 0;
 
     //-------------------------------------------------------------------------
     // Constructor
 
-    public YearView() {
+    public YearView(MainView main) {
+        this.main = main;
+
         FX.scrollPane(this).vgrow()
             .stylesheet(getClass(), "YearView.css")
             .content(FX.stackPane()
@@ -97,6 +120,7 @@ public class YearView extends ScrollPane {
             : null;
         selectedDate = null;
 
+        computeDateKinds();
         computeYearLabel();
         computeRowsInMonth();
         computeMonths();
@@ -109,6 +133,30 @@ public class YearView extends ScrollPane {
                 selectDate(theDate);
             }
         }
+    }
+
+    private void computeDateKinds() {
+        var cal = getCalendar();
+        var year = getYear();
+        dateKinds.clear();
+
+        // If the date has a recurrent incident or anniversary then
+        // mark it ANNIVERSARY; otherwise, mark it INCIDENT.
+        main.getView().getIncidents().stream()
+            .filter(i -> cal.day2date(i.moment()).year() == year)
+            .forEach(i -> {
+                var date = cal.day2date(i.moment());
+                var kind = i.isRecurring() || i instanceof Incident.Anniversary
+                    ? Kind.ANNIVERSARY
+                    : Kind.INCIDENT;
+                if (dateKinds.containsKey(date)) {
+                    if (dateKinds.get(date) != Kind.ANNIVERSARY) {
+                        dateKinds.put(date, Kind.INCIDENT);
+                    }
+                } else {
+                    dateKinds.put(date, kind);
+                }
+            });
     }
 
     private void computeYearLabel() {
@@ -313,9 +361,11 @@ public class YearView extends ScrollPane {
                 var c = date.dayOfWeek() - 1;
                 var btn = new Button();
                 dateButtons.put(date, btn);
+                var kind = dateKinds.getOrDefault(date, Kind.NORMAL);
                 FX.gridPane(dateGrid)
                     .at(c, r, FX.button(btn)
                         .clearStyleClasses()
+                        .styleClass(kind.styleClass())
                         .gridHalignment(HPos.RIGHT)
                         .padding(2)
                         .fixed()

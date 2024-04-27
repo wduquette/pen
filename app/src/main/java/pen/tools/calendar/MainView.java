@@ -31,7 +31,7 @@ public class MainView extends VBox {
     private final ComboBox<String> calendarChooser = new ComboBox<>();
     private final ToolBar statusBar = new ToolBar();
     private final Label statusLabel = new Label();
-    private final YearView yearView = new YearView();
+    private final YearView yearView = new YearView(this);
     private final DayView dayView;
 
     //
@@ -225,7 +225,6 @@ public class MainView extends VBox {
     }
 
     public void setDataPath(Path path) {
-        System.out.println("setDataPath: " + path);
         dataPath.set(path);
     }
 
