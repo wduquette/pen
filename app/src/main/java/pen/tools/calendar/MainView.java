@@ -19,6 +19,7 @@ import pen.history.HistoryQuery;
 
 import java.nio.file.Path;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class MainView extends VBox {
     //-------------------------------------------------------------------------
     // Instance Variables
@@ -37,8 +38,6 @@ public class MainView extends VBox {
     // Data
     //
 
-    private final CalendarTool app;
-
     private final ObjectProperty<Path> dataPath = new SimpleObjectProperty<>();
 
     private CalendarFile calFile;
@@ -51,7 +50,6 @@ public class MainView extends VBox {
     // Constructor
 
     public MainView(CalendarTool app) {
-        this.app = app;
         this.dayView = new DayView(this);
 
         // FIRST, build the GUI
