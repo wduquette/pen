@@ -201,6 +201,14 @@ public class MainView extends VBox {
             view = null;
             return;
         }
+
+        if (!selectedCalendar().hasMonths() || !selectedCalendar().hasWeeks()) {
+            view = null;
+            showError("Nothing to display",
+                "The selected calendar lacks weeks or months, and so cannot be displayed."
+            );
+        }
+
         var calendar = calFile.calendars().get(selectedCalendar);
         var date = calendar.day2date(currentDay);
 

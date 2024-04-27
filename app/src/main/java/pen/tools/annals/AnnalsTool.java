@@ -10,6 +10,7 @@ import pen.tools.ToolInfo;
 import java.io.File;
 import java.util.*;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class AnnalsTool extends FXTool {
     public static final ToolInfo INFO = new ToolInfo(
         "annals",

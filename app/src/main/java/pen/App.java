@@ -77,9 +77,7 @@ public class App {
     private String[] rest(String[] args) {
         var rest = new String[args.length - 1];
 
-        for (int i = 1; i < args.length; i++) {
-            rest[i-1] = args[i];
-        }
+        System.arraycopy(args, 1, rest, 0, args.length - 1);
 
         return rest;
     }
