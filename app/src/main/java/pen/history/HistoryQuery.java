@@ -21,6 +21,14 @@ public class HistoryQuery {
     public HistoryQuery() {
     }
 
+    /**
+     * Copies another query.
+     * @param other The other query.
+     */
+    public HistoryQuery(HistoryQuery other) {
+        this.terms.addAll(other.terms);
+    }
+
     //-------------------------------------------------------------------------
     // Term Definitions
 
