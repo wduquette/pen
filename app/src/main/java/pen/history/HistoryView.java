@@ -44,7 +44,9 @@ public class HistoryView
 
     @Override
     public List<Incident> getIncidents() {
-        return Collections.unmodifiableList(incidents());
+        return incidents().stream()
+            .sorted(Comparator.comparing(Incident::moment))
+            .toList();
     }
 
     @Override
