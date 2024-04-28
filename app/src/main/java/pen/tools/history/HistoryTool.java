@@ -137,7 +137,6 @@ as follows:
             System.exit(1);
         }
 
-        assert historyFile != null;
         var history = historyFile.history();
         var calendar = historyFile.getPrimaryCalendar();
 
