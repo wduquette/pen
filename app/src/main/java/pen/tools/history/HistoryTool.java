@@ -65,6 +65,11 @@ as follows:
    Include only incidents whose moments are between the start and the end,
    inclusive.  If the history specifies a calendar, the moments are specified
    in the calendar date format.
+
+--anniversaries
+
+   If given, anniversaries of memorial and birthday incidents will be added 
+   to the incident list.
    
 --debug
 
@@ -115,6 +120,7 @@ as follows:
                     options.mode = toEnum(TextTable.Mode.class, opt, argq);
                 case "--start" -> options.start = argq.poll();
                 case "--end" -> options.end = argq.poll();
+                case "--anniversaries" -> options.anniversaries = true;
                 case "--debug" -> options.debug = true;
                 default -> throw unknownOption(opt);
             }
@@ -138,8 +144,8 @@ as follows:
 
         var query = historyFile.query();
 
-        if (calendar != null) {
-            query.expandRecurring(historyFile.getPrimaryCalendar());
+        if (calendar != null && options.anniversaries) {
+            query.expandAnniversaries(historyFile.getPrimaryCalendar());
         }
 
         if (!options.includedEntities.isEmpty()) {
@@ -269,6 +275,7 @@ as follows:
         List<String> includedEntities = new ArrayList<>();
         String start;
         String end;
+        boolean anniversaries = false;
         boolean debug = false;
     }
 

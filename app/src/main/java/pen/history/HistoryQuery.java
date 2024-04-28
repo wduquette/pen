@@ -143,7 +143,7 @@ public class HistoryQuery {
      * @param calendar the calendar
      * @return The query
      */
-    public HistoryQuery expandRecurring(Calendar calendar) {
+    public HistoryQuery expandAnniversaries(Calendar calendar) {
         terms.add(new Term.ExpandRecurring(calendar, null));
         return this;
     }
@@ -155,7 +155,7 @@ public class HistoryQuery {
      * @param finalYear The final year
      * @return The query
      */
-    public HistoryQuery expandRecurring(Calendar calendar, int finalYear) {
+    public HistoryQuery expandAnniversaries(Calendar calendar, int finalYear) {
         terms.add(new Term.ExpandRecurring(calendar, finalYear));
         return this;
     }

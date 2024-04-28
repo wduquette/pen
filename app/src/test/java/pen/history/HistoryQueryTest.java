@@ -81,7 +81,7 @@ public class HistoryQueryTest extends Ted {
         history.getIncidents().add(new Incident.Normal(
             cal.date2day(finalDate), "Final date", Set.of("david")));
 
-        var view = query.expandRecurring(cal).execute(history);
+        var view = query.expandAnniversaries(cal).execute(history);
         check(view.getIncidents().size()).eq(5);
 
         var result = view.getIncidents().stream()
@@ -115,13 +115,13 @@ public class HistoryQueryTest extends Ted {
             .add(new Incident.Normal(120, "Final event", Set.of("joe")));
 
         // No calendar months implies no anniversaries
-        var view = query.expandRecurring(cal).execute(history);
+        var view = query.expandAnniversaries(cal).execute(history);
         check(view.getIncidents().size()).eq(2);
     }
 
     @Test
     public void testExpandRecurring_noIncidents() {
-        var view = query.expandRecurring(Gregorian.CALENDAR).execute(history);
+        var view = query.expandAnniversaries(Gregorian.CALENDAR).execute(history);
 
         // No incidents implies no anniversaries
         check(view.getIncidents().isEmpty()).eq(true);
@@ -134,7 +134,7 @@ public class HistoryQueryTest extends Ted {
             .add(new Incident.Start(10, "Joe is born", "joe"));
 
         // No recurring incidents implies no anniversaries
-        var view = query.expandRecurring(Gregorian.CALENDAR).execute(history);
+        var view = query.expandAnniversaries(Gregorian.CALENDAR).execute(history);
         check(view.getIncidents().size()).eq(1);
     }
 
