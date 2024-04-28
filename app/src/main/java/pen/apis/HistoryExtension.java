@@ -167,13 +167,25 @@ public class HistoryExtension implements TclExtension {
     private void cmd_entity(TclEngine tcl, Argq argq)
         throws TclException
     {
-        tcl.checkArgs(argq, 3, 3, "id name type");
+        tcl.checkArgs(argq, 3, 4, "id name type ?-prime?");
 
-        var entity = new Entity(
-            tcl.toIdentifier(argq.next()),
-            argq.next().toString().trim(),
-            tcl.toIdentifier(argq.next())
-        );
+        var id = tcl.toIdentifier(argq.next());
+        var name = argq.next().toString().trim();
+        var type = tcl.toIdentifier(argq.next());
+        boolean prime;
+
+        if (argq.hasNext()) {
+            var opt = argq.next().toString();
+            if (opt.equals("-prime")) {
+                prime = true;
+            } else {
+                throw tcl.badValue("Unknown option", opt);
+            }
+        } else {
+            prime = false;
+        }
+
+        var entity = new Entity(id, name, type, prime);
 
         if (entityLimits.get(entity.id()) != null) {
             throw tcl.error("Duplicate entity: \"" + entity.id());

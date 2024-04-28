@@ -26,7 +26,7 @@ public class HistoryBankTest extends Ted {
     @Test
     public void testAddGetEntity() {
         test("testAddGetEntity");
-        var joe = new Entity("joe", "Joe", "person");
+        var joe = new Entity("joe", "Joe", "person", true);
         history.addEntity(joe);
         check(history.getEntityMap().size()).eq(1);
         check(history.getEntity("joe").orElse(null)).eq(joe);
@@ -36,7 +36,7 @@ public class HistoryBankTest extends Ted {
     @Test
     public void testRemoveEntity() {
         test("testRemoveEntity");
-        var joe = new Entity("joe", "Joe", "person");
+        var joe = new Entity("joe", "Joe", "person", true);
         history.addEntity(joe);
         check(history.getEntityMap().isEmpty()).eq(false);
 
@@ -106,8 +106,8 @@ public class HistoryBankTest extends Ted {
     }
 
     private void populateHistory() {
-        history.addEntity(new Entity("joe", "JoeP", "person"));
-        history.addEntity(new Entity("bob", "BobC", "person"));
+        history.addEntity(new Entity("joe", "JoeP", "person", true));
+        history.addEntity(new Entity("bob", "BobC", "person", true));
         history.getIncidents()
             .add(new Incident.Start(10, "Joe is born", "joe"));
         history.getIncidents()
