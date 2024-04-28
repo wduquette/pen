@@ -20,6 +20,8 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static pen.util.TextTable.Mode.TERMINAL;
+
 /**
  * Application class for the "pen draw" tool.
  */
@@ -180,7 +182,11 @@ as follows:
         }
 
         if (options.results.contains(Result.ENTITY)) {
-            printTable(getSortedEntities(), ENTITIES);
+            if (options.mode == TERMINAL) {
+                printTable(getSortedEntities(), ENTITIES);
+            } else {
+                printTable(getSortedEntities(), ENTITIES_MARKDOWN);
+            }
         }
 
         if (options.results.contains(Result.INCIDENT)) {
@@ -235,25 +241,18 @@ as follows:
 
     public final TextTable<Entity> ENTITIES = new TextTable<>(List.of(
         new TextColumn<>("ID", TextAlign.LEFT, Entity::id),
-        new TextColumn<>("Name", TextAlign.LEFT, Entity::name),
         new TextColumn<>("Type", TextAlign.LEFT, Entity::type),
-        new TextColumn<>("Frame", TextAlign.LEFT, this::entityTimeFrame)
+        new TextColumn<>("Name", TextAlign.LEFT, Entity::name)
     ));
 
-    private String entityTimeFrame(Entity e) {
-        var p = view.getPeriods().get(e.id());
+    public final TextTable<Entity> ENTITIES_MARKDOWN = new TextTable<>(List.of(
+        new TextColumn<>("ID", TextAlign.LEFT, Entity::id),
+        new TextColumn<>("Type", TextAlign.LEFT, Entity::type),
+        new TextColumn<>("Name", TextAlign.LEFT, this::entityLink)
+    ));
 
-        if (p == null) {
-            return "No incidents";
-        }
-
-        return
-            (p.startCap() == Cap.HARD ? "[" : "(") +
-            view.formatMoment(p.start()) +
-            " to " +
-            view.formatMoment(p.end()) +
-            (p.endCap() == Cap.HARD ? ")" : "]")
-            ;
+    private String entityLink(Entity e) {
+        return "[[" + e.name() + "]]";
     }
 
     public final TextTable<Incident> INCIDENTS = new TextTable<>(List.of(
@@ -268,7 +267,7 @@ as follows:
     // Options Structure
 
     private static class Options {
-        TextTable.Mode mode = TextTable.Mode.TERMINAL;
+        TextTable.Mode mode = TERMINAL;
         LinkedHashSet<Result> results = new LinkedHashSet<>();
         List<String> includedEntities = new ArrayList<>();
         String start;
