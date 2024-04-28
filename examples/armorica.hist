@@ -3,19 +3,19 @@
 # Dropbox/Vaults/Armorica/data.
 calendar armorican.cal cumbrian "yyyy-mm-dd"
 
-type person "Person"
-type place "Place"
+type person "Person" -prime
+type place "Place" -prime
 type war "War"
 
 entity amelie            "Amelia Fabré"       person
-entity armand            "Armand Tuppeny"     person
+entity armand            "Armand Tuppeny"     person -prime
 entity aunt-maggie       "Margaret Montjoy"   person
 entity bardot            "M. Bardot"          person
 entity dad               "Burlington Massey"  person
 entity elise             "Elise Frontenac"    person
 entity fournier          "M. Fournier"        person
 entity harte             "M. Harte"           person
-entity jack              "Jack Montjoy"       person
+entity jack              "Jack Montjoy"       person -prime
 entity jacques-le-souris "Jacques-le-Souris"  person
 entity jean-baptiste     "Jean Baptiste"      person
 entity journal           "Armand's Journal"   person ;# by courtesy
