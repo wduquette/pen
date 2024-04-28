@@ -5,6 +5,7 @@ import pen.App;
 import pen.DataFileException;
 import pen.DataFiles;
 import pen.HistoryFile;
+import pen.calendars.Calendar;
 import pen.history.Cap;
 import pen.history.History;
 import pen.history.Entity;
@@ -112,6 +113,8 @@ as follows:
                     options.results.add(toEnum(Result.class, opt, argq));
                 case "--format", "-f" ->
                     options.mode = toEnum(TextTable.Mode.class, opt, argq);
+                case "--start" -> options.start = argq.poll();
+                case "--end" -> options.end = argq.poll();
                 case "--debug" -> options.debug = true;
                 default -> throw unknownOption(opt);
             }
@@ -131,11 +134,24 @@ as follows:
         }
 
         var history = historyFile.history();
-        var query = historyFile.query()
-            .expandRecurring(historyFile.getPrimaryCalendar());
+        var calendar = historyFile.getPrimaryCalendar();
+
+        var query = historyFile.query();
+
+        if (calendar != null) {
+            query.expandRecurring(historyFile.getPrimaryCalendar());
+        }
 
         if (!options.includedEntities.isEmpty()) {
             query.includes(options.includedEntities);
+        }
+
+        if (options.start != null) {
+            query.noEarlierThan(toMoment(calendar, options.start));
+        }
+
+        if (options.end != null) {
+            query.noLaterThan(toMoment(calendar, options.end));
         }
 
         view = query.execute(history);
@@ -184,6 +200,19 @@ as follows:
         }
 
         exit(); // Because JavaFX.
+    }
+
+    private int toMoment(Calendar cal, String momentString) {
+        try {
+            if (cal == null) {
+                return Integer.parseInt(momentString);
+            } else {
+                return cal.parse(momentString);
+            }
+        } catch (Exception ex) {
+            throw error("Could not make sense of timestamp: \"" +
+                    momentString + "\"");
+        }
     }
 
     private List<Entity> getSortedEntities() {
@@ -238,6 +267,8 @@ as follows:
         TextTable.Mode mode = TextTable.Mode.TERMINAL;
         LinkedHashSet<Result> results = new LinkedHashSet<>();
         List<String> includedEntities = new ArrayList<>();
+        String start;
+        String end;
         boolean debug = false;
     }
 
