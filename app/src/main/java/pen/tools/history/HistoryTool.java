@@ -6,7 +6,6 @@ import pen.DataFileException;
 import pen.DataFiles;
 import pen.HistoryFile;
 import pen.calendars.Calendar;
-import pen.history.Cap;
 import pen.history.History;
 import pen.history.Entity;
 import pen.history.Incident;
