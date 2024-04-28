@@ -21,7 +21,13 @@ public interface History {
     Function<Integer,String> getMomentFormatter();
 
     /**
-     * The entities in the history, by name.
+     * The entity types in the history, by id.
+     * @return The entities.
+     */
+    Map<String, EntityType> getTypeMap();
+
+    /**
+     * The entities in the history, by id.
      * @return The entities.
      */
     Map<String, Entity> getEntityMap();

@@ -389,7 +389,11 @@ public class HistoryQuery {
                 }
             }
 
-            var result = new HistoryView(map, incidents, periodGroups);
+            var result = new HistoryView(
+                source.getTypeMap(),
+                map,
+                incidents,
+                periodGroups);
             result.setMomentFormatter(source.getMomentFormatter());
 
             return result;

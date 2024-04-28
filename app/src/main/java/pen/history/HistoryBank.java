@@ -22,6 +22,22 @@ public class HistoryBank
         setMomentFormatter(null);
     }
 
+    public Map<String,EntityType> getTypeMap() {
+        return typeMap();
+    }
+
+    public void addEntityType(EntityType type) {
+        typeMap().put(type.id(), type);
+    }
+
+    public Optional<EntityType> removeEntityType(String id) {
+        return Optional.ofNullable(typeMap().remove(id));
+    }
+
+    public Optional<EntityType> getEntityType(String id) {
+        return Optional.ofNullable(typeMap().get(id));
+    }
+
     public Map<String,Entity> getEntityMap() {
         return entityMap();
     }
