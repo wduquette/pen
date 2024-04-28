@@ -7,7 +7,7 @@ type person "Person" -prime
 type place "Place" -prime
 type war "War"
 
-entity amelie            "Amelia Fabré"       person
+entity amelie            "Amelie Fabré"       person
 entity armand            "Armand Tuppeny"     person -prime
 entity aunt-maggie       "Margaret Montjoy"   person
 entity bardot            "M. Bardot"          person
