@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static pen.util.TextTable.Mode.MARKDOWN;
 import static pen.util.TextTable.Mode.TERMINAL;
 
 /**
@@ -193,7 +194,15 @@ as follows:
         }
 
         if (options.results.contains(Result.TIMELINE)) {
+            if (options.mode == MARKDOWN) {
+                println("```text");
+            }
+
             println(view.toTimelineChart());
+
+            if (options.mode == MARKDOWN) {
+                println("```");
+            }
         }
 
         if (options.results.contains(Result.SUMMARY)) {
