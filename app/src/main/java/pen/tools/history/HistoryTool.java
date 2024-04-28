@@ -68,7 +68,7 @@ as follows:
 
 --anniversaries
 
-   If given, anniversaries of memorial and birthday incidents will be added 
+   If given, anniversaries of memorial and birthday incidents will be added
    to the incident list.
    
 --debug
