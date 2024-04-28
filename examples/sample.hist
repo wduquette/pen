@@ -1,5 +1,6 @@
 calendar gregorian.cal gregorian "yyyy-mm-dd"
-entity joe "JoeP" person
+type person "Person" -prime
+entity joe "JoeP" person -prime
 entity bob "BobC" person
 
 birthday AD-2010-02-15 "Joe is born" joe

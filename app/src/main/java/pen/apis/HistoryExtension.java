@@ -6,10 +6,7 @@ import pen.DataFiles;
 import pen.calendars.Calendar;
 import pen.calendars.CalendarException;
 import pen.calendars.formatter.DateFormat;
-import pen.history.Entity;
-import pen.history.HistoryBank;
-import pen.history.HistoryQuery;
-import pen.history.Incident;
+import pen.history.*;
 import pen.tcl.Argq;
 import pen.tcl.TclEngine;
 import pen.tcl.TclExtension;
@@ -71,6 +68,7 @@ public class HistoryExtension implements TclExtension {
         this.tcl = tcl;
 
         tcl.add("calendar", this::cmd_calendar);
+        tcl.add("type",     this::cmd_type);
         tcl.add("entity",   this::cmd_entity);
         tcl.add("start",    this::cmd_start);
         tcl.add("end",      this::cmd_end);
@@ -160,20 +158,69 @@ public class HistoryExtension implements TclExtension {
     }
 
 
-    // entity id name type
+    // type id name ?-prime?
+    //
+    // Adds a new entity type to the history, assigning it a unique ID, a
+    // name for display, and a prime flag.
+    private void cmd_type(TclEngine tcl, Argq argq)
+        throws TclException
+    {
+        tcl.checkArgs(argq, 2, 3, "id name ?-prime?");
+
+        var id = tcl.toIdentifier(argq.next());
+        var name = argq.next().toString().trim();
+        boolean prime;
+
+        if (argq.hasNext()) {
+            var opt = argq.next().toString();
+            if (opt.equals("-prime")) {
+                prime = true;
+            } else {
+                throw tcl.badValue("Unknown option", opt);
+            }
+        } else {
+            prime = false;
+        }
+
+        var type = new EntityType(id, name, prime);
+
+        if (bank.getEntityType(id).isPresent()) {
+            throw tcl.error("Duplicate entity type: \"" + type.id());
+        }
+
+        if (type.name().isEmpty()) {
+            throw tcl.expected("entity type name", type.name());
+        }
+
+        bank.addEntityType(type);
+    }
+
+    // entity id name type ?-prime?
     //
     // Adds a new entity to the history, assigning it a unique ID, a
     // name for display, and a type.
     private void cmd_entity(TclEngine tcl, Argq argq)
         throws TclException
     {
-        tcl.checkArgs(argq, 3, 3, "id name type");
+        tcl.checkArgs(argq, 3, 4, "id name type ?-prime?");
 
-        var entity = new Entity(
-            tcl.toIdentifier(argq.next()),
-            argq.next().toString().trim(),
-            tcl.toIdentifier(argq.next())
-        );
+        var id = tcl.toIdentifier(argq.next());
+        var name = argq.next().toString().trim();
+        var type = toType(argq.next());
+        boolean prime;
+
+        if (argq.hasNext()) {
+            var opt = argq.next().toString();
+            if (opt.equals("-prime")) {
+                prime = true;
+            } else {
+                throw tcl.badValue("Unknown option", opt);
+            }
+        } else {
+            prime = false;
+        }
+
+        var entity = new Entity(id, name, type.id(), prime);
 
         if (entityLimits.get(entity.id()) != null) {
             throw tcl.error("Duplicate entity: \"" + entity.id());
@@ -181,10 +228,6 @@ public class HistoryExtension implements TclExtension {
 
         if (entity.name().isEmpty()) {
             throw tcl.expected("entity name", entity.name());
-        }
-
-        if (entity.type().isEmpty()) {
-            throw tcl.expected("entity type", entity.type());
         }
 
         entityLimits.put(entity.id(), new Limits(entity));
@@ -427,6 +470,16 @@ public class HistoryExtension implements TclExtension {
             return new DateFormat(arg.toString());
         } catch (CalendarException ex) {
             throw tcl.expected("date format", arg);
+        }
+    }
+
+    private EntityType toType(TclObject arg) throws TclException {
+        var type = bank.getEntityType(arg.toString());
+
+        if (type.isPresent()) {
+            return type.get();
+        } else {
+            throw tcl.expected("known entity type ID", arg);
         }
     }
 

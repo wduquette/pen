@@ -11,7 +11,10 @@ public abstract class AbstractHistory implements History {
     // The calendar information
     private Function<Integer, String> momentFormatter;
 
-    // The entities in this diagram.  Use a LinkedHashMap to preserve
+    // The entity types in this history.
+    private final SequencedMap<String,EntityType> typeMap = new LinkedHashMap<>();
+
+    // The entities in this history.  Use a LinkedHashMap to preserve
     private final SequencedMap<String, Entity> entityMap =
         new LinkedHashMap<>();
 
@@ -40,6 +43,15 @@ public abstract class AbstractHistory implements History {
     // Protected Members, for use by subclasses.
     //
     // Subclasses are free to edit and view the history as they like.
+
+    protected final SequencedMap<String, EntityType> typeMap() {
+        return typeMap;
+    }
+
+    protected final void setTypeMap(Map<String, EntityType> map) {
+        typeMap.clear();
+        typeMap.putAll(map);
+    }
 
     protected final SequencedMap<String, Entity> entityMap() {
         return entityMap;

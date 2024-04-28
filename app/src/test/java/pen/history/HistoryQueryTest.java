@@ -75,7 +75,7 @@ public class HistoryQueryTest extends Ted {
         var birth = cal.date(1997, 2, 11);
         var finalDate = cal.date(2000, 3, 1);
 
-        history.addEntity(new Entity("david", "David", "person"));
+        history.addEntity(new Entity("david", "David", "person", true));
         history.getIncidents().add(new Incident.Birthday(
             cal.date2day(birth), "David's birth", Set.of("david")));
         history.getIncidents().add(new Incident.Normal(
@@ -107,7 +107,7 @@ public class HistoryQueryTest extends Ted {
             .yearLength(100)
             .build();
 
-        history.addEntity(new Entity("joe", "JoeP", "person"));
+        history.addEntity(new Entity("joe", "JoeP", "person", true));
         history.getIncidents()
             .add(new Incident.Birthday(10, "Joe is born", Set.of("joe")));
         // Ensure we have a following year
@@ -129,7 +129,7 @@ public class HistoryQueryTest extends Ted {
 
     @Test
     public void testExpandRecurring_noRecurring() {
-        history.addEntity(new Entity("joe", "JoeP", "person"));
+        history.addEntity(new Entity("joe", "JoeP", "person", true));
         history.getIncidents()
             .add(new Incident.Start(10, "Joe is born", "joe"));
 
@@ -261,8 +261,8 @@ public class HistoryQueryTest extends Ted {
     }
 
     private void populateHistory() {
-        history.addEntity(new Entity("joe", "JoeP", "person"));
-        history.addEntity(new Entity("bob", "BobC", "person"));
+        history.addEntity(new Entity("joe", "JoeP", "person", true));
+        history.addEntity(new Entity("bob", "BobC", "person", false));
         history.getIncidents()
             .add(new Incident.Start(10, "Joe is born", "joe"));
         history.getIncidents()
@@ -288,7 +288,7 @@ public class HistoryQueryTest extends Ted {
     }
 
     private void makeEntity(String id, String type, int start, int end) {
-        history.addEntity(new Entity(id, id.toUpperCase(), type));
+        history.addEntity(new Entity(id, id.toUpperCase(), type, false));
         history.getIncidents()
             .add(new Incident.Start(start, null, id));
         history.getIncidents()

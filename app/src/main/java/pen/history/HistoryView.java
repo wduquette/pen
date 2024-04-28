@@ -14,18 +14,22 @@ public class HistoryView
     // Constructor
 
     public HistoryView(
+        Map<String,EntityType> typeMap,
         Map<String,Entity> entityMap,
-        List<Incident> incidents, LinkedHashMap<String, List<Period>> periodGroups
+        List<Incident> incidents,
+        LinkedHashMap<String, List<Period>> periodGroups
     ) {
         this.periodGroups = periodGroups;
-        setIncidents(incidents);
+        setTypeMap(typeMap);
         setEntityMap(entityMap);
+        setIncidents(incidents);
     }
 
     /**
      * Makes a copy of the given history.
      * @param history The history
      */
+    @SuppressWarnings("unused")
     public HistoryView(History history) {
         setMomentFormatter(history.getMomentFormatter());
         setEntityMap(history.getEntityMap());
@@ -36,6 +40,11 @@ public class HistoryView
 
     //-------------------------------------------------------------------------
     // Provide unmodifiable access to data
+
+    @Override
+    public Map<String, EntityType> getTypeMap() {
+        return Collections.unmodifiableMap(typeMap());
+    }
 
     @Override
     public Map<String, Entity> getEntityMap() {
