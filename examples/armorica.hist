@@ -1,5 +1,11 @@
 # History File: Letters from Armorica
+# NOTE: This is now *just* an example; the real file is in
+# Dropbox/Vaults/Armorica/data.
 calendar armorican.cal cumbrian "yyyy-mm-dd"
+
+type person "Person"
+type place "Place"
+type war "War"
 
 entity amelie            "Amelia Fabré"       person
 entity armand            "Armand Tuppeny"     person
@@ -10,7 +16,7 @@ entity elise             "Elise Frontenac"    person
 entity fournier          "M. Fournier"        person
 entity harte             "M. Harte"           person
 entity jack              "Jack Montjoy"       person
-entity jacques-le-souris "Jacques-le-Souris"   person
+entity jacques-le-souris "Jacques-le-Souris"  person
 entity jean-baptiste     "Jean Baptiste"      person
 entity journal           "Armand's Journal"   person ;# by courtesy
 entity leon              "Leon Suprenant"     person
