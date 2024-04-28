@@ -127,18 +127,17 @@ as follows:
         }
 
         // NEXT, try to open the file
-        HistoryFile historyFile;
+        HistoryFile historyFile = null;
 
         try {
             historyFile = DataFiles.loadHistory(historyFilePath);
         } catch (DataFileException ex) {
-            if (options.debug) {
-                println(ex.getMessage());
-                println(ex.getDetails());
-            }
-            throw error("Failed to read history file", ex);
+            println("Failed to read history file: " + ex.getMessage());
+            println(ex.getDetails());
+            System.exit(1);
         }
 
+        assert historyFile != null;
         var history = historyFile.history();
         var calendar = historyFile.getPrimaryCalendar();
 

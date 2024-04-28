@@ -9,7 +9,8 @@ public class DataFileException extends Exception {
 
     public String getDetails() {
         return switch (getCause()) {
-            case TclEngineException ex -> ex.getErrorInfo();
+            case TclEngineException ex ->
+                "At line " + ex.getErrorLine() + ", " + ex.getErrorInfo();
             case Exception ex -> ex.getMessage();
             default -> "";
         };
