@@ -212,7 +212,7 @@ public class MainView extends VBox {
         var calendar = calFile.calendars().get(selectedCalendar);
         var date = calendar.day2date(currentDay);
 
-        var query = new HistoryQuery(histFile.query());
+        var query = new HistoryQuery();
         view = query.expandAnniversaries(selectedCalendar(), date.year())
             .execute(histFile.history());
 

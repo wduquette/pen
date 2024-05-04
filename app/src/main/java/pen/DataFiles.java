@@ -71,7 +71,6 @@ public class DataFiles {
         return new HistoryFile(
             path,
             historyExtension.getHistory(),
-            historyExtension.getQuery(),
             historyExtension.getCalendarFile().orElse(null),
             historyExtension.getPrimaryCalendar().orElse(null)
         );

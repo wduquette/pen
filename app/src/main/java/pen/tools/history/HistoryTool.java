@@ -8,6 +8,7 @@ import pen.HistoryFile;
 import pen.calendars.Calendar;
 import pen.history.History;
 import pen.history.Entity;
+import pen.history.HistoryQuery;
 import pen.history.Incident;
 import pen.tools.FXTool;
 import pen.tools.ToolInfo;
@@ -142,7 +143,7 @@ as follows:
         var history = historyFile.history();
         var calendar = historyFile.getPrimaryCalendar();
 
-        var query = historyFile.query();
+        var query = new HistoryQuery();
 
         if (calendar != null && options.anniversaries) {
             query.expandAnniversaries(historyFile.getPrimaryCalendar());
