@@ -19,6 +19,7 @@ import pen.util.TextTable;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static pen.util.TextTable.Mode.MARKDOWN;
 import static pen.util.TextTable.Mode.TERMINAL;
@@ -185,7 +186,11 @@ as follows:
         }
 
         if (options.results.contains(Result.INCIDENT)) {
-            printTable(view.getIncidents(), INCIDENTS);
+            if (options.mode == TERMINAL) {
+                printTable(view.getIncidents(), INCIDENTS);
+            } else {
+                printTable(view.getIncidents(), INCIDENTS_MARKDOWN);
+            }
         }
 
         if (options.results.contains(Result.TIMELINE)) {
@@ -288,6 +293,20 @@ as follows:
         new TextColumn<>("Concerns", TextAlign.LEFT,
             row -> String.join(", ", row.entityIds()))
     ));
+
+    public final TextTable<Incident> INCIDENTS_MARKDOWN = new TextTable<>(List.of(
+        new TextColumn<>("Moment", TextAlign.RIGHT,
+            row -> view().formatMoment(row.moment())),
+        new TextColumn<>("Incident", TextAlign.LEFT, Incident::label),
+        new TextColumn<>("Concerns", TextAlign.LEFT, this::entityLinks)
+    ));
+
+    private String entityLinks(Incident incident) {
+        return incident.entityIds().stream()
+            .map(id -> view.getEntityMap().get(id))
+            .map(this::entityLink)
+            .collect(Collectors.joining(", "));
+    }
 
     //------------------------------------------------------------------------
     // Options Structure
