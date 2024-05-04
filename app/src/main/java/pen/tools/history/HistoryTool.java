@@ -8,6 +8,7 @@ import pen.HistoryFile;
 import pen.calendars.Calendar;
 import pen.history.History;
 import pen.history.Entity;
+import pen.history.EntityType;
 import pen.history.HistoryQuery;
 import pen.history.Incident;
 import pen.tools.FXTool;
@@ -173,13 +174,7 @@ as follows:
         }
 
         if (options.results.contains(Result.TYPE)) {
-            var types = view.getEntityMap().values().stream()
-                .map(Entity::type)
-                .distinct()
-                .sorted()
-                .collect(Collectors.joining(", "));
-
-            println("Types: " + (types.isEmpty() ? "None defined." : types));
+            printTable(getSortedTypes(), ENTITY_TYPES);
         }
 
         if (options.results.contains(Result.ENTITY)) {
@@ -240,6 +235,12 @@ as follows:
             .toList();
     }
 
+    private List<EntityType> getSortedTypes() {
+        return view.getTypeMap().values().stream()
+            .sorted(Comparator.comparing(EntityType::id))
+            .toList();
+    }
+
     private <R> void printTable(List<R> rows, TextTable<R> format) {
         println(format.toTable(rows, options.mode));
     }
@@ -263,6 +264,12 @@ as follows:
     private String entityLink(Entity e) {
         return "[[" + e.name() + "]]";
     }
+
+    public final TextTable<EntityType> ENTITY_TYPES = new TextTable<>(List.of(
+        new TextColumn<>("ID", TextAlign.LEFT, EntityType::id),
+        new TextColumn<>("Name", TextAlign.LEFT, EntityType::name),
+        new TextColumn<>("Prime", TextAlign.LEFT, t -> String.valueOf(t.prime()))
+    ));
 
     public final TextTable<Incident> INCIDENTS = new TextTable<>(List.of(
         new TextColumn<>("Moment", TextAlign.RIGHT,
