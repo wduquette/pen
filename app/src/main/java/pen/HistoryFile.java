@@ -2,7 +2,6 @@ package pen;
 
 import pen.calendars.Calendar;
 import pen.history.HistoryBank;
-import pen.history.HistoryQuery;
 
 import java.nio.file.Path;
 
