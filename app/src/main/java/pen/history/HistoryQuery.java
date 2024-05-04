@@ -25,6 +25,7 @@ public class HistoryQuery {
      * Copies another query.
      * @param other The other query.
      */
+    @SuppressWarnings("unused")
     public HistoryQuery(HistoryQuery other) {
         this.terms.addAll(other.terms);
     }
@@ -86,12 +87,16 @@ public class HistoryQuery {
          * Groups entities in the output by "primes": first, a group of
          * the prime entities, then a group for each of the prime types,
          * then a group for any remaining types in alphabetical order.
-         * Note: entities are included in only one group.
+         * Note: entities are included in only one group.  If the lists
+         * are empty, the query uses the primes as defined in the history
+         * data.
          * @param entities The prime entities.
          * @param types The prime types.
          */
         record GroupByPrimes(List<String> entities, List<String> types)
             implements Term {}
+
+        record GroupBySource() implements Term {}
     }
 
     //-------------------------------------------------------------------------
@@ -293,6 +298,27 @@ public class HistoryQuery {
         return this;
     }
 
+    /**
+     * Group entities by the prime entities and types defined in the history
+     * data.
+     * @return The query.
+     */
+    @SuppressWarnings("unused")
+    public HistoryQuery groupByPrimes() {
+        terms.add(new Term.GroupByPrimes(List.of(), List.of()));
+        return this;
+    }
+
+    /**
+     * Entities are listed in the order of definition in the source data.
+     * @return The query.
+     */
+    @SuppressWarnings("unused")
+    public HistoryQuery groupBySource() {
+        terms.add(new Term.GroupBySource());
+        return this;
+    }
+
     //------------------------------------------------------------------------
     // Query
 
@@ -326,7 +352,7 @@ public class HistoryQuery {
         Set<String> entities;
         List<Incident> incidents;
         boolean entitySetModified = false;
-        Term groupingTerm = null;
+        Term groupingTerm;
         LinkedHashMap<String, List<Period>> periodGroups =
             new LinkedHashMap<>();
 
@@ -340,6 +366,7 @@ public class HistoryQuery {
                 .sorted(Comparator.comparing(Incident::moment))
                 .toList();
             this.periods = source.getPeriods();
+            this.groupingTerm = new Term.GroupByPrimes(List.of(), List.of());
         }
 
         //---------------------------------------------------------------------
@@ -349,14 +376,15 @@ public class HistoryQuery {
             // FIRST, do the filtering
             for (var term : terms) {
                 switch (term) {
-                    case Term.IncidentFilter t -> filterIncidents(t);
-                    case Term.ExpandRecurring t -> expandRecurring(t);
-                    case Term.Includes t -> includeEntities(t);
-                    case Term.IncludesTypes t -> includeTypes(t);
-                    case Term.Excludes t -> excludeEntities(t);
-                    case Term.ExcludesTypes t -> excludeTypes(t);
-                    case Term.BoundBy t -> boundByEntities(t);
+                    case Term.IncidentFilter t -> doFilterIncidents(t);
+                    case Term.ExpandRecurring t -> doExpandRecurring(t);
+                    case Term.Includes t -> doIncludeEntities(t);
+                    case Term.IncludesTypes t -> doIncludeTypes(t);
+                    case Term.Excludes t -> doExcludeEntities(t);
+                    case Term.ExcludesTypes t -> doExcludeTypes(t);
+                    case Term.BoundBy t -> doBoundByEntities(t);
                     case Term.GroupByPrimes t -> groupingTerm = t;
+                    case Term.GroupBySource t -> groupingTerm = t;
                     default ->
                         throw new IllegalStateException(
                             "Unknown term:" + term);
@@ -369,15 +397,11 @@ public class HistoryQuery {
                 .toList();
 
             // NEXT, compute the period groups
-            if (groupingTerm != null) {
-                if (groupingTerm instanceof Term.GroupByPrimes t) {
-                    groupByPrimes(t);
-                } else {
-                    throw new IllegalStateException(
-                        "Unknown term:" + groupingTerm);
-                }
-            } else {
-                groupBySource();
+            switch (groupingTerm) {
+                case Term.GroupByPrimes t -> doGroupByPrimes(t);
+                case Term.GroupBySource ignored -> doGroupBySource();
+                default -> throw new IllegalStateException(
+                    "Unsupported 'groupBy' term: " + groupingTerm);
             }
 
             // NEXT, compute the entity map
@@ -399,11 +423,11 @@ public class HistoryQuery {
             return result;
         }
 
-        void filterIncidents(Term.IncidentFilter t) {
+        void doFilterIncidents(Term.IncidentFilter t) {
             incidents = incidents.stream().filter(t.filter).toList();
         }
 
-        void expandRecurring(Term.ExpandRecurring t) {
+        void doExpandRecurring(Term.ExpandRecurring t) {
             var cal = t.calendar();
             if (!cal.hasMonths()) {
                 return;
@@ -446,7 +470,7 @@ public class HistoryQuery {
             incidents = result;
         }
 
-        void includeEntities(Term.Includes t) {
+        void doIncludeEntities(Term.Includes t) {
             if (!entitySetModified) {
                 entities.clear();
             }
@@ -462,12 +486,12 @@ public class HistoryQuery {
             });
         }
 
-        void excludeEntities(Term.Excludes t) {
+        void doExcludeEntities(Term.Excludes t) {
             entitySetModified = true;
             t.entityIds().forEach(entities::remove);
         }
 
-        void includeTypes(Term.IncludesTypes t) {
+        void doIncludeTypes(Term.IncludesTypes t) {
             if (!entitySetModified) {
                 entities.clear();
             }
@@ -480,7 +504,7 @@ public class HistoryQuery {
             entities.addAll(toInclude);
         }
 
-        void excludeTypes(Term.ExcludesTypes t) {
+        void doExcludeTypes(Term.ExcludesTypes t) {
             entitySetModified = true;
             var toRetain = periods.values().stream()
                 .map(Period::entity)
@@ -496,7 +520,7 @@ public class HistoryQuery {
             return !concerns.isEmpty();
         }
 
-        void boundByEntities(Term.BoundBy t) {
+        void doBoundByEntities(Term.BoundBy t) {
             var list = new ArrayList<Period>();
 
             var ids = !t.entityIds.isEmpty() ? t.entityIds : entities;
@@ -520,7 +544,7 @@ public class HistoryQuery {
 
         // Get the source's period groups, but filter out the excluded
         // entities.
-        void groupBySource() {
+        void doGroupBySource() {
             for (var grp : source.getPeriodGroups().entrySet()) {
                 var list = new ArrayList<Period>();
 
@@ -537,16 +561,24 @@ public class HistoryQuery {
         }
 
         // Create period groups by primes entities and types.
-        void groupByPrimes(Term.GroupByPrimes t) {
-            // FIRST, get the entities and types remaining to be grouped.
+        void doGroupByPrimes(Term.GroupByPrimes t) {
+            // FIRST, get the prime entities and the prime types.
+            var primeEntities = !t.entities().isEmpty()
+                ? t.entities()
+                : getPrimeEntities(source);
+            var primeTypes = !t.types().isEmpty()
+                ? t.types()
+                : getPrimeTypes(source);
+
+            // NEXT, get the entities and types remaining to be grouped.
             var remainingEntities = new HashSet<>(entities);
             var remainingTypes = entities.stream()
                 .map(id -> source.getEntityMap().get(id).type())
                 .collect(Collectors.toSet());
 
-            // FIRST, get the prime group
+            // NEXT, get the prime group
             var primes = new ArrayList<Period>();
-            for (var id : t.entities) {
+            for (var id : primeEntities) {
                 var period = periods.get(id);
                 if (remainingEntities.contains(id) && period != null) {
                     primes.add(period);
@@ -559,7 +591,7 @@ public class HistoryQuery {
             }
 
             // NEXT, add each prime type
-            for (var type : t.types) {
+            for (var type : primeTypes) {
                 var group = periods.values().stream()
                     .filter(p -> p.entity().type().equals(type))
                     .filter(p -> remainingEntities.contains(p.entity().id()))
@@ -592,5 +624,19 @@ public class HistoryQuery {
                 }
             }
         }
+    }
+
+    private List<String> getPrimeEntities(History source) {
+        return source.getEntityMap().values().stream()
+            .filter(Entity::prime)
+            .map(Entity::id)
+            .toList();
+    }
+
+    private List<String> getPrimeTypes(History source) {
+        return source.getTypeMap().values().stream()
+            .filter(EntityType::prime)
+            .map(EntityType::id)
+            .toList();
     }
 }
