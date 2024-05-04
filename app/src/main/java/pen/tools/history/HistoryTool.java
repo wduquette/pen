@@ -8,6 +8,8 @@ import pen.HistoryFile;
 import pen.calendars.Calendar;
 import pen.history.History;
 import pen.history.Entity;
+import pen.history.EntityType;
+import pen.history.HistoryQuery;
 import pen.history.Incident;
 import pen.tools.FXTool;
 import pen.tools.ToolInfo;
@@ -142,7 +144,7 @@ as follows:
         var history = historyFile.history();
         var calendar = historyFile.getPrimaryCalendar();
 
-        var query = historyFile.query();
+        var query = new HistoryQuery();
 
         if (calendar != null && options.anniversaries) {
             query.expandAnniversaries(historyFile.getPrimaryCalendar());
@@ -172,13 +174,7 @@ as follows:
         }
 
         if (options.results.contains(Result.TYPE)) {
-            var types = view.getEntityMap().values().stream()
-                .map(Entity::type)
-                .distinct()
-                .sorted()
-                .collect(Collectors.joining(", "));
-
-            println("Types: " + (types.isEmpty() ? "None defined." : types));
+            printTable(getSortedTypes(), ENTITY_TYPES);
         }
 
         if (options.results.contains(Result.ENTITY)) {
@@ -190,7 +186,11 @@ as follows:
         }
 
         if (options.results.contains(Result.INCIDENT)) {
-            printTable(view.getIncidents(), INCIDENTS);
+            if (options.mode == TERMINAL) {
+                printTable(view.getIncidents(), INCIDENTS);
+            } else {
+                printTable(view.getIncidents(), INCIDENTS_MARKDOWN);
+            }
         }
 
         if (options.results.contains(Result.TIMELINE)) {
@@ -234,8 +234,23 @@ as follows:
     }
 
     private List<Entity> getSortedEntities() {
-        return view.getEntityMap().values().stream()
+        var list = new ArrayList<Entity>();
+
+        view.getEntityMap().values().stream()
+            .filter(Entity::prime)
             .sorted(Comparator.comparing(Entity::id))
+            .forEach(list::add);
+        view.getEntityMap().values().stream()
+            .filter(e -> !e.prime())
+            .sorted(Comparator.comparing(Entity::id))
+            .forEach(list::add);
+
+        return list;
+    }
+
+    private List<EntityType> getSortedTypes() {
+        return view.getTypeMap().values().stream()
+            .sorted(Comparator.comparing(EntityType::id))
             .toList();
     }
 
@@ -250,18 +265,26 @@ as follows:
     public final TextTable<Entity> ENTITIES = new TextTable<>(List.of(
         new TextColumn<>("ID", TextAlign.LEFT, Entity::id),
         new TextColumn<>("Type", TextAlign.LEFT, Entity::type),
-        new TextColumn<>("Name", TextAlign.LEFT, Entity::name)
+        new TextColumn<>("Name", TextAlign.LEFT, Entity::name),
+        new TextColumn<>("Prime", TextAlign.LEFT, e -> String.valueOf(e.prime()))
     ));
 
     public final TextTable<Entity> ENTITIES_MARKDOWN = new TextTable<>(List.of(
         new TextColumn<>("ID", TextAlign.LEFT, Entity::id),
         new TextColumn<>("Type", TextAlign.LEFT, Entity::type),
-        new TextColumn<>("Name", TextAlign.LEFT, this::entityLink)
+        new TextColumn<>("Name", TextAlign.LEFT, this::entityLink),
+        new TextColumn<>("Prime", TextAlign.LEFT, e -> String.valueOf(e.prime()))
     ));
 
     private String entityLink(Entity e) {
         return "[[" + e.name() + "]]";
     }
+
+    public final TextTable<EntityType> ENTITY_TYPES = new TextTable<>(List.of(
+        new TextColumn<>("ID", TextAlign.LEFT, EntityType::id),
+        new TextColumn<>("Name", TextAlign.LEFT, EntityType::name),
+        new TextColumn<>("Prime", TextAlign.LEFT, t -> String.valueOf(t.prime()))
+    ));
 
     public final TextTable<Incident> INCIDENTS = new TextTable<>(List.of(
         new TextColumn<>("Moment", TextAlign.RIGHT,
@@ -270,6 +293,20 @@ as follows:
         new TextColumn<>("Concerns", TextAlign.LEFT,
             row -> String.join(", ", row.entityIds()))
     ));
+
+    public final TextTable<Incident> INCIDENTS_MARKDOWN = new TextTable<>(List.of(
+        new TextColumn<>("Moment", TextAlign.RIGHT,
+            row -> view().formatMoment(row.moment())),
+        new TextColumn<>("Incident", TextAlign.LEFT, Incident::label),
+        new TextColumn<>("Concerns", TextAlign.LEFT, this::entityLinks)
+    ));
+
+    private String entityLinks(Incident incident) {
+        return incident.entityIds().stream()
+            .map(id -> view.getEntityMap().get(id))
+            .map(this::entityLink)
+            .collect(Collectors.joining(", "));
+    }
 
     //------------------------------------------------------------------------
     // Options Structure

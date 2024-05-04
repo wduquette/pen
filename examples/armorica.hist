@@ -53,6 +53,4 @@ incident ME-1011-08-14 "Bad Times in Mont-Havre" {armand marc mont-havre madame-
 incident ME-1011-08-26 "Rumors of War"       {armand journal petit-monde jack madame-truc leon}
 memorial ME-1011-11-31 "Armand & Amelie's Wedding" {armand amelie}
 
-# Default query
-query groupByPrimes -entity armand -entity jack -type person
 

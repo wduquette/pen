@@ -35,9 +35,6 @@ public class HistoryExtension implements TclExtension {
     // The history
     private final HistoryBank bank = new HistoryBank();
 
-    // The default query
-    private final HistoryQuery query = new HistoryQuery();
-
     // The calendar file in use for dates, if any.
     private CalendarFile calendarFile;
 
@@ -75,9 +72,6 @@ public class HistoryExtension implements TclExtension {
         tcl.add("birthday", this::cmd_birthday);
         tcl.add("memorial", this::cmd_memorial);
         tcl.add("incident", this::cmd_incident);
-
-        var queryEnsemble = tcl.ensemble("query");
-        queryEnsemble.add("groupByPrimes", this::cmd_queryGroupByPrimes);
     }
 
     @SuppressWarnings("unused")
@@ -94,14 +88,6 @@ public class HistoryExtension implements TclExtension {
      */
     public HistoryBank getHistory() {
         return bank;
-    }
-
-    /**
-     * Gets the default query, as defined by the history script.
-     * @return The query
-     */
-    public HistoryQuery getQuery() {
-        return query;
     }
 
     /**
@@ -438,27 +424,6 @@ public class HistoryExtension implements TclExtension {
 
         var incident = new Incident.Memorial(moment, label, set);
         bank.getIncidents().add(incident);
-    }
-
-    private void cmd_queryGroupByPrimes(TclEngine tcl, Argq argq)
-        throws TclException
-    {
-        tcl.checkMinArgs(argq, 0, "?option value...?");
-        var primeEntities = new ArrayList<String>();
-        var primeTypes = new ArrayList<String>();
-
-        while (argq.hasNext()) {
-            var opt = argq.next().toString();
-
-            switch (opt) {
-                case "-entity" ->
-                    primeEntities.add(tcl.toOptArg(opt, argq).toString());
-                case "-type" ->
-                    primeTypes.add(tcl.toOptArg(opt, argq).toString());
-            }
-        }
-
-        query.groupByPrimes(primeEntities, primeTypes);
     }
 
     //-------------------------------------------------------------------------
