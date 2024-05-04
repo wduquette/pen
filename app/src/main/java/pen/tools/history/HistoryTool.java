@@ -19,7 +19,6 @@ import pen.util.TextTable;
 
 import java.io.File;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static pen.util.TextTable.Mode.MARKDOWN;
 import static pen.util.TextTable.Mode.TERMINAL;
