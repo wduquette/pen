@@ -229,9 +229,18 @@ as follows:
     }
 
     private List<Entity> getSortedEntities() {
-        return view.getEntityMap().values().stream()
+        var list = new ArrayList<Entity>();
+
+        view.getEntityMap().values().stream()
+            .filter(Entity::prime)
             .sorted(Comparator.comparing(Entity::id))
-            .toList();
+            .forEach(list::add);
+        view.getEntityMap().values().stream()
+            .filter(e -> !e.prime())
+            .sorted(Comparator.comparing(Entity::id))
+            .forEach(list::add);
+
+        return list;
     }
 
     private List<EntityType> getSortedTypes() {
@@ -251,13 +260,15 @@ as follows:
     public final TextTable<Entity> ENTITIES = new TextTable<>(List.of(
         new TextColumn<>("ID", TextAlign.LEFT, Entity::id),
         new TextColumn<>("Type", TextAlign.LEFT, Entity::type),
-        new TextColumn<>("Name", TextAlign.LEFT, Entity::name)
+        new TextColumn<>("Name", TextAlign.LEFT, Entity::name),
+        new TextColumn<>("Prime", TextAlign.LEFT, e -> String.valueOf(e.prime()))
     ));
 
     public final TextTable<Entity> ENTITIES_MARKDOWN = new TextTable<>(List.of(
         new TextColumn<>("ID", TextAlign.LEFT, Entity::id),
         new TextColumn<>("Type", TextAlign.LEFT, Entity::type),
-        new TextColumn<>("Name", TextAlign.LEFT, this::entityLink)
+        new TextColumn<>("Name", TextAlign.LEFT, this::entityLink),
+        new TextColumn<>("Prime", TextAlign.LEFT, e -> String.valueOf(e.prime()))
     ));
 
     private String entityLink(Entity e) {
