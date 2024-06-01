@@ -1,6 +1,5 @@
 package pen.quell;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
@@ -83,8 +82,9 @@ public class QuellTable {
         return columns.keySet();
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T get(int index, String name) {
-        return (T)columns.get(name).get(index);
+        return columns.get(name).get(index);
     }
 
     public QuellRow get(int index) {

@@ -58,6 +58,7 @@ public class QuellColumn {
         return values.size();
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T get(int index) {
         return (T)values.get(index);
     }
