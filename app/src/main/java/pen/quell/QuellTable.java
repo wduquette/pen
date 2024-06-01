@@ -10,8 +10,29 @@ import java.util.TreeMap;
  * data in a table.
  */
 public class QuellTable {
-    private final int size;
+    private int size = 0;
     private final TreeMap<String, QuellColumn> columns = new TreeMap<>();
+
+    /**
+     * Creates a new table with the same column definitions but no data as
+     * another table.
+     * @param other The other table
+     * @return The new table
+     */
+    public static QuellTable withShape(QuellTable other) {
+        var table = new QuellTable();
+        for (var fullName : other.columns.keySet()) {
+            var column = other.columns.get(fullName);
+            var newColumn = new QuellColumn(column.name, column.type);
+            table.columns.put(fullName, newColumn);
+        }
+
+        return table;
+    }
+
+    QuellTable() {
+        // Nothing to do
+    }
 
     /**
      * Creates a table in which each column has its own name.
@@ -64,5 +85,41 @@ public class QuellTable {
 
     public <T> T get(int index, String name) {
         return (T)columns.get(name).get(index);
+    }
+
+    public QuellRow get(int index) {
+        var row = new QuellRow();
+        for (var fullName : columns.keySet()) {
+            var column = columns.get(fullName);
+            row.put(fullName, column.get(index));
+        }
+
+        return row;
+    }
+
+    public void add(QuellRow row) {
+        if (row.size() != columns.size()) {
+            throw new IllegalArgumentException("Invalid row: expected " +
+                columns.size() + " columns, got: " + row.size());
+        }
+
+        for (var fullName : row.keySet()) {
+            var value = row.get(fullName);
+            var column = columns.get(fullName);
+
+            if (column == null) {
+                throw new IllegalArgumentException("Unknown column: " + fullName);
+            }
+
+            if (!column.type().isAssignableFrom(value.getClass())) {
+                throw new IllegalArgumentException("Type mismatch for column " +
+                    fullName + ": expected " + column.type() + ", got " +
+                    value.getClass());
+            }
+
+            column.values().add(value);
+        }
+
+        ++size;
     }
 }

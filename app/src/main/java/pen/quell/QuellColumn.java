@@ -20,7 +20,23 @@ public class QuellColumn {
 
     public QuellColumn(String name, Class<?> type) {
         this.name = name;
-        this.type = type;
+        this.type = mapType(type);
+    }
+
+    private Class<?> mapType(Class<?> type) {
+        if (type == boolean.class) {
+            return Boolean.class;
+        } else if (type == double.class) {
+            return Double.class;
+        } else if (type == float.class) {
+            return Float.class;
+        } else if (type == int.class) {
+            return Integer.class;
+        } else if (type == long.class) {
+            return Long.class;
+        } else {
+            return type;
+        }
     }
 
     //-------------------------------------------------------------------------
