@@ -5,7 +5,21 @@ import java.util.List;
 import java.lang.reflect.Field;
 import java.util.stream.Stream;
 
+/**
+ * Quell is the main entry point to the Quell query language.  It is a static
+ * class providing utility methods as well as the query pipeline factory.
+ * Data is provided in the form of lists of Java records.
+ */
 public class Quell {
+    //-------------------------------------------------------------------------
+    // Static Methods
+
+    /**
+     * Given a record class, gets the names of its fields.
+     * @param cls The record class
+     * @return The list of names.
+     * @param <R> The record class type
+     */
     public static <R extends Record> List<String> getColumns(Class<R> cls) {
         // Note: needs to be "getDeclaredFields()", as "getFields()" only
         // returns *public* member variables.
