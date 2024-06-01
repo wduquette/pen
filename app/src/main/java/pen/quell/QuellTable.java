@@ -82,7 +82,6 @@ public class QuellTable {
         return columns.keySet();
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T get(int index, String name) {
         return columns.get(name).get(index);
     }
