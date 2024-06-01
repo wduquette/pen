@@ -15,6 +15,27 @@ public class Quell {
     // Static Methods
 
     /**
+     * Returns a QuellQuery on the list of records.
+     * @param records The records.
+     * @return The query
+     * @param <R> The input record type
+     */
+    public static <R extends Record> QuellQuery query(List<R> records) {
+        return new QuellQuery(new QuellTable(records));
+    }
+
+    /**
+     * Returns a QuellQuery on the list of records.
+     * @param as The table name.
+     * @param records The records.
+     * @return The query
+     * @param <R> The input record type
+     */
+    public static <R extends Record> QuellQuery query(String as, List<R> records) {
+        return new QuellQuery(new QuellTable(as, records));
+    }
+
+    /**
      * Given a record class, gets the names of its fields.
      * @param cls The record class
      * @return The list of names.

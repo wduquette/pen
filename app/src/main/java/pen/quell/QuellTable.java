@@ -13,7 +13,23 @@ public class QuellTable {
     private final int size;
     private final TreeMap<String, QuellColumn> columns = new TreeMap<>();
 
+    /**
+     * Creates a table in which each column has its own name.
+     * @param rows The rows
+     * @param <R> The record type
+     */
     public <R extends Record> QuellTable(List<R> rows) {
+        this(null, rows);
+    }
+
+    /**
+     * Creates a table in which each column's name is qualified by the "as" name.
+     * If "as" is null, the name will be unqualified.
+     * @param as The logical table name.
+     * @param rows The rows
+     * @param <R> The record type
+     */
+    public <R extends Record> QuellTable(String as, List<R> rows) {
         this.size = rows.size();
 
         if (rows.isEmpty()) {
@@ -25,11 +41,12 @@ public class QuellTable {
         for (var name : Quell.getColumns(cls)) {
             var type = Quell.getColumnType(cls,name);
             var column = new QuellColumn(name, type);
-            columns.put(name, column);
-
             for (var row : rows) {
                 column.values().add(Quell.getColumnValue(row, name));
             }
+
+            var fullName = as != null ? as + "." + column.name : column.name;
+            columns.put(fullName, column);
         }
     }
 

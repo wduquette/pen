@@ -6,6 +6,7 @@ import pen.Ted;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static pen.checker.Checker.check;
 
@@ -28,6 +29,7 @@ public class QuellTableTest extends Ted {
 
         check(table.isEmpty()).eq(false);
         check(table.size()).eq(4);
+        check(table.getColumnNames()).eq(Set.of("id", "name", "age"));
 
         check(table.get(0, "id")).eq(1);
         check(table.get(0, "name")).eq("Fred");
@@ -44,5 +46,20 @@ public class QuellTableTest extends Ted {
         check(table.get(3, "id")).eq(4);
         check(table.get(3, "name")).eq("Tom");
         check(table.get(3, "age")).eq(74);
+    }
+
+    @Test
+    public void testCreation_withAs() {
+        test("testCreation_withAs");
+        table = new QuellTable("p", persons);
+
+        check(table.isEmpty()).eq(false);
+        check(table.size()).eq(4);
+        check(table.getColumnNames()).eq(Set.of("p.id", "p.name", "p.age"));
+
+        check(table.get(0, "p.name")).eq("Fred");
+        check(table.get(1, "p.name")).eq("George");
+        check(table.get(2, "p.name")).eq("Harry");
+        check(table.get(3, "p.name")).eq("Tom");
     }
 }
