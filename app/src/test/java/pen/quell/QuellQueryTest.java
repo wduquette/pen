@@ -70,6 +70,7 @@ public class QuellQueryTest extends Ted {
 
     @Test
     public void testFilter() {
+        test("testFilter");
         var table = Quell.queryAs("p", persons)
             .dump("Before filter")
             .filter(r -> (int)r.get("p.age") > 25)
@@ -82,5 +83,23 @@ public class QuellQueryTest extends Ted {
         check(table.get(0, "p.id")).eq(4);
         check(table.get(0, "p.name")).eq("Tom");
         check(table.get(0, "p.age")).eq(74);
+    }
+
+    @Test
+    public void testUpdateColumn() {
+        test("testUpdateColumn");
+        var table = Quell.queryAs("p", persons)
+            .dump("Before updateColumn")
+            .updateColumn("fancy", String.class,
+                r -> "++" + r.get("p.name") + "++")
+            .dump("After updateColumn")
+            .result();
+
+        check(table.getColumnNames()).eq(Set.of("fancy", "p.id", "p.name", "p.age"));
+
+        check(table.get(0, "fancy")).eq("++Fred++");
+        check(table.get(1, "fancy")).eq("++George++");
+        check(table.get(2, "fancy")).eq("++Harry++");
+        check(table.get(3, "fancy")).eq("++Tom++");
     }
 }

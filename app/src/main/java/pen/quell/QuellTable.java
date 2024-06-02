@@ -96,6 +96,25 @@ public class QuellTable {
         return row;
     }
 
+    /**
+     * Adds a column to the table with the given name and type.
+     * If the table contains any rows, the column's values are initialized to null.
+     * @param name The column name
+     * @param type The column's value type.
+     */
+    public void addColumn(String name, Class<?> type) {
+        if (columns.containsKey(name)) {
+            throw new IllegalArgumentException("Column already exists: " + name);
+        }
+
+        var column = new QuellColumn(name, type);
+        columns.put(name, column);
+
+        for (int i = 0; i < size; i++) {
+            column.values().add(null);
+        }
+    }
+
     public void add(QuellRow row) {
         if (row.columnNames().size() != columns.size()) {
             throw new IllegalArgumentException("Invalid row: expected " +

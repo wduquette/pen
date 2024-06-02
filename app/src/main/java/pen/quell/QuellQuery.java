@@ -9,6 +9,13 @@ import java.util.function.Predicate;
  */
 public class QuellQuery {
     //-------------------------------------------------------------------------
+    // Types
+
+    public interface Row2ValueMapper {
+        Object map(QuellRow row);
+    }
+
+    //-------------------------------------------------------------------------
     // Instance Variables
 
     // The current result set.
@@ -45,6 +52,35 @@ public class QuellQuery {
         return new QuellQuery(filtered);
     }
 
+    /**
+     * Given a column name, adds a new column whose value is produced by the
+     * mapper.  This method can also revise a column's values in place.
+     * @param name The column name
+     * @param mapper The mapping function from row to column value.
+     * @return The updated query.
+     */
+    public QuellQuery updateColumn(String name, Class<?> type, Row2ValueMapper mapper) {
+        var mapped = QuellTable.withShape(result);
+
+        if (!mapped.getColumnNames().contains(name)) {
+            mapped.addColumn(name, type);
+        }
+
+        for (int i = 0; i < result.size(); i++) {
+            var row = result.get(i);
+            row.put(name, mapper.map(row));
+            mapped.add(row);
+        }
+
+        return new QuellQuery(mapped);
+    }
+
+    /**
+     * Dumps the current query result to System.out, as an aid to debugging
+     * the pipeline.
+     * @param tag A tag to indicate where in the pipeline the dump occurred.
+     * @return The query
+     */
     public QuellQuery dump(String tag) {
         System.out.println("Dump: " + tag);
         for (int i = 0; i < result.size(); i++) {
