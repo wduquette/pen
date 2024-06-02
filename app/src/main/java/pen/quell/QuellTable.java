@@ -97,12 +97,12 @@ public class QuellTable {
     }
 
     public void add(QuellRow row) {
-        if (row.size() != columns.size()) {
+        if (row.columnNames().size() != columns.size()) {
             throw new IllegalArgumentException("Invalid row: expected " +
-                columns.size() + " columns, got: " + row.size());
+                columns.size() + " columns, got: " + row.columnNames().size());
         }
 
-        for (var fullName : row.keySet()) {
+        for (var fullName : row.columnNames()) {
             var value = row.get(fullName);
             var column = columns.get(fullName);
 
