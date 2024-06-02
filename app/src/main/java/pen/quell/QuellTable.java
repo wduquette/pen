@@ -90,7 +90,7 @@ public class QuellTable {
         var row = new QuellRow();
         for (var fullName : columns.keySet()) {
             var column = columns.get(fullName);
-            row.put(fullName, column.get(index));
+            row.add(fullName, column.get(index));
         }
 
         return row;

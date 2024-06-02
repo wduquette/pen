@@ -86,13 +86,13 @@ public class QuellQueryTest extends Ted {
     }
 
     @Test
-    public void testUpdateColumn() {
-        test("testUpdateColumn");
+    public void testAddColumn() {
+        test("testAddColumn");
         var table = Quell.queryAs("p", persons)
-            .dump("Before updateColumn")
-            .updateColumn("fancy", String.class,
+            .dump("Before addColumn")
+            .addColumn("fancy", String.class,
                 r -> "++" + r.get("p.name") + "++")
-            .dump("After updateColumn")
+            .dump("After addColumn")
             .result();
 
         check(table.getColumnNames()).eq(Set.of("fancy", "p.id", "p.name", "p.age"));
@@ -101,5 +101,22 @@ public class QuellQueryTest extends Ted {
         check(table.get(1, "fancy")).eq("++George++");
         check(table.get(2, "fancy")).eq("++Harry++");
         check(table.get(3, "fancy")).eq("++Tom++");
+    }
+
+    @Test
+    public void testUpdate() {
+        test("testUpdate");
+        var table = Quell.queryAs("p", persons)
+            .dump("Before update")
+            .update(r -> r.put("p.name", "++" + r.get("p.name") + "++"))
+            .dump("After update")
+            .result();
+
+        check(table.getColumnNames()).eq(Set.of("p.id", "p.name", "p.age"));
+
+        check(table.get(0, "p.name")).eq("++Fred++");
+        check(table.get(1, "p.name")).eq("++George++");
+        check(table.get(2, "p.name")).eq("++Harry++");
+        check(table.get(3, "p.name")).eq("++Tom++");
     }
 }

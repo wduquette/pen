@@ -15,6 +15,10 @@ public class QuellQuery {
         Object map(QuellRow row);
     }
 
+    public interface RowUpdater {
+        void update(QuellRow row);
+    }
+
     //-------------------------------------------------------------------------
     // Instance Variables
 
@@ -54,21 +58,40 @@ public class QuellQuery {
 
     /**
      * Given a column name, adds a new column whose value is produced by the
-     * mapper.  This method can also revise a column's values in place.
+     * mapper.
      * @param name The column name
      * @param mapper The mapping function from row to column value.
      * @return The updated query.
      */
-    public QuellQuery updateColumn(String name, Class<?> type, Row2ValueMapper mapper) {
+    public QuellQuery addColumn(String name, Class<?> type, Row2ValueMapper mapper) {
         var mapped = QuellTable.withShape(result);
-
-        if (!mapped.getColumnNames().contains(name)) {
-            mapped.addColumn(name, type);
+        if (mapped.getColumnNames().contains(name)) {
+            throw new IllegalArgumentException("Column already exists: " + name);
         }
+
+        mapped.addColumn(name, type);
 
         for (int i = 0; i < result.size(); i++) {
             var row = result.get(i);
-            row.put(name, mapper.map(row));
+            row.add(name, mapper.map(row));
+            mapped.add(row);
+        }
+
+        return new QuellQuery(mapped);
+    }
+
+    /**
+     * Given an update function, updates each row's column values.  The
+     * mapper is not allowed to add new columns.
+     * @param updater A function to update the row's values.
+     * @return The updated query.
+     */
+    public QuellQuery update(RowUpdater updater) {
+        var mapped = QuellTable.withShape(result);
+
+        for (int i = 0; i < result.size(); i++) {
+            var row = result.get(i);
+            updater.update(row);
             mapped.add(row);
         }
 

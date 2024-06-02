@@ -17,13 +17,28 @@ public class QuellRow {
     }
 
     //-------------------------------------------------------------------------
-    // Accessors
+    // Package Private
+
+    /**
+     * This method is for use internally, when building rows from column data.
+     * @param name The column name
+     * @param value The value
+     */
+    void add(String name, Object value) {
+        map.put(name, value);
+    }
+
+    //-------------------------------------------------------------------------
+    // Public Accessors
 
     public Set<String> columnNames() {
         return map.keySet();
     }
 
     public void put(String columnName, Object value) {
+        if (!map.containsKey(columnName)) {
+            throw new IllegalArgumentException("Undefined column: " + columnName);
+        }
         map.put(columnName, value);
     }
 
