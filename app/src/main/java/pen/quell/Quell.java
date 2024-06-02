@@ -25,13 +25,14 @@ public class Quell {
     }
 
     /**
-     * Returns a QuellQuery on the list of records.
+     * Returns a QuellQuery on the list of records, specifying a table name.
+     * Column names will be qualified as "{as}.{name}" unless "{as}" is null.
      * @param as The table name.
      * @param records The records.
      * @return The query
      * @param <R> The input record type
      */
-    public static <R extends Record> QuellQuery query(String as, List<R> records) {
+    public static <R extends Record> QuellQuery queryAs(String as, List<R> records) {
         return new QuellQuery(new QuellTable(as, records));
     }
 

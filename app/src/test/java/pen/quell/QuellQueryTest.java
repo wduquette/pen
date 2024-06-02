@@ -55,7 +55,7 @@ public class QuellQueryTest extends Ted {
     @Test
     public void testCreation_withAs() {
         test("testCreation_withAs");
-        query = Quell.query("p", persons);
+        query = Quell.queryAs("p", persons);
         var table = query.result();
 
         check(table.isEmpty()).eq(false);
@@ -70,7 +70,7 @@ public class QuellQueryTest extends Ted {
 
     @Test
     public void testFilter() {
-        var table = Quell.query("p", persons)
+        var table = Quell.queryAs("p", persons)
             .dump("Before filter")
             .filter(r -> (int)r.get("p.age") > 25)
             .dump("After filter")
