@@ -7,6 +7,7 @@ import com.wjduquette.joe.console.ConsolePackage;
 import com.wjduquette.joe.tools.Tool;
 import com.wjduquette.joe.tools.ToolInfo;
 import pen.App;
+import pen.joe.text.JoeTextPackage;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -58,12 +59,16 @@ public class RunTool implements Tool {
         }
 
         var joe = new Joe();
+        joe.installPackage(JoeTextPackage.PACKAGE);
+
         var path = argq.poll();
 
         var consolePackage = new ConsolePackage();
         consolePackage.setScript(path);
         consolePackage.getArgs().addAll(argq);
         joe.installPackage(consolePackage);
+
+
 
         try {
             joe.runFile(path);

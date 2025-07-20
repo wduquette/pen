@@ -62,9 +62,8 @@ public class TextCanvas {
      * Gets a character from the canvas as a string.
      * @param c The column
      * @param r The row
-     * @param ch The character
      */
-    public String gets(int c, int r, char ch) {
+    public String gets(int c, int r) {
         extendRows(r);
         return "" + rows.get(r).get(c);
     }
