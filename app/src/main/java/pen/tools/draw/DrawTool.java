@@ -1,10 +1,10 @@
 package pen.tools.draw;
 
+import com.wjduquette.joe.tools.FXTool;
+import com.wjduquette.joe.tools.ToolInfo;
 import javafx.stage.Stage;
 import pen.App;
 import pen.tcl.TclEngineException;
-import pen.tools.FXTool;
-import pen.tools.ToolInfo;
 import pen.apis.StencilExtension;
 import pen.stencil.Stencil;
 import pen.stencil.StencilBuffer;
@@ -27,8 +27,9 @@ public class DrawTool extends FXTool {
         "drawing.tcl",
         "Saves a pen drawing as a PNG file.",
         """
-Given a Pen drawing script, outputs the drawing as a
-PNG file.""",
+        Given a Pen drawing script, outputs the drawing as a
+        PNG file.
+        """,
         DrawTool::main
     );
 
@@ -57,6 +58,7 @@ PNG file.""",
             exit(1);
         }
 
+        assert !argq.isEmpty();
         drawingFile = new File(argq.poll());
 
         try {
