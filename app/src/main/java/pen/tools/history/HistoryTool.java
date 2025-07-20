@@ -1,5 +1,7 @@
 package pen.tools.history;
 
+import com.wjduquette.joe.tools.FXTool;
+import com.wjduquette.joe.tools.ToolInfo;
 import javafx.stage.Stage;
 import pen.App;
 import pen.DataFileException;
@@ -11,8 +13,6 @@ import pen.history.Entity;
 import pen.history.EntityType;
 import pen.history.HistoryQuery;
 import pen.history.Incident;
-import pen.tools.FXTool;
-import pen.tools.ToolInfo;
 import pen.util.TextAlign;
 import pen.util.TextColumn;
 import pen.util.TextTable;

@@ -1,5 +1,7 @@
 package pen.tools.demo;
 
+import com.wjduquette.joe.tools.FXTool;
+import com.wjduquette.joe.tools.ToolInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -22,8 +24,6 @@ import pen.diagram.calendar.YearSpread;
 import pen.diagram.timeline.TimelineDiagram;
 import pen.fx.FX;
 import pen.stencil.*;
-import pen.tools.FXTool;
-import pen.tools.ToolInfo;
 import pen.tools.draw.DrawTool;
 
 import java.util.Deque;

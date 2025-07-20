@@ -3,12 +3,12 @@
  */
 package pen;
 
-import pen.tools.ToolException;
-import pen.tools.ToolInfo;
+import com.wjduquette.joe.tools.ToolLauncher;
 import pen.tools.annals.AnnalsTool;
 import pen.tools.demo.DemoTool;
 import pen.tools.draw.DrawTool;
 import pen.tools.history.HistoryTool;
+import pen.tools.run.RunTool;
 import pen.tools.view.ViewTool;
 
 import java.util.*;
@@ -22,123 +22,29 @@ public class App {
     public static final String NAME = "pen";
 
     //-------------------------------------------------------------------------
-    // Instance variables
-
-    // Array of tool applications that can be launched.
-    private final static Map<String, ToolInfo> TOOLS = new TreeMap<>();
-
-    static {
-        TOOLS.putAll(Map.of(
-            AnnalsTool.INFO.name(), AnnalsTool.INFO,
-            DemoTool.INFO.name(), DemoTool.INFO,
-            DrawTool.INFO.name(), DrawTool.INFO,
-            HistoryTool.INFO.name(), HistoryTool.INFO,
-            ViewTool.INFO.name(), ViewTool.INFO
-        ));
-    }
-
-    //-------------------------------------------------------------------------
-    // Launcher App
-
-    /**
-     * Initializes the application object.
-     */
-    public App() {
-        super();
-    }
-
-    /**
-     * Gets the desired tool and executes it
-     * @param args The arguments from the command line.
-     */
-    public void app(String[] args) {
-        var argq = new ArrayDeque<>(List.of(args));
-
-        if (argq.isEmpty()) {
-            println("Usage: pen <tool> [<arguments...>]");
-            println("");
-            println("Run \"pen help\" for a list of tools.");
-            System.exit(1);
-        }
-
-        var subcommand = argq.poll();
-
-        var tool = TOOLS.get(subcommand);
-
-        if (tool != null) {
-            tool.launcher().accept(rest(args));
-        } else if (subcommand.equals("help")) {
-            showHelp(argq);
-        } else {
-            showFailure(subcommand);
-        }
-    }
-
-    private String[] rest(String[] args) {
-        var rest = new String[args.length - 1];
-
-        System.arraycopy(args, 1, rest, 0, args.length - 1);
-
-        return rest;
-    }
-
-    private void showFailure(String subcommand) {
-        println("Error, unrecognized tool: \"" + subcommand + "\"");
-        println("");
-        println("Run \"pen help\" for a list of subcommands.");
-    }
-
-    private void showHelp(Deque<String> argq) {
-        if (argq.isEmpty()) {
-            System.out.println();
-            System.out.println("Pen supports the following tools:\n");
-
-            for (var tool : TOOLS.values()) {
-                System.out.printf("%-8s %s\n", tool.name(), tool.oneLiner());
-            }
-
-            System.out.println("\nEnter \"pen help <tool>\" for help on a tool.");
-            System.out.println();
-        } else {
-            var subcommand = argq.poll();
-            var tool = TOOLS.get(subcommand);
-
-            if (tool != null) {
-                tool.printHelp(NAME);
-            } else {
-                showFailure(subcommand);
-            }
-        }
-    }
-
-    //-------------------------------------------------------------------------
-    // Helpers
-
-    /**
-     * Print to System.out.
-     * @param text Text to print.
-     */
-    public void println(String text) {
-        System.out.println(text);
-    }
-
-    //-------------------------------------------------------------------------
     // Main
 
     /**
-     * App's main routine.  Creates a new application object and passes it the
-     * arguments; handles errors thrown by the application.
-     * @param args The command line arguments.
+     * The application's main routine.  The first argument is the name of
+     * the tool to execute; the remainder are passed to the tool.
+     * @param args The command-line arguments.
      */
     public static void main(String[] args) {
+        var launcher = new ToolLauncher(NAME, List.of(
+            AnnalsTool.INFO,
+            DemoTool.INFO,
+            DrawTool.INFO,
+            HistoryTool.INFO,
+            RunTool.INFO,
+            ViewTool.INFO
+        ));
+
         try {
-            new App().app(args);
-        } catch (ToolException ex) {
-            System.out.println("Error: " + ex.getMessage());
-//            ex.printStackTrace(System.out);
+            launcher.launch(args);
         } catch (Exception ex) {
-            System.out.println("Unexpected Exception Thrown: " + ex.getMessage());
-            ex.printStackTrace(System.out);
+            System.err.println("Unexpected exception: " + ex);
+            ex.printStackTrace(System.err);
         }
     }
+
 }

@@ -22,8 +22,10 @@ dependencies {
     // Use JUnit test framework.
     testImplementation 'junit:junit:4.13.2'
 
-    // This dependency is used by the application.
+    // These dependencies is used by the application.
     implementation files('../tps/jtcl-2.8.0-small.jar')
+
+    implementation files('../../joe/lib/build/libs/joe-0.7.0.jar')
 }
 jar {
     from {

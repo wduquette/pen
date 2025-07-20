@@ -1,5 +1,7 @@
 package pen.tools.view;
 
+import com.wjduquette.joe.tools.FXTool;
+import com.wjduquette.joe.tools.ToolInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -15,8 +17,6 @@ import pen.App;
 import pen.apis.StencilExtension;
 import pen.fx.FX;
 import pen.tcl.TclEngine;
-import pen.tools.FXTool;
-import pen.tools.ToolInfo;
 import pen.stencil.Stencil;
 import tcl.lang.TclException;
 
