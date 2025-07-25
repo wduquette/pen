@@ -1,0 +1,50 @@
+// Tests for the TextCanvas
+
+function testCreation() {
+    var canvas = TextCanvas();
+    assertEquals(canvas.size(), [0,0]);
+    assertEquals(canvas.height(), 0);
+    assertEquals(canvas.width(), 0);
+    assertEquals(canvas.toString(), "TextCanvas[0x0]");
+    assertEquals(canvas.asText(), "");
+}
+
+function testExtends() {
+    var canvas = TextCanvas();
+    for (var c = 0; c < 3; c++) {
+        for (var r = 0; r < 3; r++) {
+            canvas.put(c, r, ".");
+        }
+    }
+    canvas.put(2, 2, "X");
+
+    assertEquals(canvas.size(), [3,3]);
+    assertEquals(canvas.height(), 3);
+    assertEquals(canvas.width(), 3);
+    assertEquals(canvas.toString(), "TextCanvas[3x3]");
+    assertEquals(canvas.asText(), """
+       ...
+       ...
+       ..X
+       """);
+}
+
+function testPutGet() {
+    var canvas = TextCanvas();
+    canvas.put(1, 1, "abc");
+    assertEquals(canvas.size(), [4, 2]);
+    assertEquals(canvas.get(0,0), " ");
+    assertEquals(canvas.get(0,1), " ");
+    assertEquals(canvas.get(1,1), "a");
+    assertEquals(canvas.get(2,1), "b");
+    assertEquals(canvas.get(3,1), "c");
+
+    assertError(\-> canvas.get(-1, 0),
+        "Expected non-negative number, got: Number '-1'.");
+    assertError(\-> canvas.get(0, -2),
+        "Expected non-negative number, got: Number '-2'.");
+    assertError(\-> canvas.put(-1, 0, "x"),
+        "Expected non-negative number, got: Number '-1'.");
+    assertError(\-> canvas.put(0, -2, "x"),
+        "Expected non-negative number, got: Number '-2'.");
+}

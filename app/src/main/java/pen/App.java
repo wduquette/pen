@@ -9,6 +9,7 @@ import pen.tools.demo.DemoTool;
 import pen.tools.draw.DrawTool;
 import pen.tools.history.HistoryTool;
 import pen.tools.run.RunTool;
+import pen.tools.test.TestTool;
 import pen.tools.view.ViewTool;
 
 import java.util.*;
@@ -36,6 +37,7 @@ public class App {
             DrawTool.INFO,
             HistoryTool.INFO,
             RunTool.INFO,
+            TestTool.INFO,
             ViewTool.INFO
         ));
 

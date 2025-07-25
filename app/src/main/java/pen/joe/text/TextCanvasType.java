@@ -76,9 +76,8 @@ public class TextCanvasType extends ProxyType<TextCanvas> {
     // Gets the character at (*column*, *row*) as a String
     private Object _get(TextCanvas tc, Joe joe, Args args) {
         args.exactArity(2, "get(column, row)");
-        var c = joe.toInteger(args.next());
-        var r = joe.toInteger(args.next());
-        // TODO: Check for negative
+        var c = toCellIndex(joe, args.next());
+        var r = toCellIndex(joe, args.next());
 
         return tc.gets(c, r);
     }
@@ -101,9 +100,8 @@ public class TextCanvasType extends ProxyType<TextCanvas> {
     // are written to the right.  No provision is made for multiline text.
     private Object _put(TextCanvas tc, Joe joe, Args args) {
         args.exactArity(3, "put(c, r, text)");
-        var c = joe.toInteger(args.next());
-        var r = joe.toInteger(args.next());
-        // TODO: Check for negative
+        var c = toCellIndex(joe, args.next());
+        var r = toCellIndex(joe, args.next());
         var text = joe.stringify(args.next());
 
         tc.puts(c, r, text);
@@ -136,5 +134,13 @@ public class TextCanvasType extends ProxyType<TextCanvas> {
     private Object _toString(TextCanvas tc, Joe joe, Args args) {
         args.exactArity(0, "toString()");
         return stringify(joe, tc);
+    }
+
+    private int toCellIndex(Joe joe, Object arg) {
+        var num = joe.toInteger(arg);
+        if (num < 0) {
+            throw joe.expected("non-negative number", arg);
+        }
+        return num;
     }
 }
