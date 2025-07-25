@@ -1,5 +1,6 @@
 package pen;
 
+import com.wjduquette.joe.JoeError;
 import pen.tcl.TclEngineException;
 
 public class DataFileException extends Exception {
@@ -9,6 +10,7 @@ public class DataFileException extends Exception {
 
     public String getDetails() {
         return switch (getCause()) {
+            case JoeError ex -> ex.getTraceReport();
             case TclEngineException ex ->
                 "At line " + ex.getErrorLine() + ", " + ex.getErrorInfo();
             case Exception ex -> ex.getMessage();
