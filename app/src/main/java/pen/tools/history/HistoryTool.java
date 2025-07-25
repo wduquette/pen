@@ -1,8 +1,7 @@
 package pen.tools.history;
 
-import com.wjduquette.joe.tools.FXTool;
+import com.wjduquette.joe.tools.Tool;
 import com.wjduquette.joe.tools.ToolInfo;
-import javafx.stage.Stage;
 import pen.App;
 import pen.DataFileException;
 import pen.DataFiles;
@@ -25,9 +24,9 @@ import static pen.util.TextTable.Mode.MARKDOWN;
 import static pen.util.TextTable.Mode.TERMINAL;
 
 /**
- * Application class for the "pen draw" tool.
+ * Application class for the "pen history" tool.
  */
-public class HistoryTool extends FXTool {
+public class HistoryTool implements Tool {
     /**
      * Tool information for this tool, for use by the launcher.
      */
@@ -99,11 +98,23 @@ as follows:
      * Creates the tool's application object.
      */
     public HistoryTool() {
-        super(INFO);
+        // Nothing to do.
     }
 
-    @Override
-    public void run(Stage stage, Deque<String> argq) {
+    //------------------------------------------------------------------------
+    // Execution
+
+    /**
+     * Gets implementation info about the tool.
+     * @return The info.
+     */
+    public ToolInfo toolInfo() {
+        return INFO;
+    }
+
+    public void run(String[] args) {
+        var argq = new ArrayDeque<>(List.of(args));
+
         // FIRST, parse the command line arguments.
         if (argq.isEmpty()) {
             printUsage(App.NAME);
@@ -337,6 +348,6 @@ as follows:
      * @param args The command-line arguments.
      */
     public static void main(String[] args) {
-        launch(args);
+        new HistoryTool().run(args);
     }
 }
