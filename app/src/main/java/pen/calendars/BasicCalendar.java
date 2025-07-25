@@ -263,6 +263,17 @@ public class BasicCalendar extends AbstractCalendar {
         }
 
         /**
+         * Sets the calendar's months.
+         * @param months The months
+         * @return the builder
+         */
+        public Builder months(List<BoundedMonth> months) {
+            this.months.clear();
+            this.months.addAll(months);
+            return this;
+        }
+
+        /**
          * Adds a bounded month to the calendar
          * @param month The month
          * @return The builder
