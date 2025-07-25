@@ -1,0 +1,58 @@
+// Armorican Calendars
+define Calendar/id, offset;
+define Era/calendar, short, full;
+define PriorEra/calendar, short, full;
+define Week/calendar, offset;
+define Weekday/calendar, seq, full, short, unambiguous, tiny;
+define Month/calendar, seq, days, leapRule, full, short, unambiguous, tiny;
+
+Calendar(#armorican, 0);
+Era     (#armorican, "AF",  "After Founding");
+PriorEra(#armorican, "BF",  "Before Founding");
+Week(#armorican, 1);
+Weekday(#armorican, 0, "Sonnedi",  "Son", "So", "S");
+Weekday(#armorican, 1, "Lundi",    "Lun", "L",  "L");
+Weekday(#armorican, 2, "Mardi",    "Mar", "Ma", "M");
+Weekday(#armorican, 3, "Mercredi", "Mer", "Me", "M");
+Weekday(#armorican, 4, "Jeudi",    "Jeu", "J",  "J");
+Weekday(#armorican, 5, "Vendredi", "Ven", "V",  "V");
+Weekday(#armorican, 6, "Samedi",   "Sam", "Sa", "S");
+
+Month(#armorican,  0, 31, #none, "Janvier",   "Jan",  "Jan",  "J");
+Month(#armorican,  1, 28, #none, "Février",   "Fév",  "Fév",  "F");
+Month(#armorican,  2, 31, #none, "Mars",      "Mar",  "Mar",  "M");
+Month(#armorican,  3, 30, #none, "Avril",     "Avr",  "Avr",  "A");
+Month(#armorican,  4, 31, #none, "Mai",       "Mai",  "Mai",  "M");
+Month(#armorican,  5, 30, #none, "Juin",      "Juin", "Juin", "J");
+Month(#armorican,  6, 31, #none, "Juillet",   "Juil", "Juil", "J");
+Month(#armorican,  7, 31, #none, "Août",      "Août", "Août", "A");
+Month(#armorican,  8, 30, #none, "Septembre", "Sept", "Sept", "S");
+Month(#armorican,  9, 31, #none, "Octobre",   "Oct",  "Oct",  "O");
+Month(#armorican, 10, 31, #none, "Novembre",  "Nov",  "Nov",  "N");
+Month(#armorican, 11, 31, #none, "Décembre",  "Déc",  "Déc",  "D");
+
+Calendar(#cumbrian, -357948); // -978*366, 978 years
+Era     (#cumbrian,  "ME",  "Modern Era");
+PriorEra(#cumbrian,  "BME", "Before Modern Era");
+
+Week(#cumbrian, 1);
+Weekday(#cumbrian, 0, "Sunday",    "Sun", "Su", "S");
+Weekday(#cumbrian, 1, "Monday",    "Mon", "M",  "M");
+Weekday(#cumbrian, 2, "Tuesday",   "Tue", "Tu", "T");
+Weekday(#cumbrian, 3, "Wednesday", "Wed", "W",  "W");
+Weekday(#cumbrian, 4, "Thursday",  "Thu", "Th", "T");
+Weekday(#cumbrian, 5, "Friday",    "Fri", "F",  "F");
+Weekday(#cumbrian, 6, "Saturday",  "Sat", "Sa", "S");
+
+Month(#cumbrian,  0, 31, #none, "January",   "Jan",  "Jan",  "J");
+Month(#cumbrian,  1, 28, #none, "February",  "Feb",  "Feb",  "F");
+Month(#cumbrian,  2, 31, #none, "March",     "Mar",  "Mar",  "M");
+Month(#cumbrian,  3, 30, #none, "April",     "Apr",  "Apr",  "A");
+Month(#cumbrian,  4, 31, #none, "May",       "May",  "May",  "M");
+Month(#cumbrian,  5, 30, #none, "June",      "Jun",  "Jun",  "J");
+Month(#cumbrian,  6, 31, #none, "July",      "Jul",  "Jul",  "J");
+Month(#cumbrian,  7, 31, #none, "August",    "Aug",  "Aug",  "A");
+Month(#cumbrian,  8, 30, #none, "September", "Sep",  "Sep",  "S");
+Month(#cumbrian,  9, 31, #none, "October",   "Oct",  "Oct",  "O");
+Month(#cumbrian, 10, 31, #none, "November",  "Nov",  "Nov",  "N");
+Month(#cumbrian, 11, 31, #none, "December",  "Dec",  "Dec",  "D");
