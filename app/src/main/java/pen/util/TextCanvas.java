@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("unused")
 public class TextCanvas {
+    public static final char BLANK = ' ';
+
     // From Unicode Box Drawing, Block Elements, Geometric Figures, 2500-25FF
     public static final String LIGHT_HORIZONTAL = "\u2500";
     public static final String LIGHT_VERTICAL = "\u2502";
@@ -54,7 +56,7 @@ public class TextCanvas {
      * @param r The row
      */
     public char get(int c, int r) {
-        extendRows(r);
+        if (r >= rows.size()) return BLANK;
         return rows.get(r).get(c);
     }
 
@@ -64,7 +66,7 @@ public class TextCanvas {
      * @param r The row
      */
     public String gets(int c, int r) {
-        extendRows(r);
+        if (r >= rows.size()) return "" + BLANK;
         return "" + rows.get(r).get(c);
     }
 
@@ -118,13 +120,13 @@ public class TextCanvas {
             data.set(c, ch);
         }
         public char get(int c) {
-            extendData(c);
+            if (c >= data.size()) return BLANK;
             return data.get(c);
         }
 
         private void extendData(int c) {
             while (data.size() < c + 1) {
-                data.add(' ');
+                data.add(BLANK);
             }
         }
 

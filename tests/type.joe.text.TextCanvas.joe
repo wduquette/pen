@@ -48,3 +48,11 @@ function testPutGet() {
     assertError(\-> canvas.put(0, -2, "x"),
         "Expected non-negative number, got: Number '-2'.");
 }
+
+// Verify that getting a character outside the "put" data doesn't
+// actually extend the canvas.
+function testGet_noExtend() {
+    var canvas = TextCanvas();
+    assertEquals(canvas.get(10, 10), " ");
+    assertEquals(canvas.size(), [0, 0]);
+}
