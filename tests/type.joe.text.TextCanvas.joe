@@ -11,22 +11,26 @@ function testCreation() {
 
 function testExtends() {
     var canvas = TextCanvas();
-    for (var c = 0; c < 3; c++) {
-        for (var r = 0; r < 3; r++) {
-            canvas.put(c, r, ".");
-        }
-    }
     canvas.put(2, 2, "X");
 
+    assertEquals(canvas.get(0, 0), " ");
+    assertEquals(canvas.get(2, 2), "X");
     assertEquals(canvas.size(), [3,3]);
     assertEquals(canvas.height(), 3);
     assertEquals(canvas.width(), 3);
     assertEquals(canvas.toString(), "TextCanvas[3x3]");
+}
+
+function testFill() {
+    var canvas = TextCanvas();
+    canvas.fill(".", 0, 0, 5, 4);
+    canvas.fill("X", 1, 1, 3, 2);
     assertEquals(canvas.asText(), """
-       ...
-       ...
-       ..X
-       """);
+        .....
+        .XXX.
+        .XXX.
+        .....
+        """);
 }
 
 function testPutGet() {
@@ -56,3 +60,56 @@ function testGet_noExtend() {
     assertEquals(canvas.get(10, 10), " ");
     assertEquals(canvas.size(), [0, 0]);
 }
+
+// Verify that the last character is at the given cell.
+function testPutLeft_normal() {
+    var canvas = TextCanvas();
+    canvas.putLeft(4, 0, "abc");
+    assertEquals(canvas.get(4, 0), "c");
+    assertEquals(canvas.asText(), "  abc");
+}
+
+// Verify that the last character is at the given cell.
+function testPutLeft_clipped() {
+    var canvas = TextCanvas();
+    canvas.putLeft(1, 0, "abc");
+    assertEquals(canvas.get(1, 0), "c");
+    assertEquals(canvas.asText(), "bc");
+}
+
+function testPutDown() {
+    var canvas = TextCanvas();
+    canvas.fill(".", 0, 0, 3, 3);
+    canvas.putDown(1, 1, "XY");
+
+    assertEquals(canvas.asText(), """
+        ...
+        .X.
+        .Y.
+        """);
+}
+
+// Verify that the last character is at the given cell.
+function testPutUp_normal() {
+    var canvas = TextCanvas();
+    canvas.fill(".", 0, 0, 1, 5);
+    canvas.putUp(0, 4, "abc");
+    assertEquals(canvas.get(0, 4), "c");
+    assertEquals(canvas.asText(), """
+        .
+        .
+        a
+        b
+        c
+        """);
+}
+
+// Verify that the last character is at the given cell.
+function testPutUp() {
+    var canvas = TextCanvas();
+    canvas.putUp(0, 1, "abc");
+    assertEquals(canvas.get(0, 1), "c");
+    assertEquals(canvas.asText(), "b\nc");
+}
+
+

@@ -28,9 +28,13 @@ public class TextCanvasType extends ProxyType<TextCanvas> {
         initializer(this::_init);
 
         method("asText",   this::_asText);
+        method("fill",     this::_fill);
         method("get",      this::_get);
         method("height",   this::_height);
         method("put",      this::_put);
+        method("putDown",  this::_putDown);
+        method("putLeft",  this::_putLeft);
+        method("putUp",    this::_putUp);
         method("size",     this::_size);
         method("width",    this::_width);
         method("toString", this::_toString);
@@ -70,6 +74,28 @@ public class TextCanvasType extends ProxyType<TextCanvas> {
     }
 
     //**
+    // @method fill
+    // @args char, column, row, width, height
+    // @result this
+    // Fills the character cells in the given region with the given
+    // character.
+    private Object _fill(TextCanvas tc, Joe joe, Args args) {
+        args.exactArity(5, "fill(char, column, row, width, height)");
+        var text = joe.stringify(args.next());
+        if (text.length() != 1) {
+            throw joe.expected("character", text);
+        }
+        var ch = text.charAt(0);
+        var c = toCellIndex(joe, args.next());
+        var r = toCellIndex(joe, args.next());
+        var w = toDimension(joe, args.next());
+        var h = toDimension(joe, args.next());
+
+        tc.fill(ch, c, r, w, h);
+        return tc;
+    }
+
+    //**
     // @method get
     // @args column, row
     // @result String
@@ -79,7 +105,7 @@ public class TextCanvasType extends ProxyType<TextCanvas> {
         var c = toCellIndex(joe, args.next());
         var r = toCellIndex(joe, args.next());
 
-        return tc.gets(c, r);
+        return tc.get(c, r);
     }
 
     //**
@@ -94,18 +120,69 @@ public class TextCanvasType extends ProxyType<TextCanvas> {
     //**
     // @method put
     // @args column, row, text
-    // @result String
-    // Writes the *text* to the canvas at (*column*, *row*).  The first
-    // character is placed at (*column*, *row*); subsequent characters
-    // are written to the right.  No provision is made for multiline text.
+    // @result this
+    // Writes the *text* to the canvas starting at (*column*, *row*)
+    // and extending to the right. No provision is made for multiline
+    // text.
     private Object _put(TextCanvas tc, Joe joe, Args args) {
         args.exactArity(3, "put(c, r, text)");
         var c = toCellIndex(joe, args.next());
         var r = toCellIndex(joe, args.next());
         var text = joe.stringify(args.next());
 
-        tc.puts(c, r, text);
-        return this;
+        tc.put(c, r, text);
+        return tc;
+    }
+
+    //**
+    // @method putLeft
+    // @args column, row, text
+    // @result this
+    // Writes the *text* to the canvas starting at (*column*, *row*), and
+    // extending to the left, i.e., the text's rightmost character will
+    // be at (*column*, *row*).  Text that extends to the left of column
+    // 0 is clipped.
+    private Object _putLeft(TextCanvas tc, Joe joe, Args args) {
+        args.exactArity(3, "putLeft(c, r, text)");
+        var c = toCellIndex(joe, args.next());
+        var r = toCellIndex(joe, args.next());
+        var text = joe.stringify(args.next());
+
+        tc.putLeft(c, r, text);
+        return tc;
+    }
+
+    //**
+    // @method putDown
+    // @args column, row, text
+    // @result this
+    // Writes the *text* to the canvas starting at (*column*, *row*), and
+    // extending down.
+    private Object _putDown(TextCanvas tc, Joe joe, Args args) {
+        args.exactArity(3, "putDown(c, r, text)");
+        var c = toCellIndex(joe, args.next());
+        var r = toCellIndex(joe, args.next());
+        var text = joe.stringify(args.next());
+
+        tc.putDown(c, r, text);
+        return tc;
+    }
+
+    //**
+    // @method putUp
+    // @args column, row, text
+    // @result this
+    // Writes the *text* to the canvas starting at (*column*, *row*), and
+    // extending up, i.e., the text's rightmost character will
+    // be at (*column*, *row*).  Text that extends above row 0 is clipped.
+    private Object _putUp(TextCanvas tc, Joe joe, Args args) {
+        args.exactArity(3, "putUp(c, r, text)");
+        var c = toCellIndex(joe, args.next());
+        var r = toCellIndex(joe, args.next());
+        var text = joe.stringify(args.next());
+
+        tc.putUp(c, r, text);
+        return tc;
     }
 
     //**
@@ -140,6 +217,14 @@ public class TextCanvasType extends ProxyType<TextCanvas> {
         var num = joe.toInteger(arg);
         if (num < 0) {
             throw joe.expected("non-negative number", arg);
+        }
+        return num;
+    }
+
+    private int toDimension(Joe joe, Object arg) {
+        var num = joe.toInteger(arg);
+        if (num <= 0) {
+            throw joe.expected("positive number", arg);
         }
         return num;
     }

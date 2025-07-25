@@ -40,32 +40,11 @@ public class TextCanvas {
     // Accessors
 
     /**
-     * Puts a character into the canvas.
-     * @param c The column
-     * @param r The row
-     * @param ch The character
-     */
-    public void put(int c, int r, char ch) {
-        extendRows(r);
-        rows.get(r).put(c, ch);
-    }
-
-    /**
-     * Gets a character from the canvas.
-     * @param c The column
-     * @param r The row
-     */
-    public char get(int c, int r) {
-        if (r >= rows.size()) return BLANK;
-        return rows.get(r).get(c);
-    }
-
-    /**
      * Gets a character from the canvas as a string.
      * @param c The column
      * @param r The row
      */
-    public String gets(int c, int r) {
+    public String get(int c, int r) {
         if (r >= rows.size()) return "" + BLANK;
         return "" + rows.get(r).get(c);
     }
@@ -77,16 +56,87 @@ public class TextCanvas {
      * @param r The row
      * @param text the text
      */
-    public void puts(int c, int r, String text) {
+    public void put(int c, int r, String text) {
+        extendRows(r);
         for (int i = 0; i < text.length(); i++) {
-            put(c + i, r, text.charAt(i));
+            putChar(c + i, r, text.charAt(i));
         }
     }
 
-    private void extendRows(int r) {
-        while (rows.size() < r + 1) {
-            rows.add(new Row());
+    /**
+     * Fills a canvas region with the given character.
+     * @param ch The character
+     * @param c The left column of the region
+     * @param r The top row of the region
+     * @param width The region's width in columns
+     * @param height The region's height in rows
+     */
+    public void fill(char ch, int c, int r, int width, int height) {
+        extendRows(r + height - 1);
+        for (var i = 0; i < height; i++) {
+            for (var j = 0; j < width; j++) {
+                putChar(c + j, r + i, ch);
+            }
         }
+    }
+
+
+    /**
+     * Puts a text string into the canvas, horizontally, extending left
+     * from the given cell, so that the final character of the string
+     * is at the given coordinates.  Text extending left of column 0 is
+     * clipped.
+     * @param c The column
+     * @param r The row
+     * @param text the text
+     */
+    public void putLeft(int c, int r, String text) {
+        var c1 = c - text.length() + 1;
+        if (c1 < 0) {
+            var delta = -c1;
+            c1 = 0;
+            text = text.substring(delta);
+        }
+        put(c1, r, text);
+    }
+
+    /**
+     * Puts a text string into the canvas, vertically, extending down
+     * from the given cell.
+     * @param c The column
+     * @param r The row
+     * @param text the text
+     */
+    public void putDown(int c, int r, String text) {
+        extendRows(r + text.length() - 1);
+        for (int i = 0; i < text.length(); i++) {
+            putChar(c, r + i, text.charAt(i));
+        }
+    }
+
+    /**
+     * Puts a text string into the canvas, vertically, extending up
+     * from the given cell, so that the final character of the string
+     * is at the given coordinates.  Text extending above row 0 is
+     * clipped.
+     * @param c The column
+     * @param r The row
+     * @param text the text
+     */
+    public void putUp(int c, int r, String text) {
+        var r1 = r - text.length() + 1;
+        if (r1 < 0) {
+            var delta = -r1;
+            r1 = 0;
+            text = text.substring(delta);
+        }
+        putDown(c, r1, text);
+    }
+
+    // Puts a character into the canvas at the given location.
+    // extendRows(r) should already have been called.
+    private void putChar(int c, int r, char ch) {
+        rows.get(r).put(c, ch);
     }
 
     public int getWidth() {
@@ -107,6 +157,12 @@ public class TextCanvas {
         return rows.stream()
             .map(Row::toString)
             .collect(Collectors.joining("\n"));
+    }
+
+    private void extendRows(int r) {
+        while (rows.size() < r + 1) {
+            rows.add(new Row());
+        }
     }
 
     //-------------------------------------------------------------------------

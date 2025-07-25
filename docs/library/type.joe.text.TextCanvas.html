@@ -188,9 +188,13 @@ down.  Characters and strings can be inserted at any
 <p><strong><a href="#methods">Methods</a></strong></p>
 <ul>
 <li><a href="type.joe.text.TextCanvas.html#method.asText"><em>textCanvas</em>.asText()</a> → String</li>
+<li><a href="type.joe.text.TextCanvas.html#method.fill"><em>textCanvas</em>.fill(<em>char</em>, <em>column</em>, <em>row</em>, <em>width</em>, <em>height</em>)</a> → this</li>
 <li><a href="type.joe.text.TextCanvas.html#method.get"><em>textCanvas</em>.get(<em>column</em>, <em>row</em>)</a> → String</li>
 <li><a href="type.joe.text.TextCanvas.html#method.height"><em>textCanvas</em>.height()</a> → Number</li>
-<li><a href="type.joe.text.TextCanvas.html#method.put"><em>textCanvas</em>.put(<em>column</em>, <em>row</em>, <em>text</em>)</a> → String</li>
+<li><a href="type.joe.text.TextCanvas.html#method.put"><em>textCanvas</em>.put(<em>column</em>, <em>row</em>, <em>text</em>)</a> → this</li>
+<li><a href="type.joe.text.TextCanvas.html#method.putDown"><em>textCanvas</em>.putDown(<em>column</em>, <em>row</em>, <em>text</em>)</a> → this</li>
+<li><a href="type.joe.text.TextCanvas.html#method.putLeft"><em>textCanvas</em>.putLeft(<em>column</em>, <em>row</em>, <em>text</em>)</a> → this</li>
+<li><a href="type.joe.text.TextCanvas.html#method.putUp"><em>textCanvas</em>.putUp(<em>column</em>, <em>row</em>, <em>text</em>)</a> → this</li>
 <li><a href="type.joe.text.TextCanvas.html#method.size"><em>textCanvas</em>.size()</a> → List</li>
 <li><a href="type.joe.text.TextCanvas.html#method.toString"><em>textCanvas</em>.toString()</a> → String</li>
 <li><a href="type.joe.text.TextCanvas.html#method.width"><em>textCanvas</em>.width()</a> → Number</li>
@@ -206,6 +210,12 @@ down.  Characters and strings can be inserted at any
 <hr />
 <p><strong><em>textCanvas</em>.asText() → String</strong></p>
 <p>Returns the contents of the canvas as a String.</p>
+<p><span id="method.fill"> </span></p>
+<h3 id="textcanvasfill"><a class="header" href="#textcanvasfill"><em>textCanvas</em>.fill()</a></h3>
+<hr />
+<p><strong><em>textCanvas</em>.fill(<em>char</em>, <em>column</em>, <em>row</em>, <em>width</em>, <em>height</em>) → this</strong></p>
+<p>Fills the character cells in the given region with the given
+character.</p>
 <p><span id="method.get"> </span></p>
 <h3 id="textcanvasget"><a class="header" href="#textcanvasget"><em>textCanvas</em>.get()</a></h3>
 <hr />
@@ -219,10 +229,31 @@ down.  Characters and strings can be inserted at any
 <p><span id="method.put"> </span></p>
 <h3 id="textcanvasput"><a class="header" href="#textcanvasput"><em>textCanvas</em>.put()</a></h3>
 <hr />
-<p><strong><em>textCanvas</em>.put(<em>column</em>, <em>row</em>, <em>text</em>) → String</strong></p>
-<p>Writes the <em>text</em> to the canvas at (<em>column</em>, <em>row</em>).  The first
-character is placed at (<em>column</em>, <em>row</em>); subsequent characters
-are written to the right.  No provision is made for multiline text.</p>
+<p><strong><em>textCanvas</em>.put(<em>column</em>, <em>row</em>, <em>text</em>) → this</strong></p>
+<p>Writes the <em>text</em> to the canvas starting at (<em>column</em>, <em>row</em>)
+and extending to the right. No provision is made for multiline
+text.</p>
+<p><span id="method.putDown"> </span></p>
+<h3 id="textcanvasputdown"><a class="header" href="#textcanvasputdown"><em>textCanvas</em>.putDown()</a></h3>
+<hr />
+<p><strong><em>textCanvas</em>.putDown(<em>column</em>, <em>row</em>, <em>text</em>) → this</strong></p>
+<p>Writes the <em>text</em> to the canvas starting at (<em>column</em>, <em>row</em>), and
+extending down.</p>
+<p><span id="method.putLeft"> </span></p>
+<h3 id="textcanvasputleft"><a class="header" href="#textcanvasputleft"><em>textCanvas</em>.putLeft()</a></h3>
+<hr />
+<p><strong><em>textCanvas</em>.putLeft(<em>column</em>, <em>row</em>, <em>text</em>) → this</strong></p>
+<p>Writes the <em>text</em> to the canvas starting at (<em>column</em>, <em>row</em>), and
+extending to the left, i.e., the text's rightmost character will
+be at (<em>column</em>, <em>row</em>).  Text that extends to the left of column
+0 is clipped.</p>
+<p><span id="method.putUp"> </span></p>
+<h3 id="textcanvasputup"><a class="header" href="#textcanvasputup"><em>textCanvas</em>.putUp()</a></h3>
+<hr />
+<p><strong><em>textCanvas</em>.putUp(<em>column</em>, <em>row</em>, <em>text</em>) → this</strong></p>
+<p>Writes the <em>text</em> to the canvas starting at (<em>column</em>, <em>row</em>), and
+extending up, i.e., the text's rightmost character will
+be at (<em>column</em>, <em>row</em>).  Text that extends above row 0 is clipped.</p>
 <p><span id="method.size"> </span></p>
 <h3 id="textcanvassize"><a class="header" href="#textcanvassize"><em>textCanvas</em>.size()</a></h3>
 <hr />

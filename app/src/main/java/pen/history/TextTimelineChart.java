@@ -114,8 +114,8 @@ public class TextTimelineChart {
 
         // NEXT, plot the header: entities, "Incidents", and separator
         plotEntities(c0, r0);
-        canvas.puts(0, r0 - 2, padLeft(INCIDENTS, labelWidth));
-        canvas.puts(0, r0 - 1, H_LINE.repeat(canvas.getWidth()));
+        canvas.put(0, r0 - 2, padLeft(INCIDENTS, labelWidth));
+        canvas.put(0, r0 - 1, H_LINE.repeat(canvas.getWidth()));
 
         // NEXT, add a row for soft caps at the beginning, if needed.
         var t0 = incidents.getFirst().moment();
@@ -134,9 +134,9 @@ public class TextTimelineChart {
             // FIRST, add the incident.  Only include the moment if it differs
             // from the previous incident.
             if (i > 0 && incident.moment() == incidents.get(i - 1).moment()) {
-                canvas.puts(0, r, padLeft(incident.label(), labelWidth));
+                canvas.put(0, r, padLeft(incident.label(), labelWidth));
             } else {
-                canvas.puts(0, r, getIncidentLabel(incident, labelWidth));
+                canvas.put(0, r, getIncidentLabel(incident, labelWidth));
             }
 
             // NEXT, add the periods.
@@ -152,20 +152,20 @@ public class TextTimelineChart {
 
                 // NEXT, draw the starting soft cap, if any.
                 if (i == iStart && period.startCap() == Cap.SOFT) {
-                    canvas.puts(c, r - 1, SOFT_START);
+                    canvas.put(c, r - 1, SOFT_START);
                 }
 
                 // NEXT, draw the horizontal flag if the entity is concerned.
                 if (concerned) {
-                    canvas.puts(c - 1, r, H_LINE);
+                    canvas.put(c - 1, r, H_LINE);
                 }
 
                 // NEXT, draw the symbol for the period
-                canvas.puts(c, r, getSymbol(period, i, concerned));
+                canvas.put(c, r, getSymbol(period, i, concerned));
 
                 // NEXT, draw the ending soft cap, if any.
                 if (i == iEnd && period.endCap() == Cap.SOFT) {
-                    canvas.puts(c, r + 1, SOFT_END);
+                    canvas.put(c, r + 1, SOFT_END);
                 }
             }
         }
@@ -211,9 +211,9 @@ public class TextTimelineChart {
     private void plotEntities(int c0, int r0) {
         for (var r = 0; r < entities.size(); r++) {
             var c = c0 + r*3;
-            canvas.puts(c - 1, r, getEntityLabel(entities.get(r)));
+            canvas.put(c - 1, r, getEntityLabel(entities.get(r)));
             for (var rLine = r + 1; rLine < r0 - 1; rLine++) {
-                canvas.puts(c, rLine, TextCanvas.LIGHT_VERTICAL);
+                canvas.put(c, rLine, TextCanvas.LIGHT_VERTICAL);
             }
         }
     }
