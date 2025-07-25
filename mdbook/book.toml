@@ -1,0 +1,15 @@
+[book]
+authors = ["Will Duquette"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Pen v0.2.0 User's Guide"
+
+[build]
+build-dir = "../docs"             # the directory where the output is placed
+create-missing = true             # whether or not to create missing pages
+use-default-preprocessors = true  # use the default preprocessors
+
+[output.html.fold]
+enable = true
+level = 1

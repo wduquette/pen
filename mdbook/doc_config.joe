@@ -1,0 +1,5 @@
+// Configuration for the Pen library docs
+DocConfig
+    .inputFolder("../app/src/main/java/pen")
+    .inputFolder("../app/src/main/resources/pen")
+    .outputFolder("src/library");
