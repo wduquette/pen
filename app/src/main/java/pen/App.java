@@ -5,7 +5,6 @@ package pen;
 
 import com.wjduquette.joe.tools.ToolLauncher;
 import pen.tools.annals.AnnalsTool;
-import pen.tools.demo.DemoTool;
 import pen.tools.draw.DrawTool;
 import pen.tools.history.HistoryTool;
 import pen.tools.run.RunTool;
@@ -33,7 +32,6 @@ public class App {
     public static void main(String[] args) {
         var launcher = new ToolLauncher(NAME, List.of(
             AnnalsTool.INFO,
-            DemoTool.INFO,
             DrawTool.INFO,
             HistoryTool.INFO,
             RunTool.INFO,
