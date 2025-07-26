@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Application class for the "pen calendar" tool.
@@ -40,7 +42,16 @@ formatted for use.
     //------------------------------------------------------------------------
     // Instance Variables
 
-    // None yet
+    // The calendars
+    private Map<String,Calendar> calendars = new HashMap<>();
+
+    // The name of the primary calendar
+    private String primary = null;
+
+    // Today's date and day
+    // Today's day, as read from the calendar file (or wherever)
+    private String todayString = null;
+    private int today = 0;
 
     //------------------------------------------------------------------------
     // Main-line code
@@ -77,10 +88,13 @@ formatted for use.
 
 
         try {
-            CalendarFile calendarFile = load(path);
-            // TODO: Support specifying default calendar and "today" in the
-            // the Nero input
-            println("Got calendars: " + calendarFile.getNames());
+            loadData(path);
+            println("Today is: " + todayString);
+            var list = new ArrayList<>(calendars.keySet());
+            list.remove(primary);
+            list.add(0, primary);
+            println("Calendars: " + calendars.keySet().stream()
+                .sorted().collect(Collectors.joining(", ")));
         } catch (DataFileException ex) {
             println("Failed to read calendar file: " + ex.getMessage());
             println(ex.getDetails());
@@ -88,20 +102,28 @@ formatted for use.
         }
     }
 
-    private CalendarFile load(Path path) throws DataFileException {
+    private void loadData(Path path) throws DataFileException {
         try {
             var script = Files.readString(path);
             var source = new SourceBuffer(path.getFileName().toString(), script);
             var joe = new Joe();
             var nero = new Nero(joe);
             var db = nero.execute(source).getKnownFacts();
-            var cals = new LinkedHashMap<String, Calendar>();
 
             for (var cal : db.getRelation("Calendar")) {
                 var id = joe.toKeyword(cal.get("id"));
-                cals.put(id.name(), readCalendar(joe, cal, db));
+                calendars.put(id.name(), readCalendar(joe, cal, db));
             }
-            return new CalendarFile(path, cals, 0);
+
+            // Get today's date.
+            var todayFact = readOne(db, "Today", "", f -> true);
+            var primaryCalendar = joe.toKeyword(todayFact.get("calendar"));
+            primary = primaryCalendar.name();
+            if (!calendars.containsKey(primary)) {
+                throw joe.expected("calendar ID", primaryCalendar);
+            }
+            todayString = joe.stringify(todayFact.get("dateString"));
+            today = toDay(joe, calendars.get(primary), todayString);
         } catch (Exception ex) {
             throw error("calendar", ex);
         }
@@ -172,6 +194,18 @@ formatted for use.
         return facts.getFirst();
     }
 
+    private Fact readOne(FactSet db, String relation, String what, Predicate<Fact> filter) {
+        var facts = db.getRelation(relation).stream()
+            .filter(f -> filter.test(f))
+            .toList();
+        if (facts.isEmpty()) throw new JoeError(
+            "No " + relation + " found" + what + ".");
+        if (facts.size() > 1) throw new JoeError(
+            "Too many " + relation + "s found" + what + ".");
+
+        return facts.getFirst();
+    }
+
     // Reads a sequence of items
     private List<Fact> readSeq(Joe joe, String relation, Keyword id, FactSet db) {
         // TODO: Check for duplicate sequence numbers
@@ -183,6 +217,16 @@ formatted for use.
 
     int seq(Joe joe, Fact fact) {
         return joe.toInteger(fact.get("seq"));
+    }
+
+    private int toDay(Joe joe, Calendar calendar, String dateString) {
+        try {
+            return calendar.parse(dateString);
+        } catch (CalendarException ex) {
+            // Wrong format for this calendar
+        }
+
+        throw joe.expected("valid date string", dateString);
     }
 
     @SuppressWarnings("SameParameterValue")
