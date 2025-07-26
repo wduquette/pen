@@ -98,7 +98,7 @@ formatted for use.
             var cals = new LinkedHashMap<String, Calendar>();
 
             for (var cal : db.getRelation("Calendar")) {
-                var id = joe.toKeyword(field(cal, "id"));
+                var id = joe.toKeyword(cal.get("id"));
                 cals.put(id.name(), readCalendar(joe, cal, db));
             }
             return new CalendarFile(path, cals, 0);
@@ -108,9 +108,9 @@ formatted for use.
     }
 
     private Calendar readCalendar(Joe joe, Fact cal, FactSet db) {
-        var id = joe.toKeyword(field(cal, "id"));
+        var id = joe.toKeyword(cal.get("id"));
         return new BasicCalendar.Builder()
-            .epochOffset(joe.toInteger(field(cal, "offset")))
+            .epochOffset(joe.toInteger(cal.get("offset")))
             .era(readEra(joe, "Era", id, db))
             .priorEra(readEra(joe, "PriorEra", id, db))
             .week(readWeek(joe, id, db))
@@ -120,23 +120,23 @@ formatted for use.
 
     private Era readEra(Joe joe, String relation, Keyword id, FactSet db) {
         var era = readOne(relation, id, db);
-        var shortForm = joe.stringify(field(era, "short"));
-        var fullForm = joe.stringify(field(era, "full"));
+        var shortForm = joe.stringify(era.get("short"));
+        var fullForm = joe.stringify(era.get("full"));
         return new Era(shortForm, fullForm);
     }
 
     private Week readWeek(Joe joe, Keyword id, FactSet db) {
         var week = readOne("Week", id, db);
-        var offset = joe.toInteger(field(week, "offset"));
+        var offset = joe.toInteger(week.get("offset"));
 
         var days = readSeq(joe, "Weekday", id, db);
         var list = new ArrayList<Weekday>();
         for (var day : days) {
             list.add(new Weekday(
-                joe.stringify(field(day, "full")),
-                joe.stringify(field(day, "short")),
-                joe.stringify(field(day, "unambiguous")),
-                joe.stringify(field(day, "tiny"))
+                joe.stringify(day.get("full")),
+                joe.stringify(day.get("short")),
+                joe.stringify(day.get("unambiguous")),
+                joe.stringify(day.get("tiny"))
             ));
         }
         return new Week(list, offset);
@@ -146,12 +146,12 @@ formatted for use.
         // TODO: Support variable length months
         var months = new ArrayList<BoundedMonth>();
         for (var item : readSeq(joe, "Month", id, db)) {
-            int days = joe.toInteger(field(item, "days"));
+            int days = joe.toInteger(item.get("days"));
             months.add(new BoundedMonth(
-                joe.stringify(field(item, "full")),
-                joe.stringify(field(item, "short")),
-                joe.stringify(field(item, "unambiguous")),
-                joe.stringify(field(item, "tiny")),
+                joe.stringify(item.get("full")),
+                joe.stringify(item.get("short")),
+                joe.stringify(item.get("unambiguous")),
+                joe.stringify(item.get("tiny")),
                 y -> days
             ));
         }
@@ -162,7 +162,7 @@ formatted for use.
     // TODO: Make these standard FactSet queries?
     private Fact readOne(String relation, Keyword id, FactSet db) {
         var facts = db.getRelation(relation).stream()
-            .filter(f -> field(f, "calendar").equals(id))
+            .filter(f -> f.get("calendar").equals(id))
             .toList();
         if (facts.isEmpty()) throw new JoeError(
             "No " + relation + " found for calendar '" + id + "'.");
@@ -176,18 +176,13 @@ formatted for use.
     private List<Fact> readSeq(Joe joe, String relation, Keyword id, FactSet db) {
         // TODO: Check for duplicate sequence numbers
         return db.getRelation(relation).stream()
-            .filter(f -> field(f, "calendar").equals(id))
+            .filter(f -> f.get("calendar").equals(id))
             .sorted(Comparator.comparing(f -> seq(joe, f)))
             .toList();
     }
 
     int seq(Joe joe, Fact fact) {
-        return joe.toInteger(field(fact, "seq"));
-    }
-
-    // TODO: Add `Fact::get`
-    Object field(Fact fact, String name) {
-        return fact.getFieldMap().get(name);
+        return joe.toInteger(fact.get("seq"));
     }
 
     @SuppressWarnings("SameParameterValue")

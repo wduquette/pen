@@ -6,6 +6,38 @@ define Week/calendar, offset;
 define Weekday/calendar, seq, full, short, unambiguous, tiny;
 define Month/calendar, seq, days, leapRule, full, short, unambiguous, tiny;
 
+Today("ME-1019-08-01");
+
+// The Cumbrian calendar starts 978 years before the founding of the
+// colony in Armorica.  We set the epoch day to the first day of the
+// founding year, and so the Cumbrian calendar's epoch offset is
+// is 978 years * 366 days/year in the past.  (No leap years in this
+// world.)
+Calendar(#cumbrian, -357948); // -978*366, 978 years
+Era     (#cumbrian,  "ME",  "Modern Era");
+PriorEra(#cumbrian,  "BME", "Before Modern Era");
+Week(#cumbrian, 1);
+Weekday(#cumbrian, 0, "Sunday",    "Sun", "Su", "S");
+Weekday(#cumbrian, 1, "Monday",    "Mon", "M",  "M");
+Weekday(#cumbrian, 2, "Tuesday",   "Tue", "Tu", "T");
+Weekday(#cumbrian, 3, "Wednesday", "Wed", "W",  "W");
+Weekday(#cumbrian, 4, "Thursday",  "Thu", "Th", "T");
+Weekday(#cumbrian, 5, "Friday",    "Fri", "F",  "F");
+Weekday(#cumbrian, 6, "Saturday",  "Sat", "Sa", "S");
+
+Month(#cumbrian,  0, 31, #none, "January",   "Jan",  "Jan",  "J");
+Month(#cumbrian,  1, 28, #none, "February",  "Feb",  "Feb",  "F");
+Month(#cumbrian,  2, 31, #none, "March",     "Mar",  "Mar",  "M");
+Month(#cumbrian,  3, 30, #none, "April",     "Apr",  "Apr",  "A");
+Month(#cumbrian,  4, 31, #none, "May",       "May",  "May",  "M");
+Month(#cumbrian,  5, 30, #none, "June",      "Jun",  "Jun",  "J");
+Month(#cumbrian,  6, 31, #none, "July",      "Jul",  "Jul",  "J");
+Month(#cumbrian,  7, 31, #none, "August",    "Aug",  "Aug",  "A");
+Month(#cumbrian,  8, 30, #none, "September", "Sep",  "Sep",  "S");
+Month(#cumbrian,  9, 31, #none, "October",   "Oct",  "Oct",  "O");
+Month(#cumbrian, 10, 31, #none, "November",  "Nov",  "Nov",  "N");
+Month(#cumbrian, 11, 31, #none, "December",  "Dec",  "Dec",  "D");
+
 Calendar(#armorican, 0);
 Era     (#armorican, "AF",  "After Founding");
 PriorEra(#armorican, "BF",  "Before Founding");
@@ -30,29 +62,3 @@ Month(#armorican,  8, 30, #none, "Septembre", "Sept", "Sept", "S");
 Month(#armorican,  9, 31, #none, "Octobre",   "Oct",  "Oct",  "O");
 Month(#armorican, 10, 31, #none, "Novembre",  "Nov",  "Nov",  "N");
 Month(#armorican, 11, 31, #none, "Décembre",  "Déc",  "Déc",  "D");
-
-Calendar(#cumbrian, -357948); // -978*366, 978 years
-Era     (#cumbrian,  "ME",  "Modern Era");
-PriorEra(#cumbrian,  "BME", "Before Modern Era");
-
-Week(#cumbrian, 1);
-Weekday(#cumbrian, 0, "Sunday",    "Sun", "Su", "S");
-Weekday(#cumbrian, 1, "Monday",    "Mon", "M",  "M");
-Weekday(#cumbrian, 2, "Tuesday",   "Tue", "Tu", "T");
-Weekday(#cumbrian, 3, "Wednesday", "Wed", "W",  "W");
-Weekday(#cumbrian, 4, "Thursday",  "Thu", "Th", "T");
-Weekday(#cumbrian, 5, "Friday",    "Fri", "F",  "F");
-Weekday(#cumbrian, 6, "Saturday",  "Sat", "Sa", "S");
-
-Month(#cumbrian,  0, 31, #none, "January",   "Jan",  "Jan",  "J");
-Month(#cumbrian,  1, 28, #none, "February",  "Feb",  "Feb",  "F");
-Month(#cumbrian,  2, 31, #none, "March",     "Mar",  "Mar",  "M");
-Month(#cumbrian,  3, 30, #none, "April",     "Apr",  "Apr",  "A");
-Month(#cumbrian,  4, 31, #none, "May",       "May",  "May",  "M");
-Month(#cumbrian,  5, 30, #none, "June",      "Jun",  "Jun",  "J");
-Month(#cumbrian,  6, 31, #none, "July",      "Jul",  "Jul",  "J");
-Month(#cumbrian,  7, 31, #none, "August",    "Aug",  "Aug",  "A");
-Month(#cumbrian,  8, 30, #none, "September", "Sep",  "Sep",  "S");
-Month(#cumbrian,  9, 31, #none, "October",   "Oct",  "Oct",  "O");
-Month(#cumbrian, 10, 31, #none, "November",  "Nov",  "Nov",  "N");
-Month(#cumbrian, 11, 31, #none, "December",  "Dec",  "Dec",  "D");
